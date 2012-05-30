@@ -3,6 +3,20 @@
 = Introduction =
 Below should summarize the plan of attack for Fox Dash 2. Including important dates, goals, and any other important details.
 
+= Description =
+Description of the game.
+
+== Mechanics ==
+The screen will scroll from left to right depending on the orientation of the device. The fox will run continuously and jump when a finger touches the screen.
+
+== Bad Guys ==
+  * Black smoke (give it a name?)
+  * Back pickups that slow you down.
+== Good Guys ==
+Level ups
+  * stars much like the first game
+  * additional pickups that make you go faster
+
 = Details =
 
 Specific details about Fox Dash 2.
@@ -13,6 +27,7 @@ Personal goals for Fox Dash 2 include
   * New Music and More Sounds
   * In-Depth Story
   * More Efficient Code
+  * Tablet support
   
 == Ideas ==
 Some neat ideas that Fox Dash 2 could have
