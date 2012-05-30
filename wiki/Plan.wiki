@@ -11,7 +11,7 @@ The screen will scroll from left to right depending on the orientation of the de
 
 == Bad Guys ==
   * Black smoke (give it a name?)
-  * Back pickups that slow you down.
+  * Bad pickups that slow you down
 == Good Guys ==
 Level ups
   * stars much like the first game
