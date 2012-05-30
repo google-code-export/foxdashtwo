@@ -1,0 +1,45 @@
+#summary The Plan for Fox Dash 2.
+
+= Introduction =
+Below should summarize the plan of attack for Fox Dash 2. Including important dates, goals, and any other important details.
+
+= Details =
+
+Specific details about Fox Dash 2.
+
+== Goals ==
+Personal goals for Fox Dash 2 include
+  * Updates Graphics
+  * New Music and More Sounds
+  * In-Depth Story
+  * More Efficient Code
+  
+== Ideas ==
+Some neat ideas that Fox Dash 2 could have
+  * Multiplayer
+  * Visual Effects (Think lights/particles/etc)
+
+== Schedule ==
+May 29 2012 (day 1) 
+  * Prepare Google Code
+  * Upload first chunk of code
+  * Detail plan
+
+June 9 2012
+  * Base of engine complete
+  * Begin implementing new graphics from artist
+
+August 15 2012
+  * Release completed game
+
+== Assets ==
+Helpful list of assets used in the game.
+
+== Engine ==
+Detailed description of the functionality of the game engine.
+
+== Help == 
+List of useful links or people who have helped in the game. This is NOT the credits list.
+
+== Credits ==
+List of people who directly contributed to Fox Dash 2.
