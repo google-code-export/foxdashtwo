@@ -1,17 +1,18 @@
 #summary The Plan for Fox Dash 2.
 
 = Introduction =
-Below should summarize the plan of attack for Fox Dash 2. Including important dates, goals, and any other important details.
+Below should summarize the plan of attack for Fox Dash 2. Including important dates, goals, and any other details.
 
 = Description =
-Description of the game.
+Fox Dash 2 is much like Fox Dash which is much like Canabalt. A continuous running game where the player must jump to avoid hitting obstacles and thus starting over.
 
 == Mechanics ==
-The screen will scroll from left to right depending on the orientation of the device. The fox will run continuously and jump when a finger touches the screen.
+The screen will scroll from ~left to right~ right to left depending on the orientation of the device. The fox will run continuously and jump when a finger touches the screen.
 
 == Bad Guys ==
   * Black smoke (give it a name?)
   * Bad pickups that slow you down
+  * Pits/jumps
 == Good Guys ==
 Level ups
   * stars much like the first game
@@ -23,7 +24,7 @@ Specific details about Fox Dash 2.
 
 == Goals ==
 Personal goals for Fox Dash 2 include
-  * Updates Graphics
+  * Updated Graphics
   * New Music and More Sounds
   * In-Depth Story
   * More Efficient Code
@@ -51,7 +52,50 @@ August 15 2012
 Helpful list of assets used in the game.
 
 == Engine ==
-Detailed description of the functionality of the game engine.
+The Engine will be broken down into X number of Parts.
+
+*Setup/Activity*
+  *Handles loading of the game from cold boot
+  *Closing the game
+  *Minimizing the game, including saving states
+  *Reopening the game (warm boot)
+  *Setting/preparing/handling pause states (incoming call for example)
+
+  *This will also be the entrypoint for onUpdate and onDraw
+
+*Input*
+  *Manages button presses
+  *Including volume/home/etc keys
+
+*Loader*
+  *Loads in all assets
+  *Stores all assets properly
+  *Destroys assets appropriately
+
+*Sprites/Graphics*
+  *Holds graphical asset properties (width/length/position)
+  *Handles animation
+  *Draws the graphic
+
+*Text/Font*
+  *Draws texts to the screen.
+  *Allows text to be a button(click)
+
+*Sound/Music*
+  *Holds audio properties (length/speed/volume)
+  *Contains state (playing/paused/etc)
+
+*Math/Helper*
+  *Contains useful methods (linear interpolate)
+  *Stores static variables (screen orientation/DPI)
+
+*Networking(optional?)*
+  *Manages connection to network/servers
+  *Handles sending and receiving of data
+
+*AD Manager*
+  *JUST KIDDING
+  *Fox Dash will NEVER have ads! :)
 
 == Help == 
 List of useful links or people who have helped in the game. This is NOT the credits list.
