@@ -102,17 +102,20 @@ The Engine will be broken down into X number of Parts.
 
 == Code Practices == 
 Variables will be all lower-case words separated by underscores.
+{{{
 int my_int;
-
+}}}
 Methods should have a declaration comment, first word lower-case, all other words camel-case
+{{{
 /****
 My Method!
 *****/
 void onUpdate();
-
+}}}
 Everything else is fairgame. Files /should/ be all camel-case.
+{{{
 MyFile.png
-
+}}}
   * It is a wacky system, but it is better than nothing.
 
 == Help == 
