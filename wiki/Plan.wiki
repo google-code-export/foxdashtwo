@@ -116,10 +116,11 @@ My Method!
 *****/
 void onUpdate();
 }}}
-Everything else is fairgame. Files /should/ be all camel-case.
+Files /should/ be all camel-case.
 {{{
 MyFile.png
 }}}
+  * Everything else is fairgame. 
   * It is a wacky system, but it is better than nothing.
 
 == Help == 
