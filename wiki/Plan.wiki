@@ -92,6 +92,10 @@ The Engine will be broken down into X number of Parts.
 *Physics*
   * May be a part of Math or Graphics, depending on how the engine develops
 
+*File IO*
+  * Mostly handled by Simple XML.
+  * Small Wrapper needed
+
 *Networking(optional?)*
   * Manages connection to network/servers
   * Handles sending and receiving of data
