@@ -34,6 +34,8 @@ Personal goals for Fox Dash 2 include
 Some neat ideas that Fox Dash 2 could have
   * Multiplayer
   * Visual Effects (Think lights/particles/etc)
+  * Constructive/destructive environments
+  * Tutorial?
 
 == Schedule ==
 May 29 2012 (day 1) 
