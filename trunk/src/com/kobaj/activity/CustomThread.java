@@ -35,7 +35,6 @@ public class CustomThread implements Runnable
 		run = false;
 	}
 	
-	@Override
 	public void run()
 	{
 		Canvas c;
