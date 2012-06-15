@@ -7,9 +7,6 @@ public class Vector2<T>
 	public T x;
 	public T y;
 	
-	/**************************
-	Constructor
-	***************************/
 	public Vector2(T x, T y)
 	{
 		this.x = x;

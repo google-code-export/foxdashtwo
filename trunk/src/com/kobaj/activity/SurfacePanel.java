@@ -1,38 +1,33 @@
 package com.kobaj.activity;
 
-import com.kobaj.foxdashtwo.R;
+import com.kobaj.math.*;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
-import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
-import android.graphics.ComposeShader;
 import android.graphics.LightingColorFilter;
-import android.graphics.LinearGradient;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RadialGradient;
 import android.graphics.Shader;
-import android.graphics.Paint.Style;
-import android.graphics.Shader.TileMode;
+import android.util.DisplayMetrics;
+
+import com.kobaj.foxdashtwo.FoxdashtwoActivity;
+import com.kobaj.foxdashtwo.R;
 
 //surface class that updates and draws everything.
 public class SurfacePanel extends DrawablePanel
 {
-	//create
-	public SurfacePanel(Context context)
-	{
-		super(context);	
-	}
+	//fps
+	FPSManager fps;
 	
+	//other variables
 	Bitmap bitmap;
 	Paint paint;
 	Paint blur;
@@ -45,9 +40,23 @@ public class SurfacePanel extends DrawablePanel
 	
 	Paint outline;
 	
+	com.kobaj.graphics.Text text;
+	
+	//create
+	public SurfacePanel(Context context)
+	{
+		super(context);	
+	}
+	
 	// load in our resources
 	public void onInitialize()
 	{
+		text = new com.kobaj.graphics.Text();
+		text.onInitialize();
+		
+		//fps
+		fps = new FPSManager();
+		
 		BitmapFactory.Options opt = new BitmapFactory.Options();
 	    opt.inPreferredConfig = Config.ARGB_8888;
 		bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.titlescreen, opt);
@@ -64,23 +73,17 @@ public class SurfacePanel extends DrawablePanel
 	    outline.setShader(shader4);
 	}
 	
-	long change;
-	long last;
-	
 	//run logic
 	public void onUpdate(long gameTime)
 	{
-		change = gameTime -last;
-		last = gameTime;
-		
-		
+		fps.onUpdate(gameTime);
 	}
 	
 	//draw to screen
 	public void onDraw(Canvas canvas)
 	{
 		super.onDraw(canvas);
-		float w = 480;
+		/*float w = 480;
 		float h = 800;
 		
 		//ambient base layer
@@ -110,22 +113,16 @@ public class SurfacePanel extends DrawablePanel
 		//light
 		canvas.drawBitmap(bitmap, 0 , 0, blueP);
 		
-		//bloom
+		//bloom and after effect
 		outline.setXfermode(new PorterDuffXfermode(android.graphics.PorterDuff.Mode.SRC_IN));
 		outline.setAlpha(90);
 		canvas.drawPath(pth, outline);
 		
-	    
 	    //put the scene back
-	    canvas.restoreToCount(sc);
-
-	    //little bit of after effect
+	    canvas.restoreToCount(sc);*/
 	    
-		
-		//light
-		//canvas.drawRect(0, 0, 200, 250,	redP);
-		//canvas.drawRect(100,0, 300, 250, greenP);
-		//canvas.drawRect(175,0, 230, 250, blueP);
+	    //test drawing some text
+	    text.drawAll(canvas);
 		
 		//regular square
 		canvas.drawRect(305, 0, 480, 200, gradient);

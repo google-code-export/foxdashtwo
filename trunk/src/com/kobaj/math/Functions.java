@@ -6,4 +6,9 @@ public class Functions
 	{
 		return first;
 	}
+	
+	public static double clamp(double max, double value, double min)
+	{
+		return Math.max(Math.min(value, max), min);
+	}
 }
