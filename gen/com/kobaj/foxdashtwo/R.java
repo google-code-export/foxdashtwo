@@ -8,6 +8,9 @@
 package com.kobaj.foxdashtwo;
 
 public final class R {
+    public static final class array {
+        public static final int my_sa=0x7f050000;
+    }
     public static final class attr {
     }
     public static final class drawable {

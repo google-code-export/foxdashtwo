@@ -2,6 +2,10 @@
 <resources>
 
     <string name="hello">Hello World, FoxdashtwoActivity!</string>
-    <string name="app_name">Foxdashtwo</string>
-
+    <string name="app_name">Fox Dash Two</string>
+ 
+    <string-array name="my_sa">
+        <item>@string/app_name</item>
+    </string-array>
+    
 </resources>
