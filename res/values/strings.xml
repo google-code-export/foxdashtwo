@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="hello">Hello World, FoxdashtwoActivity!</string>
+    <string name="hello">Hello World,\nFoxdashtwoActivity!</string>
     <string name="app_name">Fox Dash Two</string>
  
     <string-array name="my_sa">
+        <item>@string/hello</item>
         <item>@string/app_name</item>
     </string-array>
     

@@ -1,6 +1,10 @@
 package com.kobaj.graphics;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -15,7 +19,16 @@ import com.kobaj.foxdashtwo.R;
 
 public class Text{
 	
-	HashMap<Integer, Bitmap> bitmap_buffer;
+	//holds all strings
+	HashMap<Integer, BaseSprite> bitmap_buffer;
+	
+	//nice paint.
+	Paint paint;
+	
+	//nice constants
+	private final int line_height = 4;
+	private final int padding = 4;
+	private final double text_size = 16.0;
 	
 	public Text()
 	{
@@ -24,23 +37,37 @@ public class Text{
 	
 	public void onInitialize()
 	{
+		//begin with a paint
+		paint = new Paint();
+		
 		//set default size
-		double size = 16.0 * com.kobaj.math.Constants.sd_scale;
+		double size = text_size * com.kobaj.math.Constants.sd_scale;
 		
 		//new bitmap_buffer!
-		bitmap_buffer = new HashMap<Integer, Bitmap>();
+		bitmap_buffer = new HashMap<Integer, BaseSprite>();
 		
 		//begin by getting all our strings
-		String mTestArray[];
-	    mTestArray = com.kobaj.math.Constants.context.getResources().getStringArray(R.array.my_sa);    
+		String m_test_array[];
+		m_test_array = com.kobaj.math.Constants.context.getResources().getStringArray(R.array.my_sa);    
 	    
-	    //this is where it gets brilliant
-	    for(String s: mTestArray)
+	    //add additionaly 0-9
+	    ArrayList<String> my_string_array = new ArrayList<String>();
+	    
+	    //fill in our array list
+	    for(int i = 0; i < 10; i++)
+	    	my_string_array.add(Integer.toString(i));
+	    for(String s: m_test_array)
+	    	my_string_array.add(s);
+	    
+	    int count = 0;
+	    //where it starts to get brilliant.
+	    for(String s: my_string_array)
 	    {
-	    	s = s.trim();
+	    	int key = count;
 	    	
 	    	//grab the id 
-	    	int id_value = com.kobaj.math.Constants.context.getResources().getIdentifier(s, "string", "com.kobaj.foxdashtwo");
+	    	if(count > 10)
+	    		key = com.kobaj.math.Constants.context.getResources().getIdentifier(s, "string", "com.kobaj.foxdashtwo");
 	    
 	    	//generate an image
 	    	Paint paint_temp = new Paint();
@@ -48,7 +75,6 @@ public class Text{
 	    	paint_temp.setStyle(Style.FILL);
 	    	paint_temp.setColor(Color.WHITE);
 	    	paint_temp.setTextSize((float) size);
-	    	
 	    	
 	    	Paint paint_stroke = new Paint();
 	    	paint_stroke.setColor(Color.BLACK);
@@ -58,37 +84,110 @@ public class Text{
 			paint_stroke.setStyle(Paint.Style.STROKE);
 			paint_stroke.setStrokeWidth(2);
 			paint_stroke.setAntiAlias(true);
-	    	
-	    	//see how big it will be
-	    	Rect rect_temp = new Rect();
-	    	paint_stroke.getTextBounds(s, 0, s.length(), rect_temp);
-	    	int height = rect_temp.top - rect_temp.bottom;
+	    		
+			//prep
+			ArrayList<Path> path_splits = new ArrayList<Path>();
 			
-	    	Bitmap bitmap_temp = Bitmap.createBitmap(rect_temp.left + rect_temp.right, Math.abs(height), Bitmap.Config.ARGB_8888);
+			int height = padding;
+			int width = 0;
+			
+			//split it apart
+			for (String line : s.split("\n"))
+			{
+		    	line = line.trim();
+		    	
+		    	//mini measurements
+		    	Rect rect_temp = new Rect();
+		    	paint_stroke.getTextBounds(line, 0, line.length(), rect_temp);
+		    	
+		    	int this_line_height = Math.abs(rect_temp.top - rect_temp.bottom);
+		    	int this_line_width = rect_temp.left + rect_temp.right;
+		    	
+		    	int old_height = height;
+		    	
+		    	height += this_line_height + line_height;
+		    	if(this_line_width > width)
+		    		width = this_line_width;
+
+		    	//create some paths
+		    	Path line_path = new Path();
+		    	paint_temp.getTextPath(line, 0, line.length(), padding, Math.abs(rect_temp.top) + old_height, line_path);
+		    	path_splits.add(line_path);
+			}
+			
+			//proper padding
+			width += padding * 2;
+			height -= line_height;
+			height += padding;
+			
+	    	//fullscale measurements
+	    	Bitmap bitmap_temp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 	    	Canvas canvas_temp = new Canvas(bitmap_temp);
 	    	
-	    	canvas_temp.drawColor(Color.WHITE); //erase this line
-	    	
-	    	//create some paths
-	    	Path string_path = new Path();
-	    	paint_temp.getTextPath(s, 0, s.length(), 0, Math.abs(rect_temp.top), string_path);
-	    	
 	    	//finaly after all that, draw it
-	    	canvas_temp.drawPath(string_path, paint_stroke);
-	    	canvas_temp.drawPath(string_path, paint_temp);
+	    	for(Path path: path_splits)
+	    	{
+	    		canvas_temp.drawPath(path, paint_stroke);
+	    		canvas_temp.drawPath(path, paint_temp);
+	    	}
 	    	
 	    	//stuff it in the buffer
-	    	bitmap_buffer.put(id_value, bitmap_temp);
+	    	bitmap_buffer.put(key, new BaseSprite(bitmap_temp, new Rect(0,0, width, height)));
+	    	
+	    	count++;
 	    }
 	    
 	    System.gc();
 	}
 	
-	public void drawAll(Canvas canvas)
-	{
-		for(Bitmap b: bitmap_buffer.values())
+	public void drawNumber(Canvas canvas, int this_number, int x, int y)
+	{	
+		int width = 0;
+		
+		//a little bit inefficient
+		int number = this_number;
+		while (number > 0)
 		{
-			canvas.drawBitmap(b, 50, 50, new Paint());
+			int key = (number % 10);
+			
+			width += bitmap_buffer.get(key).bounding_rectangle.right;
+			
+			number = number / 10;
 		}
+		
+		canvas.translate(width, 0);
+		
+		number = this_number;
+		while (number > 0) 
+		{
+			int key = (number % 10);
+			
+			//translate
+			int my_x = bitmap_buffer.get(key).bounding_rectangle.right; //effectively the width	
+			canvas.translate(-my_x, 0);
+			
+			//draw
+			canvas.drawBitmap(bitmap_buffer.get(key).bitmap, x, y, paint);
+			
+		    number = number / 10;
+		}
+	}
+	
+	public void drawText(Canvas canvas, int r_value, int x, int y)
+	{
+		if(bitmap_buffer.containsKey(r_value))
+			canvas.drawBitmap(bitmap_buffer.get(r_value).bitmap, x, y, paint);
+	}
+	
+	public void onDestroy()
+	{
+		Iterator<Entry<Integer, BaseSprite>> it = bitmap_buffer.entrySet().iterator();
+	    while (it.hasNext()) 
+	    {
+	        HashMap.Entry<Integer, BaseSprite> pairs = (HashMap.Entry<Integer, BaseSprite>)it.next();
+	        pairs.getValue().onDestroy();
+	        it.remove();
+	    }
+	    it = null;
 	}
 }
