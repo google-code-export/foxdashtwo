@@ -107,6 +107,7 @@ public class FoxdashtwoActivity extends Activity {
 	{
 		super.onDestroy();
 		ed.commit();
+		game.onDestroy();
 	}
 	
 	@Override

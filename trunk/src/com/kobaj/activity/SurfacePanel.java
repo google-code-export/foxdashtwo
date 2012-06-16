@@ -57,6 +57,9 @@ public class SurfacePanel extends DrawablePanel
 		//fps
 		fps = new FPSManager();
 		
+		gradient = new Paint();
+		gradient.setColor(Color.GREEN);
+		
 		BitmapFactory.Options opt = new BitmapFactory.Options();
 	    opt.inPreferredConfig = Config.ARGB_8888;
 		bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.titlescreen, opt);
@@ -122,9 +125,14 @@ public class SurfacePanel extends DrawablePanel
 	    canvas.restoreToCount(sc);*/
 	    
 	    //test drawing some text
-	    text.drawAll(canvas);
+	    text.drawNumber(canvas, 121234, 50,50);
 		
 		//regular square
-		canvas.drawRect(305, 0, 480, 200, gradient);
+		canvas.drawRect(0,0,50,50, gradient);
+	}
+	
+	public void onDestroy()
+	{
+		text.onDestroy();
 	}
 }
