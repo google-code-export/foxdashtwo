@@ -3,7 +3,6 @@ package com.kobaj.graphics;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import android.graphics.Bitmap;
@@ -50,7 +49,7 @@ public class Text{
 		String m_test_array[];
 		m_test_array = com.kobaj.math.Constants.context.getResources().getStringArray(R.array.my_sa);    
 	    
-	    //add additionaly 0-9
+	    //add additional 0-9
 	    ArrayList<String> my_string_array = new ArrayList<String>();
 	    
 	    //fill in our array list
@@ -143,6 +142,9 @@ public class Text{
 	public void drawNumber(Canvas canvas, int this_number, int x, int y)
 	{	
 		int width = 0;
+		
+		//for now we only do positives (sorry).
+		this_number = (int) Math.abs(this_number);
 		
 		//a little bit inefficient
 		int number = this_number;

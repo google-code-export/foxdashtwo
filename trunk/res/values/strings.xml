@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="unknown_screen_size_message">You have an untested screen. If the game looks weird, contact me at kobaj.g@gmail.com</string>
+    
     <string name="hello">Hello World,\nFoxdashtwoActivity!</string>
     <string name="app_name">Fox Dash Two</string>
- 
+    <string name="blank"></string>
+    
     <string-array name="my_sa">
         <item>@string/hello</item>
         <item>@string/app_name</item>
+    	<item>@string/blank</item>
     </string-array>
     
 </resources>
