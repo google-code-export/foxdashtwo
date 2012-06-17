@@ -1,25 +1,18 @@
 package com.kobaj.activity;
 
-import com.kobaj.math.*;
-
 import android.content.Context;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.ColorFilter;
-import android.graphics.LightingColorFilter;
-import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.RadialGradient;
-import android.graphics.Shader;
-import android.util.DisplayMetrics;
+import android.graphics.Rect;
 
-import com.kobaj.foxdashtwo.FoxdashtwoActivity;
 import com.kobaj.foxdashtwo.R;
+import com.kobaj.graphics.BaseLight;
+import com.kobaj.graphics.BaseSprite;
+import com.kobaj.graphics.PointLight;
+import com.kobaj.input.InputManager;
+import com.kobaj.math.FPSManager;
 
 //surface class that updates and draws everything.
 public class SurfacePanel extends DrawablePanel
@@ -27,53 +20,53 @@ public class SurfacePanel extends DrawablePanel
 	//fps
 	FPSManager fps;
 	
-	//other variables
-	Bitmap bitmap;
-	Paint paint;
-	Paint blur;
-	Paint gradient;
-	Paint red_light;
-	Paint blue_light;
-	Paint ambient;
+	//input
+	public InputManager input_manager;
 	
-	Paint redP, greenP, blueP;
-	
-	Paint outline;
-	
+	//text
 	com.kobaj.graphics.Text text;
+	
+	//other variables
+	BaseSprite bs;
+	BaseLight bl;
+	PointLight pl, plbloom, plthree;
 	
 	//create
 	public SurfacePanel(Context context)
 	{
 		super(context);	
+		
+		//fps
+		fps = new FPSManager();
+		
+		input_manager = new InputManager();
+		
+		//text
+		text = new com.kobaj.graphics.Text();
+		
+		//everything else
+		BitmapFactory.Options opt = new BitmapFactory.Options();
+        opt.inPreferredConfig = Config.ARGB_8888;
+		Bitmap temp = BitmapFactory.decodeResource(getResources(), R.drawable.titlescreen, opt);
+		bs = new BaseSprite(temp, new Rect(0,0,800,480));
+		bl = new BaseLight();
+		pl = new PointLight();
+		plbloom = new PointLight();
+		plthree = new PointLight();
 	}
 	
 	// load in our resources
 	public void onInitialize()
 	{
-		text = new com.kobaj.graphics.Text();
-		text.onInitialize();
+		//text
+		text.onInitialize();	
 		
-		//fps
-		fps = new FPSManager();
-		
-		gradient = new Paint();
-		gradient.setColor(Color.GREEN);
-		
-		BitmapFactory.Options opt = new BitmapFactory.Options();
-	    opt.inPreferredConfig = Config.ARGB_8888;
-		bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.titlescreen, opt);
-		paint = new Paint();
-		ColorFilter filter = new LightingColorFilter(Color.argb(255, 100, 100, 100), 1);
-		paint.setColorFilter(filter);
-		
-	    blueP = new Paint();
-	    //blueP.setColorFilter(new PorterDuffColorFilter(Color.BLUE,android.graphics.PorterDuff.Mode.MULTIPLY));
-	    blueP.setXfermode(new PorterDuffXfermode(android.graphics.PorterDuff.Mode.SRC_IN));
-	    
-		RadialGradient shader4 = new RadialGradient(240, 400, 250, Color.WHITE, Color.TRANSPARENT, Shader.TileMode.CLAMP);
-	    outline = new Paint();
-	    outline.setShader(shader4);
+		//everything else
+		bl.onInitialize(0x00111111);
+		pl.onInitialize(0xFF0000FF, 600, 200, 200);
+		plbloom.onInitialize(0xFF00FF00, 600, 600, 200);
+		plthree.onInitialize(0xFFFF0000, 600, 400, 400);
+			
 	}
 	
 	//run logic
@@ -86,49 +79,26 @@ public class SurfacePanel extends DrawablePanel
 	public void onDraw(Canvas canvas)
 	{
 		super.onDraw(canvas);
-		/*float w = 480;
-		float h = 800;
-		
-		//ambient base layer
-		canvas.drawBitmap(bitmap, 0, 0, paint);//canvas.drawRect(0,0,bitmap.getWidth(), bitmap.getHeight(), paint);
-		
-		//move the bitmap offscreen
-		int sc = canvas.saveLayer(0, 0, w, h, null,
-                Canvas.MATRIX_SAVE_FLAG |
-                Canvas.CLIP_SAVE_FLAG |
-                Canvas.HAS_ALPHA_LAYER_SAVE_FLAG |
-                Canvas.FULL_COLOR_LAYER_SAVE_FLAG |
-                Canvas.CLIP_TO_LAYER_SAVE_FLAG);
-		
-		//canvas.translate(w / 2.0f, 0);
-		
-		//obscuring light
-		outline.setXfermode(null);
-		outline.setAlpha(255);
-		Path pth = new Path();
-	    pth.moveTo(w*0.27f,0);
-	    pth.lineTo(w*0.73f,0);
-	    pth.lineTo(w*0.92f,h);
-	    pth.lineTo(w*0.08f,h);
-	    pth.lineTo(w*0.27f,0);
-	    canvas.drawPath(pth,outline);
-		
-		//light
-		canvas.drawBitmap(bitmap, 0 , 0, blueP);
-		
-		//bloom and after effect
-		outline.setXfermode(new PorterDuffXfermode(android.graphics.PorterDuff.Mode.SRC_IN));
-		outline.setAlpha(90);
-		canvas.drawPath(pth, outline);
-		
-	    //put the scene back
-	    canvas.restoreToCount(sc);*/
+	    //test
+		Rect temp = new Rect(0,0, 800, 480);
+	    bl.onDraw(canvas, bs.bitmap, temp, temp);
 	    
-	    //test drawing some text
-	    text.drawNumber(canvas, 121234, 50,50);
-		
-		//regular square
-		canvas.drawRect(0,0,50,50, gradient);
+			if (input_manager.getTouched(0))
+			{
+				/*pl.onDrawWithBloom(canvas,  bs.bitmap, temp, temp);
+				plbloom.onDrawWithBloom(canvas, bs.bitmap, temp, temp);
+				plthree.onDrawWithBloom(canvas, bs.bitmap, temp, temp);
+				*/
+			}
+			else
+			{
+				pl.onDraw(canvas,  bs.bitmap, temp, temp);
+				plbloom.onDraw(canvas, bs.bitmap, temp, temp);
+				plthree.onDraw(canvas, bs.bitmap, temp, temp);
+			}
+	    
+		//mmmmm fps
+		text.drawNumber(canvas, fps.getFPS(), 50, 50);
 	}
 	
 	public void onDestroy()

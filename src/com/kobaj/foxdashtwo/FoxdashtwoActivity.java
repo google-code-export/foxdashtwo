@@ -1,7 +1,5 @@
 package com.kobaj.foxdashtwo;
 
-import com.kobaj.activity.SurfacePanel;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -13,6 +11,8 @@ import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
+
+import com.kobaj.activity.SurfacePanel;
 
 public class FoxdashtwoActivity extends Activity {
     /** Called when the activity is first created. */
@@ -55,7 +55,7 @@ public class FoxdashtwoActivity extends Activity {
 			default:
 				com.kobaj.math.Constants.dip_scale = 1.0;
 				com.kobaj.math.Constants.unknown_dip = true;
-				com.kobaj.message.ToastManager.makeLongToast("Unknown screen density detected. If the game looks weird, contact me at kobaj.g@gmail.com");
+				com.kobaj.message.ToastManager.makeLongToast(getString(R.string.unknown_screen_size_message));
 				break;
 			case DisplayMetrics.DENSITY_XHIGH: //xhdpi 320
 				com.kobaj.math.Constants.dip_scale = 1.0 + 1.0 / 3.0;
@@ -110,27 +110,29 @@ public class FoxdashtwoActivity extends Activity {
 		game.onDestroy();
 	}
 	
+	//input
+	
 	@Override
 	public boolean onKeyDown(int i, KeyEvent event)
 	{
 		if (i == KeyEvent.KEYCODE_VOLUME_DOWN || i == KeyEvent.KEYCODE_VOLUME_UP)
 			return false;
 		
-		//game.im.eventUpdateDown(i, event);
+		game.input_manager.eventUpdateDown(i, event);
 		return true;
 	}
 	
 	@Override
 	public boolean onKeyUp(int i, KeyEvent event)
 	{
-		//game.im.eventUpdateUp(i, event);
+		game.input_manager.eventUpdateUp(i, event);
 		return true;
 	}
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent e)
 	{
-		//game.im.eventUpdate(e);
+		game.input_manager.eventUpdate(e);
 		return true;
 	}
 }
