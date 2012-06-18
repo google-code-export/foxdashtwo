@@ -24,7 +24,7 @@ public class BaseLight
 		//let them set color
 		ColorFilter filter = new LightingColorFilter(color, 1);
 		base_paint.setColorFilter(filter);
-		base_paint.setAntiAlias(true);
+		//base_paint.setAntiAlias(true);
 	}
 	
 	public void onDraw(Canvas canvas, Bitmap bitmap, Rect src, Rect dst)

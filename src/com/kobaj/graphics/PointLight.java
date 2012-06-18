@@ -32,15 +32,15 @@ public class PointLight
 		base_paint.setXfermode(new PorterDuffXfermode(android.graphics.PorterDuff.Mode.SRC_IN));
 		ColorFilter filter = new LightingColorFilter(color, 1);
 		base_paint.setColorFilter(filter);
-		base_paint.setAntiAlias(true);
+		//base_paint.setAntiAlias(true);
 		
 		RadialGradient shader_light = new RadialGradient(x, y, intensity, color, Color.TRANSPARENT, Shader.TileMode.CLAMP);
 		outline_paint = new Paint();
 		outline_paint.setShader(shader_light);
-		outline_paint.setAntiAlias(true);
+		//outline_paint.setAntiAlias(true);
 
 		save_paint = new Paint();
-		save_paint.setAntiAlias(true);
+		//save_paint.setAntiAlias(true);
 		save_paint.setXfermode(new PorterDuffXfermode(android.graphics.PorterDuff.Mode.SCREEN));
 		
 		screen = new Rect(x - intensity, y - intensity, x + intensity, y + intensity);
