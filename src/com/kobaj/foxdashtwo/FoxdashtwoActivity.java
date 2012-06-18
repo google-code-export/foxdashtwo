@@ -80,7 +80,7 @@ public class FoxdashtwoActivity extends Activity {
 		
 		// Create a GLSurfaceView instance and set it
         // as the ContentView for this Activity
-        mGLView = new HelloOpenGLES20SurfaceView(this);
+        mGLView = new com.kobaj.opengl.MyGLSurfaceView(this);
         setContentView(mGLView);
 	}
 	
@@ -135,16 +135,4 @@ public class FoxdashtwoActivity extends Activity {
 		//game.input_manager.eventUpdate(e);
 		return true;
 	}
-}
-
-class HelloOpenGLES20SurfaceView extends GLSurfaceView {
-
-    public HelloOpenGLES20SurfaceView(Context context){
-        super(context);
-        
-        // Create an OpenGL ES 2.0 context.
-        setEGLContextClientVersion(2);
-        // Set the Renderer for drawing on the GLSurfaceView
-        setRenderer(new com.kobaj.opengl.GLRender());
-    }
 }

@@ -1,4 +1,4 @@
-package com.kobaj.opengl;
+package com.kobaj.openglgraphics;
 
 //a lot of help from
 //http://www.learnopengles.com/android-lesson-one-getting-started/
@@ -12,9 +12,6 @@ import javax.microedition.khronos.opengles.GL10;
 
 import android.opengl.GLES20;
 import android.opengl.Matrix;
-import android.os.SystemClock;
-
-import com.kobaj.foxdashtwo.R;
 
 public class Quad
 {
@@ -26,6 +23,9 @@ public class Quad
 	private FloatBuffer my_color;
 	private FloatBuffer my_normal;
 	private FloatBuffer my_tex_coord;
+	
+	//camera
+	private float[] my_mvp_matrix = new float[16];
 	
 	//handle to texture
 	private int my_texture_data_handle;
@@ -114,18 +114,10 @@ public class Quad
 		my_tex_coord.put(cubeTextureCoordinateData).position(0);
 		
 		//load dat texture.
-		my_texture_data_handle = com.kobaj.loader.GLBitmapReader.loadTexture(gl, com.kobaj.math.Constants.context, R.drawable.titlescreen);
+		my_texture_data_handle = com.kobaj.loader.GLBitmapReader.loadTexture(gl, com.kobaj.math.Constants.context, texture_resource);
 	}
 	
-	public void onDraw(float[] my_view_matrix, float[] my_proj_matrix, float[] my_mvp_matrix, float[] my_light_pos,
-			int my_texture_uniform_handle,
-			int my_mv_matrix_handle,
-			int my_mvp_matrix_handle,
-			int my_position_handle,
-			int my_color_handle,
-			int my_normal_handle,
-			int my_tex_coord_handle,
-			int my_light_pos_handle)
+	public void onDrawPoint(float[] my_view_matrix, float[] my_proj_matrix, PointLight point_light)
 	{
 		// Set the active texture unit to texture unit 0.
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
@@ -134,12 +126,8 @@ public class Quad
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, my_texture_data_handle);
         
         // Tell the texture uniform sampler to use this texture in the shader by binding to texture unit 0.
-        GLES20.glUniform1i(my_texture_uniform_handle, 0);  
+        GLES20.glUniform1i(point_light.my_texture_uniform_handle, 0);  
 	
-        // Do a complete rotation every 10 seconds.
-        long time = SystemClock.uptimeMillis() % 10000L;        
-        float angleInDegrees = (360.0f / 10000.0f) * ((int) time);  
-        
         //set the quad up
         Matrix.setIdentityM(my_model_matrix, 0);
         Matrix.translateM(my_model_matrix, 0, 0.0f, 0.0f, -1.0f);
@@ -147,48 +135,48 @@ public class Quad
         
         //pass in position information
         my_position.position(0);		
-        GLES20.glVertexAttribPointer(my_position_handle, 3, GLES20.GL_FLOAT, false,
+        GLES20.glVertexAttribPointer(point_light.my_position_handle, 3, GLES20.GL_FLOAT, false,
         		0, my_position);        
                 
-        GLES20.glEnableVertexAttribArray(my_position_handle);        
+        GLES20.glEnableVertexAttribArray(point_light.my_position_handle);        
         
         // Pass in the color information
         my_color.position(0);
-        GLES20.glVertexAttribPointer(my_color_handle, 4, GLES20.GL_FLOAT, false,
+        GLES20.glVertexAttribPointer(point_light.my_color_handle, 4, GLES20.GL_FLOAT, false,
         		0, my_color);        
         
-        GLES20.glEnableVertexAttribArray(my_color_handle);
+        GLES20.glEnableVertexAttribArray(point_light.my_color_handle);
         
         // Pass in the normal information
         my_normal.position(0);
-        GLES20.glVertexAttribPointer(my_normal_handle, 3, GLES20.GL_FLOAT, false, 
+        GLES20.glVertexAttribPointer(point_light.my_normal_handle, 3, GLES20.GL_FLOAT, false, 
         		0, my_normal);
         
-        GLES20.glEnableVertexAttribArray(my_normal_handle);
+        GLES20.glEnableVertexAttribArray(point_light.my_normal_handle);
         
         // Pass in the texture coordinate information
         my_tex_coord.position(0);
-        GLES20.glVertexAttribPointer(my_tex_coord_handle, 2, GLES20.GL_FLOAT, false, 
+        GLES20.glVertexAttribPointer(point_light.my_tex_coord_handle, 2, GLES20.GL_FLOAT, false, 
         		0, my_tex_coord);
         
-        GLES20.glEnableVertexAttribArray(my_tex_coord_handle);
+        GLES20.glEnableVertexAttribArray(point_light.my_tex_coord_handle);
         
         // This multiplies the view matrix by the model matrix, and stores the result in the MVP matrix
         // (which currently contains model * view).
         Matrix.multiplyMM(my_mvp_matrix, 0, my_view_matrix, 0, my_model_matrix, 0);   
         
         // Pass in the modelview matrix.
-        GLES20.glUniformMatrix4fv(my_mv_matrix_handle, 1, false, my_mvp_matrix, 0);                
+        GLES20.glUniformMatrix4fv(point_light.my_mv_matrix_handle, 1, false, my_mvp_matrix, 0);                
         
         // This multiplies the modelview matrix by the projection matrix, and stores the result in the MVP matrix
         // (which now contains model * view * projection).
         Matrix.multiplyMM(my_mvp_matrix, 0, my_proj_matrix, 0, my_mvp_matrix, 0);
 
         // Pass in the combined matrix.
-        GLES20.glUniformMatrix4fv(my_mvp_matrix_handle, 1, false, my_mvp_matrix, 0);
+        GLES20.glUniformMatrix4fv(point_light.my_mvp_matrix_handle, 1, false, my_mvp_matrix, 0);
         
         // Pass in the light position in eye space.        
-        GLES20.glUniform3f(my_light_pos_handle , my_light_pos[0], my_light_pos[1], my_light_pos[2]);
+        GLES20.glUniform3f(point_light.my_light_pos_handle , point_light.my_light_eye_space[0], point_light.my_light_eye_space[1], point_light.my_light_eye_space[2]);
         
         // Draw the cube.
         GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 6);    
