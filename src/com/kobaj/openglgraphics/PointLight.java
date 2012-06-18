@@ -27,17 +27,10 @@ public class PointLight extends BaseLight
 	public void onUpdateFrame(double delta, float[] my_view_matrix)
 	{
 		//TODO gotta change this to work with delta.
-		// light
-		// Calculate position of the light. Rotate and then push into the
-		// distance.
-		// Do a complete rotation every 10 seconds.
-		long time = SystemClock.uptimeMillis() % 10000L;
-		float angleInDegrees = (360.0f / 10000.0f) * ((int) time);
+		//TODO delete this usless method?
 		
 		Matrix.setIdentityM(my_light_matrix, 0);
-		Matrix.translateM(my_light_matrix, 0, 0.0f, 0.0f, -5.0f);
-		Matrix.rotateM(my_light_matrix, 0, angleInDegrees, 0.0f, 1.0f, 0.0f);
-		Matrix.translateM(my_light_matrix, 0, 0.0f, 0.0f, 2.0f);
+		Matrix.translateM(my_light_matrix, 0, 0.0f, 0.0f, 0.0f);
 		
 		Matrix.multiplyMV(my_light_world_space, 0, my_light_matrix, 0, my_light_model_space, 0);
 		Matrix.multiplyMV(my_light_eye_space, 0, my_view_matrix, 0, my_light_world_space, 0);
