@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
+import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
@@ -12,13 +13,12 @@ import android.view.Display;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 
-import com.kobaj.activity.SurfacePanel;
-
 public class FoxdashtwoActivity extends Activity {
     /** Called when the activity is first created. */
 	
 	private PowerManager.WakeLock wl;
-	private SurfacePanel game;
+	
+	private GLSurfaceView mGLView;
 	
 	//saving state
 	public static SharedPreferences mPrefs;
@@ -78,12 +78,10 @@ public class FoxdashtwoActivity extends Activity {
 		com.kobaj.math.Constants.width = display.getWidth();
 		com.kobaj.math.Constants.height = display.getHeight();
 		
-		//start mah game.
-		game = new SurfacePanel(this);
-		game.onInitialize();
-		
-		// last
-		setContentView(game);
+		// Create a GLSurfaceView instance and set it
+        // as the ContentView for this Activity
+        mGLView = new HelloOpenGLES20SurfaceView(this);
+        setContentView(mGLView);
 	}
 	
 	@Override
@@ -91,8 +89,9 @@ public class FoxdashtwoActivity extends Activity {
 	{
 		super.onPause();
 		wl.release();
-		
 		ed.commit();
+		
+		mGLView.onPause();
 	}
 	
 	@Override
@@ -100,6 +99,8 @@ public class FoxdashtwoActivity extends Activity {
 	{
 		super.onResume();
 		wl.acquire();
+		
+		mGLView.onResume();
 	}
 	
 	@Override
@@ -107,7 +108,6 @@ public class FoxdashtwoActivity extends Activity {
 	{
 		super.onDestroy();
 		ed.commit();
-		game.onDestroy();
 	}
 	
 	//input
@@ -118,21 +118,33 @@ public class FoxdashtwoActivity extends Activity {
 		if (i == KeyEvent.KEYCODE_VOLUME_DOWN || i == KeyEvent.KEYCODE_VOLUME_UP)
 			return false;
 		
-		game.input_manager.eventUpdateDown(i, event);
+		//game.input_manager.eventUpdateDown(i, event);
 		return true;
 	}
 	
 	@Override
 	public boolean onKeyUp(int i, KeyEvent event)
 	{
-		game.input_manager.eventUpdateUp(i, event);
+		//game.input_manager.eventUpdateUp(i, event);
 		return true;
 	}
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent e)
 	{
-		game.input_manager.eventUpdate(e);
+		//game.input_manager.eventUpdate(e);
 		return true;
 	}
+}
+
+class HelloOpenGLES20SurfaceView extends GLSurfaceView {
+
+    public HelloOpenGLES20SurfaceView(Context context){
+        super(context);
+        
+        // Create an OpenGL ES 2.0 context.
+        setEGLContextClientVersion(2);
+        // Set the Renderer for drawing on the GLSurfaceView
+        setRenderer(new com.kobaj.opengl.GLRender());
+    }
 }
