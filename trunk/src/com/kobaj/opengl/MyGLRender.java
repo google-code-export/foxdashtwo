@@ -58,7 +58,7 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 	
 	public void onDrawFrame(GL10 unused)
 	{
-		onUpdate();
+		onUpdateFrame();
 		
 		// Redraw background color
 		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
@@ -67,6 +67,16 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 	}
 	
 	abstract void onDraw();
+	
+	public void onUpdateFrame()
+	{
+		//update our lights (incase the move? I have no fuckin idea, shush).
+		point_light.onUpdateFrame(0, my_view_matrix);
+		
+		//might put fps here.
+		
+		onUpdate();
+	}
 	
 	abstract void onUpdate();
 
