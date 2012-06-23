@@ -1,12 +1,18 @@
 package com.kobaj.openglgraphics;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
+
+import android.graphics.Color;
 import android.opengl.GLES20;
 import android.util.Log;
 
-public abstract class BaseLight
+public abstract class BaseLightShader
 {
 	// shader (point light)
 	public int my_shader;
+	
 	// handles to everything in the shader
 	public int my_position_handle;
 	public int my_color_handle;
@@ -15,6 +21,47 @@ public abstract class BaseLight
 	public int my_texture_uniform_handle;
 	public int my_mvp_matrix_handle;
 	public int my_mv_matrix_handle;
+	
+	//effects
+	public FloatBuffer my_color;
+	
+	public BaseLightShader()
+	{
+		my_color = ByteBuffer.allocateDirect(6/*rows*/ * 4/*colums*/ * 4/*size of float*/).order(ByteOrder.nativeOrder()).asFloatBuffer();	
+		
+		setColor(Color.WHITE);
+	}
+	
+	//TODO brightness
+	
+	
+	public void setColor(int color)
+	{
+		int alpha = Color.alpha(color);
+		int red = Color.red(color);
+		int blue = Color.blue(color);
+		int green = Color.green(color);
+		
+		float tr_alpha = (float) com.kobaj.math.Functions.byteToShader(alpha);
+		float tr_red = (float) com.kobaj.math.Functions.byteToShader(red);
+		float tr_green = (float) com.kobaj.math.Functions.byteToShader(green);
+		float tr_blue = (float) com.kobaj.math.Functions.byteToShader(blue);
+		
+		// R, G, B, A
+				final float[] cubeColorData =
+					{				
+						// Front face (white)
+						tr_red, tr_green, tr_blue, tr_alpha,				
+						tr_red, tr_green, tr_blue, tr_alpha,
+						tr_red, tr_green, tr_blue, tr_alpha,
+						tr_red, tr_green, tr_blue, tr_alpha,				
+						tr_red, tr_green, tr_blue, tr_alpha,
+						tr_red, tr_green, tr_blue, tr_alpha
+						
+					};
+										
+		my_color.put(cubeColorData).position(0);
+	}
 	
 	protected void onInitializeShaders(int r_vertex_shader, int r_fragment_shader)
 	{
@@ -62,7 +109,17 @@ public abstract class BaseLight
 			// If the compilation failed, delete the shader.
 			if (compileStatus[0] == 0)
 			{
-				Log.e("kobaj_shader_error", "Error compiling shader: " + GLES20.glGetShaderInfoLog(shader));
+				//small bit of info
+			
+				String type_name = "Vertex Shader";
+				if(type == GLES20.GL_FRAGMENT_SHADER)
+					type_name = "Fragment Shader";
+				
+				//returns absolutely nothing :(.
+				String infoLog = GLES20.glGetShaderInfoLog( shader );
+					
+				Log.e("kobaj_shader_error", "Error compiling shader: " + type_name + " " + infoLog);
+				
 				GLES20.glDeleteShader(shader);
 				shader = 0;
 			}

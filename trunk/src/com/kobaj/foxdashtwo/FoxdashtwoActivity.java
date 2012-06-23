@@ -78,6 +78,8 @@ public class FoxdashtwoActivity extends Activity {
 		com.kobaj.math.Constants.width = display.getWidth();
 		com.kobaj.math.Constants.height = display.getHeight();
 		
+		com.kobaj.math.Constants.ratio = (double) display.getWidth() / (double) display.getHeight();
+		
 		// Create a GLSurfaceView instance and set it
         // as the ContentView for this Activity
         mGLView = new com.kobaj.opengl.MyGLSurfaceView(this);
