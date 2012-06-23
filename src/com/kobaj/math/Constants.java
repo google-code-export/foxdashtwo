@@ -23,6 +23,9 @@ public class Constants
 	public static int width;
 	public static int height;
 	
+	// this is width / height
+	public static double ratio;
+	
 	//mmmm context
 	//you may be saying "BUT THATS A MEMORY LEAK"
 	//nope, this is the application context...

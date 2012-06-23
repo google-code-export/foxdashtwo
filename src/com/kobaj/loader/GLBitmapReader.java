@@ -2,6 +2,8 @@ package com.kobaj.loader;
 
 //http://blog.poweredbytoast.com/loading-opengl-textures-in-android
 
+import java.util.HashMap;
+
 import javax.microedition.khronos.opengles.GL10;
 
 import android.content.Context;
@@ -12,6 +14,13 @@ import android.graphics.Matrix;
 
 public class GLBitmapReader
 {
+	//key is the res id
+	//just a nifty way of storing images we've already loaded
+	//this might eventually be changed to a base class so that 
+	//it can contain sounds and other actually loaded resources.
+	//but most likely not :/
+	public static HashMap<Integer, GLLoadedTexture> loaded_textures = new HashMap<Integer, GLLoadedTexture>();
+	
 	// Get a new texture id:
 	private static int newTextureID(GL10 gl)
 	{
@@ -24,13 +33,15 @@ public class GLBitmapReader
 	// texture ID:
 	public static int loadTexture(GL10 gl, Context context, int resource)
 	{
+		if(loaded_textures.containsKey(resource))
+			return loaded_textures.get(resource).texture_id;
 		
 		// In which ID will we be storing this texture?
 		int id = newTextureID(gl);
 		
 		// We need to flip the textures vertically:
 		Matrix flip = new Matrix();
-		flip.postScale(1f, -1f);
+		flip.postScale(-1f, 1f);
 		
 		// This will tell the BitmapFactory to not scale based on the device's
 		// pixel density:
@@ -74,8 +85,17 @@ public class GLBitmapReader
 			bmp = bmp2;
 		}
 		
-		bmp.recycle();
+		//put out info into someplace safe.
+		GLLoadedTexture load = new GLLoadedTexture();
+		load.resource_id = resource;
+		load.height = bmp.getHeight();
+		load.width = bmp.getWidth();
+		load.texture_id = id;
 		
+		loaded_textures.put(resource, load);
+		
+		//cleanup!
+		bmp.recycle();
 		return id;
 	}
 }

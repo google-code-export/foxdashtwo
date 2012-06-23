@@ -17,10 +17,12 @@ public class Quad
 {
 	//transformation matrix to convert from object to world space 
 	private float[] my_model_matrix = new float[16];
-		
+	//these are in shader coordinates 0 to 1
+	public double x_pos = 0.0;
+	public double y_pos = 0.0;
+	
 	//data about the quad
 	private FloatBuffer my_position;
-	private FloatBuffer my_color;
 	private FloatBuffer my_normal;
 	private FloatBuffer my_tex_coord;
 	
@@ -30,9 +32,26 @@ public class Quad
 	//handle to texture
 	private int my_texture_data_handle;
 	
-	public Quad(GL10 gl, int texture_resource)
+	public Quad (GL10 gl, int texture_resource)
 	{
+		this(gl, texture_resource, -1, -1);
+	}
+	
+	//TODO implement size (width, height).
+	public Quad(GL10 gl, int texture_resource, int width, int height)
+	{
+		//load dat texture.
+		my_texture_data_handle = com.kobaj.loader.GLBitmapReader.loadTexture(gl, com.kobaj.math.Constants.context, texture_resource);
+		
+		if(width == -1 && height == -1)
+		{
+			width = com.kobaj.loader.GLBitmapReader.loaded_textures.get(texture_resource).width;
+			height = com.kobaj.loader.GLBitmapReader.loaded_textures.get(texture_resource).height;
+		}
+		
 		// Define points for a cube.		
+		float tr_x = (float) com.kobaj.math.Functions.screenToShaderX(width);
+		float tr_y = (float) com.kobaj.math.Functions.screenToShaderY(height);
 		
 		// X, Y, Z
 		final float[] cubePositionData =
@@ -43,27 +62,14 @@ public class Quad
 				// usually represent the backside of an object and aren't visible anyways.
 				
 				// Front face
-				-1.0f, 1.0f, 0.0f,				
-				-1.0f, -1.0f, 0.0f,
-				1.0f, 1.0f, 0.0f, 
-				-1.0f, -1.0f, 0.0f, 				
-				1.0f, -1.0f, 0.0f,
-				1.0f, 1.0f, 0.0f
+				-tr_x, tr_y, 0.0f,				
+				-tr_x, -tr_y, 0.0f,
+				tr_x, tr_y, 0.0f, 
+				-tr_x, -tr_y, 0.0f, 				
+				tr_x, -tr_y, 0.0f,
+				tr_x, tr_y, 0.0f
 				
 			};	
-		
-		// R, G, B, A
-		final float[] cubeColorData =
-			{				
-				// Front face (white)
-				1.0f, 1.0f, 1.0f, 1.0f,				
-				1.0f, 1.0f, 1.0f, 1.0f,
-				1.0f, 1.0f, 1.0f, 1.0f,
-				1.0f, 1.0f, 1.0f, 1.0f,				
-				1.0f, 1.0f, 1.0f, 1.0f,
-				1.0f, 1.0f, 1.0f, 1.0f
-				
-			};
 		
 		// X, Y, Z
 		// The normal is used in light calculations and is a vector which points
@@ -82,9 +88,6 @@ public class Quad
 		
 		// S, T (or X, Y)
 		// Texture coordinate data.
-		// Because images have a Y axis pointing downward (values increase as you move down the image) while
-		// OpenGL has a Y axis pointing upward, we adjust for that here by flipping the Y axis.
-		// What's more is that the texture coordinates are the same for every face.
 		final float[] cubeTextureCoordinateData =
 			{												
 				// Front face
@@ -101,10 +104,6 @@ public class Quad
 				.order(ByteOrder.nativeOrder()).asFloatBuffer();							
 		my_position.put(cubePositionData).position(0);		
 		
-		my_color = ByteBuffer.allocateDirect(cubeColorData.length * 4)
-				.order(ByteOrder.nativeOrder()).asFloatBuffer();							
-		my_color.put(cubeColorData).position(0);
-		
 		my_normal = ByteBuffer.allocateDirect(cubeNormalData.length * 4)
 				.order(ByteOrder.nativeOrder()).asFloatBuffer();							
 		my_normal.put(cubeNormalData).position(0);
@@ -112,12 +111,9 @@ public class Quad
 		my_tex_coord = ByteBuffer.allocateDirect(cubeTextureCoordinateData.length * 4)
 				.order(ByteOrder.nativeOrder()).asFloatBuffer();
 		my_tex_coord.put(cubeTextureCoordinateData).position(0);
-		
-		//load dat texture.
-		my_texture_data_handle = com.kobaj.loader.GLBitmapReader.loadTexture(gl, com.kobaj.math.Constants.context, texture_resource);
 	}
 	
-	public void onDrawPoint(float[] my_view_matrix, float[] my_proj_matrix, PointLight point_light)
+	public void onDrawPoint(float[] my_view_matrix, float[] my_proj_matrix, PointLightShader point_light)
 	{
 		// Set the active texture unit to texture unit 0.
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
@@ -130,35 +126,31 @@ public class Quad
 	
         //set the quad up
         Matrix.setIdentityM(my_model_matrix, 0);
-        Matrix.translateM(my_model_matrix, 0, 0.0f, 0.0f, -1.0f);
+        Matrix.translateM(my_model_matrix, 0, (float) x_pos, (float) y_pos, -1.0f);
         //Matrix.rotateM(my_model_matrix, 0, angleInDegrees, 1.0f, 1.0f, 0.0f);
         
         //pass in position information
         my_position.position(0);		
         GLES20.glVertexAttribPointer(point_light.my_position_handle, 3, GLES20.GL_FLOAT, false,
-        		0, my_position);        
-                
+        		0, my_position);                
         GLES20.glEnableVertexAttribArray(point_light.my_position_handle);        
         
         // Pass in the color information
-        my_color.position(0);
+        point_light.my_color.position(0);
         GLES20.glVertexAttribPointer(point_light.my_color_handle, 4, GLES20.GL_FLOAT, false,
-        		0, my_color);        
-        
+        		0, point_light.my_color);        
         GLES20.glEnableVertexAttribArray(point_light.my_color_handle);
         
         // Pass in the normal information
         my_normal.position(0);
         GLES20.glVertexAttribPointer(point_light.my_normal_handle, 3, GLES20.GL_FLOAT, false, 
         		0, my_normal);
-        
         GLES20.glEnableVertexAttribArray(point_light.my_normal_handle);
         
         // Pass in the texture coordinate information
         my_tex_coord.position(0);
         GLES20.glVertexAttribPointer(point_light.my_tex_coord_handle, 2, GLES20.GL_FLOAT, false, 
         		0, my_tex_coord);
-        
         GLES20.glEnableVertexAttribArray(point_light.my_tex_coord_handle);
         
         // This multiplies the view matrix by the model matrix, and stores the result in the MVP matrix

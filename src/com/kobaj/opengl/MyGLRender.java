@@ -6,13 +6,18 @@ import javax.microedition.khronos.opengles.GL10;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
+import android.os.SystemClock;
 
-import com.kobaj.openglgraphics.PointLight;
+import com.kobaj.math.FPSManager;
+import com.kobaj.openglgraphics.PointLightShader;
 
 public abstract class MyGLRender implements GLSurfaceView.Renderer
 {
+	//and fps
+	FPSManager fps;
+	
 	//two shaders
-	protected PointLight point_light;
+	protected PointLightShader point_light;
 	
 	// camera
 	protected float[] my_view_matrix = new float[16];
@@ -37,7 +42,10 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		GLES20.glBlendFunc(GLES20.GL_ONE, GLES20.GL_ONE);
 		
 		// shaders
-		point_light = new PointLight();
+		point_light = new PointLightShader();
+		
+		//fps
+		fps = new FPSManager();
 		
 		onInitialize(unused);
 	}
@@ -70,14 +78,14 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 	
 	public void onUpdateFrame()
 	{
-		//update our lights (incase the move? I have no fuckin idea, shush).
-		point_light.onUpdateFrame(0, my_view_matrix);
+		long gameTime = SystemClock.uptimeMillis();
 		
 		//might put fps here.
+		fps.onUpdate(gameTime);
 		
-		onUpdate();
+		onUpdate(fps.getDelta());
 	}
 	
-	abstract void onUpdate();
+	abstract void onUpdate(double delta);
 
 }
