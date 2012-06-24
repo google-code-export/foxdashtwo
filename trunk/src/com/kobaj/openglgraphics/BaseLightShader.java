@@ -16,13 +16,14 @@ public abstract class BaseLightShader
 	// handles to everything in the shader
 	public int my_position_handle;
 	public int my_color_handle;
-	public int my_normal_handle;
 	public int my_tex_coord_handle;
 	public int my_texture_uniform_handle;
 	public int my_mvp_matrix_handle;
 	public int my_mv_matrix_handle;
+	public int my_brightness_handle;
 	
 	//effects
+	public float my_brightness;
 	public FloatBuffer my_color;
 	
 	public BaseLightShader()
@@ -31,9 +32,6 @@ public abstract class BaseLightShader
 		
 		setColor(Color.WHITE);
 	}
-	
-	//TODO brightness
-	
 	
 	public void setColor(int color)
 	{
@@ -84,8 +82,9 @@ public abstract class BaseLightShader
 		// get handle to the vertex shader's vPosition member
 		my_position_handle = GLES20.glGetAttribLocation(my_shader, "a_Position");
 		my_color_handle = GLES20.glGetAttribLocation(my_shader, "a_Color");
-		my_normal_handle = GLES20.glGetAttribLocation(my_shader, "a_Normal");
 		my_tex_coord_handle = GLES20.glGetAttribLocation(my_shader, "a_TexCoordinate");
+		
+		my_brightness_handle = GLES20.glGetUniformLocation(my_shader, "u_Brightness");
 		
 		my_mvp_matrix_handle = GLES20.glGetUniformLocation(my_shader, "u_MVPMatrix");
 		my_mv_matrix_handle = GLES20.glGetUniformLocation(my_shader, "u_MVMatrix");

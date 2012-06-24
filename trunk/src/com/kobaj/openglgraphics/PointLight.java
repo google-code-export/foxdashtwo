@@ -1,22 +1,20 @@
 package com.kobaj.openglgraphics;
 
-public class PointLight
+public class PointLight extends BaseLight<PointLightShader>
 {
-	private PointLightShader pls_reference;
-	private final float[] vm_reference;
 	
 	//these are in shader coordinates 0 to 1
 	public double x_pos = 0.0;
 	public double y_pos = 0.0;
 	
-	public int color = 0xFFFFFFFF;
-	
-	//TODO intensity/focus
+	//intensity/focus
+	//1 is right up again the texture, thus the brightest
+	//0 is very far away and diffuse
+	public double focus = 0.0f;
 	
 	public PointLight(PointLightShader pls_reference, float[] vm_reference)
 	{
-		this.pls_reference = pls_reference;
-		this.vm_reference = vm_reference;
+		super(pls_reference, vm_reference);
 	}
 	
 	//this is the method that applies position, color, intensity, etc to the shader
@@ -24,5 +22,7 @@ public class PointLight
 	{
 		pls_reference.setPosition(x_pos, y_pos, vm_reference);
 		pls_reference.setColor(color);
+		pls_reference.my_brightness = brightness;
+		pls_reference.my_focus = focus;
 	}
 }

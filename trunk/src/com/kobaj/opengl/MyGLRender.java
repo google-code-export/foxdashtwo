@@ -9,6 +9,8 @@ import android.opengl.Matrix;
 import android.os.SystemClock;
 
 import com.kobaj.math.FPSManager;
+import com.kobaj.opengldrawable.Text;
+import com.kobaj.openglgraphics.AmbientLightShader;
 import com.kobaj.openglgraphics.PointLightShader;
 
 public abstract class MyGLRender implements GLSurfaceView.Renderer
@@ -16,8 +18,12 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 	//and fps
 	FPSManager fps;
 	
-	//two shaders
+	//text mmm
+	Text text;
+	
+	//three shaders
 	protected PointLightShader point_light;
+	protected AmbientLightShader ambient_light;
 	
 	// camera
 	protected float[] my_view_matrix = new float[16];
@@ -31,8 +37,8 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		// Use culling to remove back faces.
 		GLES20.glEnable(GLES20.GL_CULL_FACE);
 		
-		// Enable depth testing
-		GLES20.glEnable(GLES20.GL_DEPTH_TEST);
+		// disable depth testing
+		GLES20.glDisable(GLES20.GL_DEPTH_TEST);
 		
 		// Enable texture mapping
 		GLES20.glEnable(GLES20.GL_TEXTURE_2D);
@@ -43,9 +49,13 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		
 		// shaders
 		point_light = new PointLightShader();
+		ambient_light = new AmbientLightShader();
 		
 		//fps
 		fps = new FPSManager();
+		
+		//text setup
+		text = new Text(unused, ambient_light, my_view_matrix, my_proj_matrix);
 		
 		onInitialize(unused);
 	}
