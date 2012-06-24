@@ -8,9 +8,8 @@
     <string name="blank"></string>
     
     <string-array name="my_sa">
-        <item>@string/hello</item>
-        <item>@string/app_name</item>
-    	<item>@string/blank</item>
+        <item>hello</item>
+        <item>app_name</item>
     </string-array>
     
 </resources>

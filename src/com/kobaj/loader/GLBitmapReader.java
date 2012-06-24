@@ -14,11 +14,11 @@ import android.graphics.Matrix;
 
 public class GLBitmapReader
 {
-	//key is the res id
-	//just a nifty way of storing images we've already loaded
-	//this might eventually be changed to a base class so that 
-	//it can contain sounds and other actually loaded resources.
-	//but most likely not :/
+	// key is the res id
+	// just a nifty way of storing images we've already loaded
+	// this might eventually be changed to a base class so that
+	// it can contain sounds and other actually loaded resources.
+	// but most likely not :/
 	public static HashMap<Integer, GLLoadedTexture> loaded_textures = new HashMap<Integer, GLLoadedTexture>();
 	
 	// Get a new texture id:
@@ -29,20 +29,9 @@ public class GLBitmapReader
 		return temp[0];
 	}
 	
-	// Will load a texture out of a drawable resource file, and return an OpenGL
-	// texture ID:
-	public static int loadTexture(GL10 gl, Context context, int resource)
-	{
-		if(loaded_textures.containsKey(resource))
-			return loaded_textures.get(resource).texture_id;
-		
-		// In which ID will we be storing this texture?
-		int id = newTextureID(gl);
-		
-		// We need to flip the textures vertically:
-		Matrix flip = new Matrix();
-		flip.postScale(-1f, 1f);
-		
+	// Will load a texture out of a drawable resource file, and return an OpenGL texture id
+	public static int loadTextureFromResource(GL10 gl, Context context, int resource)
+	{		
 		// This will tell the BitmapFactory to not scale based on the device's
 		// pixel density:
 		// (Thanks to Matthew Marshall for this bit)
@@ -51,10 +40,32 @@ public class GLBitmapReader
 		
 		// Load up, and flip the texture:
 		Bitmap temp = BitmapFactory.decodeResource(context.getResources(), resource, opts);
+		return loadTextureFromBitmap(gl, context, resource, temp);
+	}
+	
+	public static int loadTextureFromBitmap(GL10 gl, Context context, int resource, Bitmap temp)
+	{
+		if (loaded_textures.containsKey(resource))
+			return loaded_textures.get(resource).texture_id;
+		
+		//flip it the right way around.
+		Matrix flip = new Matrix();
+		flip.postScale(1f, -1f);
+		
 		Bitmap bmp = Bitmap.createBitmap(temp, 0, 0, temp.getWidth(), temp.getHeight(), flip, true);
 		temp.recycle();
 		
+		// In which ID will we be storing this texture?
+		int id = newTextureID(gl);
 		gl.glBindTexture(GL10.GL_TEXTURE_2D, id);
+		
+		//make a loader
+		// put out info into someplace safe.
+		GLLoadedTexture load = new GLLoadedTexture();
+		load.resource_id = resource;
+		load.height = bmp.getHeight();
+		load.width = bmp.getWidth();
+		load.texture_id = id;
 		
 		// Set all of our texture parameters:
 		gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR_MIPMAP_NEAREST);
@@ -85,16 +96,9 @@ public class GLBitmapReader
 			bmp = bmp2;
 		}
 		
-		//put out info into someplace safe.
-		GLLoadedTexture load = new GLLoadedTexture();
-		load.resource_id = resource;
-		load.height = bmp.getHeight();
-		load.width = bmp.getWidth();
-		load.texture_id = id;
-		
 		loaded_textures.put(resource, load);
 		
-		//cleanup!
+		// cleanup!
 		bmp.recycle();
 		return id;
 	}

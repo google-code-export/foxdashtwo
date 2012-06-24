@@ -42,14 +42,26 @@ public class Functions
 		return linearInterpolate(0, 255, input, 0, 1);
 	}
 	
+	//used to translate screen widths to shader widths
+	//for example, screen width is 0 to 800, shader is 0 to 1
+	public static double screenWidthToShaderWidth(int input_x)
+	{
+		return unclampedLinearInterpolate(0, Constants.width, input_x, 0, Constants.ratio);
+	}
+	
+	public static double screenHeightToShaderHeight(int input_y)
+	{
+		return unclampedLinearInterpolate(0, Constants.height, input_y, 0, 1);
+	}
+	
 	//used to translate screen coordinates to shader coordinates
-	//for example, screen width is 0 to 800px, shader is 0 to 1.
-	public static double screenToShaderX(int input_x)
+	//for example, screen width is 0 to 800px, shader is -1 to 1.
+	public static double screenXToShaderX(int input_x)
 	{
 		return unclampedLinearInterpolate(0, Constants.width, input_x, -Constants.ratio, Constants.ratio);
 	}
 	
-	public static double screenToShaderY(int input_y)
+	public static double screenYToShaderY(int input_y)
 	{
 		return unclampedLinearInterpolate(0, Constants.height, input_y, -1, 1);
 	}
