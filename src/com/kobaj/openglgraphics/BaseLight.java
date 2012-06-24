@@ -8,7 +8,7 @@ public abstract class BaseLight<T extends BaseLightShader>
 	protected final float[] vm_reference;
 	
 	public int color = 0xFFFFFFFF;
-	public float brightness = 1.0f;
+	public double brightness = 1.0;
 	
 	public BaseLight(T pls_reference, float[] vm_reference)
 	{
