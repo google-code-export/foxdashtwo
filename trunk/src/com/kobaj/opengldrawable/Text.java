@@ -32,7 +32,7 @@ public class Text
 	private final int padding = 4;
 	private final double text_size = 16.0;
 	
-	//just a couple of references we hold onto
+	// just a couple of references we hold onto
 	private AmbientLightShader ambient_light;
 	private float[] my_view_matrix;
 	private float[] my_proj_matrix;
@@ -43,7 +43,7 @@ public class Text
 		this.my_proj_matrix = my_proj_matrix;
 		this.my_view_matrix = my_view_matrix;
 		
-		//setup our ambient light
+		// setup our ambient light
 		my_ambient_light = new AmbientLight(als, my_view_matrix);
 		
 		// set default size
@@ -70,7 +70,7 @@ public class Text
 		for (String string_name : my_string_array)
 		{
 			int key = count;
-			String s = string_name; 
+			String s = string_name;
 			
 			// grab the id
 			if (count > 9)
@@ -143,7 +143,7 @@ public class Text
 			
 			// stuff it in the buffer
 			// note this automatically destroys the bitmap
-			bitmap_buffer.put(key, new Quad(gl, key, bitmap_temp)); 
+			bitmap_buffer.put(key, new Quad(gl, key, bitmap_temp));
 			
 			count++;
 		}
@@ -151,72 +151,76 @@ public class Text
 		System.gc();
 	}
 	
-	//x and y are in shader coordinates
+	// x and y are in shader coordinates 0 to 1
 	public void DrawNumber(int this_number, double x, double y, DrawFrom where)
-	{	
+	{
 		double total_width = 0;
 		
-		//for now we only do positives (sorry).
+		// for now we only do positives (sorry).
 		this_number = (int) Math.abs(this_number);
 		
-		//a little bit inefficient
+		// we can afford this small optimization.
+		// set program
+		GLES20.glUseProgram(ambient_light.my_shader);
+		
+		// set the light
+		my_ambient_light.applyShaderProperties();
+		
+		//prepare to draw by seeing where we draw it.
+		double current_width = 0;
+		if (where == DrawFrom.top_left || where == DrawFrom.bottom_left)
+		{
+			int number = this_number;
+			while (number > 0)
+			{
+				int key = (number % 10);
+				
+				total_width += bitmap_buffer.get(key).shader_width;
+				
+				number = number / 10;
+			}
+			
+			current_width = -total_width;
+		}
+		else if (where == DrawFrom.center)
+			current_width = (-total_width / 2.0);
+		
+		//begin drawing the number
 		int number = this_number;
 		while (number > 0)
 		{
+			//get the number
 			int key = (number % 10);
-			
-			total_width += bitmap_buffer.get(key).shader_width;
-			
-			number = number / 10;
-		}
-		
-		//we can afford this small optimization.
-		//set program
-		GLES20.glUseProgram(ambient_light.my_shader);
-		
-		//set the light
-		my_ambient_light.applyShaderProperties();
-		
-		double current_width = 0;
-		if(where == DrawFrom.top_left || where == DrawFrom.bottom_left)
-			current_width = -total_width;
-		else if(where == DrawFrom.center)
-			current_width = (-total_width / 2.0);
-
-		number = this_number;
-		while (number > 0) 
-		{
-			int key = (number % 10);
-			
 			Quad temp = bitmap_buffer.get(key);
 			
-			//translate
+			// translate
 			current_width += temp.shader_width;
 			temp.setPos(x - current_width, y, where);
 			
-			//draw
+			// draw
 			temp.onDrawAmbient(my_view_matrix, my_proj_matrix, ambient_light);
 			
-		    number = number / 10;
+			//continue
+			number = number / 10;
 		}
 	}
 	
-	//x and y are in shader coordinates.
+	// x and y are in shader coordinates 0 to 1
 	public void DrawText(int resource_value, double x, double y, DrawFrom where)
 	{
-		if(bitmap_buffer.containsKey(resource_value))
+		if (bitmap_buffer.containsKey(resource_value))
 		{
-			//optimize the gets
+			// optimize the gets
 			Quad temp = bitmap_buffer.get(resource_value);
-
+			
 			temp.setPos(x, y, where);
 			
 			GLES20.glUseProgram(ambient_light.my_shader);
 			
-			//set the light
+			// set the light
 			my_ambient_light.applyShaderProperties();
 			
-			//draw pretty!
+			// draw pretty!
 			temp.onDrawAmbient(my_view_matrix, my_proj_matrix, ambient_light);
 		}
 	}

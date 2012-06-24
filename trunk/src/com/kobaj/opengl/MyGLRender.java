@@ -12,6 +12,7 @@ import com.kobaj.math.FPSManager;
 import com.kobaj.opengldrawable.Text;
 import com.kobaj.openglgraphics.AmbientLightShader;
 import com.kobaj.openglgraphics.PointLightShader;
+import com.kobaj.openglgraphics.SpotLightShader;
 
 public abstract class MyGLRender implements GLSurfaceView.Renderer
 {
@@ -24,6 +25,7 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 	//three shaders
 	protected PointLightShader point_light;
 	protected AmbientLightShader ambient_light;
+	protected SpotLightShader spot_light;
 	
 	// camera
 	protected float[] my_view_matrix = new float[16];
@@ -50,6 +52,7 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		// shaders
 		point_light = new PointLightShader();
 		ambient_light = new AmbientLightShader();
+		spot_light = new SpotLightShader();
 		
 		//fps
 		fps = new FPSManager();
@@ -97,5 +100,4 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 	}
 	
 	abstract void onUpdate(double delta);
-
 }

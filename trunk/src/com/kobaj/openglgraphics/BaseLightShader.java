@@ -23,7 +23,7 @@ public abstract class BaseLightShader
 	public int my_brightness_handle;
 	
 	//effects
-	public float my_brightness;
+	public double my_brightness;
 	public FloatBuffer my_color;
 	
 	public BaseLightShader()

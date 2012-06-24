@@ -11,8 +11,10 @@ import java.nio.FloatBuffer;
 import javax.microedition.khronos.opengles.GL10;
 
 import com.kobaj.loader.GLLoadedTexture;
+import com.kobaj.openglgraphics.AmbientLightShader;
 import com.kobaj.openglgraphics.BaseLightShader;
 import com.kobaj.openglgraphics.PointLightShader;
+import com.kobaj.openglgraphics.SpotLightShader;
 
 import android.graphics.Bitmap;
 import android.opengl.GLES20;
@@ -167,7 +169,7 @@ public class Quad
 	
 	// methods for
 	// drawing stuffs
-	private void onSetupBase(float[] my_view_matrix, float[] my_proj_matrix, BaseLightShader ambient_light)
+	private <T extends BaseLightShader> void onSetupAmbient(float[] my_view_matrix, float[] my_proj_matrix, T ambient_light)
 	{
 		// Set the active texture unit to texture unit 0.
 		GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
@@ -200,7 +202,7 @@ public class Quad
 		GLES20.glEnableVertexAttribArray(ambient_light.my_tex_coord_handle);
 		
 		// pass in the brightness
-		GLES20.glUniform1f(ambient_light.my_brightness_handle, ambient_light.my_brightness);
+		GLES20.glUniform1f(ambient_light.my_brightness_handle, (float)ambient_light.my_brightness);
 		
 		// This multiplies the view matrix by the model matrix, and stores the
 		// result in the MVP matrix
@@ -219,18 +221,8 @@ public class Quad
 		GLES20.glUniformMatrix4fv(ambient_light.my_mvp_matrix_handle, 1, false, my_mvp_matrix, 0);
 	}
 	
-	public void onDrawAmbient(float[] my_view_matrix, float[] my_proj_matrix, BaseLightShader ambient_light)
+	public <T extends PointLightShader> void onSetupPoint(float[] my_view_matrix, float[] my_proj_matrix, T point_light)
 	{
-		onSetupBase(my_view_matrix, my_proj_matrix, ambient_light);
-		
-		// Draw the cube.
-		GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 6);
-	}
-	
-	public void onDrawPoint(float[] my_view_matrix, float[] my_proj_matrix, PointLightShader point_light)
-	{
-		onSetupBase(my_view_matrix, my_proj_matrix, point_light);
-		
 		// Pass in the normal information
 		my_normal.position(0);
 		GLES20.glVertexAttribPointer(point_light.my_normal_handle, 3, GLES20.GL_FLOAT, false, 0, my_normal);
@@ -238,6 +230,38 @@ public class Quad
 		
 		// Pass in the light position in eye space.
 		GLES20.glUniform3f(point_light.my_light_pos_handle, point_light.my_light_eye_space[0], point_light.my_light_eye_space[1], point_light.my_light_eye_space[2]);
+	}
+
+	
+	public void onDrawAmbient(float[] my_view_matrix, float[] my_proj_matrix, AmbientLightShader ambient_light)
+	{
+		onSetupAmbient(my_view_matrix, my_proj_matrix, ambient_light);
+		
+		// Draw the cube.
+		GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 6);
+	}
+	
+	public void onDrawPoint(float[] my_view_matrix, float[] my_proj_matrix, PointLightShader point_light)
+	{
+		onSetupAmbient(my_view_matrix, my_proj_matrix, point_light);
+		
+		onSetupPoint(my_view_matrix, my_proj_matrix, point_light);
+		
+		// Draw the cube.
+		GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 6);
+	}
+	
+	public void onDrawSpot(float[] my_view_matrix, float[] my_proj_matrix, SpotLightShader spot_light)
+	{
+		onSetupAmbient(my_view_matrix, my_proj_matrix, spot_light);
+		
+		onSetupPoint(my_view_matrix, my_proj_matrix, spot_light);
+		
+		//pass in the two directions
+		GLES20.glUniform3f(spot_light.my_light_dir_handle, (float)spot_light.my_direction_x, (float)spot_light.my_direction_y, 0.0f);
+		
+		//pass in the angle
+		GLES20.glUniform1f(spot_light.my_light_angle_handle, (float)spot_light.my_angle);
 		
 		// Draw the cube.
 		GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 6);
