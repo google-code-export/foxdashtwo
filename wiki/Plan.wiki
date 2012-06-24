@@ -22,6 +22,9 @@ Level ups
 
 Specific details about Fox Dash 2.
 
+== New ==
+Fox Dash 2 is running on OpenGL 2.0ES rather than canvas as the first Fox Dash did.
+
 == Goals ==
 Personal goals for Fox Dash 2 include
   * Updated Graphics
@@ -43,11 +46,11 @@ May 29 2012 (day 1)
   * Upload first chunk of code
   * Detail plan
 
-June 9 2012
+July 23 2012
   * Base of engine complete
   * Begin implementing new graphics from artist
 
-August 15 2012
+August 9 2012
   * Release completed game
 
 == Assets ==
@@ -63,8 +66,6 @@ The Engine will be broken down into X number of Parts.
   * Reopening the game (warm boot)
   * Setting/preparing/handling pause states (incoming call for example)
 
-  * This will also be the entrypoint for onUpdate and onDraw
-
 *Input*
   * Manages button presses
   * Including volume/home/etc keys
@@ -73,23 +74,32 @@ The Engine will be broken down into X number of Parts.
   * Loads in all assets
   * Stores all assets properly
   * Destroys assets appropriately
-
-*Sprites/Graphics*
-  * Holds graphical asset properties (width/length/position)
-  * Handles animation
-  * Draws the graphic
-
-*Text/Font*
-  * Draws texts to the screen.
-  * Allows text to be a button(click)
-
-*Sound/Music*
-  * Holds audio properties (length/speed/volume)
-  * Contains state (playing/paused/etc)
+  * Handles reading in strings as well
 
 *Math/Helper*
   * Contains useful methods (linear interpolate)
   * Stores static variables (screen orientation/DPI)
+  * FPS Manager is here too (since it is 99% math).
+
+*Message*
+  * Contains the Toast Manager
+  * Contains the Dialog Manager
+
+*OpenGL*
+  * Contains the Game (onUpdate, onDraw)
+  * Contains the renderer
+
+*OpenGL Drawable*
+  * Things that can be drawn by Open GL
+  * Text, Quads (sprites) etc.
+
+*OpenGL Graphics*
+  * Contains classes that visuall effect Drawables
+  * Lights, particles etc.
+
+*Sound/Music*
+  * Holds audio properties (length/speed/volume)
+  * Contains state (playing/paused/etc)
 
 *Physics*
   * May be a part of Math or Graphics, depending on how the engine develops
@@ -111,11 +121,8 @@ Variables will be all lower-case words separated by underscores.
 {{{
 int my_int;
 }}}
-Methods should have a declaration comment, first word lower-case, all other words camel-case
+Methods first word lower-case, all other words camel-case
 {{{
-/****
-My Method!
-*****/
 void onUpdate();
 }}}
 Files /should/ be all camel-case.
