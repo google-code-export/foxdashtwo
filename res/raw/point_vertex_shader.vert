@@ -2,8 +2,7 @@ uniform mat4 u_MVPMatrix;		// A constant representing the combined model/view/pr
 uniform mat4 u_MVMatrix;		// A constant representing the combined model/view matrix.       		
 		  			
 attribute vec4 a_Position;		// Per-vertex position information we will pass in.   				
-attribute vec4 a_Color;			// Per-vertex color information we will pass in. 				
-attribute vec3 a_Normal;		// Per-vertex normal information we will pass in.      
+uniform vec4 a_Color;			// Per-vertex color information we will pass in. 				      
 attribute vec2 a_TexCoordinate; // Per-vertex texture coordinate information we will pass in. 		
 
 uniform float u_Brightness;		//	brightness....		  
@@ -26,7 +25,8 @@ void main()
 	v_TexCoordinate = a_TexCoordinate;                                      
 	
 	// Transform the normal's orientation into eye space.
-    v_Normal = vec3(u_MVMatrix * vec4(a_Normal, 0.0));
+	// Normals are pre-calculate for 2D
+    v_Normal = vec3(u_MVMatrix * vec4(0.0, 0.0, 1.0, 0.0));
           
 	// gl_Position is a special variable used to store the final position.
 	// Multiply the vertex by the matrix to get the final point in normalized screen coordinates.

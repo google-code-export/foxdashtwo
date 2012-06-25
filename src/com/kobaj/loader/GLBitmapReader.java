@@ -21,6 +21,12 @@ public class GLBitmapReader
 	// but most likely not :/
 	public static HashMap<Integer, GLLoadedTexture> loaded_textures = new HashMap<Integer, GLLoadedTexture>();
 	
+	//in case context is lost
+	public static void resetLoadedTextures()
+	{
+		loaded_textures = new HashMap<Integer, GLLoadedTexture>(); 
+	}
+	
 	// Get a new texture id:
 	private static int newTextureID(GL10 gl)
 	{

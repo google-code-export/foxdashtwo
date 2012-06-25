@@ -17,11 +17,8 @@ public class SpotLightShader extends PointLightShader
 	
 	public SpotLightShader()
 	{
-		super();
-		
 		onInitializeShaders(R.raw.spot_vertex_shader, R.raw.spot_fragment_shader);
 		my_light_pos_handle = GLES20.glGetUniformLocation(my_shader, "u_LightPos");
-		my_normal_handle = GLES20.glGetAttribLocation(my_shader, "a_Normal");
 		
 		my_light_dir_handle = GLES20.glGetUniformLocation(my_shader, "u_LightDir");
 		my_light_angle_handle = GLES20.glGetUniformLocation(my_shader, "u_LightAngle");
