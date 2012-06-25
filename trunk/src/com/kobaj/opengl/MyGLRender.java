@@ -33,6 +33,9 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 	
 	public void onSurfaceCreated(GL10 unused, EGLConfig config)
 	{
+		//gotta reset
+		com.kobaj.loader.GLBitmapReader.resetLoadedTextures();
+		
 		// Set the background frame color
 		GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		
@@ -67,6 +70,8 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 	
 	public void onSurfaceChanged(GL10 unused, int width, int height)
 	{
+		
+		
 		GLES20.glViewport(0, 0, width, height);
 		
 		float ratio = (float) width / height;
@@ -74,7 +79,15 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		// this projection matrix is applied to object coodinates
 		// in the onDrawFrame() method
 		Matrix.orthoM(my_proj_matrix, 0, -ratio, ratio, -1, 1, .99999999f, 2);
-		Matrix.setLookAtM(my_view_matrix, 0, 0, 0, 0, 0f, 0f, -5.0f, 0f, 1.0f, 0.0f);
+		Matrix.setLookAtM(my_view_matrix, 0, 
+				0, 0, 0, 
+				0f, 0f, -5.0f, 
+				0f, 1.0f, 0.0f);
+	}
+	
+	public void onSurfaceDestroyed()
+	{
+		
 	}
 	
 	public void onDrawFrame(GL10 unused)

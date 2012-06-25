@@ -30,7 +30,7 @@ public class Text
 	// nice constants
 	private final int line_height = 4;
 	private final int padding = 4;
-	private final double text_size = 16.0;
+	private double text_size = 16.0; //incase scaling is not set in constructor
 	
 	// just a couple of references we hold onto
 	private AmbientLightShader ambient_light;
@@ -39,6 +39,9 @@ public class Text
 	
 	public Text(GL10 gl, AmbientLightShader als, float[] my_view_matrix, float[] my_proj_matrix)
 	{
+		//settup first
+		text_size = 16.0 * com.kobaj.math.Constants.sd_scale;
+		
 		this.ambient_light = als;
 		this.my_proj_matrix = my_proj_matrix;
 		this.my_view_matrix = my_view_matrix;

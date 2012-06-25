@@ -1,9 +1,5 @@
 package com.kobaj.openglgraphics;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
-
 import android.graphics.Color;
 import android.opengl.GLES20;
 import android.util.Log;
@@ -24,41 +20,20 @@ public abstract class BaseLightShader
 	
 	//effects
 	public double my_brightness;
-	public FloatBuffer my_color;
-	
-	public BaseLightShader()
-	{
-		my_color = ByteBuffer.allocateDirect(6/*rows*/ * 4/*colums*/ * 4/*size of float*/).order(ByteOrder.nativeOrder()).asFloatBuffer();	
-		
-		setColor(Color.WHITE);
-	}
+	//alpha is 1.0;
+	public double my_color_r;
+	public double my_color_g;
+	public double my_color_b;
 	
 	public void setColor(int color)
 	{
-		int alpha = Color.alpha(color);
 		int red = Color.red(color);
 		int blue = Color.blue(color);
 		int green = Color.green(color);
 		
-		float tr_alpha = (float) com.kobaj.math.Functions.byteToShader(alpha);
-		float tr_red = (float) com.kobaj.math.Functions.byteToShader(red);
-		float tr_green = (float) com.kobaj.math.Functions.byteToShader(green);
-		float tr_blue = (float) com.kobaj.math.Functions.byteToShader(blue);
-		
-		// R, G, B, A
-				final float[] cubeColorData =
-					{				
-						// Front face (white)
-						tr_red, tr_green, tr_blue, tr_alpha,				
-						tr_red, tr_green, tr_blue, tr_alpha,
-						tr_red, tr_green, tr_blue, tr_alpha,
-						tr_red, tr_green, tr_blue, tr_alpha,				
-						tr_red, tr_green, tr_blue, tr_alpha,
-						tr_red, tr_green, tr_blue, tr_alpha
-						
-					};
-										
-		my_color.put(cubeColorData).position(0);
+		my_color_r = com.kobaj.math.Functions.byteToShader(red);
+		my_color_g = com.kobaj.math.Functions.byteToShader(green);
+		my_color_b = com.kobaj.math.Functions.byteToShader(blue);
 	}
 	
 	protected void onInitializeShaders(int r_vertex_shader, int r_fragment_shader)
@@ -81,7 +56,7 @@ public abstract class BaseLightShader
 		
 		// get handle to the vertex shader's vPosition member
 		my_position_handle = GLES20.glGetAttribLocation(my_shader, "a_Position");
-		my_color_handle = GLES20.glGetAttribLocation(my_shader, "a_Color");
+		my_color_handle = GLES20.glGetUniformLocation(my_shader, "a_Color");
 		my_tex_coord_handle = GLES20.glGetAttribLocation(my_shader, "a_TexCoordinate");
 		
 		my_brightness_handle = GLES20.glGetUniformLocation(my_shader, "u_Brightness");

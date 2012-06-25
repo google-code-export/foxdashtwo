@@ -17,17 +17,13 @@ public class PointLightShader extends BaseLightShader
 	private final  float[] my_light_matrix = new float[16];
 	
 	public int my_light_pos_handle;
-	public int my_normal_handle;
 	
 	public double my_focus;
 	
 	public PointLightShader()
 	{
-		super();
-		
 		onInitializeShaders(R.raw.point_vertex_shader, R.raw.point_fragment_shader);
 		my_light_pos_handle = GLES20.glGetUniformLocation(my_shader, "u_LightPos");
-		my_normal_handle = GLES20.glGetAttribLocation(my_shader, "a_Normal");
 	}
 	
 	public void setPosition(double x, double y, float[] my_view_matrix)

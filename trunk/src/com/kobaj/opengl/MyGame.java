@@ -4,7 +4,6 @@ import javax.microedition.khronos.opengles.GL10;
 
 import android.graphics.Color;
 import android.opengl.GLES20;
-import android.os.SystemClock;
 
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.opengldrawable.DrawFrom;
@@ -58,7 +57,7 @@ public class MyGame extends MyGLRender
 		sl_test = new SpotLight(spot_light, my_view_matrix);
 	}
 
-	double add = 0;
+	double add = 100000;
 	double delta;
 	
 	@Override
@@ -69,6 +68,9 @@ public class MyGame extends MyGLRender
 		add += .01f * delta;
         
 		sl_test.lookAtAngle(add);
+		
+		//quick test
+		//Matrix.translateM(my_view_matrix, 0, .0005f, .0005f, 0);
 	}
 	
 	@Override
@@ -98,13 +100,12 @@ public class MyGame extends MyGLRender
 		//set the light
 		pl_green.applyShaderProperties();
 		//draw stuffs.
-		quad.onDrawPoint(my_view_matrix, my_proj_matrix, point_light);
+		quad.onReDrawPoint(point_light);
 		
 		//set the light
 		pl_red.applyShaderProperties();
 		//draw stuffs.
-		quad.onDrawPoint(my_view_matrix, my_proj_matrix, point_light);
-		
+		quad.onReDrawPoint(point_light);
 		
 		
 		

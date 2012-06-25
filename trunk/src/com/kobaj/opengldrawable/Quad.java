@@ -37,7 +37,6 @@ public class Quad
 	
 	// data about the quad
 	private FloatBuffer my_position;
-	private FloatBuffer my_normal;
 	private FloatBuffer my_tex_coord;
 	
 	// camera
@@ -69,6 +68,7 @@ public class Quad
 		onCreate(gl, texture_resource, width, height);
 	}
 	
+	//actual constructor
 	private void onCreate(GL10 gl, int texture_resource, int width, int height)
 	{
 		if (width == -1 && height == -1)
@@ -107,14 +107,6 @@ public class Quad
 		
 		};
 		
-		// X, Y, Z
-		// The normal is used in light calculations and is a vector which points
-		// orthogonal to the plane of the surface. For a cube model, the normals
-		// should be orthogonal to the points of each face.
-		final float[] cubeNormalData = {
-				// Front face
-				0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f };
-		
 		// S, T (or X, Y)
 		// Texture coordinate data.
 		final float[] cubeTextureCoordinateData = {
@@ -124,9 +116,6 @@ public class Quad
 		// Initialize the buffers.
 		my_position = ByteBuffer.allocateDirect(cubePositionData.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
 		my_position.put(cubePositionData).position(0);
-		
-		my_normal = ByteBuffer.allocateDirect(cubeNormalData.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
-		my_normal.put(cubeNormalData).position(0);
 		
 		my_tex_coord = ByteBuffer.allocateDirect(cubeTextureCoordinateData.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
 		my_tex_coord.put(cubeTextureCoordinateData).position(0);
@@ -169,8 +158,20 @@ public class Quad
 	
 	// methods for
 	// drawing stuffs
+	private <T extends BaseLightShader> void onReSetupAmbient(T ambient_light)
+	{
+		// Pass in the color information
+		GLES20.glUniform4f(ambient_light.my_color_handle, (float)ambient_light.my_color_r, (float)ambient_light.my_color_g, (float)ambient_light.my_color_b, 1.0f);
+		
+		// pass in the brightness
+		GLES20.glUniform1f(ambient_light.my_brightness_handle, (float)ambient_light.my_brightness);
+		
+	}
+	
 	private <T extends BaseLightShader> void onSetupAmbient(float[] my_view_matrix, float[] my_proj_matrix, T ambient_light)
 	{
+		onReSetupAmbient(ambient_light);
+		
 		// Set the active texture unit to texture unit 0.
 		GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
 		
@@ -191,18 +192,10 @@ public class Quad
 		GLES20.glVertexAttribPointer(ambient_light.my_position_handle, 3, GLES20.GL_FLOAT, false, 0, my_position);
 		GLES20.glEnableVertexAttribArray(ambient_light.my_position_handle);
 		
-		// Pass in the color information
-		ambient_light.my_color.position(0);
-		GLES20.glVertexAttribPointer(ambient_light.my_color_handle, 4, GLES20.GL_FLOAT, false, 0, ambient_light.my_color);
-		GLES20.glEnableVertexAttribArray(ambient_light.my_color_handle);
-		
 		// Pass in the texture coordinate information
 		my_tex_coord.position(0);
 		GLES20.glVertexAttribPointer(ambient_light.my_tex_coord_handle, 2, GLES20.GL_FLOAT, false, 0, my_tex_coord);
 		GLES20.glEnableVertexAttribArray(ambient_light.my_tex_coord_handle);
-		
-		// pass in the brightness
-		GLES20.glUniform1f(ambient_light.my_brightness_handle, (float)ambient_light.my_brightness);
 		
 		// This multiplies the view matrix by the model matrix, and stores the
 		// result in the MVP matrix
@@ -221,49 +214,79 @@ public class Quad
 		GLES20.glUniformMatrix4fv(ambient_light.my_mvp_matrix_handle, 1, false, my_mvp_matrix, 0);
 	}
 	
-	public <T extends PointLightShader> void onSetupPoint(float[] my_view_matrix, float[] my_proj_matrix, T point_light)
+	//also contains method onReSetupPoint
+	private <T extends PointLightShader> void onSetupPoint(T point_light)
 	{
-		// Pass in the normal information
-		my_normal.position(0);
-		GLES20.glVertexAttribPointer(point_light.my_normal_handle, 3, GLES20.GL_FLOAT, false, 0, my_normal);
-		GLES20.glEnableVertexAttribArray(point_light.my_normal_handle);
-		
 		// Pass in the light position in eye space.
 		GLES20.glUniform3f(point_light.my_light_pos_handle, point_light.my_light_eye_space[0], point_light.my_light_eye_space[1], point_light.my_light_eye_space[2]);
 	}
 
+	//also contains method onReSetupSpot
+	private <T extends SpotLightShader> void onSetupSpot(T spot_light)
+	{
+		//pass in the two directions
+		GLES20.glUniform3f(spot_light.my_light_dir_handle, (float)spot_light.my_direction_x, (float)spot_light.my_direction_y, 0.0f);
+		
+		//pass in the angle
+		GLES20.glUniform1f(spot_light.my_light_angle_handle, (float)spot_light.my_angle);
+	}
 	
+	//main stuffs
+	private void onDraw()
+	{
+		GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 6);
+	}
+	
+	//ouside calls
 	public void onDrawAmbient(float[] my_view_matrix, float[] my_proj_matrix, AmbientLightShader ambient_light)
 	{
 		onSetupAmbient(my_view_matrix, my_proj_matrix, ambient_light);
 		
 		// Draw the cube.
-		GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 6);
+		onDraw();
 	}
 	
 	public void onDrawPoint(float[] my_view_matrix, float[] my_proj_matrix, PointLightShader point_light)
 	{
 		onSetupAmbient(my_view_matrix, my_proj_matrix, point_light);
 		
-		onSetupPoint(my_view_matrix, my_proj_matrix, point_light);
+		onSetupPoint(point_light);
 		
 		// Draw the cube.
-		GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 6);
+		onDraw();
 	}
 	
 	public void onDrawSpot(float[] my_view_matrix, float[] my_proj_matrix, SpotLightShader spot_light)
 	{
 		onSetupAmbient(my_view_matrix, my_proj_matrix, spot_light);
 		
-		onSetupPoint(my_view_matrix, my_proj_matrix, spot_light);
+		onSetupPoint(spot_light);
 		
-		//pass in the two directions
-		GLES20.glUniform3f(spot_light.my_light_dir_handle, (float)spot_light.my_direction_x, (float)spot_light.my_direction_y, 0.0f);
-		
-		//pass in the angle
-		GLES20.glUniform1f(spot_light.my_light_angle_handle, (float)spot_light.my_angle);
+		onSetupSpot(spot_light);
 		
 		// Draw the cube.
-		GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 6);
+		onDraw();
+	}
+	
+	//in an effort to make things more efficient
+	public void onReDrawAmbient(AmbientLightShader ambient_light)
+	{
+		onReSetupAmbient(ambient_light);
+		onDraw();
+	}
+	
+	public void onReDrawPoint(PointLightShader point_light)
+	{
+		onReSetupAmbient(point_light);
+		onSetupPoint(point_light);
+		onDraw();
+	}
+	
+	public void onReDrawSpot(SpotLightShader spot_light)
+	{
+		onReSetupAmbient(spot_light);
+		onSetupPoint(spot_light);
+		onSetupSpot(spot_light);
+		onDraw();
 	}
 }
