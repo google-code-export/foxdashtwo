@@ -5,18 +5,13 @@ import java.util.Queue;
 
 public class FPSManager
 {
-	private int fps = 0;
+	public int fps = 0;
 	private long lastTime = 0;
 	private long nowTime = 0;
 	private long delta = 0;
 	
 	private long reset = 0;
 	private final long wait = 1000;
-	
-	public FPSManager()
-	{
-		;// blank
-	}
 	
 	//call this method at the top of surfacepanel onUpdate
 	public void onUpdate(long gameTime)
@@ -36,25 +31,21 @@ public class FPSManager
 		lastTime = nowTime;
 	}
 	
-	//ever need to know fps
-	public int getFPS()
-	{
-		return fps;
-	}
-	
 	// averages
-	//these help prevent irregularities, such as garbage collection.
 	//overall it provides smoother gameplay.
 	private int max = 4;
 	private Queue<Double> averageList = new LinkedList<Double>();
-	private double average = 0;
 	
-	private double calculateaverage(double newV)
-	{
+	private double calculateAverage(double newV)
+	{	
 		averageList.offer(newV);
 		
 		if (averageList.size() > max)
 			averageList.poll();
+	
+		// who knew the whole time I was calculating averages wrong in the original fox dash...woops
+		// I got it right this time, I swear!
+		double average = 0; 
 		
 		for(double it: averageList)
 			average += it;
@@ -67,6 +58,7 @@ public class FPSManager
 	//pass this variable around to all the other onUpdates
 	public double getDelta()
 	{
-		return Functions.clamp(100, calculateaverage(delta), 0);
+		//return delta;
+		return Functions.clamp(100, calculateAverage(delta), 0);
 	}
 }

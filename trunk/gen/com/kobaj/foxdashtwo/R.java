@@ -27,6 +27,7 @@ public final class R {
         public static final int point_vertex_shader=0x7f040003;
         public static final int spot_fragment_shader=0x7f040004;
         public static final int spot_vertex_shader=0x7f040005;
+        public static final int test_animation=0x7f040006;
     }
     public static final class string {
         public static final int app_name=0x7f050002;
