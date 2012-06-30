@@ -1,0 +1,24 @@
+<frameAnimation>
+   <animation_set>
+      <entry>
+         <enumGlobalAnimationList>stop</enumGlobalAnimationList>
+         <frameSet>
+            <frame_list>
+               <frame>
+                  <end_x>400</end_x>
+                  <end_y>420</end_y>
+                  <start_x>0</start_x>
+                  <start_y>0</start_y>
+               </frame>
+               <frame>
+                  <end_x>800</end_x>
+                  <end_y>420</end_y>
+                  <start_x>400</start_x>
+                  <start_y>0</start_y>
+               </frame>
+            </frame_list>
+            <rec_fps>1.0</rec_fps>
+         </frameSet>
+      </entry>
+   </animation_set>
+</frameAnimation>

@@ -34,6 +34,8 @@ public class FoxdashtwoActivity extends Activity {
 		//do context first, a lot of stuff relies on it.
 		com.kobaj.math.Constants.context = getApplicationContext();
 		
+		com.kobaj.math.Constants.resources = this.getResources();
+		
 		//grabbing save states
 		mPrefs = getSharedPreferences("com.kobaj.foxdashtwo_prefs", 0);
 		ed = mPrefs.edit();

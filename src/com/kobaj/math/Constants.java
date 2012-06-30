@@ -1,6 +1,7 @@
 package com.kobaj.math;
 
 import android.content.Context;
+import android.content.res.Resources;
 
 public class Constants
 {
@@ -32,5 +33,6 @@ public class Constants
 	//So theoretically its all good. Theoretically. :)
 	public static Context context;
 	
-	
+	//the ever static reference to resources.
+	public static Resources resources;
 }

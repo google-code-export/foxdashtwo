@@ -1,13 +1,18 @@
 package com.kobaj.opengldrawable;
 
+import org.simpleframework.xml.Element;
+
 public class Frame
 {
-	//how to reference
-	public int key;
-	
 	//texture info
+	@Element
 	public int start_x;
+	@Element
 	public int start_y;
+	@Element
 	public int end_x;
+	@Element
 	public int end_y;
+	
+	//no constructor
 }

@@ -104,10 +104,8 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 	
 	public void onUpdateFrame()
 	{
-		long gameTime = SystemClock.uptimeMillis();
-		
 		//might put fps here.
-		fps.onUpdate(gameTime);
+		fps.onUpdate(SystemClock.uptimeMillis());
 		
 		onUpdate(fps.getDelta());
 	}

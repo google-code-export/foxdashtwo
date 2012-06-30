@@ -1,57 +1,69 @@
 package com.kobaj.opengldrawable;
 
-import java.util.HashMap;
-
 import javax.microedition.khronos.opengles.GL10;
 
 public class QuadAnimated extends Quad
 {
-	private HashMap<GlobalAnimationList, FrameSet> animation_set;
+	//the all important animation
+	private FrameAnimation frame_animation = new FrameAnimation();
 	
 	//whats currently playing
-	private GlobalAnimationList currently_playing;
+	private FrameSet currently_playing_frameset_reference; //long names are cool.
 	
 	//is playing?
 	public boolean playing = false;
 	
-	public QuadAnimated(GL10 gl, int texture_resource, int width, int height, int animation_resource)
+	public QuadAnimated(GL10 gl, int texture_resource, int animation_resource)
 	{
-		super(gl, texture_resource, width, height);
-		
-		//this is for when loading occures, still not sure how I'm going to handle that.
-		//XML handling is weird and slow, but very easy to use and I may use again
-		//(I used it in fox dash).
-		if(animation_set == null)
-			animation_set = new HashMap<GlobalAnimationList, FrameSet>();
-		
-		//none the less load in animations here
-		//for example
-		animation_set.put(GlobalAnimationList.stop, new FrameSet());
+		super(gl, texture_resource);
+			
+		//load in the animation
+		frame_animation = com.kobaj.loader.XMLHandler.readSerialFile(com.kobaj.math.Constants.resources, animation_resource, frame_animation.getClass());
+	
+		//every animation must have stop
+		this.setAnimation(EnumGlobalAnimationList.stop, 0);
 	}
 	
 	//called to find the text coords
-	public void getTexCoords(/*references here?*/)
+	private void updateTexCoords()
 	{
-		//grab text coords here somehow
+		//translate the frames coordinates
+		final float tr_start_x = (float) com.kobaj.math.Functions.linearInterpolate(0.0, width, currently_playing_frameset_reference.current_frame_reference.start_x, 0.0, 1.0);
+		final float tr_start_y = (float) com.kobaj.math.Functions.linearInterpolate(0.0, height, currently_playing_frameset_reference.current_frame_reference.start_y, 0.0, -1.0);
+		
+		final float tr_end_x = (float) com.kobaj.math.Functions.linearInterpolate(0.0, width, currently_playing_frameset_reference.current_frame_reference.end_x, 0.0, 1.0);
+		final float tr_end_y = (float) com.kobaj.math.Functions.linearInterpolate(0.0, height, currently_playing_frameset_reference.current_frame_reference.end_y, 0.0, -1.0);
+		
+		final float[] cubeTextureCoordinateData = {
+				// Front face
+				tr_start_x, tr_start_y,
+				tr_start_x, tr_end_y,
+				tr_end_x, tr_start_y,
+				tr_start_x, tr_end_y,
+				tr_end_x, tr_end_y,
+				tr_end_x, tr_start_y };
+		
+		my_tex_coord.clear();
+		my_tex_coord.put(cubeTextureCoordinateData).position(0);
 	}
 	
 	//should be called on every update
 	public void onUpdate(double delta)
 	{
-		if(playing)
+		if(playing && currently_playing_frameset_reference != null)
 		{
 			//animate
-			FrameSet temp = animation_set.get(currently_playing);
-			temp.onUpdate(delta);
+			if(currently_playing_frameset_reference.onUpdate(delta))
+				updateTexCoords();
 		}
 	}
 	
 	//returns true if animation can be played
-	public boolean setAnimation(GlobalAnimationList id)
+	public boolean setAnimation(EnumGlobalAnimationList id)
 	{
-		if(animation_set.containsKey(id))
+		if(frame_animation.animation_set.containsKey(id))
 		{
-			currently_playing = id;
+			currently_playing_frameset_reference = frame_animation.animation_set.get(id);
 			return true;
 		}
 			
@@ -60,11 +72,11 @@ public class QuadAnimated extends Quad
 	
 	//see above, but this allows you to specify what frame to start from
 	//other wise it will start from the last frame it was on
-	public boolean setAnimation(GlobalAnimationList id, int frame)
+	public boolean setAnimation(EnumGlobalAnimationList id, int frame)
 	{
 		if(setAnimation(id))
 		{
-			if(animation_set.get(id).setCurrentFrame(frame))
+			if(currently_playing_frameset_reference.setCurrentFrame(frame))
 				return true;
 		}
 		

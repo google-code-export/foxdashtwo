@@ -36,8 +36,8 @@ public class Quad
 	public double shader_height;
 	
 	// data about the quad
-	private FloatBuffer my_position;
-	private FloatBuffer my_tex_coord;
+	protected FloatBuffer my_position;
+	protected FloatBuffer my_tex_coord;
 	
 	// camera
 	private float[] my_mvp_matrix = new float[16];
@@ -85,8 +85,8 @@ public class Quad
 		this.height = height;
 		
 		// Define points for a cube.
-		float tr_x = (float) com.kobaj.math.Functions.screenWidthToShaderWidth(width);
-		float tr_y = (float) com.kobaj.math.Functions.screenHeightToShaderHeight(height);
+		final float tr_x = (float) com.kobaj.math.Functions.screenWidthToShaderWidth(width);
+		final float tr_y = (float) com.kobaj.math.Functions.screenHeightToShaderHeight(height);
 		
 		this.shader_width = tr_x * 2.0;
 		this.shader_height = tr_y * 2.0;
@@ -124,26 +124,26 @@ public class Quad
 	//methods for
 	//calculating stuffs
 	//these x and y are in shader space 0 to 1
-	public void setPos(double x, double y, DrawFrom where)
+	public void setPos(double x, double y, EnumDrawFrom where)
 	{
-		if(where == DrawFrom.top_left)
+		if(where == EnumDrawFrom.top_left)
 		{
 			//positive x
 			//negative y
 			this.x_pos = x + shader_width / 2.0;
 			this.y_pos = y - shader_height / 2.0;	
 		}
-		else if(where == DrawFrom.top_right)
+		else if(where == EnumDrawFrom.top_right)
 		{
 			this.x_pos = x - shader_width / 2.0;
 			this.y_pos = y - shader_height / 2.0;
 		}
-		else if(where == DrawFrom.bottom_left)
+		else if(where == EnumDrawFrom.bottom_left)
 		{
 			this.x_pos = x + shader_width / 2.0;
 			this.y_pos = y + shader_height / 2.0;	
 		}
-		else if(where == DrawFrom.bottom_right)
+		else if(where == EnumDrawFrom.bottom_right)
 		{
 
 			this.x_pos = x - shader_width / 2.0;

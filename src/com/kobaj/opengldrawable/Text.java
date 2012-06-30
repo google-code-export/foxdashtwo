@@ -155,7 +155,7 @@ public class Text
 	}
 	
 	// x and y are in shader coordinates 0 to 1
-	public void DrawNumber(int this_number, double x, double y, DrawFrom where)
+	public void DrawNumber(int this_number, double x, double y, EnumDrawFrom where)
 	{
 		double total_width = 0;
 		
@@ -171,7 +171,7 @@ public class Text
 		
 		//prepare to draw by seeing where we draw it.
 		double current_width = 0;
-		if (where == DrawFrom.top_left || where == DrawFrom.bottom_left)
+		if (where == EnumDrawFrom.top_left || where == EnumDrawFrom.bottom_left)
 		{
 			int number = this_number;
 			while (number > 0)
@@ -185,7 +185,7 @@ public class Text
 			
 			current_width = -total_width;
 		}
-		else if (where == DrawFrom.center)
+		else if (where == EnumDrawFrom.center)
 			current_width = (-total_width / 2.0);
 		
 		//begin drawing the number
@@ -209,7 +209,7 @@ public class Text
 	}
 	
 	// x and y are in shader coordinates 0 to 1
-	public void DrawText(int resource_value, double x, double y, DrawFrom where)
+	public void DrawText(int resource_value, double x, double y, EnumDrawFrom where)
 	{
 		if (bitmap_buffer.containsKey(resource_value))
 		{
