@@ -111,4 +111,11 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 	}
 	
 	abstract void onUpdate(double delta);
+	
+	public void onScreenPause()
+	{
+		onPause();
+	}
+	
+	abstract void onPause();
 }

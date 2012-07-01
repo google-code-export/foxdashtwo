@@ -5,16 +5,25 @@ import javax.microedition.khronos.opengles.GL10;
 import android.graphics.Color;
 import android.opengl.GLES20;
 
+import com.kobaj.audio.Music;
+import com.kobaj.audio.MusicPlayList;
 import com.kobaj.foxdashtwo.R;
+import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.EnumDrawFrom;
 import com.kobaj.opengldrawable.QuadAnimated;
 import com.kobaj.openglgraphics.AmbientLight;
 import com.kobaj.openglgraphics.PointLight;
 import com.kobaj.openglgraphics.SpotLight;
-import com.kobaj.math.*;
 
 public class MyGame extends MyGLRender
 {
+	//music play
+	//the two songs I am using for testing (and testing only)
+	//are no indication of the music expected in Fox Dash Two, and will be deleted once testing is done.
+	//the songs are created by Waterflame, http://waterflame.newgrounds.com/
+	Music my_music;
+	MusicPlayList my_music_playlist;
+	
 	// test
 	QuadAnimated quad;
 	
@@ -30,6 +39,11 @@ public class MyGame extends MyGLRender
 	@Override
 	void onInitialize(GL10 gl)
 	{
+		my_music = new Music();
+		my_music_playlist = new MusicPlayList(my_music);
+		
+		my_music_playlist.setPlayList(R.raw.music_waterflame_new_clouds, R.raw.music_waterflame_whatever);
+		
 		quad = new QuadAnimated(gl, R.drawable.titlescreen, R.raw.test_animation);
 		quad.playing = true;
 		
@@ -56,6 +70,8 @@ public class MyGame extends MyGLRender
 		al_test.color = Color.CYAN;
 		
 		sl_test = new SpotLight(spot_light, my_view_matrix);
+		
+		my_music_playlist.start();
 	}
 
 	double add = 100000;
@@ -71,6 +87,8 @@ public class MyGame extends MyGLRender
 		sl_test.lookAtAngle(add);
 		
 		quad.onUpdate(delta);
+		
+		my_music_playlist.onUpdate();
 		
 		//quick test
 		//Matrix.translateM(my_view_matrix, 0, .0005f, .0005f, 0);
@@ -126,5 +144,11 @@ public class MyGame extends MyGLRender
 		text.DrawNumber(fps.fps, Functions.screenXToShaderX(25), Functions.screenYToShaderY((int)Functions.fix_y(25)), EnumDrawFrom.top_left);
 		text.DrawNumber((int)add, Functions.screenXToShaderX(25), Functions.screenYToShaderY((int)Functions.fix_y(50)), EnumDrawFrom.top_left);
 		text.DrawNumber((int)delta, Functions.screenXToShaderX(25), Functions.screenYToShaderY((int)Functions.fix_y(75)), EnumDrawFrom.top_left);
-	}	
+	}
+
+	@Override
+	void onPause()
+	{
+		my_music_playlist.stop();
+	}
 }
