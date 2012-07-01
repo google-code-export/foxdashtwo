@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
-import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
@@ -18,7 +17,7 @@ public class FoxdashtwoActivity extends Activity {
 	
 	private PowerManager.WakeLock wl;
 	
-	private GLSurfaceView mGLView;
+	private com.kobaj.opengl.MyGLSurfaceView mGLView;
 	
 	//saving state
 	public static SharedPreferences mPrefs;
@@ -95,7 +94,7 @@ public class FoxdashtwoActivity extends Activity {
 		wl.release();
 		ed.commit();
 		
-		mGLView.onPause();
+		mGLView.onScreenPause();
 	}
 	
 	@Override
@@ -105,13 +104,6 @@ public class FoxdashtwoActivity extends Activity {
 		wl.acquire();
 		
 		mGLView.onResume();
-	}
-	
-	@Override
-	protected void onDestroy()
-	{
-		super.onDestroy();
-		ed.commit();
 	}
 	
 	//input
