@@ -7,8 +7,14 @@ package com.kobaj.opengldrawable;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.util.ArrayList;
 
 import javax.microedition.khronos.opengles.GL10;
+
+import android.graphics.Bitmap;
+import android.graphics.RectF;
+import android.opengl.GLES20;
+import android.opengl.Matrix;
 
 import com.kobaj.loader.GLLoadedTexture;
 import com.kobaj.openglgraphics.AmbientLightShader;
@@ -16,19 +22,21 @@ import com.kobaj.openglgraphics.BaseLightShader;
 import com.kobaj.openglgraphics.PointLightShader;
 import com.kobaj.openglgraphics.SpotLightShader;
 
-import android.graphics.Bitmap;
-import android.opengl.GLES20;
-import android.opengl.Matrix;
-
 public class Quad
 {
 	// transformation matrix to convert from object to world space
 	private float[] my_model_matrix = new float[16];
-	// these are in shader coordinates 0 to 1
-	public double x_pos = 0.0;
-	public double y_pos = 0.0;
 	
-	//TODO add a bounding rectangle for stuffs
+	// these are in shader coordinates 0 to 1
+	// and placed in the exact center of the quad
+	private double x_pos = 0.0;
+	private double y_pos = 0.0;
+	
+	// physics rectangle. An object can have multiple
+	// rectangles so it has better 'resolution' when interacting
+	// phys rect is stored in shader coordinates
+	private ArrayList<RectF> phys_rect_list;
+	
 	//begin by holding these
 	public int width;
 	public int height;
@@ -119,6 +127,9 @@ public class Quad
 		
 		my_tex_coord = ByteBuffer.allocateDirect(cubeTextureCoordinateData.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
 		my_tex_coord.put(cubeTextureCoordinateData).position(0);
+		
+		//up next setup phys rect list. Just a default. The user can set/add/remove more rectangles as needed.
+		phys_rect_list.add(new RectF(-tr_x, tr_y, tr_x, -tr_y));
 	}
 	
 	//methods for
@@ -153,6 +164,18 @@ public class Quad
 		{
 			x_pos = x;
 			y_pos = y;
+		}
+		
+		//set the rectangle
+		for(RectF rect: phys_rect_list)
+		{
+			double rect_half_width = rect.width() / 2.0;
+			double rect_half_height = rect.height() / 2.0;
+			
+			rect.left = (float)(x_pos - rect_half_width);
+			rect.top = (float)(y_pos + rect_half_height);
+			rect.right = (float)(x_pos + rect_half_width);
+			rect.bottom = (float)(y_pos - rect_half_height);
 		}
 	} 
 	

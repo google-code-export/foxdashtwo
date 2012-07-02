@@ -56,12 +56,12 @@ public class Functions
 	
 	//used to translate screen coordinates to shader coordinates
 	//for example, screen width is 0 to 800px, shader is -1 to 1.
-	public static double screenXToShaderX(int input_x)
+	public static double screenXToShaderX(double input_x)
 	{
 		return unclampedLinearInterpolate(0, Constants.width, input_x, -Constants.ratio, Constants.ratio);
 	}
 	
-	public static double screenYToShaderY(int input_y)
+	public static double screenYToShaderY(double input_y)
 	{
 		return unclampedLinearInterpolate(0, Constants.height, input_y, -1, 1);
 	}

@@ -147,6 +147,7 @@ public class MusicPlayList
 	
 	public void stop()
 	{
+		play_list.clear();
 		music_player.stop();
 	}
 }
