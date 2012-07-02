@@ -2,76 +2,28 @@ package com.kobaj.opengl;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import android.graphics.Color;
 import android.opengl.GLES20;
 
-import com.kobaj.audio.Music;
-import com.kobaj.audio.MusicPlayList;
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.EnumDrawFrom;
 import com.kobaj.opengldrawable.QuadAnimated;
 import com.kobaj.openglgraphics.AmbientLight;
-import com.kobaj.openglgraphics.PointLight;
-import com.kobaj.openglgraphics.SpotLight;
 
 public class MyGame extends MyGLRender
 {
-	//music play
-	//the two songs I am using for testing (and testing only)
-	//are no indication of the music expected in Fox Dash Two, and will be deleted once testing is done.
-	//the songs are created by Waterflame, http://waterflame.newgrounds.com/
-	Music my_music;
-	MusicPlayList my_music_playlist;
-	
 	// test
 	QuadAnimated quad;
 	
-	//lights
-	PointLight pl_blue;
-	PointLight pl_green;
-	PointLight pl_red;
-	
 	AmbientLight al_test;
-	
-	SpotLight sl_test;
 
 	@Override
 	void onInitialize(GL10 gl)
 	{
-		my_music = new Music();
-		my_music_playlist = new MusicPlayList(my_music);
-		
-		my_music_playlist.setPlayList(R.raw.music_waterflame_new_clouds, R.raw.music_waterflame_whatever);
-		
 		quad = new QuadAnimated(gl, R.drawable.titlescreen, R.raw.test_animation);
 		quad.playing = true;
 		
-		pl_blue = new PointLight(point_light, my_view_matrix);
-		pl_blue.x_pos = 0.2;
-		pl_blue.y_pos = 0;
-		pl_blue.focus = .9;
-		pl_blue.color = Color.BLUE;
-		
-		pl_green = new PointLight(point_light, my_view_matrix);
-		pl_green.x_pos = -0.2;
-		pl_green.y_pos = 0;
-		pl_green.focus = .9;
-		pl_green.color = Color.GREEN;
-		
-		pl_red = new PointLight(point_light, my_view_matrix);
-		pl_red.x_pos = 0.0;
-		pl_red.y_pos = 0.2;
-		pl_red.focus = .9;
-		pl_red.color = Color.RED;
-		
 		al_test = new AmbientLight(ambient_light, my_view_matrix);
-		al_test.brightness = .3;
-		al_test.color = Color.CYAN;
-		
-		sl_test = new SpotLight(spot_light, my_view_matrix);
-		
-		my_music_playlist.start();
 	}
 
 	double add = 100000;
@@ -83,12 +35,8 @@ public class MyGame extends MyGLRender
 		this.delta = delta;
 		
 		add += .01f * delta;
-        
-		sl_test.lookAtAngle(add);
 		
-		quad.onUpdate(delta);
-		
-		my_music_playlist.onUpdate();
+		quad.onUpdate(delta); // for animation
 		
 		//quick test
 		//Matrix.translateM(my_view_matrix, 0, .0005f, .0005f, 0);
@@ -110,34 +58,6 @@ public class MyGame extends MyGLRender
 		
 		
 		
-		// Add program to OpenGL environment
-		GLES20.glUseProgram(point_light.my_shader);
-		
-		//set the light
-		pl_blue.applyShaderProperties();
-		//draw stuffs.
-		quad.onDrawPoint(my_view_matrix, my_proj_matrix, point_light);
-		
-		//set the light
-		pl_green.applyShaderProperties();
-		//draw stuffs.
-		quad.onReDrawPoint(point_light);
-		
-		//set the light
-		pl_red.applyShaderProperties();
-		//draw stuffs.
-		quad.onReDrawPoint(point_light);
-		
-		
-		
-		GLES20.glUseProgram(spot_light.my_shader);
-		
-		sl_test.applyShaderProperties();
-		
-		quad.onDrawSpot(my_view_matrix, my_proj_matrix, spot_light);
-		
-	
-		
 		
 		//see if text works.
 		//text.DrawText(R.string.hello, 0, 0, DrawFrom.bottom_right);
@@ -149,6 +69,6 @@ public class MyGame extends MyGLRender
 	@Override
 	void onPause()
 	{
-		my_music_playlist.stop();
+		
 	}
 }
