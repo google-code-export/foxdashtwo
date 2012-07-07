@@ -22,7 +22,7 @@ import com.kobaj.openglgraphics.BaseLightShader;
 import com.kobaj.openglgraphics.PointLightShader;
 import com.kobaj.openglgraphics.SpotLightShader;
 
-public class Quad
+public class Quad implements com.kobaj.physics.PhysObj
 {
 	// transformation matrix to convert from object to world space
 	private float[] my_model_matrix = new float[16];
@@ -31,6 +31,11 @@ public class Quad
 	// and placed in the exact center of the quad
 	private double x_pos = 0.0;
 	private double y_pos = 0.0;
+	
+	//z index doesnt have to specially be set.
+	//objects will only collide if on the same z index plane.
+	//this shouldn't really change much actually.
+	public double z_pos = -1.0f;
 	
 	// physics rectangle. An object can have multiple
 	// rectangles so it has better 'resolution' when interacting
@@ -207,8 +212,7 @@ public class Quad
 		
 		// set the quad up
 		Matrix.setIdentityM(my_model_matrix, 0);
-		Matrix.translateM(my_model_matrix, 0, (float) x_pos, (float) y_pos, -1.0f);
-		// Matrix.rotateM(my_model_matrix, 0, angleInDegrees, 1.0f, 1.0f, 0.0f);
+		Matrix.translateM(my_model_matrix, 0, (float) x_pos, (float) y_pos, (float) z_pos);
 		
 		// pass in position information
 		my_position.position(0);

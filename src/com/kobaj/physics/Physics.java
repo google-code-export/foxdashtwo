@@ -8,7 +8,11 @@ import android.graphics.Rect;
 //3. Collision handling
 public class Physics
 {
-	private final static double gravity = 2.9;
+	//I honestly don't know the best way to tackle this.
+	//half of me wants to make it abstract and have a quad extend it.
+	//but I really want to keep it separate from quads...
+	
+	private final static double gravity = 2.9; //well thats a random number.
 	
 	public static void apply_force(){}
 	

@@ -39,6 +39,8 @@ public class MyGame extends MyGLRender
 		quad.onUpdate(delta); // for animation
 		
 		//quick test
+		//TODO grab the initial translation matrix and store it
+		//transforming it to the my_view_matrix to make the view change.
 		//Matrix.translateM(my_view_matrix, 0, .0005f, .0005f, 0);
 	}
 	
