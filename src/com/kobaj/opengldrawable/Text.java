@@ -3,16 +3,14 @@ package com.kobaj.opengldrawable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import javax.microedition.khronos.opengles.GL10;
-
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Paint.Style;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.Typeface;
-import android.graphics.Paint.Style;
 import android.opengl.GLES20;
 
 import com.kobaj.foxdashtwo.R;
@@ -37,7 +35,7 @@ public class Text
 	private float[] my_view_matrix;
 	private float[] my_proj_matrix;
 	
-	public Text(GL10 gl, AmbientLightShader als, float[] my_view_matrix, float[] my_proj_matrix)
+	public Text(AmbientLightShader als, float[] my_view_matrix, float[] my_proj_matrix)
 	{
 		//settup first
 		text_size = 16.0 * com.kobaj.math.Constants.sd_scale;
@@ -146,7 +144,7 @@ public class Text
 			
 			// stuff it in the buffer
 			// note this automatically destroys the bitmap
-			bitmap_buffer.put(key, new Quad(gl, key, bitmap_temp));
+			bitmap_buffer.put(key, new Quad(key, bitmap_temp));
 			
 			count++;
 		}

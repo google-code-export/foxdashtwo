@@ -1,7 +1,5 @@
 package com.kobaj.opengldrawable;
 
-import javax.microedition.khronos.opengles.GL10;
-
 public class QuadAnimated extends Quad
 {
 	//the all important animation
@@ -13,9 +11,9 @@ public class QuadAnimated extends Quad
 	//is playing?
 	public boolean playing = false;
 	
-	public QuadAnimated(GL10 gl, int texture_resource, int animation_resource)
+	public QuadAnimated(int texture_resource, int animation_resource)
 	{
-		super(gl, texture_resource);
+		super(texture_resource);
 			
 		//load in the animation
 		frame_animation = com.kobaj.loader.XMLHandler.readSerialFile(com.kobaj.math.Constants.resources, animation_resource, frame_animation.getClass());

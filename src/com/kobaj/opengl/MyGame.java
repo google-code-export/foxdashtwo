@@ -1,7 +1,5 @@
 package com.kobaj.opengl;
 
-import javax.microedition.khronos.opengles.GL10;
-
 import android.opengl.GLES20;
 
 import com.kobaj.foxdashtwo.R;
@@ -18,9 +16,9 @@ public class MyGame extends MyGLRender
 	AmbientLight al_test;
 
 	@Override
-	void onInitialize(GL10 gl)
+	void onInitialize()
 	{
-		quad = new QuadAnimated(gl, R.drawable.titlescreen, R.raw.test_animation);
+		quad = new QuadAnimated(R.drawable.titlescreen, R.raw.test_animation);
 		quad.playing = true;
 		
 		al_test = new AmbientLight(ambient_light, my_view_matrix);
@@ -42,6 +40,10 @@ public class MyGame extends MyGLRender
 		//TODO grab the initial translation matrix and store it
 		//transforming it to the my_view_matrix to make the view change.
 		//Matrix.translateM(my_view_matrix, 0, .0005f, .0005f, 0);
+		
+		
+		//testing physics
+		physics.apply_physics(delta, quad);
 	}
 	
 	@Override

@@ -9,8 +9,6 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 
-import javax.microedition.khronos.opengles.GL10;
-
 import android.graphics.Bitmap;
 import android.graphics.RectF;
 import android.opengl.GLES20;
@@ -22,7 +20,7 @@ import com.kobaj.openglgraphics.BaseLightShader;
 import com.kobaj.openglgraphics.PointLightShader;
 import com.kobaj.openglgraphics.SpotLightShader;
 
-public class Quad implements com.kobaj.physics.PhysObj
+public class Quad
 {
 	// transformation matrix to convert from object to world space
 	private float[] my_model_matrix = new float[16];
@@ -31,6 +29,13 @@ public class Quad implements com.kobaj.physics.PhysObj
 	// and placed in the exact center of the quad
 	private double x_pos = 0.0;
 	private double y_pos = 0.0;
+	
+	//I would much rather extend a physics object
+	//but that wouldn't really fit in with this model.
+	public double x_acc = 0.0;
+	public double y_acc = 0.0;
+	public double x_vel = 0.0;
+	public double y_vel = 0.0;
 	
 	//z index doesnt have to specially be set.
 	//objects will only collide if on the same z index plane.
@@ -58,31 +63,31 @@ public class Quad implements com.kobaj.physics.PhysObj
 	// handle to texture
 	private int my_texture_data_handle;
 	
-	public Quad(GL10 gl, int texture_resource)
+	public Quad(int texture_resource)
 	{
-		this(gl, texture_resource, -1, -1);
+		this(texture_resource, -1, -1);
 	}
 	
-	public Quad(GL10 gl, int texture_resource, int width, int height)
+	public Quad(int texture_resource, int width, int height)
 	{
 		// load dat texture.
-		my_texture_data_handle = com.kobaj.loader.GLBitmapReader.loadTextureFromResource(gl, com.kobaj.math.Constants.context, texture_resource);
-		onCreate(gl, texture_resource, width, height);
+		my_texture_data_handle = com.kobaj.loader.GLBitmapReader.loadTextureFromResource(texture_resource);
+		onCreate(texture_resource, width, height);
 	}
 	
-	public Quad(GL10 gl, int texture_resource, Bitmap bmp)
+	public Quad(int texture_resource, Bitmap bmp)
 	{
-		this(gl, texture_resource, bmp, -1, -1);
+		this(texture_resource, bmp, -1, -1);
 	}
 	
-	public Quad(GL10 gl, int texture_resource, Bitmap bmp, int width, int height)
+	public Quad(int texture_resource, Bitmap bmp, int width, int height)
 	{
-		my_texture_data_handle = com.kobaj.loader.GLBitmapReader.loadTextureFromBitmap(gl, com.kobaj.math.Constants.context, texture_resource, bmp);
-		onCreate(gl, texture_resource, width, height);
+		my_texture_data_handle = com.kobaj.loader.GLBitmapReader.loadTextureFromBitmap(texture_resource, bmp);
+		onCreate(texture_resource, width, height);
 	}
 	
 	//actual constructor
-	private void onCreate(GL10 gl, int texture_resource, int width, int height)
+	private void onCreate(int texture_resource, int width, int height)
 	{
 		if (width == -1 && height == -1)
 		{
@@ -183,6 +188,17 @@ public class Quad implements com.kobaj.physics.PhysObj
 			rect.bottom = (float)(y_pos - rect_half_height);
 		}
 	} 
+	
+	//getters are slower than public, but more secure
+	public double get_x_pos()
+	{
+		return x_pos;
+	}
+	
+	public double get_y_pos()
+	{
+		return y_pos;
+	}
 	
 	// methods for
 	// drawing stuffs
