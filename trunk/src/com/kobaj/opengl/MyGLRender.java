@@ -8,7 +8,11 @@ import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 import android.os.SystemClock;
 
+import com.kobaj.audio.Music;
+import com.kobaj.audio.MusicPlayList;
+import com.kobaj.audio.Sound;
 import com.kobaj.math.FPSManager;
+import com.kobaj.math.Physics;
 import com.kobaj.opengldrawable.Text;
 import com.kobaj.openglgraphics.AmbientLightShader;
 import com.kobaj.openglgraphics.PointLightShader;
@@ -17,19 +21,27 @@ import com.kobaj.openglgraphics.SpotLightShader;
 public abstract class MyGLRender implements GLSurfaceView.Renderer
 {
 	//and fps
-	FPSManager fps;
+	protected FPSManager fps;
 	
 	//text mmm
-	Text text;
+	public Text text;
 	
 	//three shaders
-	protected PointLightShader point_light;
-	protected AmbientLightShader ambient_light;
-	protected SpotLightShader spot_light;
+	public PointLightShader point_light;
+	public AmbientLightShader ambient_light;
+	public SpotLightShader spot_light;
 	
 	// camera
-	protected float[] my_view_matrix = new float[16];
-	protected float[] my_proj_matrix = new float[16];
+	public float[] my_view_matrix = new float[16];
+	public float[] my_proj_matrix = new float[16];
+	
+	//sound and music
+	protected Music music;
+	public MusicPlayList music_play_list;
+	public Sound sound;
+	
+	//physics
+	public Physics physics;
 	
 	public void onSurfaceCreated(GL10 unused, EGLConfig config)
 	{
@@ -61,17 +73,23 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		fps = new FPSManager();
 		
 		//text setup
-		text = new Text(unused, ambient_light, my_view_matrix, my_proj_matrix);
+		text = new Text(ambient_light, my_view_matrix, my_proj_matrix);
 		
-		onInitialize(unused);
+		//sound and audio setup
+		music = new Music();
+		music_play_list = new MusicPlayList(music);
+		sound = new Sound();
+		
+		//physics setup
+		physics = new Physics();
+		
+		onInitialize();
 	}
 	
-	abstract void onInitialize(GL10 gl);
+	abstract void onInitialize();
 	
 	public void onSurfaceChanged(GL10 unused, int width, int height)
 	{
-		
-		
 		GLES20.glViewport(0, 0, width, height);
 		
 		float ratio = (float) width / height;
@@ -87,7 +105,7 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 	
 	public void onSurfaceDestroyed()
 	{
-		
+		//empty for now
 	}
 	
 	public void onDrawFrame(GL10 unused)
