@@ -43,9 +43,9 @@ public class Quad
 	public double z_pos = -1.0f;
 	
 	// physics rectangle. An object can have multiple
-	// rectangles so it has better 'resolution' when interacting
+	// rectangles so it has better 'resolution' when interacting with other quads
 	// phys rect is stored in shader coordinates
-	private ArrayList<RectF> phys_rect_list;
+	public ArrayList<RectF> phys_rect_list = new ArrayList<RectF>();
 	
 	//begin by holding these
 	public int width;
@@ -202,7 +202,8 @@ public class Quad
 	
 	// methods for
 	// drawing stuffs
-	private <T extends BaseLightShader> void onReSetupAmbient(T ambient_light)
+	
+	private <T extends BaseLightShader> void onSetupAmbient(float[] my_view_matrix, float[] my_proj_matrix, T ambient_light)
 	{
 		// Pass in the color information
 		GLES20.glUniform4f(ambient_light.my_color_handle, (float)ambient_light.my_color_r, (float)ambient_light.my_color_g, (float)ambient_light.my_color_b, 1.0f);
@@ -210,11 +211,6 @@ public class Quad
 		// pass in the brightness
 		GLES20.glUniform1f(ambient_light.my_brightness_handle, (float)ambient_light.my_brightness);
 		
-	}
-	
-	private <T extends BaseLightShader> void onSetupAmbient(float[] my_view_matrix, float[] my_proj_matrix, T ambient_light)
-	{
-		onReSetupAmbient(ambient_light);
 		
 		// Set the active texture unit to texture unit 0.
 		GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
@@ -226,19 +222,6 @@ public class Quad
 		// binding to texture unit 0.
 		GLES20.glUniform1i(ambient_light.my_texture_uniform_handle, 0);
 		
-		// set the quad up
-		Matrix.setIdentityM(my_model_matrix, 0);
-		Matrix.translateM(my_model_matrix, 0, (float) x_pos, (float) y_pos, (float) z_pos);
-		
-		// pass in position information
-		my_position.position(0);
-		GLES20.glVertexAttribPointer(ambient_light.my_position_handle, 3, GLES20.GL_FLOAT, false, 0, my_position);
-		GLES20.glEnableVertexAttribArray(ambient_light.my_position_handle);
-		
-		// Pass in the texture coordinate information
-		my_tex_coord.position(0);
-		GLES20.glVertexAttribPointer(ambient_light.my_tex_coord_handle, 2, GLES20.GL_FLOAT, false, 0, my_tex_coord);
-		GLES20.glEnableVertexAttribArray(ambient_light.my_tex_coord_handle);
 		
 		// This multiplies the view matrix by the model matrix, and stores the
 		// result in the MVP matrix
@@ -255,6 +238,21 @@ public class Quad
 		
 		// Pass in the combined matrix.
 		GLES20.glUniformMatrix4fv(ambient_light.my_mvp_matrix_handle, 1, false, my_mvp_matrix, 0);
+		
+		
+		// set the quad up
+		Matrix.setIdentityM(my_model_matrix, 0);
+		Matrix.translateM(my_model_matrix, 0, (float) x_pos, (float) y_pos, (float) z_pos);
+		
+		// pass in position information
+		my_position.position(0);
+		GLES20.glVertexAttribPointer(ambient_light.my_position_handle, 3, GLES20.GL_FLOAT, false, 0, my_position);
+		GLES20.glEnableVertexAttribArray(ambient_light.my_position_handle);
+		
+		// Pass in the texture coordinate information
+		my_tex_coord.position(0);
+		GLES20.glVertexAttribPointer(ambient_light.my_tex_coord_handle, 2, GLES20.GL_FLOAT, false, 0, my_tex_coord);
+		GLES20.glEnableVertexAttribArray(ambient_light.my_tex_coord_handle);
 	}
 	
 	//also contains method onReSetupPoint
@@ -308,28 +306,6 @@ public class Quad
 		onSetupSpot(spot_light);
 		
 		// Draw the cube.
-		onDraw();
-	}
-	
-	//in an effort to make things more efficient
-	public void onReDrawAmbient(AmbientLightShader ambient_light)
-	{
-		onReSetupAmbient(ambient_light);
-		onDraw();
-	}
-	
-	public void onReDrawPoint(PointLightShader point_light)
-	{
-		onReSetupAmbient(point_light);
-		onSetupPoint(point_light);
-		onDraw();
-	}
-	
-	public void onReDrawSpot(SpotLightShader spot_light)
-	{
-		onReSetupAmbient(spot_light);
-		onSetupPoint(spot_light);
-		onSetupSpot(spot_light);
 		onDraw();
 	}
 }
