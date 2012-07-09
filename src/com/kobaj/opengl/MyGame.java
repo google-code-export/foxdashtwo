@@ -45,10 +45,10 @@ public class MyGame extends MyGLRender
 		quad = new QuadAnimated(R.drawable.titlescreen, R.raw.test_animation);
 		quad.playing = true;
 		
-		floor = new QuadColorShape(0, 20, com.kobaj.math.Constants.width, 0, 0xFF0000FF);
-		ball = new QuadColorShape(25, Color.RED);
+		//floor = new QuadColorShape(0, 20, com.kobaj.math.Constants.width, 0, 0xFF0000FF);
+		//ball = new QuadColorShape(25, Color.RED);
 		
-		floor.setPos(com.kobaj.math.Functions.screenXToShaderX(0), com.kobaj.math.Functions.screenYToShaderY(20), com.kobaj.opengldrawable.EnumDrawFrom.top_left);
+		//floor.setPos(com.kobaj.math.Functions.screenXToShaderX(0), com.kobaj.math.Functions.screenYToShaderY(20), com.kobaj.opengldrawable.EnumDrawFrom.top_left);
 		
 		//take them away from the background a little
 		quad.z_pos = -1.0000001;
@@ -79,8 +79,8 @@ public class MyGame extends MyGLRender
         
         //add to our quad list
         my_quad_list.add(quad);
-        my_quad_list.add(floor);
-        my_quad_list.add(ball);
+       // my_quad_list.add(floor);
+       // my_quad_list.add(ball);
         my_quad_list.add(ic);
 	
         //add to our light list
@@ -113,8 +113,8 @@ public class MyGame extends MyGLRender
 		//Matrix.translateM(my_view_matrix, 0, .0005f, .0005f, 0);
 		
 		//testing physics
-		physics.apply_physics(delta, ball);
-		physics.handle_collision(physics.check_collision(ball, floor), ball);
+		//physics.apply_physics(delta, ball);
+		//physics.handle_collision(physics.check_collision(ball, floor), ball);
 	}
 	
 	@Override
