@@ -75,7 +75,10 @@ public class Physics
 		//only fix up and down
 		//no bounce
 		
+		//early copouts
 		if(collision == null)
+			return;
+		if(collision.height() == 0)
 			return;
 		
 		//grab the direction of travel and normalize it
