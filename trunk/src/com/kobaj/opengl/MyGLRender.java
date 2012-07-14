@@ -62,7 +62,9 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		
 		//mmm blending
 		GLES20.glEnable(GLES20.GL_BLEND);
-		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
+		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA); // no see thru
+		//GLES20.glBlendFunc(GLES20.GL_DST_ALPHA, GLES20.GL_ONE); //good lights
+		//GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_SRC_ALPHA); // cheap effective lights
 		
 		// shaders
 		point_light = new PointLightShader();
