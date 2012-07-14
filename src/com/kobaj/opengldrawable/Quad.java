@@ -61,7 +61,13 @@ public class Quad
 	private float[] my_mvp_matrix = new float[16];
 	
 	// handle to texture
-	private int my_texture_data_handle;
+	protected int my_texture_data_handle;
+	
+	//constructores
+	protected Quad()
+	{
+		//do nothing. Assume whoever is extending knows what he/she is doing.
+	}
 	
 	public Quad(int texture_resource)
 	{
@@ -87,7 +93,8 @@ public class Quad
 	}
 	
 	//actual constructor
-	private void onCreate(int texture_resource, int width, int height)
+	//width and height in screen coordinates 0 - 800
+	protected void onCreate(int texture_resource, int width, int height)
 	{
 		if (width == -1 && height == -1)
 		{

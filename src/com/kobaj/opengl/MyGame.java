@@ -3,6 +3,7 @@ package com.kobaj.opengl;
 import java.util.ArrayList;
 
 import android.graphics.Color;
+import android.opengl.GLES20;
 
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Functions;
@@ -10,6 +11,7 @@ import com.kobaj.opengldrawable.EnumDrawFrom;
 import com.kobaj.opengldrawable.Quad;
 import com.kobaj.opengldrawable.QuadAnimated;
 import com.kobaj.opengldrawable.QuadColorShape;
+import com.kobaj.opengldrawable.QuadRenderTo;
 import com.kobaj.openglgraphics.AmbientLight;
 import com.kobaj.openglgraphics.BaseLight;
 import com.kobaj.openglgraphics.PointLight;
@@ -22,6 +24,11 @@ public class MyGame extends MyGLRender
 	QuadAnimated quad;
 	QuadColorShape floor;
 	QuadColorShape ball;
+	QuadColorShape ball2;
+	QuadColorShape ball3;
+	QuadColorShape black_drop;
+	
+	QuadRenderTo scene;
 	
 	ArrayList<Quad> my_quad_list = new ArrayList<Quad>();
 	
@@ -45,13 +52,16 @@ public class MyGame extends MyGLRender
 		quad.playing = true;
 		
 		floor = new QuadColorShape(0, 20, com.kobaj.math.Constants.width, 0, 0xFF0000FF);
-		ball = new QuadColorShape(25, Color.RED);
+		ball = new QuadColorShape(1000, Color.RED);
+		ball2 = new QuadColorShape(1000, Color.GREEN);
+		ball3 = new QuadColorShape(1000, Color.BLUE);
 		
 		floor.setPos(com.kobaj.math.Functions.screenXToShaderX(0), com.kobaj.math.Functions.screenYToShaderY(20), com.kobaj.opengldrawable.EnumDrawFrom.top_left);
 		
+		black_drop = new QuadColorShape(0, com.kobaj.math.Constants.height, com.kobaj.math.Constants.width, 0, 0x00000000);
+		
 		//take them away from the background a little
 		quad.z_pos = -1.0000001;
-		
 		
 		pl_blue = new PointLight(point_light, my_view_matrix);
         pl_blue.x_pos = 0.2;
@@ -84,10 +94,12 @@ public class MyGame extends MyGLRender
 	
         //add to our light list
         my_light_list.add(al_test);
-        my_light_list.add(pl_green);
-        my_light_list.add(pl_red);
-        my_light_list.add(pl_blue);
-        my_light_list.add(sl_test);
+        //my_light_list.add(pl_green);
+        //my_light_list.add(pl_red);
+        //my_light_list.add(pl_blue);
+        //my_light_list.add(sl_test);
+        
+        scene = new QuadRenderTo();
 	}
 
 	double add = 100000;
@@ -112,65 +124,43 @@ public class MyGame extends MyGLRender
 		//Matrix.translateM(my_view_matrix, 0, .0005f, .0005f, 0);
 		
 		//testing physics
-		physics.apply_physics(delta, ball);
+		/*physics.apply_physics(delta, ball);
 		physics.handle_collision(physics.check_collision(ball, floor), ball);
+		
+		physics.apply_physics(delta, ball2);
+		physics.handle_collision(physics.check_collision(ball2, floor), ball2);
+		
+		physics.apply_physics(delta, ball3);
+		physics.handle_collision(physics.check_collision(ball3, floor), ball3);*/
 	}
 	
 	@Override
 	void onDraw()
-	{
+	{	
+		GLES20.glUseProgram(ambient_light.my_shader);
+		al_test.applyShaderProperties();
 		
-		/*for(Quad q: my_quad_list) //30-31fps
-		for(BaseLight bl: my_light_list)
+		//regular objects
+		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA); // no see thru
+		if(scene.beginRenderToTexture())
 		{
-			if(bl instanceof AmbientLight)
-			{
-				GLES20.glUseProgram(ambient_light.my_shader);
-				bl.applyShaderProperties();
-				q.onDrawAmbient(my_view_matrix, my_proj_matrix, ambient_light);
-			}
-			else if(bl instanceof PointLight)
-			{
-		        GLES20.glUseProgram(point_light.my_shader);
-		        bl.applyShaderProperties();
-				q.onDrawPoint(my_view_matrix, my_proj_matrix, point_light);
-			}
-			else if(bl instanceof SpotLight)
-			{
-				GLES20.glUseProgram(spot_light.my_shader);
-				bl.applyShaderProperties();
-        		q.onDrawSpot(my_view_matrix, my_proj_matrix, spot_light);
-			}
-		}*/
+			quad.onDrawAmbient(my_view_matrix, my_proj_matrix, ambient_light);
+			ic.onDrawAmbient(my_view_matrix, my_proj_matrix, ambient_light);
+		}
+		scene.endRenderToTexture();
 		
-		/*for(BaseLight bl: my_light_list) //43 fps more efficient
-		{
-			if(bl instanceof AmbientLight)
-			{
-				GLES20.glUseProgram(ambient_light.my_shader);
-				bl.applyShaderProperties();
-				for(Quad q: my_quad_list)
-					q.onDrawAmbient(my_view_matrix, my_proj_matrix, ambient_light);
-			}
-			else if(bl instanceof PointLight)
-			{
-		        GLES20.glUseProgram(point_light.my_shader);
-		        bl.applyShaderProperties();
-		        for(Quad q: my_quad_list)
-					q.onDrawPoint(my_view_matrix, my_proj_matrix, point_light);
-			}
-			else if(bl instanceof SpotLight)
-			{
-				GLES20.glUseProgram(spot_light.my_shader);
-				bl.applyShaderProperties();
-        		for(Quad q: my_quad_list)
-        			q.onDrawSpot(my_view_matrix, my_proj_matrix, spot_light);
-			}
-		}*/
-	
-        
+		//lights
+		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_SRC_ALPHA); // cheap lights
+		floor.onDrawAmbient(my_view_matrix, my_proj_matrix, ambient_light);
+		ball.onDrawAmbient(my_view_matrix, my_proj_matrix, ambient_light);
+		ball2.onDrawAmbient(my_view_matrix, my_proj_matrix, ambient_light);
+		ball3.onDrawAmbient(my_view_matrix, my_proj_matrix, ambient_light);
 		
+		//final scene
+		GLES20.glBlendFunc(GLES20.GL_DST_COLOR, GLES20.GL_ZERO); // masking
+		scene.onDrawAmbient(my_view_matrix, my_proj_matrix, ambient_light);
 		
+		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA); // no see thru
 		//see if text works.
 		//text.DrawText(R.string.hello, 0, 0, DrawFrom.bottom_right);
 		text.DrawNumber(fps.fps, Functions.screenXToShaderX(25), Functions.screenYToShaderY((int)Functions.fix_y(25)), EnumDrawFrom.top_left);
