@@ -15,8 +15,6 @@ import com.kobaj.math.FPSManager;
 import com.kobaj.math.Physics;
 import com.kobaj.opengldrawable.Text;
 import com.kobaj.openglgraphics.AmbientLightShader;
-import com.kobaj.openglgraphics.PointLightShader;
-import com.kobaj.openglgraphics.SpotLightShader;
 
 public abstract class MyGLRender implements GLSurfaceView.Renderer
 {
@@ -26,10 +24,8 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 	//text mmm
 	public Text text;
 	
-	//three shaders
-	public PointLightShader point_light;
+	//shaders
 	public AmbientLightShader ambient_light;
-	public SpotLightShader spot_light;
 	
 	// camera
 	public float[] my_view_matrix = new float[16];
@@ -67,9 +63,7 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		//GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_SRC_ALPHA); // cheap effective lights
 		
 		// shaders
-		point_light = new PointLightShader();
 		ambient_light = new AmbientLightShader();
-		spot_light = new SpotLightShader();
 		
 		//fps
 		fps = new FPSManager();

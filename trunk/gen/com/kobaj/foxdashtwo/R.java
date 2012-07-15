@@ -23,13 +23,7 @@ public final class R {
     public static final class raw {
         public static final int ambient_fragment_shader=0x7f040000;
         public static final int ambient_vertex_shader=0x7f040001;
-        public static final int music_waterflame_new_clouds=0x7f040002;
-        public static final int music_waterflame_whatever=0x7f040003;
-        public static final int point_fragment_shader=0x7f040004;
-        public static final int point_vertex_shader=0x7f040005;
-        public static final int spot_fragment_shader=0x7f040006;
-        public static final int spot_vertex_shader=0x7f040007;
-        public static final int test_animation=0x7f040008;
+        public static final int test_animation=0x7f040002;
     }
     public static final class string {
         public static final int app_name=0x7f050002;
