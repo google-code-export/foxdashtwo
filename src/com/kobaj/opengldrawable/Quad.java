@@ -17,8 +17,6 @@ import android.opengl.Matrix;
 import com.kobaj.loader.GLLoadedTexture;
 import com.kobaj.openglgraphics.AmbientLightShader;
 import com.kobaj.openglgraphics.BaseLightShader;
-import com.kobaj.openglgraphics.PointLightShader;
-import com.kobaj.openglgraphics.SpotLightShader;
 
 public class Quad
 {
@@ -261,24 +259,7 @@ public class Quad
 		GLES20.glUniformMatrix4fv(ambient_light.my_mvp_matrix_handle, 1, false, my_mvp_matrix, 0);
 		
 	}
-	
-	//also contains method onReSetupPoint
-	private <T extends PointLightShader> void onSetupPoint(T point_light)
-	{
-		// Pass in the light position in eye space.
-		GLES20.glUniform3f(point_light.my_light_pos_handle, point_light.my_light_eye_space[0], point_light.my_light_eye_space[1], point_light.my_light_eye_space[2]);
-	}
 
-	//also contains method onReSetupSpot
-	private <T extends SpotLightShader> void onSetupSpot(T spot_light)
-	{
-		//pass in the two directions
-		GLES20.glUniform3f(spot_light.my_light_dir_handle, (float)spot_light.my_direction_x, (float)spot_light.my_direction_y, 0.0f);
-		
-		//pass in the angle
-		GLES20.glUniform1f(spot_light.my_light_angle_handle, (float)spot_light.my_angle);
-	}
-	
 	//main stuffs
 	private void onDraw()
 	{
@@ -289,28 +270,6 @@ public class Quad
 	public void onDrawAmbient(float[] my_view_matrix, float[] my_proj_matrix, AmbientLightShader ambient_light)
 	{
 		onSetupAmbient(my_view_matrix, my_proj_matrix, ambient_light);
-		
-		// Draw the cube.
-		onDraw();
-	}
-	
-	public void onDrawPoint(float[] my_view_matrix, float[] my_proj_matrix, PointLightShader point_light)
-	{
-		onSetupAmbient(my_view_matrix, my_proj_matrix, point_light);
-		
-		onSetupPoint(point_light);
-		
-		// Draw the cube.
-		onDraw();
-	}
-	
-	public void onDrawSpot(float[] my_view_matrix, float[] my_proj_matrix, SpotLightShader spot_light)
-	{
-		onSetupAmbient(my_view_matrix, my_proj_matrix, spot_light);
-		
-		onSetupPoint(spot_light);
-		
-		onSetupSpot(spot_light);
 		
 		// Draw the cube.
 		onDraw();
