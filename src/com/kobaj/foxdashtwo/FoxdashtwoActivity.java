@@ -1,5 +1,7 @@
 package com.kobaj.foxdashtwo;
 
+import com.kobaj.math.Constants;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -31,9 +33,9 @@ public class FoxdashtwoActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		
 		//do context first, a lot of stuff relies on it.
-		com.kobaj.math.Constants.context = getApplicationContext();
+		Constants.context = getApplicationContext();
 		
-		com.kobaj.math.Constants.resources = this.getResources();
+		Constants.resources = this.getResources();
 		
 		//grabbing save states
 		mPrefs = getSharedPreferences("com.kobaj.foxdashtwo_prefs", 0);
@@ -54,32 +56,32 @@ public class FoxdashtwoActivity extends Activity {
 		switch(metrics.densityDpi)
 		{
 			default:
-				com.kobaj.math.Constants.dip_scale = 1.0;
-				com.kobaj.math.Constants.unknown_dip = true;
+				Constants.dip_scale = 1.0;
+				Constants.unknown_dip = true;
 				com.kobaj.message.ToastManager.makeLongToast(getString(R.string.unknown_screen_size_message));
 				break;
 			case DisplayMetrics.DENSITY_XHIGH: //xhdpi 320
-				com.kobaj.math.Constants.dip_scale = 1.0 + 1.0 / 3.0;
+				Constants.dip_scale = 1.0 + 1.0 / 3.0;
 				break;
 			case DisplayMetrics.DENSITY_HIGH: //HDPI 240
-				com.kobaj.math.Constants.dip_scale = 1.0;
+				Constants.dip_scale = 1.0;
 				break;
 			case DisplayMetrics.DENSITY_MEDIUM: //MDPI 160
-				com.kobaj.math.Constants.dip_scale = 2.0 / 3.0;
+				Constants.dip_scale = 2.0 / 3.0;
 				break;
 			case DisplayMetrics.DENSITY_LOW:  //LDPI 120
-				com.kobaj.math.Constants.dip_scale = 0.5;
+				Constants.dip_scale = 0.5;
 				break;
 		}
 		
 		//fonts and text scale
-		com.kobaj.math.Constants.sd_scale = metrics.scaledDensity;
+		Constants.sd_scale = metrics.scaledDensity;
 		
 		//put in the other stuffs.
-		com.kobaj.math.Constants.width = display.getWidth();
-		com.kobaj.math.Constants.height = display.getHeight();
+		Constants.width = display.getWidth();
+		Constants.height = display.getHeight();
 		
-		com.kobaj.math.Constants.ratio = (double) display.getWidth() / (double) display.getHeight();
+		Constants.ratio = (double) display.getWidth() / (double) display.getHeight();
 		
 		// Create a GLSurfaceView instance and set it
         // as the ContentView for this Activity

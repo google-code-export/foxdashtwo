@@ -10,7 +10,7 @@ import com.kobaj.opengldrawable.Quad;
 //3. Collision handling
 public class Physics
 {	
-	private double gravity = -.000000098; //well thats a random number.
+	private double gravity = -.000000698; //well thats a random number.
 	
 	public Physics()
 	{
@@ -24,15 +24,19 @@ public class Physics
 	
 	//applies gravity
 	public <T extends Quad> void apply_physics(double delta, T the_quad)
-	{
-		//set acceleration
-		the_quad.y_acc = gravity;
+	{	
+		//the below is in shader coordinates
 		
 		//add velocity
 		the_quad.y_vel += the_quad.y_acc * delta;
+		the_quad.x_vel += the_quad.x_acc * delta;
+		
+		//set acceleration
+		the_quad.y_acc = gravity;
+		the_quad.x_acc = 0;
 		
 		//add position
-		the_quad.setPos(the_quad.get_x_pos(), the_quad.get_y_pos() + the_quad.y_vel * delta, com.kobaj.opengldrawable.EnumDrawFrom.center);
+		the_quad.setPos(the_quad.get_x_pos() + the_quad.x_vel * delta, the_quad.get_y_pos() + the_quad.y_vel * delta, com.kobaj.opengldrawable.EnumDrawFrom.center);
 	}
 	
 	public <T extends Quad> RectF check_collision(T first_quad, T second_quad)
@@ -66,6 +70,7 @@ public class Physics
 				if(collision.setIntersect(first_rect, second_rect))
 					return collision;
 		
+		//if there is a collision, return a rectF, if no collision then null.
 		return null;
 	}
 	

@@ -12,13 +12,16 @@ import android.opengl.GLES20;
 public class QuadRenderTo extends Quad
 {
 	// RENDER TO TEXTURE VARIABLES
-	int[] fb, depthRb, renderTex;
-	int texW = 800;
-	int texH = 480;
-	IntBuffer texBuffer;
+	private int[] fb, depthRb, renderTex;
+	private int texW = 800;
+	private int texH = 480;
+	private IntBuffer texBuffer;
 
 	public QuadRenderTo()
 	{
+		texW = com.kobaj.math.Constants.width;
+		texH = com.kobaj.math.Constants.height;
+		
 		setupRenderToTexture();
 		onCreate(renderTex[0], texW, texH);
 	}
@@ -43,7 +46,6 @@ public class QuadRenderTo extends Quad
 		GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_REPEAT);
 
 		// create it 
-		// create an empty intbuffer first?
 		int[] buf = new int[texW * texH];
 		texBuffer = ByteBuffer.allocateDirect(buf.length* 4).order(ByteOrder.nativeOrder()).asIntBuffer();
 		GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGB, texW, texH, 0, GLES20.GL_RGB, GLES20.GL_UNSIGNED_SHORT_5_6_5, texBuffer);
@@ -57,17 +59,13 @@ public class QuadRenderTo extends Quad
 	
 	public boolean beginRenderToTexture()
 	{
-		//GLES20.glViewport(0, 0, this.texW, this.texH);
-		
 		GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, fb[0]);
 		
 		// specify texture as color attachment
 		GLES20.glFramebufferTexture2D(GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0, GLES20.GL_TEXTURE_2D, renderTex[0], 0);
-		//GLES20.glFramebufferTexture2D(GLES20.GL_FRAMEBUFFER, GLES20.GL_DEPTH_ATTACHMENT, GLES20.GL_TEXTURE_2D, renderTex[0], 0);
 		
 		// attach render buffer as depth buffer
 		GLES20.glFramebufferRenderbuffer(GLES20.GL_FRAMEBUFFER, GLES20.GL_DEPTH_ATTACHMENT, GLES20.GL_RENDERBUFFER, depthRb[0]);
-		//GLES20.glFramebufferRenderbuffer(GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0, GLES20.GL_RENDERBUFFER, depthRb[0]);
 		
 		// check status
 		int status = GLES20.glCheckFramebufferStatus(GLES20.GL_FRAMEBUFFER);
@@ -83,7 +81,6 @@ public class QuadRenderTo extends Quad
 		GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
 		
 		// Same thing, only different texture is bound now
-		
 		GLES20.glClearColor(.0f, .0f, .0f, 1.0f);
 		GLES20.glClear( GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_COLOR_BUFFER_BIT);
 	}

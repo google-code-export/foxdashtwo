@@ -10,12 +10,7 @@ import android.graphics.Rect;
 import android.graphics.Shader;
 
 public class QuadColorShape extends Quad
-{
-	private QuadColorShape()
-	{
-		super(0);
-	}
-	
+{	
 	//this is in screen coordinates 0-800
 	//square/rectangle
 	public QuadColorShape(int left, int top, int right, int bottom, int color)
@@ -25,22 +20,25 @@ public class QuadColorShape extends Quad
 	
 	//this is in screen coordinates 0-800
 	//circle
-	public QuadColorShape(int radius, int color)
+	public QuadColorShape(double radius, int color)
 	{
 		super(findKey(), makeCircle(radius, color));
 	}
 	
 	//gradient circle
 	//this boolean might decide if its a bloom or not in the future
-	//for now it just differentiats between the two types of circles to draw.
-	public QuadColorShape(int radius, int color, boolean this_does_nothing)
+	//the whole point of bloom is to not act as a light, but more of an overlay. kind of that
+	//"ahh, the light is so bright its blinding me and I cant see behind it" effect...
+	//this is in screen coordinates 0-800
+	public QuadColorShape(double radius, int color, boolean is_bloom)
 	{
-		super(findKey(), makeCircleGradient(radius, color));
+		super(findKey(), makeCircleGradient(radius, color, is_bloom));
 	}
 	
-	public QuadColorShape(int radius, int color, int close_width, int far_width)
+	//this is in screen coordinates 0-800
+	public QuadColorShape(double radius, int color, int close_width, int far_width, boolean is_bloom)
 	{
-		super(findKey(), makeCircleGradientWithMask(radius, color, close_width, far_width));
+		super(findKey(), makeCircleGradientWithMask(radius, color, close_width, far_width, is_bloom));
 	}
 	
 	private static int findKey()
@@ -63,25 +61,30 @@ public class QuadColorShape extends Quad
 		return bitmap_temp;
 	}
 	
-	private static Bitmap makeCircle(int radius, int color)
+	private static Bitmap makeCircle(double radius, int color)
 	{
 		Paint paint = new Paint();
 		paint.setColor(color);
 		paint.setAntiAlias(true);
 		
-		Bitmap bitmap_temp = Bitmap.createBitmap(radius * 2, radius * 2, Bitmap.Config.ARGB_8888);
+		Bitmap bitmap_temp = Bitmap.createBitmap((int)(radius * 2.0), (int)(radius * 2.0), Bitmap.Config.ARGB_8888);
 		Canvas canvas_temp = new Canvas(bitmap_temp);	
-		canvas_temp.drawCircle((float)radius, (float)radius, radius, paint);
+		canvas_temp.drawCircle((float)radius, (float)radius, (float)radius, paint);
 		
 		return bitmap_temp;
 	}
 	
-	private static Bitmap makeCircleGradient(double radius, int color)
+	private static Bitmap makeCircleGradient(double radius, int color, boolean is_bloom)
 	{
 		int x = (int) radius;
 		int y = (int) radius;
         
-        RadialGradient shader_light = new RadialGradient(x, y, (float) radius, color, Color.BLACK, Shader.TileMode.CLAMP);
+        RadialGradient shader_light;
+        if(!is_bloom)
+        	shader_light = new RadialGradient(x, y, (float) radius, color, Color.BLACK, Shader.TileMode.CLAMP);
+        else
+        	shader_light = new RadialGradient(x, y, (float) radius, color, Color.TRANSPARENT, Shader.TileMode.CLAMP);
+        
         Paint outline_paint = new Paint();
         outline_paint.setShader(shader_light);
         outline_paint.setAntiAlias(true);
@@ -97,19 +100,19 @@ public class QuadColorShape extends Quad
         
         // obscuring light
         outline_paint.setXfermode(null);
-        outline_paint.setAlpha(255);
+        if(!is_bloom)
+        	outline_paint.setAlpha(255);
+        else
+        	outline_paint.setAlpha(50);
+        
         canvas_temp.drawRect(screen, outline_paint);
         
-        // bloom and after effect
-        //outline_paint.setAlpha(50);
-        //canvas_temp.drawRect(screen, outline_paint);
-
         return bitmap_temp;
 	}
 	
-	private static Bitmap makeCircleGradientWithMask(double radius, int color, double close_width, double far_width)
+	private static Bitmap makeCircleGradientWithMask(double radius, int color, double close_width, double far_width, boolean is_bloom)
 	{
-		Bitmap light = makeCircleGradient(radius, color);
+		Bitmap light = makeCircleGradient(radius, color, is_bloom);
 		
 		Paint mask_paint = new Paint();
 		mask_paint.setAntiAlias(true);

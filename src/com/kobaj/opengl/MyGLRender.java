@@ -33,11 +33,6 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 	
 	//sound and music
 	protected Music music;
-	public MusicPlayList music_play_list;
-	public Sound sound;
-	
-	//physics
-	public Physics physics;
 	
 	public void onSurfaceCreated(GL10 unused, EGLConfig config)
 	{
@@ -59,8 +54,6 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		//mmm blending
 		GLES20.glEnable(GLES20.GL_BLEND);
 		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA); // no see thru
-		//GLES20.glBlendFunc(GLES20.GL_DST_ALPHA, GLES20.GL_ONE); //good lights
-		//GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_SRC_ALPHA); // cheap effective lights
 		
 		// shaders
 		ambient_light = new AmbientLightShader();
@@ -73,11 +66,11 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		
 		//sound and audio setup
 		music = new Music();
-		music_play_list = new MusicPlayList(music);
-		sound = new Sound();
+		com.kobaj.math.Constants.music_play_list = new MusicPlayList(music);
+		com.kobaj.math.Constants.sound = new Sound();
 		
 		//physics setup
-		physics = new Physics();
+		com.kobaj.math.Constants.physics = new Physics();
 		
 		onInitialize();
 	}
@@ -89,6 +82,7 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		GLES20.glViewport(0, 0, width, height);
 		
 		float ratio = (float) width / height;
+		com.kobaj.math.Constants.shader_width = ratio * 2.0;
 		
 		// this projection matrix is applied to object coodinates
 		// in the onDrawFrame() method
