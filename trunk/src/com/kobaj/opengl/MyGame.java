@@ -6,6 +6,8 @@ import android.opengl.GLES20;
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.EnumDrawFrom;
+import com.kobaj.opengldrawable.Particle;
+import com.kobaj.opengldrawable.Particles;
 import com.kobaj.opengldrawable.Quad;
 import com.kobaj.opengldrawable.QuadAnimated;
 import com.kobaj.opengldrawable.QuadColorShape;
@@ -17,6 +19,7 @@ public class MyGame extends MyGLRender
 	//items
 	Quad ic;
 	QuadAnimated quad;
+	QuadColorShape white;
 	
 	//lights
 	QuadColorShape floor;
@@ -25,11 +28,16 @@ public class MyGame extends MyGLRender
 	QuadColorShape ball2;
 	QuadColorShape ball3;
 	
+	//particles
+	Particles particles;
+	
+	//dont touch the stuff below this line
 	//final drawable.
 	QuadRenderTo scene;
 	
 	//lights
-    AmbientLight al_test;
+    AmbientLight al_ambient_light;
+    //dont touch stuff above this line
     
 	@Override
 	void onInitialize()
@@ -40,21 +48,27 @@ public class MyGame extends MyGLRender
 		quad.playing = true;
 		//take them away from the background a little
 		quad.z_pos = -1.0000001;
+		white = new QuadColorShape(0, com.kobaj.math.Constants.height, com.kobaj.math.Constants.width, 0, 0xFFFFFFFF);
 		
 		floor = new QuadColorShape(0, 20, com.kobaj.math.Constants.width, 0, 0xFF0000FF);
 		overlay = new QuadColorShape(0, com.kobaj.math.Constants.height, com.kobaj.math.Constants.width, 0, 0xFF555555);
-		ball = new QuadColorShape(25, Color.RED, 10, 30);
+		ball = new QuadColorShape(25, Color.RED, 10, 30, false);
 		ball2 = new QuadColorShape(25, Color.GREEN);
 		ball3 = new QuadColorShape(25, Color.BLUE);
 		
 		floor.setPos(com.kobaj.math.Functions.screenXToShaderX(0), com.kobaj.math.Functions.screenYToShaderY(20), com.kobaj.opengldrawable.EnumDrawFrom.top_left);
         
-        al_test = new AmbientLight(ambient_light, my_view_matrix);
-      
+		particles = new Particles(25, 400, 240, 15, -1, false, -1);
+		particles.setMovementToFountian(100, 100);
+		//particles.setMovementToGravity(100);
+		particles.advancePhysics();
+		
+		//dont touch below this line.
+        al_ambient_light = new AmbientLight(ambient_light, my_view_matrix);
         scene = new QuadRenderTo();
+        
+        System.gc();
 	}
-
-	double add = 100000;
 	double delta;
 	
 	@Override
@@ -62,10 +76,10 @@ public class MyGame extends MyGLRender
 	{
 		this.delta = delta;
 		
-		add += .01f * delta;
-		
 		//for animation
 		quad.onUpdate(delta);
+		
+		particles.onUpdate(delta);
 		
 		//quick test
 		//TODO grab the initial translation matrix and store it
@@ -87,13 +101,14 @@ public class MyGame extends MyGLRender
 	void onDraw()
 	{	
 		GLES20.glUseProgram(ambient_light.my_shader);
-		al_test.applyShaderProperties();
+		al_ambient_light.applyShaderProperties();
 		
 		//regular objects
 		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA); // no see thru
 		if(scene.beginRenderToTexture())
 		{
 			quad.onDrawAmbient(my_view_matrix, my_proj_matrix, ambient_light);
+			white.onDrawAmbient(my_view_matrix, my_proj_matrix, ambient_light);
 			ic.onDrawAmbient(my_view_matrix, my_proj_matrix, ambient_light);
 		}
 		scene.endRenderToTexture();
@@ -101,21 +116,25 @@ public class MyGame extends MyGLRender
 		//lights
 		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_SRC_ALPHA); // cheap lights
 		overlay.onDrawAmbient(my_view_matrix, my_proj_matrix, ambient_light);
-		floor.onDrawAmbient(my_view_matrix, my_proj_matrix, ambient_light);
-		ball.onDrawAmbient(my_view_matrix, my_proj_matrix, ambient_light);
+		for(Particle p: particles.actual_particles)
+			p.actual_quad.onDrawAmbient(my_view_matrix, my_proj_matrix, ambient_light);
+		//floor.onDrawAmbient(my_view_matrix, my_proj_matrix, ambient_light);
+		//ball.onDrawAmbient(my_view_matrix, my_proj_matrix, ambient_light);
 		//ball2.onDrawAmbient(my_view_matrix, my_proj_matrix, ambient_light);
 		//ball3.onDrawAmbient(my_view_matrix, my_proj_matrix, ambient_light);
+		
+		
 		
 		//final scene
 		GLES20.glBlendFunc(GLES20.GL_DST_COLOR, GLES20.GL_ZERO); // masking
 		scene.onDrawAmbient(my_view_matrix, my_proj_matrix, ambient_light);
 		
+		//text below this line
 		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA); // no see thru
-		//see if text works.
-		//text.DrawText(R.string.hello, 0, 0, DrawFrom.bottom_right);
 		text.DrawNumber(fps.fps, Functions.screenXToShaderX(25), Functions.screenYToShaderY((int)Functions.fix_y(25)), EnumDrawFrom.top_left);
-		text.DrawNumber((int)add, Functions.screenXToShaderX(25), Functions.screenYToShaderY((int)Functions.fix_y(75)), EnumDrawFrom.top_left);
-		text.DrawNumber((int)delta, Functions.screenXToShaderX(25), Functions.screenYToShaderY((int)Functions.fix_y(125)), EnumDrawFrom.top_left);
+		text.DrawNumber((int)delta, Functions.screenXToShaderX(100), Functions.screenYToShaderY((int)Functions.fix_y(25)), EnumDrawFrom.top_left);
+			
+		text.DrawNumber((int)particles.actual_particles.size(), Functions.screenXToShaderX(25), Functions.screenYToShaderY((int)Functions.fix_y(75)), EnumDrawFrom.top_left);
 	}
 
 	@Override

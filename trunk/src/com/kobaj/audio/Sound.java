@@ -10,7 +10,7 @@ import android.util.SparseIntArray;
 //this class is for playing sounds overtop of music
 //like gunshots, or foot steps or something.
 public class Sound extends AudioBase
-{
+{	
 	private SoundPool sound_pool;
 	private SparseIntArray sound_pool_map;
 	

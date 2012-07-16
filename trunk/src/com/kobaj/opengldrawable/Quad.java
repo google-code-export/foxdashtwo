@@ -269,6 +269,8 @@ public class Quad
 	//ouside calls
 	public void onDrawAmbient(float[] my_view_matrix, float[] my_proj_matrix, AmbientLightShader ambient_light)
 	{
+		//TODO if on screen draw, else return early (save some fps).
+		
 		onSetupAmbient(my_view_matrix, my_proj_matrix, ambient_light);
 		
 		// Draw the cube.

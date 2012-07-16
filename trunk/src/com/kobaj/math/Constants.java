@@ -3,6 +3,9 @@ package com.kobaj.math;
 import android.content.Context;
 import android.content.res.Resources;
 
+import com.kobaj.audio.MusicPlayList;
+import com.kobaj.audio.Sound;
+
 public class Constants
 {
 	//you may be wondering why the heck I'm not using 
@@ -24,6 +27,9 @@ public class Constants
 	public static int width;
 	public static int height;
 	
+	public static double shader_width;
+	public final static double shader_height = 2.0; // always
+	
 	// this is width / height
 	public static double ratio;
 	
@@ -35,4 +41,9 @@ public class Constants
 	
 	//the ever static reference to resources.
 	public static Resources resources;
+	
+	public static Physics physics;
+	
+	public static MusicPlayList music_play_list;
+	public static Sound sound;
 }
