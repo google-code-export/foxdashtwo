@@ -83,6 +83,9 @@ public class FoxdashtwoActivity extends Activity {
 		
 		Constants.ratio = (double) display.getWidth() / (double) display.getHeight();
 		
+		//touchy
+		com.kobaj.math.Constants.input_manager = new com.kobaj.input.InputManager();
+		
 		// Create a GLSurfaceView instance and set it
         // as the ContentView for this Activity
         mGLView = new com.kobaj.opengl.MyGLSurfaceView(this);
@@ -117,6 +120,7 @@ public class FoxdashtwoActivity extends Activity {
 			return false;
 		
 		//game.input_manager.eventUpdateDown(i, event);
+		com.kobaj.math.Constants.input_manager.eventUpdateDown(i, event);
 		return true;
 	}
 	
@@ -124,6 +128,7 @@ public class FoxdashtwoActivity extends Activity {
 	public boolean onKeyUp(int i, KeyEvent event)
 	{
 		//game.input_manager.eventUpdateUp(i, event);
+		com.kobaj.math.Constants.input_manager.eventUpdateUp(i, event);
 		return true;
 	}
 	
@@ -131,6 +136,7 @@ public class FoxdashtwoActivity extends Activity {
 	public boolean onTouchEvent(MotionEvent e)
 	{
 		//game.input_manager.eventUpdate(e);
+		com.kobaj.math.Constants.input_manager.eventUpdate(e);
 		return true;
 	}
 }

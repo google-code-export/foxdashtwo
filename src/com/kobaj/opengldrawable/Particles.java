@@ -52,14 +52,13 @@ public class Particles
 			this.have_lifes = this.total_lifes;
 		
 		colors = new ArrayList<Integer>();
+		//this is ok because it is an actual array
 		for(int selection_color: color)
 			colors.add(selection_color);
 		
 		//begin making the amount of particles currently alive
 		for(int i = 0; i < have_lifes; i++)
-		{
 			actual_particles.add(makeParticle());
-		}
 	}
 	
 	private Particle makeParticle()
@@ -111,6 +110,26 @@ public class Particles
 			if(movement == EnumParticleMovement.orbit)
 			{
 				//TODO figure out orbital movement.
+				if(p.travel_time >= p.max_travel_time)
+				{
+					//if radius, then orbit
+					p.degree += delta * p.speed * 1000.0;
+					
+					double new_x = com.kobaj.math.Functions.polarToX(p.degree, p.radius) + shader_x;
+					double new_y = com.kobaj.math.Functions.polarToY(p.degree, p.radius) + shader_y;
+					
+					p.actual_quad.setPos(new_x, new_y, EnumDrawFrom.center);
+				}
+				else
+				{
+					//if not radius, then navigate to radius
+					p.travel_time += delta;
+					
+					double new_x = com.kobaj.math.Functions.linearInterpolate(0, p.max_travel_time, p.travel_time, p.start_x, p.go_x);
+					double new_y = com.kobaj.math.Functions.linearInterpolate(0, p.max_travel_time, p.travel_time, p.start_y, p.go_y);
+					
+					p.actual_quad.setPos(new_x, new_y, EnumDrawFrom.center);
+				}
 			}
 			else
 			{
@@ -146,8 +165,8 @@ public class Particles
 		this.spread = spread;
 		
 		//add the left right to each particle
-		for(Particle p: actual_particles)
-			setParticleToMovement(p);
+		for(int i = actual_particles.size() - 1; i >= 0; i--)
+			setParticleToMovement(actual_particles.get(i));
 	}
 	
 	//screen coordinates
@@ -159,8 +178,8 @@ public class Particles
 		
 		//add the jump to each particle
 		//add left and right to each particle
-		for(Particle p: actual_particles)
-			setParticleToMovement(p);
+		for(int i = actual_particles.size() - 1; i >= 0; i--)
+			setParticleToMovement(actual_particles.get(i));
 	}
 	
 	//screen coordinates
@@ -170,8 +189,8 @@ public class Particles
 		this.spread = radius;
 		this.height = speed; //not confusing at all...
 		
-		for(Particle p: actual_particles)
-			setParticleToMovement(p);
+		for(int i = actual_particles.size() - 1; i >= 0; i--)
+			setParticleToMovement(actual_particles.get(i));
 	}
 	
 	//so things are a bit more staggered
@@ -179,17 +198,14 @@ public class Particles
 	{
 		
 		int loop = 0;
-		for(Particle p: actual_particles)
+		for(int i = actual_particles.size() - 1; i >= 0; i--)
 		{
 			int loops = 10 * loop;
-			double delta = 1.0 / 60.0 * 1000.0;
+			double delta = 1.0 / 60.0 * 1000.0 * loops;
 			
-			for(int i = 0 ; i < loops; i++)
-			{
-				com.kobaj.math.Constants.physics.apply_physics(delta, p.actual_quad);
-				if(p.bloom_quad != null)
-					com.kobaj.math.Constants.physics.apply_physics(delta, p.bloom_quad);
-			}
+				com.kobaj.math.Constants.physics.apply_physics(delta, actual_particles.get(i).actual_quad);
+				if(actual_particles.get(i).bloom_quad != null)
+					com.kobaj.math.Constants.physics.apply_physics(delta, actual_particles.get(i).bloom_quad);
 			
 			loop += 1;
 			if(loop == 7)
@@ -212,7 +228,7 @@ public class Particles
 		}
 		else if(movement == EnumParticleMovement.orbit)
 		{
-			p.addRadiusDegree(spread, height);
+			p.setRadiusDegree(spread, height, shader_x, shader_y);
 		}
 	}
 }

@@ -5,6 +5,7 @@ import android.content.res.Resources;
 
 import com.kobaj.audio.MusicPlayList;
 import com.kobaj.audio.Sound;
+import com.kobaj.input.InputManager;
 
 public class Constants
 {
@@ -46,4 +47,6 @@ public class Constants
 	
 	public static MusicPlayList music_play_list;
 	public static Sound sound;
+	
+	public static InputManager input_manager;
 }

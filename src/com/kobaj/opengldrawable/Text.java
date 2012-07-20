@@ -63,6 +63,7 @@ public class Text
 		// fill in our array list
 		for (int i = 0; i < 10; i++)
 			my_string_array.add(Integer.toString(i));
+		//this is ok because it is an actual array
 		for (String s : m_test_array)
 			my_string_array.add(s);
 		
@@ -136,10 +137,10 @@ public class Text
 			Canvas canvas_temp = new Canvas(bitmap_temp);
 			
 			// finaly after all that, draw it
-			for (Path path : path_splits)
+			for(int i = path_splits.size() - 1; i >= 0; i--)
 			{
-				canvas_temp.drawPath(path, paint_stroke);
-				canvas_temp.drawPath(path, paint_temp);
+				canvas_temp.drawPath(path_splits.get(i), paint_stroke);
+				canvas_temp.drawPath(path_splits.get(i), paint_temp);
 			}
 			
 			// stuff it in the buffer

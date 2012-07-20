@@ -1,7 +1,5 @@
 package com.kobaj.math;
 
-import java.util.LinkedList;
-import java.util.Queue;
 
 public class FPSManager
 {
@@ -33,24 +31,32 @@ public class FPSManager
 	
 	// averages
 	//overall it provides smoother gameplay.
-	private int max = 4;
-	private Queue<Double> averageList = new LinkedList<Double>();
+	private final int max = 4;
+	private double[] averageList = new double[max];
+	//private Queue<Double> averageList = new LinkedList<Double>();
+	
+	//new method, fakeing our own queue soz we can save on memory
+	private void offer(double value)
+	{
+		for(int i = max - 1; i >= 1; i--)
+			averageList[i] = averageList[i-1];
+		
+		averageList[0] = value;
+	}
 	
 	private double calculateAverage(double newV)
 	{	
-		averageList.offer(newV);
-		
-		if (averageList.size() > max)
-			averageList.poll();
+		offer(newV);
 	
 		// who knew the whole time I was calculating averages wrong in the original fox dash...woops
 		// I got it right this time, I swear!
 		double average = 0; 
 		
-		for(double it: averageList)
-			average += it;
+		//this is ok because its a regular array;
+		for(double avg: averageList)
+			average += avg;
 		
-		average = average / averageList.size();
+		average = average / max;
 		
 		return average;
 	}

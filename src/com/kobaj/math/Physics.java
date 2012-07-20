@@ -65,10 +65,10 @@ public class Physics
 		RectF collision = new RectF();
 		
 		//if its possible, get a detailed picture of the collision
-		for(RectF first_rect: first_quad.phys_rect_list)
-			for(RectF second_rect: second_quad.phys_rect_list)
-				if(collision.setIntersect(first_rect, second_rect))
-					return collision;
+		for(int i = first_quad.phys_rect_list.size() - 1; i >= 0; i--)
+			for(int e = second_quad.phys_rect_list.size() - 1; i >= 0; i--)
+				if(collision.setIntersect(first_quad.phys_rect_list.get(i), second_quad.phys_rect_list.get(e)))
+						return collision;
 		
 		//if there is a collision, return a rectF, if no collision then null.
 		return null;

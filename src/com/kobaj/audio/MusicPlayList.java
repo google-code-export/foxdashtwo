@@ -39,6 +39,7 @@ public class MusicPlayList
 		
 		play_list.clear();
 		
+		//this is ok because its just a regular array
 		for(int sound_id: sound_ids)
 			play_list.add(sound_id);
 	}
