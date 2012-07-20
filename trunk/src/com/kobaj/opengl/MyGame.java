@@ -6,7 +6,6 @@ import android.opengl.GLES20;
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.EnumDrawFrom;
-import com.kobaj.opengldrawable.Particle;
 import com.kobaj.opengldrawable.Particles;
 import com.kobaj.opengldrawable.Quad;
 import com.kobaj.opengldrawable.QuadAnimated;
@@ -80,6 +79,19 @@ public class MyGame extends MyGLRender
 		quad.onUpdate(delta);
 		
 		particles.onUpdate(delta);
+
+		//for (int i = 0; i < com.kobaj.math.Constants.input_manager.fingerCount; i++)
+			if (com.kobaj.math.Constants.input_manager.getReleased(0))
+			{
+				//change the particle effects.
+				
+				if(particles.movement == com.kobaj.opengldrawable.EnumParticleMovement.fountain)
+					particles.setMovementToGravity(100);
+				else if(particles.movement == com.kobaj.opengldrawable.EnumParticleMovement.gravity)
+					particles.setMovementToOrbit(100, 50);
+				else if(particles.movement == com.kobaj.opengldrawable.EnumParticleMovement.orbit)
+					particles.setMovementToFountian(100, 100);
+			}
 		
 		//quick test
 		//TODO grab the initial translation matrix and store it
@@ -116,8 +128,9 @@ public class MyGame extends MyGLRender
 		//lights
 		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_SRC_ALPHA); // cheap lights
 		overlay.onDrawAmbient(my_view_matrix, my_proj_matrix, ambient_light);
-		for(Particle p: particles.actual_particles)
-			p.actual_quad.onDrawAmbient(my_view_matrix, my_proj_matrix, ambient_light);
+		
+		for(int i = particles.actual_particles.size() - 1; i >= 0; i--)
+			particles.actual_particles.get(i).actual_quad.onDrawAmbient(my_view_matrix, my_proj_matrix, ambient_light);	
 		//floor.onDrawAmbient(my_view_matrix, my_proj_matrix, ambient_light);
 		//ball.onDrawAmbient(my_view_matrix, my_proj_matrix, ambient_light);
 		//ball2.onDrawAmbient(my_view_matrix, my_proj_matrix, ambient_light);

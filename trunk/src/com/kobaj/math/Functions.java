@@ -15,11 +15,11 @@ public class Functions
 		if(value > maxX)
 			return maxY;
 	
-		return unclampedLinearInterpolate(minX, maxX, value, minY, maxY);
+		return linearInterpolateUnclamped(minX, maxX, value, minY, maxY);
 	}
 	
 	//method that is unclamped.
-	public static final double unclampedLinearInterpolate(double minX, double maxX, double value, double minY, double maxY)
+	public static final double linearInterpolateUnclamped(double minX, double maxX, double value, double minY, double maxY)
 	{
 		return minY * (value - maxX) / (minX - maxX) + maxY * (value - minX) / (maxX - minX);
 	}
@@ -46,24 +46,24 @@ public class Functions
 	//for example, screen width is 0 to 800, shader is 0 to 1
 	public static final double screenWidthToShaderWidth(double input_x)
 	{
-		return unclampedLinearInterpolate(0, Constants.width, input_x, 0, Constants.ratio);
+		return linearInterpolateUnclamped(0, Constants.width, input_x, 0, Constants.ratio);
 	}
 	
 	public static final double screenHeightToShaderHeight(double input_y)
 	{
-		return unclampedLinearInterpolate(0, Constants.height, input_y, 0, 1);
+		return linearInterpolateUnclamped(0, Constants.height, input_y, 0, 1);
 	}
 	
 	//used to translate screen coordinates to shader coordinates
 	//for example, screen width is 0 to 800px, shader is -1 to 1.
 	public static final double screenXToShaderX(double input_x)
 	{
-		return unclampedLinearInterpolate(0, Constants.width, input_x, -Constants.ratio, Constants.ratio);
+		return linearInterpolateUnclamped(0, Constants.width, input_x, -Constants.ratio, Constants.ratio);
 	}
 	
 	public static final double screenYToShaderY(double input_y)
 	{
-		return unclampedLinearInterpolate(0, Constants.height, input_y, -1, 1);
+		return linearInterpolateUnclamped(0, Constants.height, input_y, -1, 1);
 	}
 	
 	//random between two values
@@ -94,5 +94,21 @@ public class Functions
 				return true;
 		
 		return false;
+	}
+	
+	//radius stuff.
+	public static final double rectangularToRadius(double x, double y)
+	{
+		return Math.sqrt(x * x + y * y);
+	}
+	
+	public static final double polarToX(double degree, double radius)
+	{
+		return radius * Math.sin(Math.toRadians(degree));
+	}
+	
+	public static final double polarToY(double degree, double radius)
+	{
+		return radius * Math.cos(Math.toRadians(degree));
 	}
 }
