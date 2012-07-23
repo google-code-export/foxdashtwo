@@ -47,11 +47,8 @@ public abstract class BaseLightShader
 		int fragment_shader = loadShader(GLES20.GL_FRAGMENT_SHADER, fragment_shader_code);
 		
 		my_shader = GLES20.glCreateProgram(); // create empty OpenGL Program
-		GLES20.glAttachShader(my_shader, vertex_shader); // add the vertex
-															// shader
-															// to program
-		GLES20.glAttachShader(my_shader, fragment_shader); // add the fragment
-															// shader to program
+		GLES20.glAttachShader(my_shader, vertex_shader); 
+		GLES20.glAttachShader(my_shader, fragment_shader); 
 		GLES20.glLinkProgram(my_shader); // creates OpenGL program executables
 		
 		// get handle to the vertex shader's vPosition member

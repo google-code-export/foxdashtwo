@@ -46,7 +46,7 @@ public class QuadColorShape extends Quad
 		int key = 20;
 		//could potentially get slow
 		//but I hope nobody is making thousands of quads and getting to that slow point.
-		while(com.kobaj.loader.GLBitmapReader.loaded_textures.containsKey(key))
+		while(com.kobaj.loader.GLBitmapReader.loaded_textures.get(key) != null)
 			key += 1;
 		
 		return key;	

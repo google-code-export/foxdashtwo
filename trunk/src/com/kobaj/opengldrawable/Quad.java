@@ -13,6 +13,7 @@ import android.graphics.Bitmap;
 import android.graphics.RectF;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
+import android.util.Log;
 
 import com.kobaj.loader.GLLoadedTexture;
 import com.kobaj.openglgraphics.AmbientLightShader;
@@ -269,7 +270,7 @@ public class Quad
 	//ouside calls
 	public void onDrawAmbient(float[] my_view_matrix, float[] my_proj_matrix, AmbientLightShader ambient_light)
 	{
-		//TODO if on screen draw, else return early (save some fps).
+		//TODO, if object is visible on screen, then draw. Otherwise return early.
 		
 		onSetupAmbient(my_view_matrix, my_proj_matrix, ambient_light);
 		

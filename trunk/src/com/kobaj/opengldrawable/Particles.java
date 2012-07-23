@@ -114,6 +114,7 @@ public class Particles
 				{
 					//if radius, then orbit
 					p.degree += delta * p.speed * 1000.0;
+					p.degree = p.degree % 360; //avoiding stack overflow
 					
 					double new_x = com.kobaj.math.Functions.polarToX(p.degree, p.radius) + shader_x;
 					double new_y = com.kobaj.math.Functions.polarToY(p.degree, p.radius) + shader_y;

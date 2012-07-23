@@ -2,13 +2,12 @@ package com.kobaj.loader;
 
 //http://blog.poweredbytoast.com/loading-opengl-textures-in-android
 
-import java.util.HashMap;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.opengl.GLES20;
 import android.opengl.GLUtils;
+import android.util.SparseArray;
 
 public class GLBitmapReader
 {
@@ -17,12 +16,12 @@ public class GLBitmapReader
 	// this might eventually be changed to a base class so that
 	// it can contain sounds and other actually loaded resources.
 	// but most likely not :/
-	public static HashMap<Integer, GLLoadedTexture> loaded_textures = new HashMap<Integer, GLLoadedTexture>();
+	public static SparseArray<GLLoadedTexture> loaded_textures = new SparseArray<GLLoadedTexture>();
 	
 	//in case context is lost
 	public static void resetLoadedTextures()
 	{
-		loaded_textures = new HashMap<Integer, GLLoadedTexture>(); 
+		loaded_textures = new SparseArray<GLLoadedTexture>();
 	}
 	
 	// Get a new texture id:
@@ -49,7 +48,7 @@ public class GLBitmapReader
 	
 	public static int loadTextureFromBitmap(int resource, Bitmap temp)
 	{
-		if (loaded_textures.containsKey(resource))
+		if(loaded_textures.get(resource) != null)
 			return loaded_textures.get(resource).texture_id;
 		
 		//flip it the right way around.

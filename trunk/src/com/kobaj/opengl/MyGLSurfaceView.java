@@ -14,7 +14,7 @@ public class MyGLSurfaceView extends GLSurfaceView {
         setEGLContextClientVersion(2);
         // Set the Renderer for drawing on the GLSurfaceView
         my_game = new com.kobaj.opengl.MyGame();
-        
+
         setRenderer(my_game);
     }
     
