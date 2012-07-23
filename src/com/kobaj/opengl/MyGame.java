@@ -2,6 +2,7 @@ package com.kobaj.opengl;
 
 import android.graphics.Color;
 import android.opengl.GLES20;
+import android.util.Log;
 
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Functions;
@@ -57,7 +58,7 @@ public class MyGame extends MyGLRender
 		
 		floor.setPos(com.kobaj.math.Functions.screenXToShaderX(0), com.kobaj.math.Functions.screenYToShaderY(20), com.kobaj.opengldrawable.EnumDrawFrom.top_left);
         
-		particles = new Particles(25, 400, 240, 15, -1, false, -1);
+		particles = new Particles(25, 400, 240, 1, -1, false, -1);
 		particles.setMovementToFountian(100, 100);
 		//particles.setMovementToGravity(100);
 		particles.advancePhysics();
@@ -124,7 +125,7 @@ public class MyGame extends MyGLRender
 			ic.onDrawAmbient(my_view_matrix, my_proj_matrix, ambient_light);
 		}
 		scene.endRenderToTexture();
-		
+	
 		//lights
 		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_SRC_ALPHA); // cheap lights
 		overlay.onDrawAmbient(my_view_matrix, my_proj_matrix, ambient_light);
@@ -135,8 +136,6 @@ public class MyGame extends MyGLRender
 		//ball.onDrawAmbient(my_view_matrix, my_proj_matrix, ambient_light);
 		//ball2.onDrawAmbient(my_view_matrix, my_proj_matrix, ambient_light);
 		//ball3.onDrawAmbient(my_view_matrix, my_proj_matrix, ambient_light);
-		
-		
 		
 		//final scene
 		GLES20.glBlendFunc(GLES20.GL_DST_COLOR, GLES20.GL_ZERO); // masking

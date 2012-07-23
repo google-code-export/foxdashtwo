@@ -45,8 +45,7 @@ public class Particle
 		if(com.kobaj.math.Functions.randomInt(0, 1) == 1)
 			half_width = -half_width;
 		
-		return half_width / 1000.0;
-		
+		return half_width / 1000.0;	
 	}
 	
 	private double getHalfWidth(double spread)
@@ -87,10 +86,24 @@ public class Particle
 		
 		this.radius = Math.abs(com.kobaj.math.Functions.screenWidthToShaderWidth(getHalfWidth(radius))) * 3000.0;
 		this.speed = com.kobaj.math.Functions.screenWidthToShaderWidth(percent(speed, 0.35)); //width is kinda bad, but it will do. everything is approx anyway.
-		this.degree = com.kobaj.math.Functions.randomInt(0, 360);
+		
+		//temporary help
+		this.speed = com.kobaj.math.Functions.screenWidthToShaderWidth(Math.abs(speed) / 1000.0);
+		this.radius = com.kobaj.math.Functions.screenWidthToShaderWidth(radius * 2.0);
 		
 		start_x = actual_quad.get_x_pos();
 		start_y = actual_quad.get_y_pos();
+		
+		//calculate the tangent degree.
+		double degree_to_target = com.kobaj.math.Functions.rectangularToDegree(start_x - shader_x, start_y - shader_y);
+		if((degree_to_target >= 90 && degree_to_target <= 180) || (degree_to_target <= 0 && degree_to_target >= -90))
+			degree_to_target += 180;
+
+		//if(this.speed >= 0)
+		//	degree_to_target += 90;
+		/*else
+			degree_to_target -= 90;*/
+		this.degree = degree_to_target;
 		
 		//where we need to go
 		go_x = com.kobaj.math.Functions.polarToX(this.degree, this.radius) + shader_x;

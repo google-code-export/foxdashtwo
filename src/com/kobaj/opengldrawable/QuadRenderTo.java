@@ -40,11 +40,11 @@ public class QuadRenderTo extends Quad
 		GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, renderTex[0]);
 
 		// Set all of our texture parameters:
-		GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR_MIPMAP_NEAREST);
-		GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR_MIPMAP_NEAREST);
-		GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_REPEAT);
-		GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_REPEAT);
-
+		GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_REPEAT);
+		GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_REPEAT);
+		GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
+		GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
+		
 		// create it 
 		int[] buf = new int[texW * texH];
 		texBuffer = ByteBuffer.allocateDirect(buf.length* 4).order(ByteOrder.nativeOrder()).asIntBuffer();
@@ -58,11 +58,11 @@ public class QuadRenderTo extends Quad
 	}
 	
 	public boolean beginRenderToTexture()
-	{
+	{	
 		GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, fb[0]);
-		
+			
 		// specify texture as color attachment
-		GLES20.glFramebufferTexture2D(GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0, GLES20.GL_TEXTURE_2D, renderTex[0], 0);
+		GLES20.glFramebufferTexture2D(GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0, GLES20.GL_TEXTURE_2D, renderTex[0], 0);		
 		
 		// attach render buffer as depth buffer
 		GLES20.glFramebufferRenderbuffer(GLES20.GL_FRAMEBUFFER, GLES20.GL_DEPTH_ATTACHMENT, GLES20.GL_RENDERBUFFER, depthRb[0]);
@@ -71,7 +71,7 @@ public class QuadRenderTo extends Quad
 		int status = GLES20.glCheckFramebufferStatus(GLES20.GL_FRAMEBUFFER);
 		if (status != GLES20.GL_FRAMEBUFFER_COMPLETE)
 			return false;
-
+		
 		// draw all the objects
 		return true;
 	}
@@ -81,7 +81,6 @@ public class QuadRenderTo extends Quad
 		GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
 		
 		// Same thing, only different texture is bound now
-		GLES20.glClearColor(.0f, .0f, .0f, 1.0f);
-		GLES20.glClear( GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_COLOR_BUFFER_BIT);
+		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 	}
 }

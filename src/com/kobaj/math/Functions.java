@@ -102,6 +102,11 @@ public class Functions
 		return Math.sqrt(x * x + y * y);
 	}
 	
+	public static final double rectangularToDegree(double x, double y)
+	{
+		return Math.toDegrees(Math.atan2(y, x));
+	}
+	
 	public static final double polarToX(double degree, double radius)
 	{
 		return radius * Math.sin(Math.toRadians(degree));

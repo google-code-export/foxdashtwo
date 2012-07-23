@@ -48,13 +48,10 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		// disable depth testing
 		GLES20.glDisable(GLES20.GL_DEPTH_TEST);
 		
-		// Enable texture mapping
-		GLES20.glEnable(GLES20.GL_TEXTURE_2D);
-		
 		//mmm blending
 		GLES20.glEnable(GLES20.GL_BLEND);
 		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA); // no see thru
-		
+
 		// shaders
 		ambient_light = new AmbientLightShader();
 		
