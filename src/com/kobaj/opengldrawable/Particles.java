@@ -107,19 +107,23 @@ public class Particles
 		{
 			Particle p = actual_particles.get(i);
 			
-			if(movement == EnumParticleMovement.orbit)
+			if(movement == EnumParticleMovement.orbit || movement == EnumParticleMovement.explode)
 			{
-				//TODO figure out orbital movement.
 				if(p.travel_time >= p.max_travel_time)
 				{
-					//if radius, then orbit
-					p.degree += delta * p.speed * 1000.0;
-					p.degree = p.degree % 360; //avoiding stack overflow
-					
-					double new_x = com.kobaj.math.Functions.polarToX(p.degree, p.radius) + shader_x;
-					double new_y = com.kobaj.math.Functions.polarToY(p.degree, p.radius) + shader_y;
-					
-					p.actual_quad.setPos(new_x, new_y, EnumDrawFrom.center);
+					if (movement == EnumParticleMovement.orbit)
+					{
+						// if radius, then orbit
+						p.degree += delta * p.speed * 1000.0;
+						p.degree = p.degree % 360; // avoiding stack overflow
+						
+						double new_x = com.kobaj.math.Functions.polarToX(p.degree, p.radius) + shader_x;
+						double new_y = com.kobaj.math.Functions.polarToY(p.degree, p.radius) + shader_y;
+						
+						p.actual_quad.setPos(new_x, new_y, EnumDrawFrom.center);
+					}
+					else
+						reboot_particle(p);
 				}
 				else
 				{
@@ -142,17 +146,21 @@ public class Particles
 			//see if any object needs to die 
 			//delete it if it does (would be cool to animated it out, fade, shrink, fly off screen, whatever...)
 			if(!com.kobaj.math.Functions.onShader(p.actual_quad.get_x_pos(), p.actual_quad.get_y_pos()))
-			{
-				p.reset(shader_x, shader_y);
-				setParticleToMovement(p);
-				if(total_lifes > 0)
-					total_lifes--;
-			}
+				reboot_particle(p);
 		}
 		
 		//and calculated everything.
 		if(have_lifes > total_lifes && total_lifes != -1)
 			have_lifes = total_lifes;
+	}
+	
+	//just a helper method
+	private void reboot_particle(Particle p)
+	{
+		p.reset(shader_x, shader_y);
+		setParticleToMovement(p);
+		if(total_lifes > 0)
+			total_lifes--;	
 	}
 	
 	//the below is not an exact science.
@@ -194,6 +202,16 @@ public class Particles
 			setParticleToMovement(actual_particles.get(i));
 	}
 	
+	public void setMovementToExplode(double radius, double speed)
+	{	
+		movement = EnumParticleMovement.explode;
+		this.spread = radius;
+		this.height = speed; //not confusing at all...
+		
+		for(int i = actual_particles.size() - 1; i >= 0; i--)
+			setParticleToMovement(actual_particles.get(i));
+	}
+	
 	//so things are a bit more staggered
 	public void advancePhysics()
 	{
@@ -227,9 +245,9 @@ public class Particles
 		{
 			p.addLeftRight(spread);
 		}
-		else if(movement == EnumParticleMovement.orbit)
+		else
 		{
-			p.setRadiusDegree(spread, height, shader_x, shader_y);
+			p.setRadiusDegree(spread, height, shader_x, shader_y, movement);
 		}
 	}
 }
