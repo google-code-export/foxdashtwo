@@ -68,7 +68,6 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		
 		//physics setup
 		com.kobaj.math.Constants.physics = new Physics();
-		
 		onInitialize();
 	}
 	

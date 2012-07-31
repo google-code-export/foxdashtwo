@@ -23,6 +23,7 @@ public class QuadAnimated extends Quad
 	}
 	
 	//called to find the text coords
+	//TODO update this with the new square quad functions
 	private void updateTexCoords()
 	{
 		//translate the frames coordinates

@@ -1,7 +1,6 @@
 package com.kobaj.opengldrawable;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -12,6 +11,7 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.opengl.GLES20;
+import android.util.SparseArray;
 
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.openglgraphics.AmbientLight;
@@ -20,7 +20,7 @@ import com.kobaj.openglgraphics.AmbientLightShader;
 public class Text
 {
 	// has set of quads
-	private HashMap<Integer, Quad> bitmap_buffer;
+	private SparseArray<Quad> bitmap_buffer;
 	
 	// has an ambient light
 	private AmbientLight my_ambient_light;
@@ -51,7 +51,7 @@ public class Text
 		double size = text_size * com.kobaj.math.Constants.sd_scale;
 		
 		// new bitmap_buffer!
-		bitmap_buffer = new HashMap<Integer, Quad>();
+		bitmap_buffer = new SparseArray<Quad>();
 		
 		// begin by getting all our strings
 		String m_test_array[];
@@ -210,7 +210,7 @@ public class Text
 	// x and y are in shader coordinates 0 to 1
 	public void DrawText(int resource_value, double x, double y, EnumDrawFrom where)
 	{
-		if (bitmap_buffer.containsKey(resource_value))
+		if (bitmap_buffer.indexOfKey(resource_value) >= 0)
 		{
 			// optimize the gets
 			Quad temp = bitmap_buffer.get(resource_value);

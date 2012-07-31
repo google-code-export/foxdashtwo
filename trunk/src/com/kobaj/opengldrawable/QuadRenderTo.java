@@ -19,11 +19,12 @@ public class QuadRenderTo extends Quad
 
 	public QuadRenderTo()
 	{
-		texW = com.kobaj.math.Constants.width;
-		texH = com.kobaj.math.Constants.height;
-		
+		texW = (com.kobaj.math.Constants.width);
+		texH = (com.kobaj.math.Constants.height);
+
 		setupRenderToTexture();
 		onCreate(renderTex[0], texW, texH);
+		simpleUpdateTexCoords(1,1);
 	}
 	
 	private void setupRenderToTexture() {

@@ -58,7 +58,7 @@ public class MyGame extends MyGLRender
 		
 		floor.setPos(com.kobaj.math.Functions.screenXToShaderX(0), com.kobaj.math.Functions.screenYToShaderY(20), com.kobaj.opengldrawable.EnumDrawFrom.top_left);
         
-		particles = new Particles(25, 400, 240, 15, -1, false, -1);
+		particles = new Particles(25, 400, 240, 1, -1, false, -1);
 		particles.setMovementToFountian(100, 100);
 		//particles.setMovementToGravity(100);
 		particles.advancePhysics();

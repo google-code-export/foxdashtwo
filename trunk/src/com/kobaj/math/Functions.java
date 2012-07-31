@@ -1,5 +1,8 @@
 package com.kobaj.math;
 
+import android.opengl.GLES20;
+import android.util.Log;
+
 public class Functions
 {
 	//input is related to x scale
@@ -115,5 +118,25 @@ public class Functions
 	public static final double polarToY(double degree, double radius)
 	{
 		return radius * Math.cos(Math.toRadians(degree));
+	}
+	
+	//not really a math function, but we need a static error check for open gl
+	public static void checkGlError() 
+	{
+		int error;
+		while ((error = GLES20.glGetError()) != GLES20.GL_NO_ERROR) 
+			Log.e("gl_error", ": glError " + error);
+	}
+	
+	//thanks to http://www.gamedev.net/topic/229831-nearest-power-of-2/
+	public static int nearestPowerOf2( int x ) 
+	{
+		--x;    
+		x |= x >> 1;
+		x |= x >> 2;    
+		x |= x >> 4;    
+		x |= x >> 8;    
+		x |= x >> 16;    
+		return ++x;
 	}
 }

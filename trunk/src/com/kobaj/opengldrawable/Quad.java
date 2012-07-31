@@ -13,7 +13,6 @@ import android.graphics.Bitmap;
 import android.graphics.RectF;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
-import android.util.Log;
 
 import com.kobaj.loader.GLLoadedTexture;
 import com.kobaj.openglgraphics.AmbientLightShader;
@@ -127,29 +126,52 @@ public class Quad
 				// visible anyways.
 				
 				// Front face
-				-tr_x, tr_y, 0.0f, -tr_x, -tr_y, 0.0f, tr_x, tr_y, 0.0f, -tr_x, -tr_y, 0.0f, tr_x, -tr_y, 0.0f, tr_x, tr_y, 0.0f
+				-tr_x, tr_y, 0.0f,
+				-tr_x, -tr_y, 0.0f,
+				tr_x, tr_y, 0.0f,
+				-tr_x, -tr_y, 0.0f,
+				tr_x, -tr_y, 0.0f,
+				tr_x, tr_y, 0.0f
 		
 		};
 		
-		// S, T (or X, Y)
-		// Texture coordinate data.
-		final float[] cubeTextureCoordinateData = {
-				// Front face
-				0.0f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f, -1.0f, 1.0f, -1.0f, 1.0f, 0.0f };
+		final float tr_square_x = com.kobaj.math.Functions.nearestPowerOf2(width);
+		final float tr_square_y = com.kobaj.math.Functions.nearestPowerOf2(height);
+		
+		final float square = Math.max(tr_square_x, tr_square_y);
+
+		final float tex_y = (float) com.kobaj.math.Functions.linearInterpolateUnclamped(0, square, height, 0, 1);
+		final float tex_x = (float) com.kobaj.math.Functions.linearInterpolateUnclamped(0, square, width, 0, 1);
+		
+		simpleUpdateTexCoords(tex_x, tex_y);
 		
 		// Initialize the buffers.
 		my_position = ByteBuffer.allocateDirect(cubePositionData.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
 		my_position.put(cubePositionData).position(0);
 		
-		my_tex_coord = ByteBuffer.allocateDirect(cubeTextureCoordinateData.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
-		my_tex_coord.put(cubeTextureCoordinateData).position(0);
-		
 		//up next setup phys rect list. Just a default. The user can set/add/remove more rectangles as needed.
 		phys_rect_list.add(new RectF(-tr_x, tr_y, tr_x, -tr_y));
 	}
 	
-	//methods for
-	//calculating stuffs
+	//methods for calculating stuffs
+	protected void simpleUpdateTexCoords(float tex_x, float tex_y)
+	{
+		// S, T (or X, Y)
+		// Texture coordinate data.
+		final float[] cubeTextureCoordinateData = {
+				// Front face
+				0.0f, 0.0f,
+				0.0f, -tex_y,
+				tex_x, 0.0f,
+				0.0f, -tex_y,
+				tex_x, -tex_y,
+				tex_x, 0.0f };
+	
+		// my_tex_coord.clear();
+		my_tex_coord = ByteBuffer.allocateDirect(cubeTextureCoordinateData.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
+		my_tex_coord.put(cubeTextureCoordinateData).position(0);
+	}
+	
 	//these x and y are in shader space 0 to 1
 	public void setPos(double x, double y, EnumDrawFrom where)
 	{

@@ -4,7 +4,10 @@ package com.kobaj.loader;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.opengl.GLES20;
 import android.opengl.GLUtils;
 import android.util.SparseArray;
@@ -55,8 +58,22 @@ public class GLBitmapReader
 		Matrix flip = new Matrix();
 		flip.postScale(1f, -1f);
 		
-		Bitmap bmp = Bitmap.createBitmap(temp, 0, 0, temp.getWidth(), temp.getHeight(), flip, true);
+		int original_width = temp.getWidth();
+		int original_height = temp.getHeight();
+		
+		Bitmap bmp1 = Bitmap.createBitmap(temp, 0, 0, original_width, original_height, flip, true);
 		temp.recycle();
+		
+		int square_width = com.kobaj.math.Functions.nearestPowerOf2(bmp1.getWidth());
+		int square_height = com.kobaj.math.Functions.nearestPowerOf2(bmp1.getHeight());
+		
+		int new_size = Math.max(square_width, square_height);
+		
+		Bitmap bmp = Bitmap.createBitmap(new_size, new_size, Bitmap.Config.ARGB_8888);
+		Canvas temp_canvas = new Canvas(bmp);
+		temp_canvas.drawBitmap(bmp1, 0, new_size - original_height, new Paint());
+		
+		bmp1.recycle();
 		
 		// In which ID will we be storing this texture?
 		int id = newTextureID();
@@ -66,8 +83,8 @@ public class GLBitmapReader
 		// put out info into someplace safe.
 		GLLoadedTexture load = new GLLoadedTexture();
 		load.resource_id = resource;
-		load.height = bmp.getHeight();
-		load.width = bmp.getWidth();
+		load.height = /*bmp.getHeight();*/original_height;
+		load.width = /*bmp.getWidth();*/original_width;
 		load.texture_id = id;
 		
 		// Set all of our texture parameters:
