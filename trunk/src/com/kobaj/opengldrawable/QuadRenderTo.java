@@ -19,12 +19,21 @@ public class QuadRenderTo extends Quad
 
 	public QuadRenderTo()
 	{
-		texW = (com.kobaj.math.Constants.width);
-		texH = (com.kobaj.math.Constants.height);
+		final int orig_tex_w = com.kobaj.math.Constants.width;
+		final int orig_tex_h = com.kobaj.math.Constants.height;
+		
+		texW = com.kobaj.math.Functions.nearestPowerOf2(orig_tex_w);
+		texH = com.kobaj.math.Functions.nearestPowerOf2(orig_tex_h);
 
+		final int square = Math.max(texW, texH);
+		
+		texW = square;
+		texH = square;
+		
 		setupRenderToTexture();
-		onCreate(renderTex[0], texW, texH);
-		simpleUpdateTexCoords(1,1);
+		onCreate(renderTex[0], orig_tex_w, orig_tex_h);
+		complexUpdateTexCoords(0, (float) com.kobaj.math.Functions.linearInterpolateUnclamped(0, square, orig_tex_w, 0, 1), 
+							   1.0f - (float) com.kobaj.math.Functions.linearInterpolateUnclamped(0, square, orig_tex_h, 0, 1), 1);
 	}
 	
 	private void setupRenderToTexture() {

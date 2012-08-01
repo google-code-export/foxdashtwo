@@ -54,7 +54,7 @@ public class MyGame extends MyGLRender
 		overlay = new QuadColorShape(0, com.kobaj.math.Constants.height, com.kobaj.math.Constants.width, 0, 0xFF555555);
 		ball = new QuadColorShape(25, Color.RED, 10, 30, false);
 		ball2 = new QuadColorShape(25, Color.GREEN);
-		ball3 = new QuadColorShape(25, Color.BLUE);
+		ball3 = new QuadColorShape(25, Color.BLUE);		
 		
 		floor.setPos(com.kobaj.math.Functions.screenXToShaderX(0), com.kobaj.math.Functions.screenYToShaderY(20), com.kobaj.opengldrawable.EnumDrawFrom.top_left);
         

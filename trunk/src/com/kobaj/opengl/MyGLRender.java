@@ -51,7 +51,7 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		//mmm blending
 		GLES20.glEnable(GLES20.GL_BLEND);
 		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA); // no see thru
-
+		
 		// shaders
 		ambient_light = new AmbientLightShader();
 		
@@ -65,7 +65,7 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		music = new Music();
 		com.kobaj.math.Constants.music_play_list = new MusicPlayList(music);
 		com.kobaj.math.Constants.sound = new Sound();
-		
+
 		//physics setup
 		com.kobaj.math.Constants.physics = new Physics();
 		onInitialize();
