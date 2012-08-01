@@ -5,7 +5,6 @@ package com.kobaj.loader;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.opengl.GLES20;
@@ -83,39 +82,19 @@ public class GLBitmapReader
 		// put out info into someplace safe.
 		GLLoadedTexture load = new GLLoadedTexture();
 		load.resource_id = resource;
-		load.height = /*bmp.getHeight();*/original_height;
-		load.width = /*bmp.getWidth();*/original_width;
+		load.height = original_height;
+		load.width = original_width;
 		load.texture_id = id;
 		
 		// Set all of our texture parameters:
-		GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR_MIPMAP_NEAREST);
-		GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR_MIPMAP_NEAREST);
-		GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_REPEAT);
-		GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_REPEAT);
-		
-		// Generate, and load up all of the mipmaps:
-		for (int level = 0, height = bmp.getHeight(), width = bmp.getWidth(); true; level++)
-		{
-			// Push the bitmap onto the GPU:
-			GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, level, bmp, 0);
-			
-			// We need to stop when the texture is 1x1:
-			if (height == 1 && width == 1)
-				break;
-			
-			// Resize, and let's go again:
-			width >>= 1;
-			height >>= 1;
-			if (width < 1)
-				width = 1;
-			if (height < 1)
-				height = 1;
-			
-			Bitmap bmp2 = Bitmap.createScaledBitmap(bmp, width, height, true);
-			bmp.recycle();
-			bmp = bmp2;
-		}
-		
+		GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_REPEAT);
+		GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_REPEAT);
+		GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
+		GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
+
+		// Push the bitmap onto the GPU:
+		GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bmp, 0);
+				
 		loaded_textures.put(resource, load);
 		
 		// cleanup!

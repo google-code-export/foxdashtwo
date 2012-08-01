@@ -156,16 +156,21 @@ public class Quad
 	//methods for calculating stuffs
 	protected void simpleUpdateTexCoords(float tex_x, float tex_y)
 	{
+		complexUpdateTexCoords(0, tex_x, 0, tex_y);
+	}
+	
+	protected void complexUpdateTexCoords(float one_x, float two_x, float one_y, float two_y)
+	{
 		// S, T (or X, Y)
 		// Texture coordinate data.
 		final float[] cubeTextureCoordinateData = {
 				// Front face
-				0.0f, 0.0f,
-				0.0f, -tex_y,
-				tex_x, 0.0f,
-				0.0f, -tex_y,
-				tex_x, -tex_y,
-				tex_x, 0.0f };
+				one_x, -one_y,
+				one_x, -two_y,
+				two_x, -one_y,
+				one_x, -two_y,
+				two_x, -two_y,
+				two_x, -one_y };
 	
 		// my_tex_coord.clear();
 		my_tex_coord = ByteBuffer.allocateDirect(cubeTextureCoordinateData.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
