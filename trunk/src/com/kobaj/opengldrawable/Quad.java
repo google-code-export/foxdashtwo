@@ -50,6 +50,7 @@ public class Quad
 	public int height;
 	public double shader_width;
 	public double shader_height;
+	public int square;
 	
 	// data about the quad
 	protected FloatBuffer my_position;
@@ -135,10 +136,10 @@ public class Quad
 		
 		};
 		
-		final float tr_square_x = com.kobaj.math.Functions.nearestPowerOf2(width);
-		final float tr_square_y = com.kobaj.math.Functions.nearestPowerOf2(height);
+		final int tr_square_x = com.kobaj.math.Functions.nearestPowerOf2(width);
+		final int tr_square_y = com.kobaj.math.Functions.nearestPowerOf2(height);
 		
-		final float square = Math.max(tr_square_x, tr_square_y);
+		square = Math.max(tr_square_x, tr_square_y);
 
 		final float tex_y = (float) com.kobaj.math.Functions.linearInterpolateUnclamped(0, square, height, 0, 1);
 		final float tex_x = (float) com.kobaj.math.Functions.linearInterpolateUnclamped(0, square, width, 0, 1);
@@ -159,8 +160,11 @@ public class Quad
 		complexUpdateTexCoords(0, tex_x, 0, tex_y);
 	}
 	
+	//these are in shader coordinates. start_x, end_x, start_y, end_y
 	protected void complexUpdateTexCoords(float one_x, float two_x, float one_y, float two_y)
 	{
+		//only time I use floats...
+		
 		// S, T (or X, Y)
 		// Texture coordinate data.
 		final float[] cubeTextureCoordinateData = {
@@ -173,7 +177,11 @@ public class Quad
 				two_x, -one_y };
 	
 		// my_tex_coord.clear();
-		my_tex_coord = ByteBuffer.allocateDirect(cubeTextureCoordinateData.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
+		if(my_tex_coord == null)
+			my_tex_coord = ByteBuffer.allocateDirect(cubeTextureCoordinateData.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
+		else
+			my_tex_coord.clear();
+		
 		my_tex_coord.put(cubeTextureCoordinateData).position(0);
 	}
 	
