@@ -87,7 +87,7 @@ public class Particle
 		this.radius = Math.abs(com.kobaj.math.Functions.screenWidthToShaderWidth(getHalfWidth(radius))) * 3000.0;
 		this.speed = com.kobaj.math.Functions.screenWidthToShaderWidth(percent(speed, 0.35)); 
 		
-		if (movement == EnumParticleMovement.orbit)
+		if (movement == EnumParticleMovement.orbit || movement == EnumParticleMovement.frantic)
 		{
 			start_x = actual_quad.get_x_pos();
 			start_y = actual_quad.get_y_pos();

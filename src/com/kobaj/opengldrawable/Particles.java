@@ -83,7 +83,7 @@ public class Particles
 		
 		Particle the_particle = new Particle();
 		
-		the_particle.actual_quad = new QuadColorShape(radius, particle_color, false);
+		the_particle.actual_quad = new QuadColorShape(radius, particle_color, is_bloom);
 		the_particle.actual_quad.setPos(com.kobaj.math.Functions.screenXToShaderX(x), com.kobaj.math.Functions.screenYToShaderY(y), com.kobaj.opengldrawable.EnumDrawFrom.center);
 		
 		//add a bloom particle if requested
@@ -107,18 +107,52 @@ public class Particles
 		{
 			Particle p = actual_particles.get(i);
 			
-			if(movement == EnumParticleMovement.orbit || movement == EnumParticleMovement.explode)
+			p.travel_time += delta;
+			
+			if(movement == EnumParticleMovement.frantic && false)
+			{
+				final double current_x = p.actual_quad.get_x_pos();
+				final double current_y = p.actual_quad.get_y_pos();
+				
+				final double current_radius = com.kobaj.math.Functions.rectangularToRadius(current_x - shader_x, current_y - shader_y);
+			
+				final double add_amount = com.kobaj.math.Functions.linearInterpolate(0, com.kobaj.math.Functions.screenWidthToShaderWidth(spread), current_radius, .00002, .0001);
+				double add_amount_x = add_amount * delta / 1000.0;
+				double add_amount_y = add_amount * delta / 1000.0;
+				
+				if(current_x < shader_x)
+					add_amount_x = -add_amount_x;
+				if(current_y < shader_y)
+					add_amount_y = add_amount_y;
+				
+				//cancel out gravity
+				p.actual_quad.y_acc = 0;
+				
+				p.actual_quad.x_vel += add_amount_x;
+				p.actual_quad.y_vel += add_amount_y;
+					
+				com.kobaj.math.Constants.physics.apply_physics(delta, p.actual_quad);
+				if(p.bloom_quad != null)
+					com.kobaj.math.Constants.physics.apply_physics(delta, p.bloom_quad);
+			}
+			else if(movement == EnumParticleMovement.orbit || movement == EnumParticleMovement.explode || movement == EnumParticleMovement.frantic)
 			{
 				if(p.travel_time >= p.max_travel_time)
 				{
-					if (movement == EnumParticleMovement.orbit)
+					p.travel_time = 0;
+					if (movement == EnumParticleMovement.orbit || movement == EnumParticleMovement.frantic)
 					{
 						// if radius, then orbit
 						p.degree += delta * p.speed * 1000.0;
 						p.degree = p.degree % 360; // avoiding stack overflow
 						
-						double new_x = com.kobaj.math.Functions.polarToX(p.degree, p.radius) + shader_x;
-						double new_y = com.kobaj.math.Functions.polarToY(p.degree, p.radius) + shader_y;
+						double radius = p.radius;
+						
+						if(movement == EnumParticleMovement.frantic)
+							radius = Math.sin(p.travel_time / 1000.0) * radius;
+						
+						final double new_x = com.kobaj.math.Functions.polarToX(p.degree, radius) + shader_x;
+						final double new_y = com.kobaj.math.Functions.polarToY(p.degree, radius) + shader_y;
 						
 						p.actual_quad.setPos(new_x, new_y, EnumDrawFrom.center);
 					}
@@ -126,12 +160,10 @@ public class Particles
 						reboot_particle(p);
 				}
 				else
-				{
+				{	
 					//if not radius, then navigate to radius
-					p.travel_time += delta;
-					
-					double new_x = com.kobaj.math.Functions.linearInterpolate(0, p.max_travel_time, p.travel_time, p.start_x, p.go_x);
-					double new_y = com.kobaj.math.Functions.linearInterpolate(0, p.max_travel_time, p.travel_time, p.start_y, p.go_y);
+					final double new_x = com.kobaj.math.Functions.linearInterpolate(0, p.max_travel_time, p.travel_time, p.start_x, p.go_x);
+					final double new_y = com.kobaj.math.Functions.linearInterpolate(0, p.max_travel_time, p.travel_time, p.start_y, p.go_y);
 					
 					p.actual_quad.setPos(new_x, new_y, EnumDrawFrom.center);
 				}
@@ -202,6 +234,17 @@ public class Particles
 			setParticleToMovement(actual_particles.get(i));
 	}
 	
+	public void setMovementToFrantic(double radius, double speed)
+	{
+		movement = EnumParticleMovement.frantic;
+		this.spread = radius;
+		this.height = speed;
+		
+		for(int i = actual_particles.size() - 1; i>= 0; i--)
+			setParticleToMovement(actual_particles.get(i));
+	}
+	
+	//screen coordinates
 	public void setMovementToExplode(double radius, double speed)
 	{	
 		movement = EnumParticleMovement.explode;

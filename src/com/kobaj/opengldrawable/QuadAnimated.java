@@ -23,27 +23,16 @@ public class QuadAnimated extends Quad
 	}
 	
 	//called to find the text coords
-	//TODO update this with the new square quad functions
 	private void updateTexCoords()
 	{
 		//translate the frames coordinates
-		final float tr_start_x = (float) com.kobaj.math.Functions.linearInterpolate(0.0, width, currently_playing_frameset_reference.current_frame_reference.start_x, 0.0, 1.0);
-		final float tr_start_y = (float) com.kobaj.math.Functions.linearInterpolate(0.0, height, currently_playing_frameset_reference.current_frame_reference.start_y, 0.0, -1.0);
+		final float tr_start_x = (float) com.kobaj.math.Functions.linearInterpolate(0.0, square, currently_playing_frameset_reference.current_frame_reference.start_x, 0.0, 1.0);
+		final float tr_start_y = (float) com.kobaj.math.Functions.linearInterpolate(0.0, square, currently_playing_frameset_reference.current_frame_reference.start_y, 0.0, 1.0);
 		
-		final float tr_end_x = (float) com.kobaj.math.Functions.linearInterpolate(0.0, width, currently_playing_frameset_reference.current_frame_reference.end_x, 0.0, 1.0);
-		final float tr_end_y = (float) com.kobaj.math.Functions.linearInterpolate(0.0, height, currently_playing_frameset_reference.current_frame_reference.end_y, 0.0, -1.0);
+		final float tr_end_x = (float) com.kobaj.math.Functions.linearInterpolate(0.0, square, currently_playing_frameset_reference.current_frame_reference.end_x, 0.0, 1.0);
+		final float tr_end_y = (float) com.kobaj.math.Functions.linearInterpolate(0.0, square, currently_playing_frameset_reference.current_frame_reference.end_y, 0.0, 1.0);
 		
-		final float[] cubeTextureCoordinateData = {
-				// Front face
-				tr_start_x, tr_start_y,
-				tr_start_x, tr_end_y,
-				tr_end_x, tr_start_y,
-				tr_start_x, tr_end_y,
-				tr_end_x, tr_end_y,
-				tr_end_x, tr_start_y };
-		
-		my_tex_coord.clear();
-		my_tex_coord.put(cubeTextureCoordinateData).position(0);
+		complexUpdateTexCoords(tr_start_x, tr_end_x, tr_start_y, tr_end_y);
 	}
 	
 	//should be called on every update
