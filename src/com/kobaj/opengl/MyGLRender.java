@@ -22,14 +22,14 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 	protected FPSManager fps;
 	
 	//text mmm
-	public Text text;
+	protected Text text;
 	
 	//shaders
-	public AmbientLightShader ambient_light;
+	protected AmbientLightShader ambient_light;
 	
 	// camera
-	public float[] my_view_matrix = new float[16];
-	public float[] my_proj_matrix = new float[16];
+	protected float[] my_view_matrix = new float[16];
+	protected float[] my_proj_matrix = new float[16];
 	
 	//sound and music
 	protected Music music;

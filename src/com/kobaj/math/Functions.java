@@ -1,5 +1,6 @@
 package com.kobaj.math;
 
+import android.graphics.RectF;
 import android.opengl.GLES20;
 import android.util.Log;
 
@@ -96,6 +97,15 @@ public class Functions
 			if(y > -1 && y < 1)
 				return true;
 		
+		return false;
+	}
+	
+	public static final boolean onShader(RectF ... objects)
+	{
+		for(RectF object: objects)
+		{
+			
+		}
 		return false;
 	}
 	

@@ -109,37 +109,10 @@ public class Particles
 			
 			p.travel_time += delta;
 			
-			if(movement == EnumParticleMovement.frantic && false)
-			{
-				final double current_x = p.actual_quad.get_x_pos();
-				final double current_y = p.actual_quad.get_y_pos();
-				
-				final double current_radius = com.kobaj.math.Functions.rectangularToRadius(current_x - shader_x, current_y - shader_y);
-			
-				final double add_amount = com.kobaj.math.Functions.linearInterpolate(0, com.kobaj.math.Functions.screenWidthToShaderWidth(spread), current_radius, .00002, .0001);
-				double add_amount_x = add_amount * delta / 1000.0;
-				double add_amount_y = add_amount * delta / 1000.0;
-				
-				if(current_x < shader_x)
-					add_amount_x = -add_amount_x;
-				if(current_y < shader_y)
-					add_amount_y = add_amount_y;
-				
-				//cancel out gravity
-				p.actual_quad.y_acc = 0;
-				
-				p.actual_quad.x_vel += add_amount_x;
-				p.actual_quad.y_vel += add_amount_y;
-					
-				com.kobaj.math.Constants.physics.apply_physics(delta, p.actual_quad);
-				if(p.bloom_quad != null)
-					com.kobaj.math.Constants.physics.apply_physics(delta, p.bloom_quad);
-			}
-			else if(movement == EnumParticleMovement.orbit || movement == EnumParticleMovement.explode || movement == EnumParticleMovement.frantic)
+			if(movement == EnumParticleMovement.orbit || movement == EnumParticleMovement.explode || movement == EnumParticleMovement.frantic)
 			{
 				if(p.travel_time >= p.max_travel_time)
 				{
-					p.travel_time = 0;
 					if (movement == EnumParticleMovement.orbit || movement == EnumParticleMovement.frantic)
 					{
 						// if radius, then orbit
@@ -149,7 +122,7 @@ public class Particles
 						double radius = p.radius;
 						
 						if(movement == EnumParticleMovement.frantic)
-							radius = Math.sin(p.travel_time / 1000.0) * radius;
+							radius = Math.sin((p.travel_time + p.max_travel_time) / 100.0) * radius;
 						
 						final double new_x = com.kobaj.math.Functions.polarToX(p.degree, radius) + shader_x;
 						final double new_y = com.kobaj.math.Functions.polarToY(p.degree, radius) + shader_y;

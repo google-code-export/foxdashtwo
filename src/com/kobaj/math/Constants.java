@@ -6,6 +6,8 @@ import android.content.res.Resources;
 import com.kobaj.audio.MusicPlayList;
 import com.kobaj.audio.Sound;
 import com.kobaj.input.InputManager;
+import com.kobaj.opengldrawable.Text;
+import com.kobaj.openglgraphics.AmbientLightShader;
 
 public class Constants
 {
@@ -31,8 +33,12 @@ public class Constants
 	public static double shader_width;
 	public final static double shader_height = 2.0; // always
 	
-	// this is width / height
+	//this is width / height
 	public static double ratio;
+	
+	//this is where the camera is translated to
+	public static double x_shader_translation;
+	public static double y_shader_translation;
 	
 	//mmmm context
 	//you may be saying "BUT THATS A MEMORY LEAK"
@@ -43,10 +49,19 @@ public class Constants
 	//the ever static reference to resources.
 	public static Resources resources;
 	
+	//While the below are not really constant and don't belong here
+	//this is a convenient way of being able to see all objects a game screen can see and use
 	public static Physics physics;
 	
 	public static MusicPlayList music_play_list;
 	public static Sound sound;
 	
 	public static InputManager input_manager;
+	
+	public static Text text;
+	
+	public static float[] my_view_matrix;
+	public static float[] my_proj_matrix;
+	
+	public static AmbientLightShader ambient_light;
 }

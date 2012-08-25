@@ -306,6 +306,7 @@ public class Quad
 	public void onDrawAmbient(float[] my_view_matrix, float[] my_proj_matrix, AmbientLightShader ambient_light)
 	{
 		//TODO, if object is visible on screen, then draw. Otherwise return early.
+		com.kobaj.math.Functions.
 		
 		onSetupAmbient(my_view_matrix, my_proj_matrix, ambient_light);
 		
