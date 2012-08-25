@@ -71,6 +71,8 @@ public class QuadRenderTo extends Quad
 	{	
 		GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, fb[0]);
 			
+		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+		
 		// specify texture as color attachment
 		GLES20.glFramebufferTexture2D(GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0, GLES20.GL_TEXTURE_2D, renderTex[0], 0);		
 		

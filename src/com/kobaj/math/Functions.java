@@ -1,7 +1,10 @@
 package com.kobaj.math;
 
+import java.util.ArrayList;
+
 import android.graphics.RectF;
 import android.opengl.GLES20;
+import android.opengl.Matrix;
 import android.util.Log;
 
 public class Functions
@@ -84,30 +87,40 @@ public class Functions
 	//helpful to see whats on screen
 	public static final boolean onScreen(int x, int y)
 	{	
-		if(x > 0 && x < Constants.width)
-			if(y > 0 && y < Constants.height)
-				return true;
-		
-		return false;
+		return onShader(screenXToShaderX(x), screenYToShaderY(y));
 	}
 	
 	public static final boolean onShader(double x, double y)
 	{
-		if(x > -Constants.ratio && x < Constants.ratio)
-			if(y > -1 && y < 1)
+		if(x > -Constants.ratio + Constants.x_shader_translation && x < Constants.ratio + Constants.x_shader_translation)
+			if(y > -1 + Constants.y_shader_translation && y < 1 + Constants.y_shader_translation)
 				return true;
 		
 		return false;
 	}
 	
-	public static final boolean onShader(RectF ... objects)
+	public static final boolean onShader(ArrayList<RectF> objects)
 	{
-		for(RectF object: objects)
-		{
-			
-		}
+		final RectF camera = new RectF((float)(-Constants.ratio - Constants.x_shader_translation),
+									   (float)(1 + Constants.y_shader_translation),
+									   (float)(Constants.ratio - Constants.x_shader_translation),
+									   (float)(-1 + Constants.y_shader_translation));
+		
+		for(int i = objects.size() - 1; i >= 0; i--)
+			if(equalIntersects(objects.get(i), camera))
+				return true;
+		
 		return false;
 	}
+	
+	//helpful method
+	//strangly, it is programmed different than RectF.intersects...
+	public static final boolean equalIntersects(RectF a, RectF b)
+	{
+		return (a.left <= b.right && b.left <= a.right &&
+			a.top >= b.bottom && b.top >= a.bottom);
+	}
+
 	
 	//radius stuff.
 	public static final double rectangularToRadius(double x, double y)
@@ -148,5 +161,22 @@ public class Functions
 		x |= x >> 8;    
 		x |= x >> 16;    
 		return ++x;
+	}
+	
+	//just one simple place to update all the camera variables
+	//this is in shader coordinates
+	public static void addCamera(double x, double y)
+	{
+		Matrix.translateM(Constants.my_view_matrix, 0, (float) x, (float) y, 0);
+		Constants.x_shader_translation += x;
+		Constants.y_shader_translation += y;
+	}
+	
+	public static void setCamera(double x_camera, double y_camera)
+	{
+		Matrix.setIdentityM(Constants.my_view_matrix, 0);
+		Matrix.translateM(Constants.my_view_matrix, 0, (float) x_camera, (float) y_camera, 0);
+		Constants.x_shader_translation = x_camera;
+		Constants.y_shader_translation = y_camera;
 	}
 }

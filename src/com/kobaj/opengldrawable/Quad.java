@@ -220,8 +220,8 @@ public class Quad
 		//set the rectangle
 		for(RectF rect: phys_rect_list)
 		{
-			double rect_half_width = rect.width() / 2.0;
-			double rect_half_height = rect.height() / 2.0;
+			final double rect_half_width = rect.width() / 2.0;
+			final double rect_half_height = rect.height() / 2.0;
 			
 			rect.left = (float)(x_pos - rect_half_width);
 			rect.top = (float)(y_pos + rect_half_height);
@@ -303,12 +303,16 @@ public class Quad
 	}
 	
 	//ouside calls
+	public void onDrawAmbient()
+	{
+		onDrawAmbient(com.kobaj.math.Constants.my_view_matrix, com.kobaj.math.Constants.my_proj_matrix, com.kobaj.math.Constants.ambient_light);
+	}
+	
 	public void onDrawAmbient(float[] my_view_matrix, float[] my_proj_matrix, AmbientLightShader ambient_light)
 	{
-		//TODO, if object is visible on screen, then draw. Otherwise return early.
-		com.kobaj.math.Functions.
-		
-		onSetupAmbient(my_view_matrix, my_proj_matrix, ambient_light);
+		//If on screen, draw.
+		if(com.kobaj.math.Functions.onShader(phys_rect_list))
+			onSetupAmbient(my_view_matrix, my_proj_matrix, ambient_light);
 		
 		// Draw the cube.
 		onDraw();

@@ -3,36 +3,38 @@ package com.kobaj.opengl;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 
+import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.EnumDrawFrom;
 import com.kobaj.opengldrawable.QuadRenderTo;
-import com.kobaj.openglgraphics.AmbientLight;
+import com.kobaj.screen.BaseScreen;
+import com.kobaj.screen.SinglePlayerScreen;
 
 public class MyGame extends MyGLRender
 {	
 	//test screen
-	
+	SinglePlayerScreen single_player_screen;
+	BaseScreen currently_active_screen;
 	
 	//dont touch the stuff below this line
 	//final drawable.
 	private QuadRenderTo scene;
-	
-	//lights
-    private AmbientLight al_ambient_light;
-    //dont touch stuff above this line
-    
+
     public MyGame()
     {
-    	
+    	single_player_screen = new SinglePlayerScreen();
+    	currently_active_screen = single_player_screen;
     }
     
 	@Override
 	void onInitialize()
 	{
 		//for the record this is called everytime the screen is reset/paused/resumed
+		//all graphics are destroyed (dunno about sounds >.>).
+		
+		currently_active_screen.onInitialize();
 		
 		//dont touch below this line.
-        al_ambient_light = new AmbientLight(ambient_light, my_view_matrix);
         scene = new QuadRenderTo();
         
         System.gc();
@@ -41,23 +43,24 @@ public class MyGame extends MyGLRender
 	@Override
 	public void onUpdate(double delta)
 	{
-		//quick test
-		//TODO grab the initial translation matrix and store it
-		//transforming it to the my_view_matrix to make the view change.
-		Matrix.translateM(my_view_matrix, 0, .0005f, .0005f, 0);
+		currently_active_screen.onUpdate(delta);
 	}
 	
 	@Override
 	void onDraw()
 	{	
 		GLES20.glUseProgram(ambient_light.my_shader);
-		al_ambient_light.applyShaderProperties();
 		
 		//regular objects
 		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA); // no see thru
 		if(scene.beginRenderToTexture())
 		{
+			/* It is recomended that the screen calls something similar to the following to functions
+			 * al_ambient_light.applyShaderProperties();
+			 */
+			
 			//put opaque items here
+			currently_active_screen.onDrawObject();
 		}
 		scene.endRenderToTexture();
 	
@@ -65,6 +68,10 @@ public class MyGame extends MyGLRender
 		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_SRC_ALPHA); // cheap lights
 
 		//put transluscent (lights) here
+		currently_active_screen.onDrawLight();
+		
+		//reset the camera so the following is drawn correctly
+		Matrix.setIdentityM(my_view_matrix, 0);
 		
 		//final scene
 		GLES20.glBlendFunc(GLES20.GL_DST_COLOR, GLES20.GL_ZERO); // masking
@@ -73,6 +80,8 @@ public class MyGame extends MyGLRender
 		//text below this line
 		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA); // no see thru
 		text.DrawNumber(fps.fps, Functions.screenXToShaderX(25), Functions.screenYToShaderY((int)Functions.fix_y(25)), EnumDrawFrom.top_left);
+	
+		Matrix.translateM(Constants.my_view_matrix, 0, (float) Constants.x_shader_translation, (float) Constants.y_shader_translation, 0);
 	}
 
 	@Override
