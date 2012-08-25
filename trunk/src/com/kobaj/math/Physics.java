@@ -65,6 +65,7 @@ public class Physics
 		RectF collision = new RectF();
 		
 		//if its possible, get a detailed picture of the collision
+		//TODO double check this is correct
 		for(int i = first_quad.phys_rect_list.size() - 1; i >= 0; i--)
 			for(int e = second_quad.phys_rect_list.size() - 1; i >= 0; i--)
 				if(collision.setIntersect(first_quad.phys_rect_list.get(i), second_quad.phys_rect_list.get(e)))

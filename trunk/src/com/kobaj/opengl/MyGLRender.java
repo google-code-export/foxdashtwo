@@ -54,12 +54,14 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		
 		// shaders
 		ambient_light = new AmbientLightShader();
+		com.kobaj.math.Constants.ambient_light = ambient_light;
 		
 		//fps
 		fps = new FPSManager();
 		
 		//text setup
 		text = new Text(ambient_light, my_view_matrix, my_proj_matrix);
+		com.kobaj.math.Constants.text = text; //referencing!
 		
 		//sound and audio setup
 		music = new Music();
@@ -68,6 +70,11 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 
 		//physics setup
 		com.kobaj.math.Constants.physics = new Physics();
+		
+		//camera
+		com.kobaj.math.Constants.my_view_matrix = my_view_matrix;
+		com.kobaj.math.Constants.my_proj_matrix = my_proj_matrix;
+		
 		onInitialize();
 	}
 	
@@ -83,10 +90,13 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		// this projection matrix is applied to object coodinates
 		// in the onDrawFrame() method
 		Matrix.orthoM(my_proj_matrix, 0, -ratio, ratio, -1, 1, .99999999f, 2);
-		Matrix.setLookAtM(my_view_matrix, 0, 
+		Matrix.setLookAtM(my_view_matrix, 0, //this is the identity...
 				0, 0, 0, 
 				0f, 0f, -5.0f, 
 				0f, 1.0f, 0.0f);
+		
+		com.kobaj.math.Constants.x_shader_translation = 0;
+		com.kobaj.math.Constants.y_shader_translation = 0;
 	}
 	
 	public void onSurfaceDestroyed()
