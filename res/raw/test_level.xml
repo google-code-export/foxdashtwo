@@ -1,0 +1,29 @@
+<level>
+   <light_array length="1">
+      <levelLight>
+         <this_light>spot</this_light>
+         <this_color>-16776961</this_color>
+         <this_degree>0.0</this_degree>
+         <radius>200.0</radius>
+         <is_bloom>true</is_bloom>
+         <x_pos>250.0</x_pos>
+         <y_pos>290.0</y_pos>
+      </levelLight>
+   </light_array>
+   <object_array length="2">
+      <levelObject>
+         <draw_from>top_left</draw_from>
+         <this_object>test</this_object>
+         <x_pos>200.0</x_pos>
+         <y_pos>200.0</y_pos>
+      </levelObject>
+      <levelObject>
+         <draw_from>top_left</draw_from>
+         <this_object>test</this_object>
+         <x_pos>600.0</x_pos>
+         <y_pos>200.0</y_pos>
+      </levelObject>
+   </object_array>
+   <total_height>1600</total_height>
+   <total_width>1600</total_width>
+</level>

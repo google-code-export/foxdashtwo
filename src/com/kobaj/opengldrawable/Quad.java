@@ -305,13 +305,13 @@ public class Quad
 	//ouside calls
 	public void onDrawAmbient()
 	{
-		onDrawAmbient(com.kobaj.math.Constants.my_view_matrix, com.kobaj.math.Constants.my_proj_matrix, com.kobaj.math.Constants.ambient_light);
+		onDrawAmbient(com.kobaj.math.Constants.my_view_matrix, com.kobaj.math.Constants.my_proj_matrix, com.kobaj.math.Constants.ambient_light, false);
 	}
 	
-	public void onDrawAmbient(float[] my_view_matrix, float[] my_proj_matrix, AmbientLightShader ambient_light)
+	public void onDrawAmbient(float[] my_view_matrix, float[] my_proj_matrix, AmbientLightShader ambient_light, boolean skip_draw_check)
 	{
 		//If on screen, draw.
-		if(com.kobaj.math.Functions.onShader(phys_rect_list))
+		if(skip_draw_check || com.kobaj.math.Functions.onShader(phys_rect_list))
 			onSetupAmbient(my_view_matrix, my_proj_matrix, ambient_light);
 		
 		// Draw the cube.

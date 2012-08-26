@@ -200,7 +200,7 @@ public class Text
 			temp.setPos(x - current_width, y, where);
 			
 			// draw
-			temp.onDrawAmbient(my_view_matrix, my_proj_matrix, ambient_light);
+			temp.onDrawAmbient(my_view_matrix, my_proj_matrix, ambient_light, true);
 			
 			//continue
 			number = number / 10;
@@ -223,7 +223,7 @@ public class Text
 			my_ambient_light.applyShaderProperties();
 			
 			// draw pretty!
-			temp.onDrawAmbient(my_view_matrix, my_proj_matrix, ambient_light);
+			temp.onDrawAmbient(my_view_matrix, my_proj_matrix, ambient_light, true);
 		}
 	}
 }
