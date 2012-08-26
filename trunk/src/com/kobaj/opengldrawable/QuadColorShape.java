@@ -35,10 +35,11 @@ public class QuadColorShape extends Quad
 		super(findKey(), makeCircleGradient(radius, color, is_bloom));
 	}
 	
+	//gradient circle with mask
 	//this is in screen coordinates 0-800
-	public QuadColorShape(double radius, int color, int close_width, int far_width, boolean is_bloom)
+	public QuadColorShape(double radius, int color, int close_width, int far_width, double degree, boolean is_bloom)
 	{
-		super(findKey(), makeCircleGradientWithMask(radius, color, close_width, far_width, is_bloom));
+		super(findKey(), makeCircleGradientWithMask(radius, color, close_width, far_width, degree, is_bloom));
 	}
 	
 	private static int findKey()
@@ -110,7 +111,7 @@ public class QuadColorShape extends Quad
         return bitmap_temp;
 	}
 	
-	private static Bitmap makeCircleGradientWithMask(double radius, int color, double close_width, double far_width, boolean is_bloom)
+	private static Bitmap makeCircleGradientWithMask(double radius, int color, double close_width, double far_width, double degree, boolean is_bloom)
 	{
 		Bitmap light = makeCircleGradient(radius, color, is_bloom);
 		
@@ -162,8 +163,9 @@ public class QuadColorShape extends Quad
 		}
 		path.close(); 
 		
-		Bitmap bitmap_temp = Bitmap.createBitmap((int)(radius * 2), (int)(radius * 2), Bitmap.Config.ARGB_8888);
+		Bitmap bitmap_temp = Bitmap.createBitmap((int)(radius * 2) - 1, (int)(radius * 2) - 1, Bitmap.Config.ARGB_8888);
 		Canvas canvas_temp = new Canvas(bitmap_temp);
+		canvas_temp.rotate((float) degree - 90.0f, (float)radius, (float)radius);
 		canvas_temp.drawBitmap(light, 0, 0, mask_paint); // may have to use a different paint here.
 		canvas_temp.drawPath(path, mask_paint);
 		

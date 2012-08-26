@@ -30,4 +30,11 @@ public class TitleScreen extends BaseScreen
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void onDrawText()
+	{
+		// TODO Auto-generated method stub
+		
+	}
 }

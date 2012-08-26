@@ -24,6 +24,7 @@ public final class R {
         public static final int ambient_fragment_shader=0x7f040000;
         public static final int ambient_vertex_shader=0x7f040001;
         public static final int test_animation=0x7f040002;
+        public static final int test_level=0x7f040003;
     }
     public static final class string {
         public static final int app_name=0x7f050002;

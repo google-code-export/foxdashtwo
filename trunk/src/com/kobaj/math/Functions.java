@@ -117,8 +117,8 @@ public class Functions
 	//strangly, it is programmed different than RectF.intersects...
 	public static final boolean equalIntersects(RectF a, RectF b)
 	{
-		return (a.left <= b.right && b.left <= a.right &&
-			a.top >= b.bottom && b.top >= a.bottom);
+		return (a.left <= b.right && b.left <= a.right && ((a.top >= b.bottom && b.top >= a.bottom) ||
+														   (a.top <= -b.bottom && -b.top <= a.bottom)));
 	}
 
 	
