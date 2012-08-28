@@ -268,12 +268,10 @@ public class Quad
 		Matrix.translateM(my_model_matrix, 0, (float) x_pos, (float) y_pos, (float) z_pos);
 		
 		// pass in position information
-		my_position.position(0);
 		GLES20.glVertexAttribPointer(ambient_light.my_position_handle, 3, GLES20.GL_FLOAT, false, 0, my_position);
 		GLES20.glEnableVertexAttribArray(ambient_light.my_position_handle);
 		
 		// Pass in the texture coordinate information
-		my_tex_coord.position(0);
 		GLES20.glVertexAttribPointer(ambient_light.my_tex_coord_handle, 2, GLES20.GL_FLOAT, false, 0, my_tex_coord);
 		GLES20.glEnableVertexAttribArray(ambient_light.my_tex_coord_handle);
 		
@@ -294,6 +292,8 @@ public class Quad
 		// Pass in the combined matrix.
 		GLES20.glUniformMatrix4fv(ambient_light.my_mvp_matrix_handle, 1, false, my_mvp_matrix, 0);
 		
+		// Clear the currently bound buffer (so future OpenGL calls do not use this buffer).
+		GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0);
 	}
 
 	//main stuffs

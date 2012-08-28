@@ -44,9 +44,21 @@ public class Functions
 	
 	//input 0 to 255, output 0 to 1
 	//really helpful for color transformations
+	private static double[] byte_to_shader_lookup;
 	public static final double byteToShader(int input)
 	{
-		return linearInterpolate(0, 255, input, 0, 1);
+		if(input < 0 || input >255)
+			return 0;
+		
+		//small optimization
+		if(byte_to_shader_lookup == null)
+		{
+			byte_to_shader_lookup = new double[256];
+			for(int i = 0; i <=255; i++)
+				byte_to_shader_lookup[i] = linearInterpolate(0, i, input, 0, 1);
+		}
+		
+		return byte_to_shader_lookup[input];
 	}
 	
 	//used to translate screen widths to shader widths
@@ -101,13 +113,13 @@ public class Functions
 	
 	public static final boolean onShader(ArrayList<RectF> objects)
 	{
-		final RectF camera = new RectF((float)(-Constants.ratio - Constants.x_shader_translation),
-									   (float)(1 + Constants.y_shader_translation),
-									   (float)(Constants.ratio - Constants.x_shader_translation),
-									   (float)(-1 + Constants.y_shader_translation));
+		final double left = (-Constants.ratio - Constants.x_shader_translation);
+		final double top = (1 + Constants.y_shader_translation);
+		final double right = (Constants.ratio - Constants.x_shader_translation);
+		final double bottom = (-1 + Constants.y_shader_translation);
 		
 		for(int i = objects.size() - 1; i >= 0; i--)
-			if(equalIntersects(objects.get(i), camera))
+			if(equalIntersects(objects.get(i), left, top, right, bottom))
 				return true;
 		
 		return false;
@@ -117,8 +129,13 @@ public class Functions
 	//strangly, it is programmed different than RectF.intersects...
 	public static final boolean equalIntersects(RectF a, RectF b)
 	{
-		return (a.left <= b.right && b.left <= a.right && ((a.top >= b.bottom && b.top >= a.bottom) ||
-														   (a.top <= -b.bottom && -b.top <= a.bottom)));
+		return equalIntersects(a, b.left, b.top, b.right, b.bottom);
+	}
+	
+	public static final boolean equalIntersects(RectF a, double left, double top, double right, double bottom)
+	{
+		return (a.left <= right && left <= a.right && ((a.top >= bottom && top >= a.bottom) ||
+				   (a.top <= -bottom && -top <= a.bottom)));
 	}
 
 	
