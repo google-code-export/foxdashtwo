@@ -62,6 +62,10 @@ public class Constants
 	
 	public static float[] my_view_matrix;
 	public static float[] my_proj_matrix;
+	public static final float[] identity_matrix = {1, 0, 0, 0,
+												   0, 1, 0, 0,
+												   0, 0, 1, 0,
+												   0, 0, 0, 1};
 	
 	public static AmbientLightShader ambient_light;
 }

@@ -10,18 +10,34 @@
          <y_pos>290.0</y_pos>
       </levelLight>
    </light_array>
-   <object_array length="2">
+   <object_array length="4">
       <levelObject>
          <draw_from>top_left</draw_from>
          <this_object>test</this_object>
          <x_pos>200.0</x_pos>
          <y_pos>200.0</y_pos>
+         <z_plane>5</z_plane>
       </levelObject>
       <levelObject>
          <draw_from>top_left</draw_from>
          <this_object>test</this_object>
          <x_pos>600.0</x_pos>
          <y_pos>200.0</y_pos>
+         <z_plane>5</z_plane>
+      </levelObject>
+      <levelObject>
+         <draw_from>top_left</draw_from>
+         <this_object>two</this_object>
+         <x_pos>650.0</x_pos>
+         <y_pos>250.0</y_pos>
+         <z_plane>0</z_plane>
+      </levelObject>
+      <levelObject>
+         <draw_from>top_left</draw_from>
+         <this_object>test</this_object>
+         <x_pos>900.0</x_pos>
+         <y_pos>500.0</y_pos>
+         <z_plane>5</z_plane>
       </levelObject>
    </object_array>
    <total_height>1600</total_height>

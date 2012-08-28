@@ -34,7 +34,8 @@ public class SinglePlayerScreen extends BaseScreen
 		IC = new Quad(R.drawable.ic_launcher);
 		real_ambient_light = new QuadColorShape(0, Constants.height, Constants.width, 0, 0xFF444444);
 		
-		test_level.onInitialize();
+		if(test_level != null)
+			test_level.onInitialize();
 		
 		Functions.setCamera(x_camera, y_camera);
 	}
@@ -45,9 +46,9 @@ public class SinglePlayerScreen extends BaseScreen
 		if(Constants.input_manager.getTouched(0))
 		{
 			if(Constants.input_manager.getX(0) > Constants.width / 2.0)
-				x_camera -= .01;
+				x_camera -= .0025 * delta;
 			else
-				x_camera += .01;
+				x_camera += .0025 * delta;
 			Functions.setCamera(x_camera, 0);
 		}
 	}
@@ -63,16 +64,16 @@ public class SinglePlayerScreen extends BaseScreen
 		for(com.kobaj.level.LevelObject level_object: test_level.object_array)
 			level_object.quad_object.onDrawAmbient();
 		
-		/*for(com.kobaj.level.LevelLight level_light: test_level.light_array)
+		
+		for(com.kobaj.level.LevelLight level_light: test_level.light_array)
 			if(level_light.is_bloom)
 				level_light.quad_bloom.onDrawAmbient();
-		*/
 	}
 
 	@Override
 	public void onDrawLight()
 	{
-		real_ambient_light.onDrawAmbient();
+		real_ambient_light.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, Constants.ambient_light, true);
 		
 		for(com.kobaj.level.LevelLight level_light: test_level.light_array)
 			level_light.quad_light.onDrawAmbient();
@@ -94,8 +95,12 @@ public class SinglePlayerScreen extends BaseScreen
 				drawn_count++;
 		
 		for(com.kobaj.level.LevelLight level_light: test_level.light_array)
+		{
 			if(Functions.onShader(level_light.quad_light.phys_rect_list))
 				drawn_count++;
+			if(level_light.is_bloom)
+				drawn_count++;
+		}
 		
 		Constants.text.DrawNumber(drawn_count, Functions.screenXToShaderX(100), Functions.screenYToShaderY(100), com.kobaj.opengldrawable.EnumDrawFrom.top_left);
 	}
