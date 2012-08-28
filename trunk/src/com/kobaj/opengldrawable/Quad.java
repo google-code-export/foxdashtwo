@@ -312,9 +312,11 @@ public class Quad
 	{
 		//If on screen, draw.
 		if(skip_draw_check || com.kobaj.math.Functions.onShader(phys_rect_list))
+		{
 			onSetupAmbient(my_view_matrix, my_proj_matrix, ambient_light);
 		
-		// Draw the cube.
-		onDraw();
+			// Draw the cube.
+			onDraw();
+		}
 	}
 }

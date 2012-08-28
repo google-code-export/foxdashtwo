@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.RadialGradient;
 import android.graphics.Rect;
 import android.graphics.Shader;
@@ -104,7 +105,7 @@ public class QuadColorShape extends Quad
         if(!is_bloom)
         	outline_paint.setAlpha(255);
         else
-        	outline_paint.setAlpha(50);
+        	outline_paint.setAlpha(100);
         
         canvas_temp.drawRect(screen, outline_paint);
         
@@ -119,6 +120,8 @@ public class QuadColorShape extends Quad
 		mask_paint.setAntiAlias(true);
 		mask_paint.setStyle(Paint.Style.FILL);
 		mask_paint.setColor(Color.BLACK);
+		if(is_bloom)
+			mask_paint.setXfermode(new PorterDuffXfermode(android.graphics.PorterDuff.Mode.DST_OUT));
 		
 		Path path = new Path();
 		
@@ -163,10 +166,10 @@ public class QuadColorShape extends Quad
 		}
 		path.close(); 
 		
-		Bitmap bitmap_temp = Bitmap.createBitmap((int)(radius * 2) - 1, (int)(radius * 2) - 1, Bitmap.Config.ARGB_8888);
+		Bitmap bitmap_temp = Bitmap.createBitmap((int)(radius * 2) - 2, (int)(radius * 2) - 2, Bitmap.Config.ARGB_8888);
 		Canvas canvas_temp = new Canvas(bitmap_temp);
 		canvas_temp.rotate((float) degree - 90.0f, (float)radius, (float)radius);
-		canvas_temp.drawBitmap(light, 0, 0, mask_paint); // may have to use a different paint here.
+		canvas_temp.drawBitmap(light, -1, -1, new Paint()); // may have to use a different paint here.
 		canvas_temp.drawPath(path, mask_paint);
 		
 		return bitmap_temp;
