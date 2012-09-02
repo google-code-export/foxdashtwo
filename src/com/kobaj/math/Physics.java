@@ -36,17 +36,21 @@ public class Physics
 		the_quad.x_acc = 0;
 		
 		//add position
-		the_quad.setPos(the_quad.get_x_pos() + the_quad.x_vel * delta, the_quad.get_y_pos() + the_quad.y_vel * delta, com.kobaj.opengldrawable.EnumDrawFrom.center);
+		the_quad.setPos(the_quad.getXPos() + the_quad.x_vel * delta, the_quad.getYPos() + the_quad.y_vel * delta, com.kobaj.opengldrawable.EnumDrawFrom.center);
 	}
 	
 	public <T extends Quad> RectF check_collision(T first_quad, T second_quad)
 	{
-		//quick check to even see if its possible for two quads to touch
-		double first_x = first_quad.get_x_pos();
-		double first_y = first_quad.get_y_pos();
+		//see if in the same z_plane
+		if(first_quad.z_pos != second_quad.z_pos)
+			return null;
 		
-		double second_x = second_quad.get_x_pos();
-		double second_y = second_quad.get_y_pos();
+		//quick check to even see if its possible for two quads to touch
+		double first_x = first_quad.getXPos();
+		double first_y = first_quad.getYPos();
+		
+		double second_x = second_quad.getXPos();
+		double second_y = second_quad.getYPos();
 		
 		//reposition
 		first_x = first_x - first_quad.shader_width / 2.0;
@@ -98,7 +102,7 @@ public class Physics
 		height *= direction;
 		
 		//set the quad
-		the_quad.setPos(the_quad.get_x_pos(), the_quad.get_y_pos() + height, com.kobaj.opengldrawable.EnumDrawFrom.center);
+		the_quad.setPos(the_quad.getXPos(), the_quad.getYPos() + height, com.kobaj.opengldrawable.EnumDrawFrom.center);
 		the_quad.y_vel = 0;
 	}
 }

@@ -89,8 +89,8 @@ public class Particle
 		
 		if (movement == EnumParticleMovement.orbit || movement == EnumParticleMovement.frantic)
 		{
-			start_x = actual_quad.get_x_pos();
-			start_y = actual_quad.get_y_pos();
+			start_x = actual_quad.getXPos();
+			start_y = actual_quad.getYPos();
 		
 			// calculate the tangent degree.
 			double degree_to_target = com.kobaj.math.Functions.rectangularToDegree(start_x - shader_x, start_y - shader_y);

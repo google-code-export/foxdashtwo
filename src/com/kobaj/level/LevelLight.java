@@ -7,11 +7,11 @@ import com.kobaj.opengldrawable.QuadColorShape;
 public class LevelLight
 {
 	@Element
-	public EnumLevelLight this_light;
+	public EnumLevelLight light;
 	@Element
-	public int this_color;
+	public int color;
 	@Element
-	public double this_degree;
+	public double degree;
 	@Element
 	public double radius;
 	@Element
@@ -26,19 +26,19 @@ public class LevelLight
 	
 	public void onInitialize()
 	{
-		if(this_light == EnumLevelLight.ambient)
-			quad_light = new QuadColorShape(0, com.kobaj.math.Constants.height, com.kobaj.math.Constants.width, 0, this_color);
-		else if(this_light == EnumLevelLight.point)
+		if(light == EnumLevelLight.ambient)
+			quad_light = new QuadColorShape(0, com.kobaj.math.Constants.height, com.kobaj.math.Constants.width, 0, color);
+		else if(light == EnumLevelLight.point)
 		{
-			quad_light = new QuadColorShape(radius, this_color, false);
+			quad_light = new QuadColorShape(radius, color, false);
 			if(is_bloom)
-				quad_bloom = new QuadColorShape(radius, this_color, true);
+				quad_bloom = new QuadColorShape(radius, color, true);
 		}
 		else
 		{
-			quad_light = new QuadColorShape(radius, this_color, 10, 100, this_degree, false);
+			quad_light = new QuadColorShape(radius, color, 10, 100, degree, false);
 			if(is_bloom)
-				quad_bloom = new QuadColorShape(radius, this_color, 10, 100, this_degree, true);	
+				quad_bloom = new QuadColorShape(radius, color, 10, 100, degree, true);	
 		}
 		
 		quad_light.setPos(com.kobaj.math.Functions.screenXToShaderX(x_pos), com.kobaj.math.Functions.screenYToShaderY(y_pos), com.kobaj.opengldrawable.EnumDrawFrom.center);

@@ -10,42 +10,32 @@ import android.graphics.Paint.Style;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.Typeface;
-import android.opengl.GLES20;
 import android.util.SparseArray;
 
 import com.kobaj.foxdashtwo.R;
+import com.kobaj.math.Constants;
 import com.kobaj.openglgraphics.AmbientLight;
-import com.kobaj.openglgraphics.AmbientLightShader;
 
 public class Text
 {
 	// has set of quads
 	private SparseArray<Quad> bitmap_buffer;
-	
-	// has an ambient light
-	private AmbientLight my_ambient_light;
+
+    // has an ambient light
+    private AmbientLight my_ambient_light;
 	
 	// nice constants
 	private final int line_height = 4;
 	private final int padding = 4;
 	private double text_size = 16.0; //incase scaling is not set in constructor
 	
-	// just a couple of references we hold onto
-	private AmbientLightShader ambient_light;
-	private float[] my_view_matrix;
-	private float[] my_proj_matrix;
-	
-	public Text(AmbientLightShader als, float[] my_view_matrix, float[] my_proj_matrix)
+	public Text()
 	{
 		//settup first
 		text_size = 16.0 * com.kobaj.math.Constants.sd_scale;
 		
-		this.ambient_light = als;
-		this.my_proj_matrix = my_proj_matrix;
-		this.my_view_matrix = my_view_matrix;
-		
-		// setup our ambient light
-		my_ambient_light = new AmbientLight(als, my_view_matrix);
+        // setup our ambient light
+        my_ambient_light = new AmbientLight();
 		
 		// set default size
 		double size = text_size * com.kobaj.math.Constants.sd_scale;
@@ -158,15 +148,11 @@ public class Text
 	{
 		double total_width = 0;
 		
+        // set the light
+        my_ambient_light.applyShaderProperties();
+		
 		// for now we only do positives (sorry).
 		this_number = (int) Math.abs(this_number);
-		
-		// we can afford this small optimization.
-		// set program
-		GLES20.glUseProgram(ambient_light.my_shader);
-		
-		// set the light
-		my_ambient_light.applyShaderProperties();
 		
 		//prepare to draw by seeing where we draw it.
 		double current_width = 0;
@@ -200,7 +186,7 @@ public class Text
 			temp.setPos(x - current_width, y, where);
 			
 			// draw
-			temp.onDrawAmbient(my_view_matrix, my_proj_matrix, ambient_light, true);
+			temp.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, Constants.ambient_light, true);
 			
 			//continue
 			number = number / 10;
@@ -217,13 +203,11 @@ public class Text
 			
 			temp.setPos(x, y, where);
 			
-			GLES20.glUseProgram(ambient_light.my_shader);
-			
-			// set the light
-			my_ambient_light.applyShaderProperties();
+            // set the light
+            my_ambient_light.applyShaderProperties();
 			
 			// draw pretty!
-			temp.onDrawAmbient(my_view_matrix, my_proj_matrix, ambient_light, true);
+			temp.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, Constants.ambient_light, true);
 		}
 	}
 }

@@ -1,20 +1,18 @@
 uniform mat4 u_MVPMatrix;		// A constant representing the combined model/view/projection matrix.      		       
 uniform mat4 u_MVMatrix;		// A constant representing the combined model/view matrix.       		
+uniform float u_Brightness;		// constant brightness
 		  			
-attribute vec4 a_Position;		// Per-vertex position information we will pass in.   				
-uniform vec4 a_Color;			// Per-vertex color information we will pass in. 				   
-attribute vec2 a_TexCoordinate; // Per-vertex texture coordinate information we will pass in. 		
-
-uniform float u_Brightness;		//	brightness....		  
-		    		
-varying vec4 v_Color;			// This will be passed into the fragment shader.          		 
+attribute vec4 a_Position;		// Per-vertex position information we will pass in.   								   
+attribute vec2 a_TexCoordinate; // Per-vertex texture coordinate information we will pass in. 		 
+		    		         		 
 varying vec2 v_TexCoordinate;   // This will be passed into the fragment shader.    		  
+varying vec4 v_Color;			// Pass color on through		  
 		  
 // The entry point for our vertex shader.  
 void main()                                                 	
 {                                                         
 	// Pass through the color.
-	v_Color = a_Color * u_Brightness;
+	v_Color = vec4(1.0, 1.0, 1.0, 1.0) * u_Brightness;
 	
 	// Pass through the texture coordinate.
 	v_TexCoordinate = a_TexCoordinate;                                      

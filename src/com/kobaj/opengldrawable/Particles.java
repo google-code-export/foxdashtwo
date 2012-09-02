@@ -150,7 +150,7 @@ public class Particles
 			
 			//see if any object needs to die 
 			//delete it if it does (would be cool to animated it out, fade, shrink, fly off screen, whatever...)
-			if(!com.kobaj.math.Functions.onShader(p.actual_quad.get_x_pos(), p.actual_quad.get_y_pos()))
+			if(!com.kobaj.math.Functions.onShader(p.actual_quad.getXPos(), p.actual_quad.getYPos()))
 				reboot_particle(p);
 		}
 		
