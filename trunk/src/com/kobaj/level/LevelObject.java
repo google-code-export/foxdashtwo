@@ -2,9 +2,10 @@ package com.kobaj.level;
 
 import org.simpleframework.xml.Element;
 
-import com.kobaj.opengldrawable.QuadColorShape;
-
 import android.graphics.Color;
+
+import com.kobaj.opengldrawable.Quad;
+import com.kobaj.opengldrawable.QuadColorShape;
 
 public class LevelObject
 {
@@ -19,7 +20,7 @@ public class LevelObject
 	@Element
 	public double z_plane; //generally 0-10, with 0 being closes to the 'front'
 	
-	public QuadColorShape quad_object;
+	public Quad quad_object;
 	
 	public void onInitialize()
 	{

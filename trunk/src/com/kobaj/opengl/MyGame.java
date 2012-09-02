@@ -54,11 +54,7 @@ public class MyGame extends MyGLRender
 		//regular objects
 		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA); // no see thru
 		if(scene.beginRenderToTexture())
-		{
-			/* It is recommended that the screen calls something similar to the following to functions
-			 * al_ambient_light.applyShaderProperties();
-			 */
-			
+		{	
 			//put opaque items here
 			currently_active_screen.onDrawObject();
 		}

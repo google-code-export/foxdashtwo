@@ -231,12 +231,12 @@ public class Quad
 	} 
 	
 	//getters are slower than public, but more secure
-	public double get_x_pos()
+	public double getXPos()
 	{
 		return x_pos;
 	}
 	
-	public double get_y_pos()
+	public double getYPos()
 	{
 		return y_pos;
 	}
@@ -245,9 +245,6 @@ public class Quad
 	// drawing stuffs
 	private <T extends BaseLightShader> void onSetupAmbient(float[] my_view_matrix, float[] my_proj_matrix, T ambient_light)
 	{
-		// Pass in the color information
-		GLES20.glUniform4f(ambient_light.my_color_handle, (float)ambient_light.my_color_r, (float)ambient_light.my_color_g, (float)ambient_light.my_color_b, 1.0f);
-		
 		// pass in the brightness
 		GLES20.glUniform1f(ambient_light.my_brightness_handle, (float)ambient_light.my_brightness);
 		

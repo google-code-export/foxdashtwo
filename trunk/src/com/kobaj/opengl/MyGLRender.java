@@ -60,7 +60,7 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		fps = new FPSManager();
 		
 		//text setup
-		text = new Text(ambient_light, my_view_matrix, my_proj_matrix);
+		text = new Text();
 		com.kobaj.math.Constants.text = text; //referencing!
 		
 		//sound and audio setup
