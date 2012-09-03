@@ -39,6 +39,8 @@ public class Physics
 		the_quad.setPos(the_quad.getXPos() + the_quad.x_vel * delta, the_quad.getYPos() + the_quad.y_vel * delta, com.kobaj.opengldrawable.EnumDrawFrom.center);
 	}
 	
+	//check for a collision and return a collission rectf
+	//int primary_quad is used to indicate if (1) first quad is the player/primary moving object or (2) secondary is.
 	public <T extends Quad> RectF check_collision(T first_quad, T second_quad)
 	{
 		//see if in the same z_plane
@@ -66,14 +68,33 @@ public class Physics
 			return null; //no possibility of collision
 		
 		//Is this going to cause garbage?
-		RectF collision = new RectF();
+		RectF collision;
 		
 		//if its possible, get a detailed picture of the collision
-		//TODO double check this is correct
 		for(int i = first_quad.phys_rect_list.size() - 1; i >= 0; i--)
 			for(int e = second_quad.phys_rect_list.size() - 1; i >= 0; i--)
-				if(collision.setIntersect(first_quad.phys_rect_list.get(i), second_quad.phys_rect_list.get(e)))
-						return collision;
+			{
+				collision = Functions.setEqualIntersects(first_quad.phys_rect_list.get(i).main_rect, second_quad.phys_rect_list.get(e).main_rect);
+				if(collision != null)
+				{
+					//we will generate normals
+					//and in addition modify the collision rectangle
+					//based on how the object should react (bounce, fly through, stick, etc
+					
+					//then decide normal
+					final double width = Math.abs(collision.width());
+					final double height = Math.abs(collision.height());
+					
+					if(width >= height)
+						collision.left = collision.right;
+					else
+						collision.top = collision.bottom;
+							
+					//and here we would decide reaction (if it were programmed)
+						
+					return collision;
+				}
+			}
 		
 		//if there is a collision, return a rectF, if no collision then null.
 		return null;
@@ -82,27 +103,31 @@ public class Physics
 	public <T extends Quad> void handle_collision(RectF collision, T the_quad)
 	{
 		//assume a few things
-		//only fix up and down
 		//no bounce
-		
+	
 		//early copouts
 		if(collision == null)
 			return;
-		if(collision.height() == 0)
+		
+		double width = Math.abs(collision.width());
+		double height = Math.abs(collision.height());
+			
+		if(width == height)
 			return;
 		
-		//grab the direction of travel and normalize it
-		double direction = the_quad.y_vel;
-		if(direction > 0)
-			direction = -1;
-		else if(direction < 0 )
-			direction = 1;
-	
-		double height = collision.height();
-		height *= direction;
-		
-		//set the quad
-		the_quad.setPos(the_quad.getXPos(), the_quad.getYPos() + height, com.kobaj.opengldrawable.EnumDrawFrom.center);
-		the_quad.y_vel = 0;
+		if(collision.width() != 0)
+		{
+			if(collision.centerX() > the_quad.getXPos()) // push object to the right
+				width = -width;
+			the_quad.setPos(the_quad.getXPos() + width, the_quad.getYPos(), com.kobaj.opengldrawable.EnumDrawFrom.center);
+			the_quad.x_vel = 0;
+		}
+		else
+		{
+			if(collision.centerY() > the_quad.getYPos())
+				height = -height;
+			the_quad.setPos(the_quad.getXPos(), the_quad.getYPos() + height, com.kobaj.opengldrawable.EnumDrawFrom.center);
+			the_quad.y_vel = 0;
+		}
 	}
 }

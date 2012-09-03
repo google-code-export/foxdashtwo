@@ -85,6 +85,19 @@ public class Functions
 		return linearInterpolateUnclamped(0, Constants.height, input_y, -1, 1);
 	}
 	
+	//used to translate screen coordinates to shader coordinates
+	//for example, screen width is 0 to 800px, shader is -1 to 1.
+	//really you should not go from shader to screen
+	public static final double shaderXToScreenX(double input_x)
+	{
+		return linearInterpolateUnclamped(-Constants.ratio, Constants.ratio, input_x, 0, Constants.width);
+	}
+	
+	public static final double shaderYToScreenY(double input_y)
+	{
+		return linearInterpolateUnclamped(-1, 1, input_y, 0, Constants.height);
+	}
+	
 	//random between two values
 	public static final double randomDouble(double min, double max)
 	{
@@ -111,7 +124,7 @@ public class Functions
 		return false;
 	}
 	
-	public static final boolean onShader(ArrayList<RectF> objects)
+	public static final boolean onShader(ArrayList<ExtendedRectF> objects)
 	{
 		final double left = (-Constants.ratio - Constants.x_shader_translation);
 		final double top = (1 + Constants.y_shader_translation);
@@ -119,7 +132,7 @@ public class Functions
 		final double bottom = (-1 + Constants.y_shader_translation);
 		
 		for(int i = objects.size() - 1; i >= 0; i--)
-			if(equalIntersects(objects.get(i), left, top, right, bottom))
+			if(equalIntersects(objects.get(i).main_rect, left, top, right, bottom))
 				return true;
 		
 		return false;
@@ -136,6 +149,34 @@ public class Functions
 	{
 		return (a.left <= right && left <= a.right && ((a.top >= bottom && top >= a.bottom) ||
 				   (a.top <= -bottom && -top <= a.bottom)));
+	}
+	public static final RectF setEqualIntersects(RectF a, RectF b)
+	{
+		return setEqualIntersects(a, b.left, b.top, b.right, b.bottom);
+	}
+	public static final RectF setEqualIntersects(RectF a, double left, double top, double right, double bottom)
+	{
+		if(equalIntersects(a, left, top, right, bottom))
+		{
+			RectF send_back = new RectF();
+			send_back.left = (float)(Math.max(a.left, left));
+			
+			//correct orientation
+			if(a.top < a.bottom && top < bottom)
+				send_back.top = (float)(Math.max(a.top, top));
+			else
+				send_back.top = (float)(Math.min(a.top, top));
+				
+			send_back.right = (float)(Math.min(a.right, right));
+			
+			if(a.top < a.bottom && top < bottom)
+				send_back.bottom = (float)(Math.min(a.bottom, bottom));
+			else
+				send_back.bottom = (float)(Math.max(a.bottom, bottom));
+			
+			return send_back;
+		}
+		return null;
 	}
 
 	
