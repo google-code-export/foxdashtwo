@@ -10,54 +10,82 @@
          <y_pos>290.0</y_pos>
       </levelLight>
    </light_array>
-   <object_array length="7">
+   <object_array length="11">
       <levelObject>
-         <draw_from>top_left</draw_from>
-         <this_object>test</this_object>
-         <x_pos>200.0</x_pos>
-         <y_pos>200.0</y_pos>
-         <z_plane>5</z_plane>
-      </levelObject>
-      <levelObject>
-         <draw_from>top_left</draw_from>
-         <this_object>test</this_object>
-         <x_pos>600.0</x_pos>
-         <y_pos>200.0</y_pos>
-         <z_plane>5</z_plane>
-      </levelObject>
-      <levelObject>
-         <draw_from>top_left</draw_from>
-         <this_object>two</this_object>
-         <x_pos>650.0</x_pos>
-         <y_pos>250.0</y_pos>
-         <z_plane>0</z_plane>
-      </levelObject>
-      <levelObject>
-         <draw_from>top_left</draw_from>
-         <this_object>test</this_object>
-         <x_pos>900.0</x_pos>
-         <y_pos>500.0</y_pos>
-         <z_plane>5</z_plane>
-      </levelObject>
-       <levelObject>
-         <draw_from>top_left</draw_from>
-         <this_object>test</this_object>
-         <x_pos>0.0</x_pos>
-         <y_pos>500.0</y_pos>
-         <z_plane>5</z_plane>
-      </levelObject>
-       <levelObject>
-         <draw_from>top_left</draw_from>
-         <this_object>test</this_object>
-         <x_pos>-400.0</x_pos>
-         <y_pos>500.0</y_pos>
-         <z_plane>5</z_plane>
-      </levelObject>
-       <levelObject>
-         <draw_from>top_left</draw_from>
+         <draw_from>bottom_left</draw_from>
          <this_object>test</this_object>
          <x_pos>-800.0</x_pos>
-         <y_pos>500.0</y_pos>
+         <y_pos>0.0</y_pos>
+         <z_plane>5</z_plane>
+      </levelObject>
+    <levelObject>
+         <draw_from>bottom_left</draw_from>
+         <this_object>test</this_object>
+         <x_pos>-600.0</x_pos>
+         <y_pos>0.0</y_pos>
+         <z_plane>5</z_plane>
+      </levelObject>
+      <levelObject>
+         <draw_from>bottom_left</draw_from>
+         <this_object>test</this_object>
+         <x_pos>-400.0</x_pos>
+         <y_pos>0.0</y_pos>
+         <z_plane>5</z_plane>
+      </levelObject>
+      <levelObject>
+         <draw_from>bottom_left</draw_from>
+         <this_object>test</this_object>
+         <x_pos>-200.0</x_pos>
+         <y_pos>0.0</y_pos>
+         <z_plane>5</z_plane>
+      </levelObject>
+      <levelObject>
+         <draw_from>bottom_left</draw_from>
+         <this_object>test</this_object>
+         <x_pos>0.0</x_pos>
+         <y_pos>0.0</y_pos>
+         <z_plane>5</z_plane>
+      </levelObject>
+    <levelObject>
+         <draw_from>bottom_left</draw_from>
+         <this_object>test</this_object>
+         <x_pos>200.0</x_pos>
+         <y_pos>0.0</y_pos>
+         <z_plane>5</z_plane>
+      </levelObject>
+      <levelObject>
+         <draw_from>bottom_left</draw_from>
+         <this_object>test</this_object>
+         <x_pos>400.0</x_pos>
+         <y_pos>0.0</y_pos>
+         <z_plane>5</z_plane>
+      </levelObject>
+      <levelObject>
+         <draw_from>bottom_left</draw_from>
+         <this_object>test</this_object>
+         <x_pos>600.0</x_pos>
+         <y_pos>0.0</y_pos>
+         <z_plane>5</z_plane>
+      </levelObject>
+      <levelObject>
+         <draw_from>bottom_left</draw_from>
+         <this_object>test</this_object>
+         <x_pos>-800.0</x_pos>
+         <y_pos>200.0</y_pos>
+         <z_plane>5</z_plane>
+      </levelObject>
+      <levelObject>
+         <draw_from>bottom_left</draw_from>
+         <this_object>test</this_object>
+         <x_pos>-800.0</x_pos>
+         <y_pos>400.0</y_pos>
+         <z_plane>5</z_plane>
+      </levelObject>
+      <levelObject>
+         <draw_from>bottom_left</draw_from>
+         <this_object>test</this_object>
+         <x_pos>600.0</x_pos>
+         <y_pos>100.0</y_pos>
          <z_plane>5</z_plane>
       </levelObject>
    </object_array>

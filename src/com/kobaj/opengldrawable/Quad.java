@@ -10,11 +10,11 @@ import java.nio.FloatBuffer;
 import java.util.ArrayList;
 
 import android.graphics.Bitmap;
-import android.graphics.RectF;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 
 import com.kobaj.loader.GLLoadedTexture;
+import com.kobaj.math.ExtendedRectF;
 import com.kobaj.openglgraphics.AmbientLightShader;
 import com.kobaj.openglgraphics.BaseLightShader;
 
@@ -27,6 +27,7 @@ public class Quad
 	// and placed in the exact center of the quad
 	private double x_pos = 0.0;
 	private double y_pos = 0.0;
+	public EnumDrawFrom currently_drawn;
 	
 	//I would much rather extend a physics object
 	//but that wouldn't really fit in with this model.
@@ -43,7 +44,7 @@ public class Quad
 	// physics rectangle. An object can have multiple
 	// rectangles so it has better 'resolution' when interacting with other quads
 	// phys rect is stored in shader coordinates
-	public ArrayList<RectF> phys_rect_list = new ArrayList<RectF>();
+	public ArrayList<ExtendedRectF> phys_rect_list = new ArrayList<ExtendedRectF>();
 	
 	//begin by holding these
 	public int width;
@@ -151,7 +152,7 @@ public class Quad
 		my_position.put(cubePositionData).position(0);
 		
 		//up next setup phys rect list. Just a default. The user can set/add/remove more rectangles as needed.
-		phys_rect_list.add(new RectF(-tr_x, tr_y, tr_x, -tr_y));
+		phys_rect_list.add(new ExtendedRectF(-tr_x, tr_y, tr_x, -tr_y));
 	}
 	
 	//methods for calculating stuffs
@@ -188,6 +189,8 @@ public class Quad
 	//these x and y are in shader space 0 to 1
 	public void setPos(double x, double y, EnumDrawFrom where)
 	{
+		currently_drawn = where;
+		
 		if(where == EnumDrawFrom.top_left)
 		{
 			//positive x
@@ -218,16 +221,8 @@ public class Quad
 		}
 		
 		//set the rectangle
-		for(RectF rect: phys_rect_list)
-		{
-			final double rect_half_width = rect.width() / 2.0;
-			final double rect_half_height = rect.height() / 2.0;
-			
-			rect.left = (float)(x_pos - rect_half_width);
-			rect.top = (float)(y_pos + rect_half_height);
-			rect.right = (float)(x_pos + rect_half_width);
-			rect.bottom = (float)(y_pos - rect_half_height);
-		}
+		for(int i = phys_rect_list.size() - 1; i >= 0; i--)
+			phys_rect_list.get(i).setPositionWithOffset(x_pos, y_pos);
 	} 
 	
 	//getters are slower than public, but more secure
@@ -248,7 +243,7 @@ public class Quad
 		// pass in the brightness
 		GLES20.glUniform1f(ambient_light.my_brightness_handle, (float)ambient_light.my_brightness);
 		
-		
+	
 		// Set the active texture unit to texture unit 0.
 		GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
 		
