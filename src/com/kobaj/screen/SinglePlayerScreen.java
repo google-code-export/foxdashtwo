@@ -36,7 +36,7 @@ public class SinglePlayerScreen extends BaseScreen
 	{
 		al_ambient_light = new AmbientLight();
 		
-		real_ambient_light = new QuadColorShape(0, Constants.height, Constants.width, 0, 0xFF444444);
+		real_ambient_light = new QuadColorShape(0, Constants.height, Constants.width, 0, 0xFF444444, 0);
 		
 		if(test_level != null)
 			test_level.onInitialize();
@@ -143,7 +143,7 @@ public class SinglePlayerScreen extends BaseScreen
 		double y_center = bounding_box.centerY();
 		
 		//holy garbage creation batman
-		QuadColorShape outline = new QuadColorShape((int)left,(int) top,(int) right,(int) bottom, 0x99FF00FF);
+		QuadColorShape outline = new QuadColorShape((int)left,(int) top,(int) right,(int) bottom, 0x99FF00FF, 0);
 		outline.setPos(x_center, y_center, EnumDrawFrom.center);
 		outline.onDrawAmbient(Constants.my_view_matrix, Constants.my_proj_matrix, Constants.ambient_light, true);
 	}

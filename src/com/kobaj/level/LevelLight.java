@@ -27,18 +27,18 @@ public class LevelLight
 	public void onInitialize()
 	{
 		if(light == EnumLevelLight.ambient)
-			quad_light = new QuadColorShape(0, com.kobaj.math.Constants.height, com.kobaj.math.Constants.width, 0, color);
+			quad_light = new QuadColorShape(0, com.kobaj.math.Constants.height, com.kobaj.math.Constants.width, 0, color, 0);
 		else if(light == EnumLevelLight.point)
 		{
-			quad_light = new QuadColorShape(radius, color, false);
+			quad_light = new QuadColorShape(radius, color, false, 0);
 			if(is_bloom)
-				quad_bloom = new QuadColorShape(radius, color, true);
+				quad_bloom = new QuadColorShape(radius, color, true, 0);
 		}
 		else
 		{
-			quad_light = new QuadColorShape(radius, color, 10, 100, degree, false);
+			quad_light = new QuadColorShape(radius, color, 10, 100, degree, false, 7);
 			if(is_bloom)
-				quad_bloom = new QuadColorShape(radius, color, 10, 100, degree, true);	
+				quad_bloom = new QuadColorShape(radius, color, 10, 100, degree, true, 7);	
 		}
 		
 		quad_light.setPos(com.kobaj.math.Functions.screenXToShaderX(x_pos), com.kobaj.math.Functions.screenYToShaderY(y_pos), com.kobaj.opengldrawable.EnumDrawFrom.center);
