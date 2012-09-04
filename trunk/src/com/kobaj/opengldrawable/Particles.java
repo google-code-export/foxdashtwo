@@ -83,13 +83,13 @@ public class Particles
 		
 		Particle the_particle = new Particle();
 		
-		the_particle.actual_quad = new QuadColorShape(radius, particle_color, is_bloom);
+		the_particle.actual_quad = new QuadColorShape(radius, particle_color, is_bloom, 0);
 		the_particle.actual_quad.setPos(com.kobaj.math.Functions.screenXToShaderX(x), com.kobaj.math.Functions.screenYToShaderY(y), com.kobaj.opengldrawable.EnumDrawFrom.center);
 		
 		//add a bloom particle if requested
 		if(is_bloom)
 		{
-			the_particle.bloom_quad = new QuadColorShape(radius, particle_color, true);
+			the_particle.bloom_quad = new QuadColorShape(radius, particle_color, true, 0);
 			the_particle.bloom_quad.setPos(com.kobaj.math.Functions.screenXToShaderX(x), com.kobaj.math.Functions.screenYToShaderY(y), com.kobaj.opengldrawable.EnumDrawFrom.center);
 		}
 	

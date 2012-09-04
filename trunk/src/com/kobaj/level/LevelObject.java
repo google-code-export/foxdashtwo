@@ -25,9 +25,9 @@ public class LevelObject
 	public void onInitialize()
 	{
 		if(this_object == EnumLevelObject.test)
-			quad_object = new QuadColorShape(0, 200, 200, 0, Color.RED);
+			quad_object = new QuadColorShape(0, 200, 200, 0, Color.RED, 0);
 		else
-			quad_object = new QuadColorShape(0, 200, 200, 0, Color.GREEN);
+			quad_object = new QuadColorShape(0, 200, 200, 0, Color.GREEN, 0);
 		
 		quad_object.z_pos -= (z_plane * .00001);
 		quad_object.setPos(com.kobaj.math.Functions.screenXToShaderX(x_pos), com.kobaj.math.Functions.screenYToShaderY(y_pos), draw_from);

@@ -1,5 +1,7 @@
 package com.kobaj.opengldrawable;
 
+import com.kobaj.math.Functions;
+
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -14,16 +16,16 @@ public class QuadColorShape extends Quad
 {	
 	//this is in screen coordinates 0-800
 	//square/rectangle
-	public QuadColorShape(int left, int top, int right, int bottom, int color)
+	public QuadColorShape(int left, int top, int right, int bottom, int color, int blur_amount)
 	{	
-		super(findKey(), makeSquare(left, top, right, bottom, color));
+		super(findKey(), Functions.fastBlur(makeSquare(left, top, right, bottom, color), blur_amount));
 	}
 	
 	//this is in screen coordinates 0-800
 	//circle
-	public QuadColorShape(double radius, int color)
+	public QuadColorShape(double radius, int color, int blur_amount)
 	{
-		super(findKey(), makeCircle(radius, color));
+		super(findKey(), Functions.fastBlur(makeCircle(radius, color), blur_amount));
 	}
 	
 	//gradient circle
@@ -31,16 +33,16 @@ public class QuadColorShape extends Quad
 	//the whole point of bloom is to not act as a light, but more of an overlay. kind of that
 	//"ahh, the light is so bright its blinding me and I cant see behind it" effect...
 	//this is in screen coordinates 0-800
-	public QuadColorShape(double radius, int color, boolean is_bloom)
+	public QuadColorShape(double radius, int color, boolean is_bloom, int blur_amount)
 	{
-		super(findKey(), makeCircleGradient(radius, color, is_bloom));
+		super(findKey(), Functions.fastBlur(makeCircleGradient(radius, color, is_bloom), blur_amount));
 	}
 	
 	//gradient circle with mask
 	//this is in screen coordinates 0-800
-	public QuadColorShape(double radius, int color, int close_width, int far_width, double degree, boolean is_bloom)
+	public QuadColorShape(double radius, int color, int close_width, int far_width, double degree, boolean is_bloom, int blur_amount)
 	{
-		super(findKey(), makeCircleGradientWithMask(radius, color, close_width, far_width, degree, is_bloom));
+		super(findKey(), Functions.fastBlur(makeCircleGradientWithMask(radius, color, close_width, far_width, degree, is_bloom), blur_amount));
 	}
 	
 	private static int findKey()

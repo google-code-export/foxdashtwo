@@ -2,6 +2,8 @@ package com.kobaj.math;
 
 import java.util.ArrayList;
 
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.RectF;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
@@ -236,5 +238,290 @@ public class Functions
 		Matrix.translateM(Constants.my_view_matrix, 0, (float) x_camera, (float) y_camera, 0);
 		Constants.x_shader_translation = x_camera;
 		Constants.y_shader_translation = y_camera;
+	}
+	
+	//when needing to blur something
+	public static Bitmap fastBlur(Bitmap sentBitmap, int radius) 
+	{
+        // Stack Blur Algorithm by Mario Klingemann <mario@quasimondo.com>
+
+        Bitmap bitmap = sentBitmap.copy(sentBitmap.getConfig(), true);
+
+        if (radius < 1) {
+            return bitmap;
+        }
+
+        int w = bitmap.getWidth();
+        int h = bitmap.getHeight();
+
+        int[] pix = new int[w * h];
+        bitmap.getPixels(pix, 0, w, 0, 0, w, h);
+
+        int wm = w - 1;
+        int hm = h - 1;
+        int wh = w * h;
+        int div = radius + radius + 1;
+
+        int a[] = new int[wh];
+        int r[] = new int[wh];
+        int g[] = new int[wh];
+        int b[] = new int[wh];
+        int asum, rsum, gsum, bsum, x, y, i, p, yp, yi, yw;
+        int vmin[] = new int[Math.max(w, h)];
+
+        int divsum = (div + 1) >> 1;
+        divsum *= divsum;
+        int dv[] = new int[256 * divsum];
+        for (i = 0; i < 256 * divsum; i++) {
+            dv[i] = (i / divsum);
+        }
+
+        yw = yi = 0;
+
+        int[][] stack = new int[div][4];
+        int stackpointer;
+        int stackstart;
+        int[] sir;
+        int rbs;
+        int r1 = radius + 1;
+        int aoutsum, routsum, goutsum, boutsum;
+        int ainsum, rinsum, ginsum, binsum;
+
+        for (y = 0; y < h; y++) {
+            ainsum = rinsum = ginsum = binsum = aoutsum = routsum = goutsum = boutsum = asum = rsum = gsum = bsum = 0;
+            for (i = -radius; i <= radius; i++) {
+                p = pix[yi + Math.min(wm, Math.max(i, 0))];
+                sir = stack[i + radius];
+                
+                sir[0] = (p & 0xff0000) >> 16;
+                sir[1] = (p & 0x00ff00) >> 8;
+                sir[2] = (p & 0x0000ff);
+                sir[3] = Color.alpha(p);
+                
+                rbs = r1 - Math.abs(i);
+                
+                rsum += sir[0] * rbs;
+                gsum += sir[1] * rbs;
+                bsum += sir[2] * rbs;
+                asum += sir[3] * rbs;
+                
+                if (i > 0) {
+                    rinsum += sir[0];
+                    ginsum += sir[1];
+                    binsum += sir[2];
+                    ainsum += sir[3];
+                } else {
+                    routsum += sir[0];
+                    goutsum += sir[1];
+                    boutsum += sir[2];
+                    aoutsum += sir[3];
+                }
+            }
+            stackpointer = radius;
+
+            for (x = 0; x < w; x++) {
+
+                r[yi] = dv[rsum];
+                g[yi] = dv[gsum];
+                b[yi] = dv[bsum];
+                a[yi] = dv[asum];
+
+                rsum -= routsum;
+                gsum -= goutsum;
+                bsum -= boutsum;
+                asum -= aoutsum;
+
+                stackstart = stackpointer - radius + div;
+                sir = stack[stackstart % div];
+
+                routsum -= sir[0];
+                goutsum -= sir[1];
+                boutsum -= sir[2];
+                aoutsum -= sir[3];
+
+                if (y == 0) {
+                    vmin[x] = Math.min(x + radius + 1, wm);
+                }
+                p = pix[yw + vmin[x]];
+
+                sir[0] = (p & 0xff0000) >> 16;
+                sir[1] = (p & 0x00ff00) >> 8;
+                sir[2] = (p & 0x0000ff);
+                sir[3] = Color.alpha(p);;
+                
+                rinsum += sir[0];
+                ginsum += sir[1];
+                binsum += sir[2];
+                ainsum += sir[3];
+
+                rsum += rinsum;
+                gsum += ginsum;
+                bsum += binsum;
+                asum += ainsum;
+
+                stackpointer = (stackpointer + 1) % div;
+                sir = stack[(stackpointer) % div];
+
+                routsum += sir[0];
+                goutsum += sir[1];
+                boutsum += sir[2];
+                aoutsum += sir[3];
+
+                rinsum -= sir[0];
+                ginsum -= sir[1];
+                binsum -= sir[2];
+                ainsum -= sir[3];
+
+                yi++;
+            }
+            yw += w;
+        }
+        for (x = 0; x < w; x++) {
+            ainsum = rinsum = ginsum = binsum = aoutsum = routsum = goutsum = boutsum = asum = rsum = gsum = bsum = 0;
+            yp = -radius * w;
+            for (i = -radius; i <= radius; i++) {
+                yi = Math.max(0, yp) + x;
+
+                sir = stack[i + radius];
+
+                sir[0] = r[yi];
+                sir[1] = g[yi];
+                sir[2] = b[yi];
+                sir[3] = a[yi];
+
+                rbs = r1 - Math.abs(i);
+
+                rsum += r[yi] * rbs;
+                gsum += g[yi] * rbs;
+                bsum += b[yi] * rbs;
+                asum += a[yi] * rbs;
+
+                if (i > 0) {
+                    rinsum += sir[0];
+                    ginsum += sir[1];
+                    binsum += sir[2];
+                    ainsum += sir[3];
+                } else {
+                    routsum += sir[0];
+                    goutsum += sir[1];
+                    boutsum += sir[2];
+                    aoutsum += sir[3];
+                }
+
+                if (i < hm) {
+                    yp += w;
+                }
+            }
+            yi = x;
+            stackpointer = radius;
+            for (y = 0; y < h; y++) {
+                pix[yi] = (dv[asum] << 24) | (dv[rsum] << 16) | (dv[gsum] << 8) | dv[bsum];
+
+                rsum -= routsum;
+                gsum -= goutsum;
+                bsum -= boutsum;
+                asum -= aoutsum;
+
+                stackstart = stackpointer - radius + div;
+                sir = stack[stackstart % div];
+
+                routsum -= sir[0];
+                goutsum -= sir[1];
+                boutsum -= sir[2];
+                aoutsum -= sir[3];
+
+                if (x == 0) {
+                    vmin[y] = Math.min(y + r1, hm) * w;
+                }
+                p = x + vmin[y];
+
+                sir[0] = r[p];
+                sir[1] = g[p];
+                sir[2] = b[p];
+                sir[3] = a[p];
+
+                rinsum += sir[0];
+                ginsum += sir[1];
+                binsum += sir[2];
+                ainsum += sir[3];
+
+                rsum += rinsum;
+                gsum += ginsum;
+                bsum += binsum;
+                asum += ainsum;
+
+                stackpointer = (stackpointer + 1) % div;
+                sir = stack[stackpointer];
+
+                routsum += sir[0];
+                goutsum += sir[1];
+                boutsum += sir[2];
+                aoutsum += sir[3];
+
+                rinsum -= sir[0];
+                ginsum -= sir[1];
+                binsum -= sir[2];
+                ainsum -= sir[3];
+
+                yi += w;
+            }
+        }
+
+        bitmap.setPixels(pix, 0, w, 0, 0, w, h);
+
+        return bitmap;
+    }
+	
+	public static Bitmap applyShrinkGrowBlur(Bitmap source, double blur_amount)
+	{
+		if(blur_amount < 1)
+			return source;
+		
+		final int original_width = source.getWidth();
+		final int original_height = source.getHeight();
+		
+		final int scale_width = (int)((double)original_width / blur_amount);
+		final int scale_height = (int)((double)original_height / blur_amount);
+		
+		//return Bitmap.createScaledBitmap(source, original_width, original_height, true);
+		return Bitmap.createScaledBitmap(Bitmap.createScaledBitmap(source, scale_width, scale_height, true), original_width, original_height, true);	
+	}
+	
+	public static Bitmap simpleBlur(Bitmap source, double blur_amount)
+	{
+		if(blur_amount < 1)
+			return source;
+		
+		Bitmap bitmap = source.copy(source.getConfig(), true);
+		final int bitmap_width = bitmap.getWidth();
+		final int bitmap_height = bitmap.getHeight();
+		final int total = bitmap_width * bitmap_height;
+		
+		int[] inpix = new int[total];
+        bitmap.getPixels(inpix, 0, bitmap_width, 0, 0, bitmap_width, bitmap_height);
+        
+        int[][] in_pixels = new int[bitmap_width][bitmap_height];
+        
+        //unfinished
+        /*int e = 0;
+    	
+        for(int i = 0; i < total; i++)
+        {
+        	in_pixels[
+        	
+        	e++;
+        	if(e > bitmap_width)
+        		e = 0;
+        }
+        
+        int[] outpix = new int[total];
+        
+        for(int i = 0; i < bitmap_width; i++)
+        	for(int e = 0; e < bitmap_width; e++)
+        	{
+        		
+        	}*/
+        
+        return bitmap;
 	}
 }
