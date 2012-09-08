@@ -247,9 +247,8 @@ public class Functions
 
         Bitmap bitmap = sentBitmap.copy(sentBitmap.getConfig(), true);
 
-        if (radius < 1) {
+        if (radius < 1) 
             return bitmap;
-        }
 
         int w = bitmap.getWidth();
         int h = bitmap.getHeight();
@@ -272,9 +271,8 @@ public class Functions
         int divsum = (div + 1) >> 1;
         divsum *= divsum;
         int dv[] = new int[256 * divsum];
-        for (i = 0; i < 256 * divsum; i++) {
+        for (i = 0; i < 256 * divsum; i++)
             dv[i] = (i / divsum);
-        }
 
         yw = yi = 0;
 
@@ -287,16 +285,18 @@ public class Functions
         int aoutsum, routsum, goutsum, boutsum;
         int ainsum, rinsum, ginsum, binsum;
 
-        for (y = 0; y < h; y++) {
+        for (y = 0; y < h; y++) 
+        {
             ainsum = rinsum = ginsum = binsum = aoutsum = routsum = goutsum = boutsum = asum = rsum = gsum = bsum = 0;
-            for (i = -radius; i <= radius; i++) {
+            for (i = -radius; i <= radius; i++) 
+            {
                 p = pix[yi + Math.min(wm, Math.max(i, 0))];
                 sir = stack[i + radius];
                 
-                sir[0] = (p & 0xff0000) >> 16;
-                sir[1] = (p & 0x00ff00) >> 8;
-                sir[2] = (p & 0x0000ff);
-                sir[3] = Color.alpha(p);
+                sir[0] = (p >> 16) & 0xFF;
+                sir[1] = (p >> 8) & 0xFF;
+                sir[2] = (p & 0xFF);
+                sir[3] = p >>> 24;
                 
                 rbs = r1 - Math.abs(i);
                 
@@ -319,8 +319,8 @@ public class Functions
             }
             stackpointer = radius;
 
-            for (x = 0; x < w; x++) {
-
+            for (x = 0; x < w; x++) 
+            {
                 r[yi] = dv[rsum];
                 g[yi] = dv[gsum];
                 b[yi] = dv[bsum];
@@ -339,15 +339,15 @@ public class Functions
                 boutsum -= sir[2];
                 aoutsum -= sir[3];
 
-                if (y == 0) {
+                if (y == 0) 
                     vmin[x] = Math.min(x + radius + 1, wm);
-                }
+            
                 p = pix[yw + vmin[x]];
 
-                sir[0] = (p & 0xff0000) >> 16;
-                sir[1] = (p & 0x00ff00) >> 8;
-                sir[2] = (p & 0x0000ff);
-                sir[3] = Color.alpha(p);;
+                sir[0] = (p >> 16) & 0xFF;
+                sir[1] = (p >> 8) & 0xFF;
+                sir[2] = (p & 0xFF);
+                sir[3] = p >>> 24;
                 
                 rinsum += sir[0];
                 ginsum += sir[1];
@@ -376,10 +376,13 @@ public class Functions
             }
             yw += w;
         }
-        for (x = 0; x < w; x++) {
+        
+        for (x = 0; x < w; x++) 
+        {
             ainsum = rinsum = ginsum = binsum = aoutsum = routsum = goutsum = boutsum = asum = rsum = gsum = bsum = 0;
             yp = -radius * w;
-            for (i = -radius; i <= radius; i++) {
+            for (i = -radius; i <= radius; i++) 
+            {
                 yi = Math.max(0, yp) + x;
 
                 sir = stack[i + radius];
@@ -396,25 +399,31 @@ public class Functions
                 bsum += b[yi] * rbs;
                 asum += a[yi] * rbs;
 
-                if (i > 0) {
+                if (i > 0) 
+                {
                     rinsum += sir[0];
                     ginsum += sir[1];
                     binsum += sir[2];
                     ainsum += sir[3];
-                } else {
+                } 
+                else 
+                {
                     routsum += sir[0];
                     goutsum += sir[1];
                     boutsum += sir[2];
                     aoutsum += sir[3];
                 }
 
-                if (i < hm) {
+                if (i < hm) 
                     yp += w;
-                }
+                
             }
+            
             yi = x;
             stackpointer = radius;
-            for (y = 0; y < h; y++) {
+            
+            for (y = 0; y < h; y++) 
+            {
                 pix[yi] = (dv[asum] << 24) | (dv[rsum] << 16) | (dv[gsum] << 8) | dv[bsum];
 
                 rsum -= routsum;
@@ -430,9 +439,9 @@ public class Functions
                 boutsum -= sir[2];
                 aoutsum -= sir[3];
 
-                if (x == 0) {
+                if (x == 0) 
                     vmin[y] = Math.min(y + r1, hm) * w;
-                }
+                
                 p = x + vmin[y];
 
                 sir[0] = r[p];
@@ -487,7 +496,9 @@ public class Functions
 		return Bitmap.createScaledBitmap(Bitmap.createScaledBitmap(source, scale_width, scale_height, true), original_width, original_height, true);	
 	}
 	
-	public static Bitmap simpleBlur(Bitmap source, double blur_amount)
+	//just an experiment to see if I could blur things.
+	//fastBlur is still much faster (simple blur is about 10 times slower)
+	public static Bitmap simpleBlur(Bitmap source, int blur_amount)
 	{
 		if(blur_amount < 1)
 			return source;
@@ -497,30 +508,94 @@ public class Functions
 		final int bitmap_height = bitmap.getHeight();
 		final int total = bitmap_width * bitmap_height;
 		
-		int[] inpix = new int[total];
-        bitmap.getPixels(inpix, 0, bitmap_width, 0, 0, bitmap_width, bitmap_height);
+		int[] in_pixels = new int[total];
+        bitmap.getPixels(in_pixels, 0, bitmap_width, 0, 0, bitmap_width, bitmap_height);
         
-        int[][] in_pixels = new int[bitmap_width][bitmap_height];
+        int[] out_pixels = new int[total];
         
-        //unfinished
-        /*int e = 0;
-    	
         for(int i = 0; i < total; i++)
         {
-        	in_pixels[
+        	final int y = (int)Math.floor(i / bitmap_width);
+        	final int x = (int)(i % bitmap_width);
         	
-        	e++;
-        	if(e > bitmap_width)
-        		e = 0;
+        	final int total_blur = (blur_amount * 4) + 1;
+        	int temp_red = 0;
+        	int temp_green = 0;
+        	int temp_blue = 0;
+        	int temp_alpha = 0;
+        	
+        	//little bit faster
+        	for(int shift = -blur_amount; shift <= blur_amount; shift++)
+        	{
+        		final int translated_x = x + shift;
+        		if(translated_x >= 0 && translated_x < bitmap_width) //could clamp or assume empty
+        		{
+        			final int get_i = y * bitmap_width + translated_x;
+
+        			temp_red += ((in_pixels[get_i] >> 16) & 0xFF) / total_blur;
+        			temp_green +=  ((in_pixels[get_i] >> 8) & 0xFF) / total_blur;
+        			temp_blue +=  (in_pixels[get_i] & 0xFF) / total_blur;
+        			temp_alpha +=  (in_pixels[get_i] >>> 24) / total_blur;
+        		}
+        		
+        		final int translated_y = y + shift;
+        		if(translated_y >= 0 && translated_y < bitmap_height) //again, clamp or assume empty
+        		{
+        			final int get_i = translated_y * bitmap_width + x;
+        			
+        			temp_red += ((in_pixels[get_i] >> 16) & 0xFF) / total_blur;
+        			temp_green +=  ((in_pixels[get_i] >> 8) & 0xFF) / total_blur;
+        			temp_blue +=  (in_pixels[get_i] & 0xFF) / total_blur;
+        			temp_alpha +=  (in_pixels[get_i] >>> 24) / total_blur;
+        		}
+        	}
+        	
+        	//average the pixels
+        	//slow
+        	/*for(int shift_x = -blur_amount; shift_x <= blur_amount; shift_x++)
+        	{
+        		final int translated_x = (int) clamp(bitmap_width, (x + shift_x), 0);
+        		final int additional_shift_y = (((x + shift_x) / bitmap_width) % bitmap_height);
+        		for(int shift_y = -blur_amount; shift_y <= blur_amount; shift_y++)
+        		{
+        			final int translated_y = (int) clamp(bitmap_height, (y + shift_y + additional_shift_y), 0);
+        			
+        			final int get_i = translated_y * bitmap_width + translated_x;
+        			
+        			if(get_i < 0 || get_i >= total)
+        			{
+        				temp_red = 0;
+        			}
+        			
+        			temp_red += (double) Color.red(in_pixels[get_i]) / (double)total_blur;
+        			temp_green += (double) Color.green(in_pixels[get_i]) / (double)total_blur;
+        			temp_blue += (double) Color.blue(in_pixels[get_i]) / (double)total_blur;
+        			temp_alpha += (double) Color.alpha(in_pixels[get_i]) / (double)total_blur;
+        			
+        			//not used but might be helpful
+        			final int insert_x = shift_x + blur_amount;
+        			final int insert_y = shift_y + blur_amount;
+        		}
+        	}*/	
+        
+        	if(temp_alpha > 255)
+        		temp_alpha = 255;
+        	if(temp_red > 255)
+        		temp_red = 255;
+        	if(temp_green > 255)
+        		temp_green = 255;
+        	if(temp_blue > 255)
+        		temp_blue = 255;
+        	
+        	//set the pixels
+        	out_pixels[i] = (temp_alpha << 24) |
+        					(temp_red << 16) |
+        					(temp_green << 8) |
+        					temp_blue;
+
         }
         
-        int[] outpix = new int[total];
-        
-        for(int i = 0; i < bitmap_width; i++)
-        	for(int e = 0; e < bitmap_width; e++)
-        	{
-        		
-        	}*/
+        bitmap.setPixels(out_pixels, 0, bitmap_width, 0, 0, bitmap_width, bitmap_height);
         
         return bitmap;
 	}
