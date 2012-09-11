@@ -143,9 +143,9 @@ public class Particles
 			}
 			else
 			{
-				com.kobaj.math.Constants.physics.apply_physics(delta, p.actual_quad);
+				com.kobaj.math.Constants.physics.integrate_physics(delta, p.actual_quad);
 				if(p.bloom_quad != null)
-					com.kobaj.math.Constants.physics.apply_physics(delta, p.bloom_quad);
+					com.kobaj.math.Constants.physics.integrate_physics(delta, p.bloom_quad);
 			}
 			
 			//see if any object needs to die 
@@ -238,9 +238,9 @@ public class Particles
 			int loops = 10 * loop;
 			double delta = 1.0 / 60.0 * 1000.0 * loops;
 			
-				com.kobaj.math.Constants.physics.apply_physics(delta, actual_particles.get(i).actual_quad);
+				com.kobaj.math.Constants.physics.integrate_physics(delta, actual_particles.get(i).actual_quad);
 				if(actual_particles.get(i).bloom_quad != null)
-					com.kobaj.math.Constants.physics.apply_physics(delta, actual_particles.get(i).bloom_quad);
+					com.kobaj.math.Constants.physics.integrate_physics(delta, actual_particles.get(i).bloom_quad);
 			
 			loop += 1;
 			if(loop == 7)

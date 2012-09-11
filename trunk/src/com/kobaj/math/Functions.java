@@ -3,7 +3,6 @@ package com.kobaj.math;
 import java.util.ArrayList;
 
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.RectF;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
@@ -129,9 +128,9 @@ public class Functions
 	public static final boolean onShader(ArrayList<ExtendedRectF> objects)
 	{
 		final double left = (-Constants.ratio - Constants.x_shader_translation);
-		final double top = (1 + Constants.y_shader_translation);
+		final double top = (1 + -Constants.y_shader_translation);
 		final double right = (Constants.ratio - Constants.x_shader_translation);
-		final double bottom = (-1 + Constants.y_shader_translation);
+		final double bottom = (-1 + -Constants.y_shader_translation);
 		
 		for(int i = objects.size() - 1; i >= 0; i--)
 			if(equalIntersects(objects.get(i).main_rect, left, top, right, bottom))
@@ -480,123 +479,4 @@ public class Functions
 
         return bitmap;
     }
-	
-	public static Bitmap applyShrinkGrowBlur(Bitmap source, double blur_amount)
-	{
-		if(blur_amount < 1)
-			return source;
-		
-		final int original_width = source.getWidth();
-		final int original_height = source.getHeight();
-		
-		final int scale_width = (int)((double)original_width / blur_amount);
-		final int scale_height = (int)((double)original_height / blur_amount);
-		
-		//return Bitmap.createScaledBitmap(source, original_width, original_height, true);
-		return Bitmap.createScaledBitmap(Bitmap.createScaledBitmap(source, scale_width, scale_height, true), original_width, original_height, true);	
-	}
-	
-	//just an experiment to see if I could blur things.
-	//fastBlur is still much faster (simple blur is about 10 times slower)
-	public static Bitmap simpleBlur(Bitmap source, int blur_amount)
-	{
-		if(blur_amount < 1)
-			return source;
-		
-		Bitmap bitmap = source.copy(source.getConfig(), true);
-		final int bitmap_width = bitmap.getWidth();
-		final int bitmap_height = bitmap.getHeight();
-		final int total = bitmap_width * bitmap_height;
-		
-		int[] in_pixels = new int[total];
-        bitmap.getPixels(in_pixels, 0, bitmap_width, 0, 0, bitmap_width, bitmap_height);
-        
-        int[] out_pixels = new int[total];
-        
-        for(int i = 0; i < total; i++)
-        {
-        	final int y = (int)Math.floor(i / bitmap_width);
-        	final int x = (int)(i % bitmap_width);
-        	
-        	final int total_blur = (blur_amount * 4) + 1;
-        	int temp_red = 0;
-        	int temp_green = 0;
-        	int temp_blue = 0;
-        	int temp_alpha = 0;
-        	
-        	//little bit faster
-        	for(int shift = -blur_amount; shift <= blur_amount; shift++)
-        	{
-        		final int translated_x = x + shift;
-        		if(translated_x >= 0 && translated_x < bitmap_width) //could clamp or assume empty
-        		{
-        			final int get_i = y * bitmap_width + translated_x;
-
-        			temp_red += ((in_pixels[get_i] >> 16) & 0xFF) / total_blur;
-        			temp_green +=  ((in_pixels[get_i] >> 8) & 0xFF) / total_blur;
-        			temp_blue +=  (in_pixels[get_i] & 0xFF) / total_blur;
-        			temp_alpha +=  (in_pixels[get_i] >>> 24) / total_blur;
-        		}
-        		
-        		final int translated_y = y + shift;
-        		if(translated_y >= 0 && translated_y < bitmap_height) //again, clamp or assume empty
-        		{
-        			final int get_i = translated_y * bitmap_width + x;
-        			
-        			temp_red += ((in_pixels[get_i] >> 16) & 0xFF) / total_blur;
-        			temp_green +=  ((in_pixels[get_i] >> 8) & 0xFF) / total_blur;
-        			temp_blue +=  (in_pixels[get_i] & 0xFF) / total_blur;
-        			temp_alpha +=  (in_pixels[get_i] >>> 24) / total_blur;
-        		}
-        	}
-        	
-        	//average the pixels
-        	//slow
-        	/*for(int shift_x = -blur_amount; shift_x <= blur_amount; shift_x++)
-        	{
-        		final int translated_x = (int) clamp(bitmap_width, (x + shift_x), 0);
-        		final int additional_shift_y = (((x + shift_x) / bitmap_width) % bitmap_height);
-        		for(int shift_y = -blur_amount; shift_y <= blur_amount; shift_y++)
-        		{
-        			final int translated_y = (int) clamp(bitmap_height, (y + shift_y + additional_shift_y), 0);
-        			
-        			final int get_i = translated_y * bitmap_width + translated_x;
-        			
-        			if(get_i < 0 || get_i >= total)
-        			{
-        				temp_red = 0;
-        			}
-        			
-        			temp_red += (double) Color.red(in_pixels[get_i]) / (double)total_blur;
-        			temp_green += (double) Color.green(in_pixels[get_i]) / (double)total_blur;
-        			temp_blue += (double) Color.blue(in_pixels[get_i]) / (double)total_blur;
-        			temp_alpha += (double) Color.alpha(in_pixels[get_i]) / (double)total_blur;
-        			
-        			//not used but might be helpful
-        			final int insert_x = shift_x + blur_amount;
-        			final int insert_y = shift_y + blur_amount;
-        		}
-        	}*/	
-        
-        	if(temp_alpha > 255)
-        		temp_alpha = 255;
-        	if(temp_red > 255)
-        		temp_red = 255;
-        	if(temp_green > 255)
-        		temp_green = 255;
-        	if(temp_blue > 255)
-        		temp_blue = 255;
-        	
-        	//set the pixels
-        	out_pixels[i] = (temp_alpha << 24) |
-        					(temp_red << 16) |
-        					(temp_green << 8) |
-        					temp_blue;
-
-        }
-        
-        bitmap.setPixels(out_pixels, 0, bitmap_width, 0, 0, bitmap_width, bitmap_height);
-        
-        return bitmap;
-	}
 }

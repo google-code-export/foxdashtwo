@@ -14,6 +14,12 @@ public class SinglePlayerScreen extends BaseScreen
 	//get to drawing stuff
 	private QuadColorShape real_ambient_light;
 	
+	//couple of constants
+	private final double normal_acceleration = .000000050;
+	private final double normal_reverse_acceleration = .000000075;
+	private final double normal_air_damping = .5;
+	private final double normal_friction = .000500;
+	
 	//basic light
 	private AmbientLight al_ambient_light;
 	
@@ -46,28 +52,70 @@ public class SinglePlayerScreen extends BaseScreen
 	public void onUpdate(double delta)
 	{	
 		boolean jump_time = false;
-		
-		//initial touch
-		if(Constants.input_manager.getTouched(0))
-		{	
-			double x_player = test_level.player.quad_object.getXPos();
-			
-			if(Constants.input_manager.getX(0) > Constants.width / 2.0)
-				x_player += .0025 * delta;
-			else
-				x_player -= .0025 * delta;
-			
-			test_level.player.quad_object.setPos(x_player, test_level.player.quad_object.getYPos(), EnumDrawFrom.center);
-		}
-		
-		//physics
-		Constants.physics.apply_physics(delta, test_level.player.quad_object);
+		boolean touched = false;
+				
+		Constants.physics.integrate_physics(delta, test_level.player.quad_object);
 		for(com.kobaj.level.LevelObject level_object: test_level.object_array)
 		{
 			RectF collision = Constants.physics.check_collision(test_level.player.quad_object, level_object.quad_object);
 			if(collision != null && collision.height() != 0)
 				jump_time = true;
 			Constants.physics.handle_collision(collision, test_level.player.quad_object);	
+		}
+		
+		//initial touch
+		if(Constants.input_manager.getTouched(0))
+		{	
+			touched = true;
+			
+			if(Constants.input_manager.getX(0) > Constants.width / 2.0)
+			{
+				double move_amount = 0;
+				
+				if(test_level.player.quad_object.x_vel > 0)
+					move_amount = normal_acceleration;
+				else
+					move_amount = normal_reverse_acceleration;
+			
+				//if in the air, apply a dampint.
+				if(!jump_time)
+					move_amount *= normal_air_damping;
+						
+				//add to it
+				test_level.player.quad_object.x_acc += move_amount * delta;
+			}
+			else
+			{
+				double move_amount = 0;
+				
+				if(test_level.player.quad_object.x_vel < 0)
+					move_amount = -normal_acceleration;
+				else
+					move_amount = -normal_reverse_acceleration;
+			
+				//if in the air, apply a dampint.
+				if(!jump_time)
+					move_amount *= normal_air_damping;
+						
+				//add to it
+				test_level.player.quad_object.x_acc += move_amount * delta;
+			}
+		}
+		
+		//physics
+		if(!jump_time) //add gravity
+			Constants.physics.add_gravity(test_level.player.quad_object);
+		else if(!touched) //add friction
+		{
+
+			double friction = -normal_friction * delta * test_level.player.quad_object.x_vel;
+			test_level.player.quad_object.x_acc += friction;
+			/*
+			double friction = normal_friction * delta;
+			if(test_level.player.quad_object.x_vel > 0)
+				friction = -friction;
+			
+			test_level.player.quad_object.x_acc += friction;*/
 		}
 		
 		//resume touch
@@ -94,7 +142,7 @@ public class SinglePlayerScreen extends BaseScreen
 		//jump
 		if(Constants.input_manager.getTouched(1) && jump_time)
 		{
-			test_level.player.quad_object.y_vel = .001;
+			test_level.player.quad_object.y_vel = .009 * delta;
 			jump_time = false;
 		}
 		
@@ -163,9 +211,6 @@ public class SinglePlayerScreen extends BaseScreen
 		//should not be doing calculations here!!
 		int drawn_count = 0;
 		
-		if(Functions.onShader(real_ambient_light.phys_rect_list))
-			drawn_count++;
-		
 		for(com.kobaj.level.LevelObject level_object: test_level.object_array)
 			if(Functions.onShader(level_object.quad_object.phys_rect_list))
 				drawn_count++;
@@ -176,6 +221,11 @@ public class SinglePlayerScreen extends BaseScreen
 				drawn_count++;
 			if(level_light.is_bloom)
 				drawn_count++;
+		}
+		
+		if(drawn_count == 8)
+		{
+			Functions.onShader(test_level.object_array[9].quad_object.phys_rect_list);
 		}
 		
 		Constants.text.DrawNumber(drawn_count, Functions.screenXToShaderX(100), Functions.screenYToShaderY(100), com.kobaj.opengldrawable.EnumDrawFrom.top_left);
