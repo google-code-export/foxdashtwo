@@ -36,9 +36,9 @@ public class LevelLight
 		}
 		else
 		{
-			quad_light = new QuadColorShape(radius, color, 10, 100, degree, false, 7);
+			quad_light = new QuadColorShape(radius, color, 10, 100, degree, false, 0);
 			if(is_bloom)
-				quad_bloom = new QuadColorShape(radius, color, 10, 100, degree, true, 7);	
+				quad_bloom = new QuadColorShape(radius, color, 10, 100, degree, true, 0);	
 		}
 		
 		quad_light.setPos(com.kobaj.math.Functions.screenXToShaderX(x_pos), com.kobaj.math.Functions.screenYToShaderY(y_pos), com.kobaj.opengldrawable.EnumDrawFrom.center);

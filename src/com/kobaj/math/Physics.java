@@ -10,20 +10,24 @@ import com.kobaj.opengldrawable.Quad;
 //3. Collision handling
 public class Physics
 {	
-	private double gravity = -.000000698; //well thats a random number.
+	private double gravity = -.000001; //well thats a random number.
+	private double max_y_velocity = .001;
+	private double max_x_velocity = .001;
 	
 	public Physics()
 	{
-		gravity = gravity * Constants.dip_scale;
+		gravity = gravity * Constants.dip_scale; //should this be a dip scale?
+		max_y_velocity = max_y_velocity * Constants.dip_scale;
+		max_x_velocity = max_x_velocity * Constants.dip_scale;
 	}
 	
-	public void apply_force()
+	public <T extends Quad> void add_gravity(T the_quad)
 	{
-		//if needed I'll make this.
+		the_quad.y_acc += gravity;
 	}
 	
 	//applies gravity
-	public <T extends Quad> void apply_physics(double delta, T the_quad)
+	public <T extends Quad> void integrate_physics(double delta, T the_quad)
 	{	
 		//the below is in shader coordinates
 		
@@ -32,15 +36,18 @@ public class Physics
 		the_quad.x_vel += the_quad.x_acc * delta;
 		
 		//set acceleration
-		the_quad.y_acc = gravity;
+		the_quad.y_acc = 0;
 		the_quad.x_acc = 0;
+		
+		//clamp velocitys
+		the_quad.y_vel = Functions.clamp(max_y_velocity, the_quad.y_vel, -max_y_velocity);
+		the_quad.x_vel = Functions.clamp(max_x_velocity, the_quad.x_vel, -max_x_velocity);
 		
 		//add position
 		the_quad.setPos(the_quad.getXPos() + the_quad.x_vel * delta, the_quad.getYPos() + the_quad.y_vel * delta, com.kobaj.opengldrawable.EnumDrawFrom.center);
 	}
 	
 	//check for a collision and return a collission rectf
-	//int primary_quad is used to indicate if (1) first quad is the player/primary moving object or (2) secondary is.
 	public <T extends Quad> RectF check_collision(T first_quad, T second_quad)
 	{
 		//see if in the same z_plane
@@ -84,8 +91,8 @@ public class Physics
 					//then decide normal
 					final double width = Math.abs(collision.width());
 					final double height = Math.abs(collision.height());
-					
-					if(width >= height)
+				
+					if(width > height)
 						collision.left = collision.right;
 					else
 						collision.top = collision.bottom;
@@ -127,7 +134,9 @@ public class Physics
 			if(collision.centerY() > the_quad.getYPos())
 				height = -height;
 			the_quad.setPos(the_quad.getXPos(), the_quad.getYPos() + height, com.kobaj.opengldrawable.EnumDrawFrom.center);
-			the_quad.y_vel = 0;
+			
+			if(the_quad.y_vel < 0)
+				the_quad.y_vel = 0;
 		}
 	}
 }

@@ -5,8 +5,6 @@ import org.simpleframework.xml.ElementArray;
 
 import android.graphics.Color;
 
-import com.kobaj.foxdashtwo.R;
-
 public class Level
 {
 	@Element
@@ -37,7 +35,7 @@ public class Level
 		
 		//setup player
 		//player.onInitialize();
-		player.quad_object = new com.kobaj.opengldrawable.Quad(R.drawable.ic_launcher);
+		player.quad_object = new com.kobaj.opengldrawable.QuadColorShape(0, 64, 64, 0, Color.GRAY, 0);//new com.kobaj.opengldrawable.Quad(R.drawable.ic_launcher);
 		player.quad_object.z_pos -= (player.z_plane * .00001);
 	
 		//set widths and heights for the camera
