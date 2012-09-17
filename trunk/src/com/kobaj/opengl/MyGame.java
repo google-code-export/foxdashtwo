@@ -6,7 +6,7 @@ import android.opengl.Matrix;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.EnumDrawFrom;
-import com.kobaj.opengldrawable.QuadRenderTo;
+import com.kobaj.opengldrawable.Quad.QuadRenderTo;
 import com.kobaj.screen.BaseScreen;
 import com.kobaj.screen.SinglePlayerScreen;
 
@@ -76,7 +76,7 @@ public class MyGame extends MyGLRender
 		//text below this line
 		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA); // no see thru
 		text.DrawNumber(fps.fps, Functions.screenXToShaderX(25), Functions.screenYToShaderY((int)Functions.fix_y(25)), EnumDrawFrom.top_left);
-		currently_active_screen.onDrawText();
+		currently_active_screen.onDrawConstant();
 	
 		//move the camera back
 		Matrix.translateM(Constants.my_view_matrix, 0, (float) Constants.x_shader_translation, (float) Constants.y_shader_translation, 0);

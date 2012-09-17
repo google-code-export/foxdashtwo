@@ -1,4 +1,4 @@
-package com.kobaj.opengldrawable;
+package com.kobaj.opengldrawable.Quad;
 
 import com.kobaj.math.Functions;
 

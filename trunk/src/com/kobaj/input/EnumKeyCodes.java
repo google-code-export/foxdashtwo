@@ -1,6 +1,6 @@
 package com.kobaj.input;
 
-public enum KeyCodes
+public enum EnumKeyCodes
 {
 	center, left, right, up, down
 }

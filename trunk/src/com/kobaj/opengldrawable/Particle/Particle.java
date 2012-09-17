@@ -1,4 +1,8 @@
-package com.kobaj.opengldrawable;
+package com.kobaj.opengldrawable.Particle;
+
+import com.kobaj.opengldrawable.EnumDrawFrom;
+import com.kobaj.opengldrawable.EnumParticleMovement;
+import com.kobaj.opengldrawable.Quad.Quad;
 
 public class Particle
 {

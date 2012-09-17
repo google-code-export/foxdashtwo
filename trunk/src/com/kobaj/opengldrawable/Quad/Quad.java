@@ -1,4 +1,4 @@
-package com.kobaj.opengldrawable;
+package com.kobaj.opengldrawable.Quad;
 
 //a lot of help from
 //http://www.learnopengles.com/android-lesson-one-getting-started/
@@ -15,6 +15,7 @@ import android.opengl.Matrix;
 
 import com.kobaj.loader.GLLoadedTexture;
 import com.kobaj.math.ExtendedRectF;
+import com.kobaj.opengldrawable.EnumDrawFrom;
 import com.kobaj.openglgraphics.AmbientLightShader;
 import com.kobaj.openglgraphics.BaseLightShader;
 

@@ -2,7 +2,7 @@ package com.kobaj.math;
 
 import android.graphics.RectF;
 
-import com.kobaj.opengldrawable.Quad;
+import com.kobaj.opengldrawable.Quad.Quad;
 
 //broken down into three parts
 //1. gravity/force application.
@@ -10,15 +10,15 @@ import com.kobaj.opengldrawable.Quad;
 //3. Collision handling
 public class Physics
 {	
-	private double gravity = -.000001; //well thats a random number.
-	private double max_y_velocity = .001;
-	private double max_x_velocity = .001;
+	private double gravity;
+	private double max_y_velocity;
+	private double max_x_velocity;
 	
 	public Physics()
 	{
-		gravity = gravity * Constants.dip_scale; //should this be a dip scale?
-		max_y_velocity = max_y_velocity * Constants.dip_scale;
-		max_x_velocity = max_x_velocity * Constants.dip_scale;
+		gravity = Constants.gravity * Constants.dip_scale; //should this be a dip scale?
+		max_y_velocity = Constants.max_y_velocity * Constants.dip_scale;
+		max_x_velocity = Constants.max_x_velocity * Constants.dip_scale;
 	}
 	
 	public <T extends Quad> void add_gravity(T the_quad)
@@ -39,9 +39,16 @@ public class Physics
 		the_quad.y_acc = 0;
 		the_quad.x_acc = 0;
 		
-		//clamp velocitys
-		the_quad.y_vel = Functions.clamp(max_y_velocity, the_quad.y_vel, -max_y_velocity);
-		the_quad.x_vel = Functions.clamp(max_x_velocity, the_quad.x_vel, -max_x_velocity);
+		//clamp velocities
+		if(the_quad.y_vel > max_y_velocity)
+			the_quad.y_vel = max_y_velocity;
+		else if(the_quad.y_vel < -max_y_velocity)
+			the_quad.y_vel = -max_y_velocity;
+		
+		if(the_quad.x_vel > max_x_velocity)
+			the_quad.x_vel = max_x_velocity;
+		else if(the_quad.x_vel < -max_x_velocity)
+			the_quad.x_vel = -max_x_velocity;
 		
 		//add position
 		the_quad.setPos(the_quad.getXPos() + the_quad.x_vel * delta, the_quad.getYPos() + the_quad.y_vel * delta, com.kobaj.opengldrawable.EnumDrawFrom.center);

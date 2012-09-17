@@ -4,8 +4,8 @@ import org.simpleframework.xml.Element;
 
 import android.graphics.Color;
 
-import com.kobaj.opengldrawable.Quad;
-import com.kobaj.opengldrawable.QuadColorShape;
+import com.kobaj.opengldrawable.Quad.Quad;
+import com.kobaj.opengldrawable.Quad.QuadColorShape;
 
 public class LevelObject
 {

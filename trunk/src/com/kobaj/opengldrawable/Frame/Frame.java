@@ -1,4 +1,4 @@
-package com.kobaj.opengldrawable;
+package com.kobaj.opengldrawable.Frame;
 
 import org.simpleframework.xml.Element;
 

@@ -1,4 +1,4 @@
-package com.kobaj.opengldrawable;
+package com.kobaj.opengldrawable.Quad;
 
 //thank you
 //http://blog.shayanjaved.com/2011/05/13/android-opengl-es-2-0-render-to-texture/
