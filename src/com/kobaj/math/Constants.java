@@ -49,6 +49,19 @@ public class Constants
 	//the ever static reference to resources.
 	public static Resources resources;
 	
+	//physics constants
+	public static final double gravity = -.000001; //well thats a random number.
+	public static final double max_y_velocity = .01;
+	public static final double max_x_velocity = .01;
+	public static final double normal_acceleration = .000000050;
+	public static final double normal_reverse_acceleration = .000000075;
+	public static final double normal_air_damping = .5;
+	public static final double normal_friction = .000500;
+	
+	//graphic constants
+	public static final double max_brightness = 0.75;
+	public static final double min_brightness = 0.40;
+	
 	//While the below are not really constant and don't belong here
 	//this is a convenient way of being able to see all objects a game screen can see and use
 	public static Physics physics;

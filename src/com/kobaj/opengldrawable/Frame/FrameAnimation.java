@@ -1,8 +1,10 @@
-package com.kobaj.opengldrawable;
+package com.kobaj.opengldrawable.Frame;
 
 import java.util.HashMap;
 
 import org.simpleframework.xml.ElementMap;
+
+import com.kobaj.opengldrawable.EnumGlobalAnimationList;
 
 public class FrameAnimation
 {

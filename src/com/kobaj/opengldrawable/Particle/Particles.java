@@ -1,6 +1,10 @@
-package com.kobaj.opengldrawable;
+package com.kobaj.opengldrawable.Particle;
 
 import java.util.ArrayList;
+
+import com.kobaj.opengldrawable.EnumDrawFrom;
+import com.kobaj.opengldrawable.EnumParticleMovement;
+import com.kobaj.opengldrawable.Quad.QuadColorShape;
 
 public class Particles
 {

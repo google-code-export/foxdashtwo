@@ -10,62 +10,62 @@ public class InputManager
 	private float[] x;
 	private float[] y;
 	
-	private float[] oldx;
-	private float[] oldy;
+	private float[] x_old;
+	private float[] y_old;
 	
-	private float[] deltax;
-	private float[] deltay;
+	private float[] x_delta;
+	private float[] y_delta;
 	
-	private boolean[] oldpressed;
+	private boolean[] old_pressed;
 	private boolean[] pressed;
 	
+	private boolean[] old_dpads;
 	private boolean[] dpads;
-	private boolean[] olddpads;
 	
 	public InputManager()
 	{
 		x = new float[fingerCount];
 		y = new float[fingerCount];
 		
-		oldx = new float[fingerCount];
-		oldy = new float[fingerCount];
+		x_old = new float[fingerCount];
+		y_old = new float[fingerCount];
 		
-		deltax = new float[fingerCount];
-		deltay = new float[fingerCount];
+		x_delta = new float[fingerCount];
+		y_delta = new float[fingerCount];
 		
-		oldpressed = new boolean[fingerCount];
+		old_pressed = new boolean[fingerCount];
 		pressed = new boolean[fingerCount];
 		
-		dpads = new boolean[KeyCodes.values().length];
-		olddpads = new boolean[KeyCodes.values().length];
+		dpads = new boolean[EnumKeyCodes.values().length];
+		old_dpads = new boolean[EnumKeyCodes.values().length];
 	}
 	
 	public void eventUpdateUp(int i, KeyEvent event)
 	{
 		if (i == KeyEvent.KEYCODE_DPAD_CENTER)
 		{
-			olddpads[KeyCodes.center.ordinal()] = true;
-			dpads[KeyCodes.center.ordinal()] = false;
+			old_dpads[EnumKeyCodes.center.ordinal()] = true;
+			dpads[EnumKeyCodes.center.ordinal()] = false;
 		}
 		else if (i == KeyEvent.KEYCODE_DPAD_LEFT)
 		{
-			olddpads[KeyCodes.left.ordinal()] = true;
-			dpads[KeyCodes.left.ordinal()] = false;
+			old_dpads[EnumKeyCodes.left.ordinal()] = true;
+			dpads[EnumKeyCodes.left.ordinal()] = false;
 		}
 		else if (i == KeyEvent.KEYCODE_DPAD_RIGHT)
 		{
-			olddpads[KeyCodes.right.ordinal()] = true;
-			dpads[KeyCodes.right.ordinal()] = false;
+			old_dpads[EnumKeyCodes.right.ordinal()] = true;
+			dpads[EnumKeyCodes.right.ordinal()] = false;
 		}
 		else if (i == KeyEvent.KEYCODE_DPAD_UP)
 		{
-			olddpads[KeyCodes.up.ordinal()] = true;
-			dpads[KeyCodes.up.ordinal()] = false;
+			old_dpads[EnumKeyCodes.up.ordinal()] = true;
+			dpads[EnumKeyCodes.up.ordinal()] = false;
 		}
 		else if (i == KeyEvent.KEYCODE_DPAD_DOWN)
 		{
-			olddpads[KeyCodes.down.ordinal()] = true;
-			dpads[KeyCodes.down.ordinal()] = false;
+			old_dpads[EnumKeyCodes.down.ordinal()] = true;
+			dpads[EnumKeyCodes.down.ordinal()] = false;
 		}
 	}
 	
@@ -73,28 +73,28 @@ public class InputManager
 	{
 		if (i == KeyEvent.KEYCODE_DPAD_CENTER)
 		{
-			olddpads[KeyCodes.center.ordinal()] = false;
-			dpads[KeyCodes.center.ordinal()] = true;
+			old_dpads[EnumKeyCodes.center.ordinal()] = false;
+			dpads[EnumKeyCodes.center.ordinal()] = true;
 		}
 		else if (i == KeyEvent.KEYCODE_DPAD_LEFT)
 		{
-			olddpads[KeyCodes.left.ordinal()] = false;
-			dpads[KeyCodes.left.ordinal()] = true;
+			old_dpads[EnumKeyCodes.left.ordinal()] = false;
+			dpads[EnumKeyCodes.left.ordinal()] = true;
 		}
 		else if (i == KeyEvent.KEYCODE_DPAD_RIGHT)
 		{
-			olddpads[KeyCodes.right.ordinal()] = false;
-			dpads[KeyCodes.right.ordinal()] = true;
+			old_dpads[EnumKeyCodes.right.ordinal()] = false;
+			dpads[EnumKeyCodes.right.ordinal()] = true;
 		}
 		else if (i == KeyEvent.KEYCODE_DPAD_UP)
 		{
-			olddpads[KeyCodes.up.ordinal()] = false;
-			dpads[KeyCodes.up.ordinal()] = true;
+			old_dpads[EnumKeyCodes.up.ordinal()] = false;
+			dpads[EnumKeyCodes.up.ordinal()] = true;
 		}
 		else if (i == KeyEvent.KEYCODE_DPAD_DOWN)
 		{
-			olddpads[KeyCodes.down.ordinal()] = false;
-			dpads[KeyCodes.down.ordinal()] = true;
+			old_dpads[EnumKeyCodes.down.ordinal()] = false;
+			dpads[EnumKeyCodes.down.ordinal()] = true;
 		}
 	}
 	
@@ -120,7 +120,7 @@ public class InputManager
 				y[id] = event.getY(i);
 			}
 			
-			oldpressed[ptrId] = false;
+			old_pressed[ptrId] = false;
 			pressed[ptrId] = true;
 		}
 		if (action == MotionEvent.ACTION_MOVE)
@@ -129,24 +129,33 @@ public class InputManager
 			{
 				int id = event.getPointerId(i);
 				
-				oldx[id] = x[id];
-				oldy[id] = y[id];
+				x_old[id] = x[id];
+				y_old[id] = y[id];
 				
 				x[id] = event.getX(i);
 				y[id] = event.getY(i);
 				
-				deltax[id] = x[id] - oldx[id];
-				deltay[id] = y[id] - oldy[id];
+				x_delta[id] = x[id] - x_old[id];
+				y_delta[id] = y[id] - y_old[id];
 			}
 		}
 		if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL)
 		{
-			oldpressed[ptrId] = true;
+			old_pressed[ptrId] = true;
 			pressed[ptrId] = false;
 			
+			for (int i = 0; i < event.getPointerCount(); i++)
+			{
+				int id = event.getPointerId(i);
+				
+				x[id] = event.getX(i);
+				y[id] = event.getY(i);
+			}
+			
+			/*
 			if (event.getPointerCount() == 1)
 				for (int i = 0; i < fingerCount; i++)
-					pressed[i] = false;
+					pressed[i] = false;*/
 		}
 	}
 	
@@ -162,22 +171,22 @@ public class InputManager
 	
 	public float getOldx(int index)
 	{
-		return oldx[index];
+		return x_old[index];
 	}
 	
 	public float getOldy(int index)
 	{
-		return oldy[index];
+		return y_old[index];
 	}
 	
 	public float getDeltax(int index)
 	{
-		return deltax[index];
+		return x_delta[index];
 	}
 	
 	public float getDeltay(int index)
 	{
-		return deltay[index];
+		return y_delta[index];
 	}
 	
 	public boolean getTouched(int index)
@@ -187,9 +196,9 @@ public class InputManager
 	
 	public boolean getKeyPressed(int index)
 	{
-		if (dpads[index] && !olddpads[index])
+		if (dpads[index] && !old_dpads[index])
 		{
-			olddpads[index] = true;
+			old_dpads[index] = true;
 			return true;
 		}
 		
@@ -198,9 +207,9 @@ public class InputManager
 	
 	public boolean getKeyReleased(int index)
 	{
-		if (!dpads[index] && olddpads[index])
+		if (!dpads[index] && old_dpads[index])
 		{
-			olddpads[index] = false;
+			old_dpads[index] = false;
 			return true;
 		}
 		
@@ -209,9 +218,9 @@ public class InputManager
 	
 	public boolean getPressed(int index)
 	{
-		if (pressed[index] && !oldpressed[index])
+		if (pressed[index] && !old_pressed[index])
 		{
-			oldpressed[index] = true;
+			old_pressed[index] = true;
 			
 			return true;
 		}
@@ -221,9 +230,9 @@ public class InputManager
 	
 	public boolean getReleased(int index)
 	{
-		if (!pressed[index] && oldpressed[index])
+		if (!pressed[index] && old_pressed[index])
 		{
-			oldpressed[index] = false;
+			old_pressed[index] = false;
 			return true;
 		}
 		

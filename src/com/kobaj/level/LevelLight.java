@@ -2,7 +2,7 @@ package com.kobaj.level;
 
 import org.simpleframework.xml.Element;
 
-import com.kobaj.opengldrawable.QuadColorShape;
+import com.kobaj.opengldrawable.Quad.QuadColorShape;
 
 public class LevelLight
 {

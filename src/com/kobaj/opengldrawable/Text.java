@@ -14,6 +14,7 @@ import android.util.SparseArray;
 
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Constants;
+import com.kobaj.opengldrawable.Quad.Quad;
 import com.kobaj.openglgraphics.AmbientLight;
 
 public class Text

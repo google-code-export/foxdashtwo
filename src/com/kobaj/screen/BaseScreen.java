@@ -6,5 +6,5 @@ public abstract class BaseScreen
 	public abstract void onUpdate(double delta);
 	public abstract void onDrawObject();
 	public abstract void onDrawLight();
-	public abstract void onDrawText();
+	public abstract void onDrawConstant(); //drawtext
 }

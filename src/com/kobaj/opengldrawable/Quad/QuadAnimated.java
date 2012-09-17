@@ -1,4 +1,8 @@
-package com.kobaj.opengldrawable;
+package com.kobaj.opengldrawable.Quad;
+
+import com.kobaj.opengldrawable.EnumGlobalAnimationList;
+import com.kobaj.opengldrawable.Frame.FrameAnimation;
+import com.kobaj.opengldrawable.Frame.FrameSet;
 
 public class QuadAnimated extends Quad
 {
