@@ -83,19 +83,20 @@ public class SinglePlayerScreen extends BaseScreen
 			if (my_modifier.getInputType().getTouchedRight())
 			{
 				if (test_level.player.quad_object.x_vel > 0)
-					move_amount = Constants.normal_acceleration;
+					move_amount += Constants.normal_acceleration;
 				else
-					move_amount = Constants.normal_reverse_acceleration;
-			}
-			else
-			{
-				if (my_modifier.getInputType().getTouchedLeft())
-					move_amount = -Constants.normal_acceleration;
-				else
-					move_amount = -Constants.normal_reverse_acceleration;
+					move_amount += Constants.normal_reverse_acceleration;
 			}
 			
-			// if in the air, apply a dampint.
+			if(my_modifier.getInputType().getTouchedLeft())
+			{
+				if (my_modifier.getInputType().getTouchedLeft())
+					move_amount += -Constants.normal_acceleration;
+				else
+					move_amount += -Constants.normal_reverse_acceleration;
+			}
+			
+			// if in the air, apply a damping.
 			if (!jump_time)
 				move_amount *= Constants.normal_air_damping;
 			
@@ -135,14 +136,14 @@ public class SinglePlayerScreen extends BaseScreen
 		// jump
 		if (my_modifier.getInputType().getPressedJump() && jump_time)
 		{
-			test_level.player.quad_object.y_vel = .000025 * delta;
+			test_level.player.quad_object.y_vel = .0015;
 			jump_time = false;
 		}
 		else if(my_modifier.getInputType().getReleasedJump())
 			if(test_level.player.quad_object.y_vel > .0005)
 				test_level.player.quad_object.y_vel = .0005;
 		
-		// make sure we dont go through the level
+		// make sure we dont go through the level (should be deleted later)
 		if (test_level.player.quad_object.getYPos() < -1)
 		{
 			test_level.player.quad_object.y_acc = 0;

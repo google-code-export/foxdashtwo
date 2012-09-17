@@ -50,11 +50,11 @@ public class Constants
 	public static Resources resources;
 	
 	//physics constants
-	public static final double gravity = -.000001; //well thats a random number.
+	public static final double gravity = -.0000015; //well thats a random number.
 	public static final double max_y_velocity = .01;
-	public static final double max_x_velocity = .01;
-	public static final double normal_acceleration = .000000050;
-	public static final double normal_reverse_acceleration = .000000075;
+	public static final double max_x_velocity = .006;
+	public static final double normal_acceleration = .000000075;
+	public static final double normal_reverse_acceleration = .000000100;
 	public static final double normal_air_damping = .5;
 	public static final double normal_friction = .000500;
 	
