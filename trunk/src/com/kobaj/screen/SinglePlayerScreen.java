@@ -1,5 +1,6 @@
 package com.kobaj.screen;
 
+import android.graphics.Color;
 import android.graphics.RectF;
 
 import com.kobaj.foxdashtwo.R;
@@ -17,6 +18,11 @@ public class SinglePlayerScreen extends BaseScreen
 	
 	// get to drawing stuff
 	private QuadColorShape real_ambient_light;
+	
+	//0,0
+	private QuadColorShape zero_shader;
+	private QuadColorShape zero_screen;
+	
 	
 	// basic light
 	private AmbientLight al_ambient_light;
@@ -46,6 +52,12 @@ public class SinglePlayerScreen extends BaseScreen
 		al_ambient_light = new AmbientLight();
 		
 		real_ambient_light = new QuadColorShape(0, Constants.height, Constants.width, 0, 0xFF444444, 0);
+		
+		zero_shader = new QuadColorShape(4, Color.WHITE, 0);
+		zero_shader.setPos(0, 0, EnumDrawFrom.center);
+		
+		zero_screen = new QuadColorShape(4, Color.YELLOW, 0);
+		zero_screen.setPos(Functions.screenXToShaderX(0), Functions.screenYToShaderY(0), EnumDrawFrom.center);
 		
 		if (test_level != null)
 			test_level.onInitialize();
@@ -120,15 +132,17 @@ public class SinglePlayerScreen extends BaseScreen
 		double y_camera = -test_level.player.quad_object.getYPos();
 		
 		// restrict camera movement
-		if (x_camera > test_level.x_limit)
-			x_camera = test_level.x_limit;
-		else if (x_camera < -test_level.x_limit)
-			x_camera = -test_level.x_limit;
+		if (x_camera > test_level.left_shader_limit)
+			x_camera = test_level.left_shader_limit;
+		else if (x_camera < test_level.right_shader_limit)
+			x_camera = test_level.right_shader_limit;
 		
-		if (y_camera > test_level.y_limit)
-			y_camera = test_level.y_limit;
-		else if (y_camera < -test_level.y_limit)
-			y_camera = -test_level.y_limit;
+		
+		//to do, proper top and bottom limits
+		/*if (y_camera - 1 > test_level.y_limit)
+			y_camera = test_level.y_limit + 1;
+		else if (y_camera + 1 < -test_level.y_limit)
+			y_camera = -test_level.y_limit - 1;*/
 		
 		// set camera
 		Functions.setCamera(x_camera, y_camera);
@@ -136,7 +150,7 @@ public class SinglePlayerScreen extends BaseScreen
 		// jump
 		if (my_modifier.getInputType().getPressedJump() && jump_time)
 		{
-			test_level.player.quad_object.y_vel = .0015;
+			test_level.player.quad_object.y_vel = .0015 * Constants.dip_scale;
 			jump_time = false;
 		}
 		else if(my_modifier.getInputType().getReleasedJump())
@@ -156,8 +170,6 @@ public class SinglePlayerScreen extends BaseScreen
 	public void onDrawObject()
 	{
 		al_ambient_light.applyShaderProperties();
-		
-		real_ambient_light.onDrawAmbient();
 		
 		// player
 		test_level.player.quad_object.onDrawAmbient();
@@ -181,6 +193,9 @@ public class SinglePlayerScreen extends BaseScreen
 		for (com.kobaj.level.LevelLight level_light : test_level.light_array)
 			if (level_light.is_bloom)
 				level_light.quad_bloom.onDrawAmbient();
+		
+		zero_shader.onDrawAmbient();
+		zero_screen.onDrawAmbient();
 	}
 	
 	private void onDrawBoundingBox(RectF bounding_box)

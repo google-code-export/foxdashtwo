@@ -11,7 +11,9 @@ import android.os.SystemClock;
 import com.kobaj.audio.Music;
 import com.kobaj.audio.MusicPlayList;
 import com.kobaj.audio.Sound;
+import com.kobaj.math.Constants;
 import com.kobaj.math.FPSManager;
+import com.kobaj.math.Functions;
 import com.kobaj.math.Physics;
 import com.kobaj.opengldrawable.Text;
 import com.kobaj.openglgraphics.AmbientLightShader;
@@ -85,7 +87,13 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		GLES20.glViewport(0, 0, width, height);
 		
 		float ratio = (float) width / height;
+		com.kobaj.math.Constants.ratio = ratio;
 		com.kobaj.math.Constants.shader_width = ratio * 2.0;
+		
+		com.kobaj.math.Constants.delta_width = width - Constants.static_width;
+		com.kobaj.math.Constants.delta_height = height - Constants.static_height;
+		com.kobaj.math.Constants.delta_shader_width = Functions.screenWidthToShaderWidth(Constants.delta_width);
+		com.kobaj.math.Constants.delta_shader_height = Functions.screenHeightToShaderHeight(Constants.delta_height);
 		
 		// this projection matrix is applied to object coodinates
 		// in the onDrawFrame() method

@@ -3,16 +3,26 @@ package com.kobaj.level;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementArray;
 
+import com.kobaj.math.Constants;
+import com.kobaj.math.Functions;
+
 import android.graphics.Color;
 
 public class Level
 {
 	@Element
-	public int total_width;
-	public double x_limit;
+	public int left_limit;
 	@Element
-	public int total_height;
-	public double y_limit;
+	public int top_limit;
+	@Element
+	public int right_limit;
+	@Element
+	public int bottom_limit;
+	
+	public double left_shader_limit;
+	public double top_shader_limit;
+	public double right_shader_limit;
+	public double bottom_shader_limit;
 	
 	@ElementArray
 	public LevelObject[] object_array;
@@ -34,13 +44,21 @@ public class Level
 			light.onInitialize();
 		
 		//setup player
-		//player.onInitialize();
+		//todo, set player position
 		player.quad_object = new com.kobaj.opengldrawable.Quad.QuadColorShape(0, 64, 64, 0, Color.GRAY, 0);//new com.kobaj.opengldrawable.Quad(R.drawable.ic_launcher);
 		player.quad_object.z_pos -= (player.z_plane * .00001);
 	
 		//set widths and heights for the camera
-		x_limit = com.kobaj.math.Functions.screenXToShaderX(total_width) / 2.0;
-		y_limit = com.kobaj.math.Functions.screenYToShaderY(total_height) / 2.0;
+		double widths = Constants.delta_shader_width / 2.0;
+		double x_ratio_helper_minus = Constants.ratio - widths;
+		double x_ratio_helper_plus = Constants.ratio + widths;
+		
+		left_shader_limit = -(Functions.screenXToShaderX(left_limit) + x_ratio_helper_minus);
+		right_shader_limit = -(Functions.screenXToShaderX(right_limit) - x_ratio_helper_plus);
+		
+		//todo, proper top and bottom limits
+		top_shader_limit = Functions.screenXToShaderX(top_limit);
+		bottom_shader_limit = Functions.screenXToShaderX(bottom_limit);
 	}
 	
 	//this method will be deleted.
