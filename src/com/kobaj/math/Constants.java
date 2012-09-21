@@ -28,13 +28,24 @@ public class Constants
 	
 	//width n height
 	public static int width;
+	public static final int static_width = 800;
 	public static int height;
+	public static final int static_height = 800;
 	
 	public static double shader_width;
-	public final static double shader_height = 2.0; // always
+	public static final double static_shader_width = 3.0 + 1.0 / 3.0;
+	public static final double shader_height = 2.0; // always
+	public static final double static_shader_height = 2.0; //always
 	
 	//this is width / height
 	public static double ratio;
+	public final static double static_ratio = 1.0 + (2.0 / 3.0);
+	
+	//for calculating bounds and positions
+	public static double delta_width;
+	public static double delta_height;
+	public static double delta_shader_width;
+	public static double delta_shader_height;
 	
 	//this is where the camera is translated to
 	public static double x_shader_translation;
@@ -50,17 +61,17 @@ public class Constants
 	public static Resources resources;
 	
 	//physics constants
-	public static final double gravity = -.0000015; //well thats a random number.
-	public static final double max_y_velocity = .01;
-	public static final double max_x_velocity = .006;
-	public static final double normal_acceleration = .000000075;
-	public static final double normal_reverse_acceleration = .000000100;
-	public static final double normal_air_damping = .5;
-	public static final double normal_friction = .000500;
+	public static final double gravity 						= -.0000015; //well thats a random number.
+	public static final double max_y_velocity 				= .01;
+	public static final double max_x_velocity 				= .006;
+	public static final double normal_acceleration 			= .000000075;
+	public static final double normal_reverse_acceleration  = .000000100;
+	public static final double normal_air_damping  			= .5;
+	public static final double normal_friction 				= .000500000;
 	
 	//graphic constants
-	public static final double max_brightness = 0.75;
-	public static final double min_brightness = 0.40;
+	public static final double max_brightness = 0.65;
+	public static final double min_brightness = 0.45;
 	
 	//While the below are not really constant and don't belong here
 	//this is a convenient way of being able to see all objects a game screen can see and use

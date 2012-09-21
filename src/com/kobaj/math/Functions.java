@@ -88,7 +88,7 @@ public class Functions
 		return linearInterpolateUnclamped(0, Constants.height, input_y, -1, 1);
 	}
 	
-	// used to translate screen coordinates to shader coordinates
+	// used to translate shader coordinates to screen coordinates
 	// for example, screen width is 0 to 800px, shader is -1 to 1.
 	// really you should not go from shader to screen
 	public static final double shaderXToScreenX(double input_x)
@@ -234,11 +234,11 @@ public class Functions
 	
 	// just one simple place to update all the camera variables
 	// this is in shader coordinates
-	public static void addCamera(double x, double y)
+	public static void addCamera(double x_camera, double y_camera)
 	{
-		Matrix.translateM(Constants.my_view_matrix, 0, (float) x, (float) y, 0);
-		Constants.x_shader_translation += x;
-		Constants.y_shader_translation += y;
+		Matrix.translateM(Constants.my_view_matrix, 0, (float) x_camera, (float) y_camera, 0);
+		Constants.x_shader_translation += x_camera;
+		Constants.y_shader_translation += y_camera;
 	}
 	
 	public static void setCamera(double x_camera, double y_camera)

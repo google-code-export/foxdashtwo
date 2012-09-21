@@ -1,6 +1,6 @@
 <level>
-   <light_array length="1">
-      <levelLight>
+   <light_array length="0">
+      <!--<levelLight>
          <light>spot</light>
          <color>-16776961</color>
          <degree>90.0</degree>
@@ -8,9 +8,16 @@
          <is_bloom>true</is_bloom>
          <x_pos>250.0</x_pos>
          <y_pos>290.0</y_pos>
-      </levelLight>
+      </levelLight>-->
    </light_array>
-   <object_array length="11">
+   <object_array length="16">
+      <levelObject>
+         <draw_from>bottom_left</draw_from>
+         <this_object>test</this_object>
+         <x_pos>-800.0</x_pos>
+         <y_pos>100.0</y_pos>
+         <z_plane>5</z_plane>
+      </levelObject>
       <levelObject>
          <draw_from>bottom_left</draw_from>
          <this_object>test</this_object>
@@ -18,7 +25,7 @@
          <y_pos>0.0</y_pos>
          <z_plane>5</z_plane>
       </levelObject>
-    <levelObject>
+      <levelObject>
          <draw_from>bottom_left</draw_from>
          <this_object>test</this_object>
          <x_pos>-600.0</x_pos>
@@ -46,7 +53,7 @@
          <y_pos>0.0</y_pos>
          <z_plane>5</z_plane>
       </levelObject>
-    <levelObject>
+      <levelObject>
          <draw_from>bottom_left</draw_from>
          <this_object>test</this_object>
          <x_pos>200.0</x_pos>
@@ -70,32 +77,62 @@
       <levelObject>
          <draw_from>bottom_left</draw_from>
          <this_object>test</this_object>
-         <x_pos>-800.0</x_pos>
-         <y_pos>200.0</y_pos>
+         <x_pos>800.0</x_pos>
+         <y_pos>0.0</y_pos>
+         <z_plane>5</z_plane>
+      </levelObject>
+            <levelObject>
+         <draw_from>bottom_left</draw_from>
+         <this_object>test</this_object>
+         <x_pos>1000.0</x_pos>
+         <y_pos>0.0</y_pos>
+         <z_plane>5</z_plane>
+      </levelObject>
+            <levelObject>
+         <draw_from>bottom_left</draw_from>
+         <this_object>test</this_object>
+         <x_pos>1200.0</x_pos>
+         <y_pos>0.0</y_pos>
+         <z_plane>5</z_plane>
+      </levelObject>
+            <levelObject>
+         <draw_from>bottom_left</draw_from>
+         <this_object>test</this_object>
+         <x_pos>1400.0</x_pos>
+         <y_pos>0.0</y_pos>
+         <z_plane>5</z_plane>
+      </levelObject>
+                  <levelObject>
+         <draw_from>bottom_left</draw_from>
+         <this_object>test</this_object>
+         <x_pos>1600.0</x_pos>
+         <y_pos>0.0</y_pos>
+         <z_plane>5</z_plane>
+      </levelObject>
+                  <levelObject>
+         <draw_from>bottom_left</draw_from>
+         <this_object>test</this_object>
+         <x_pos>1800.0</x_pos>
+         <y_pos>0.0</y_pos>
          <z_plane>5</z_plane>
       </levelObject>
       <levelObject>
          <draw_from>bottom_left</draw_from>
          <this_object>test</this_object>
-         <x_pos>-800.0</x_pos>
-         <y_pos>400.0</y_pos>
-         <z_plane>5</z_plane>
-      </levelObject>
-      <levelObject>
-         <draw_from>bottom_left</draw_from>
-         <this_object>test</this_object>
-         <x_pos>600.0</x_pos>
+         <x_pos>1800.0</x_pos>
          <y_pos>100.0</y_pos>
          <z_plane>5</z_plane>
       </levelObject>
    </object_array>
     <player>
-      <draw_from>top_left</draw_from>
+      <draw_from>center</draw_from>
       <this_object>test</this_object>
       <x_pos>0.0</x_pos>
-      <y_pos>0.0</y_pos>
+      <y_pos>100.0</y_pos>
       <z_plane>5.0</z_plane>
    </player>
-   <total_height>1650</total_height>
-   <total_width>1650</total_width>
+   <left_limit>-800</left_limit>
+   <top_limit>2000</top_limit>
+   <right_limit>2000</right_limit>
+   <bottom_limit>-2000</bottom_limit>
 </level>

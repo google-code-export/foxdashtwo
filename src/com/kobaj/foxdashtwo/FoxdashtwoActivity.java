@@ -53,12 +53,14 @@ public class FoxdashtwoActivity extends Activity {
 		Display display = getWindowManager().getDefaultDisplay();
 		display.getMetrics(metrics);
 
+		/*still needs work*/
 		switch(metrics.densityDpi)
 		{
 			default:
-				Constants.dip_scale = 1.0;
+				Constants.dip_scale = ((double) metrics.densityDpi) / DisplayMetrics.DENSITY_HIGH;
 				Constants.unknown_dip = true;
-				com.kobaj.message.ToastManager.makeLongToast(getString(R.string.unknown_screen_size_message));
+				com.kobaj.message.ToastManager.makeLongToast("Unknown dp: " + metrics.densityDpi);
+				//com.kobaj.message.ToastManager.makeLongToast(getString(R.string.unknown_screen_size_message));
 				break;
 			case DisplayMetrics.DENSITY_XHIGH: //xhdpi 320
 				Constants.dip_scale = 1.0 + 1.0 / 3.0;
@@ -73,7 +75,7 @@ public class FoxdashtwoActivity extends Activity {
 				Constants.dip_scale = 0.5;
 				break;
 		}
-		
+
 		//fonts and text scale
 		Constants.sd_scale = metrics.scaledDensity;
 		
@@ -82,6 +84,9 @@ public class FoxdashtwoActivity extends Activity {
 		Constants.height = display.getHeight();
 		
 		Constants.ratio = (double) display.getWidth() / (double) display.getHeight();
+		
+		//test of new dip
+		Constants.dip_scale = Constants.ratio / (1.0 + 2.0 / 3.0);
 		
 		//touchy
 		com.kobaj.math.Constants.input_manager = new com.kobaj.input.InputManager();
