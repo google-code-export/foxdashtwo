@@ -28,25 +28,21 @@ public class Text
 	// nice constants
 	private final int line_height = 4;
 	private final int padding = 4;
-	private double text_size = 16.0; //incase scaling is not set in constructor
 	
 	public Text()
 	{
-		//settup first
-		text_size = 16.0 * com.kobaj.math.Constants.sd_scale;
-		
         // setup our ambient light
         my_ambient_light = new AmbientLight();
 		
 		// set default size
-		double size = text_size * com.kobaj.math.Constants.sd_scale;
+		double size = Constants.text_size * Constants.sd_scale;
 		
 		// new bitmap_buffer!
 		bitmap_buffer = new SparseArray<Quad>();
 		
 		// begin by getting all our strings
 		String m_test_array[];
-		m_test_array = com.kobaj.math.Constants.context.getResources().getStringArray(R.array.my_sa);
+		m_test_array = Constants.context.getResources().getStringArray(R.array.my_sa);
 		
 		// add additional 0-9
 		ArrayList<String> my_string_array = new ArrayList<String>();
@@ -68,8 +64,8 @@ public class Text
 			// grab the id
 			if (count > 9)
 			{
-				key = com.kobaj.math.Constants.context.getResources().getIdentifier(s, "string", "com.kobaj.foxdashtwo");
-				s = com.kobaj.math.Constants.context.getResources().getString(key);
+				key = Constants.context.getResources().getIdentifier(s, "string", "com.kobaj.foxdashtwo");
+				s = Constants.context.getResources().getString(key);
 			}
 			
 			// generate an image

@@ -13,7 +13,6 @@ import com.kobaj.audio.MusicPlayList;
 import com.kobaj.audio.Sound;
 import com.kobaj.math.Constants;
 import com.kobaj.math.FPSManager;
-import com.kobaj.math.Functions;
 import com.kobaj.math.Physics;
 import com.kobaj.opengldrawable.Text;
 import com.kobaj.openglgraphics.AmbientLightShader;
@@ -22,19 +21,6 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 {
 	//and fps
 	protected FPSManager fps;
-	
-	//text mmm
-	protected Text text;
-	
-	//shaders
-	protected AmbientLightShader ambient_light;
-	
-	// camera
-	protected float[] my_view_matrix = new float[16];
-	protected float[] my_proj_matrix = new float[16];
-	
-	//sound and music
-	protected Music music;
 	
 	public void onSurfaceCreated(GL10 unused, EGLConfig config)
 	{
@@ -55,29 +41,17 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA); // no see thru
 		
 		// shaders
-		ambient_light = new AmbientLightShader();
-		com.kobaj.math.Constants.ambient_light = ambient_light;
+		Constants.ambient_light = new AmbientLightShader();
 		
 		//fps
 		fps = new FPSManager();
 		
-		//text setup
-		text = new Text();
-		com.kobaj.math.Constants.text = text; //referencing!
-		
 		//sound and audio setup
-		music = new Music();
-		com.kobaj.math.Constants.music_play_list = new MusicPlayList(music);
-		com.kobaj.math.Constants.sound = new Sound();
+		Constants.music_play_list = new MusicPlayList(new Music());
+		Constants.sound = new Sound();
 
 		//physics setup
-		com.kobaj.math.Constants.physics = new Physics();
-		
-		//camera
-		com.kobaj.math.Constants.my_view_matrix = my_view_matrix;
-		com.kobaj.math.Constants.my_proj_matrix = my_proj_matrix;
-		
-		onInitialize();
+		Constants.physics = new Physics();
 	}
 	
 	abstract void onInitialize();
@@ -86,25 +60,28 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 	{
 		GLES20.glViewport(0, 0, width, height);
 		
-		float ratio = (float) width / height;
-		com.kobaj.math.Constants.ratio = ratio;
-		com.kobaj.math.Constants.shader_width = ratio * 2.0;
+		Constants.width = width;
+		Constants.height = height;
 		
-		com.kobaj.math.Constants.delta_width = width - Constants.static_width;
-		com.kobaj.math.Constants.delta_height = height - Constants.static_height;
-		com.kobaj.math.Constants.delta_shader_width = Functions.screenWidthToShaderWidth(Constants.delta_width);
-		com.kobaj.math.Constants.delta_shader_height = Functions.screenHeightToShaderHeight(Constants.delta_height);
+		float ratio = (float) (width / height);
+		Constants.ratio = ratio;
+		Constants.shader_width = ratio * 2.0;
 		
 		// this projection matrix is applied to object coodinates
 		// in the onDrawFrame() method
-		Matrix.orthoM(my_proj_matrix, 0, -ratio, ratio, -1, 1, .99999999f, 2);
-		Matrix.setLookAtM(my_view_matrix, 0, //this is the identity...
+		Matrix.orthoM(Constants.my_proj_matrix, 0, -ratio, ratio, -1, 1, .99999999f, 2);
+		Matrix.setLookAtM(Constants.my_view_matrix, 0, //this is the identity...
 				0, 0, 0, 
 				0f, 0f, -5.0f, 
 				0f, 1.0f, 0.0f);
 		
-		com.kobaj.math.Constants.x_shader_translation = 0;
-		com.kobaj.math.Constants.y_shader_translation = 0;
+		Constants.x_shader_translation = 0;
+		Constants.y_shader_translation = 0;
+		
+		//finish setup
+		Constants.text = new Text();
+		
+		onInitialize();
 	}
 	
 	public void onSurfaceDestroyed()

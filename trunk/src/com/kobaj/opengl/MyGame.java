@@ -29,6 +29,9 @@ public class MyGame extends MyGLRender
 	@Override
 	void onInitialize()
 	{
+		//begin by aligning our functions
+		Functions.adjustConstantsToScreen();
+		
 		//for the record this is called everytime the screen is reset/paused/resumed
 		//all graphics are destroyed (dunno about sounds >.>).
 		
@@ -49,7 +52,7 @@ public class MyGame extends MyGLRender
 	@Override
 	void onDraw()
 	{	
-		GLES20.glUseProgram(ambient_light.my_shader);
+		GLES20.glUseProgram(Constants.ambient_light.my_shader);
 		
 		//regular objects
 		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA); // no see thru
@@ -67,15 +70,15 @@ public class MyGame extends MyGLRender
 		currently_active_screen.onDrawLight();
 		
 		//reset the camera so the following is drawn correctly
-		Matrix.setIdentityM(my_view_matrix, 0);
+		Matrix.setIdentityM(Constants.my_view_matrix, 0);
 		
 		//final scene
 		GLES20.glBlendFunc(GLES20.GL_DST_COLOR, GLES20.GL_ZERO); // masking
-		scene.onDrawAmbient(my_view_matrix, my_proj_matrix, ambient_light, true);
+		scene.onDrawAmbient(Constants.my_view_matrix, Constants.my_proj_matrix, Constants.ambient_light, true);
 		
 		//text below this line
 		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA); // no see thru
-		text.DrawNumber(fps.fps, Functions.screenXToShaderX(25), Functions.screenYToShaderY((int)Functions.fix_y(25)), EnumDrawFrom.top_left);
+		Constants.text.DrawNumber(fps.fps, Functions.screenXToShaderX(25), Functions.screenYToShaderY((int)Functions.fix_y(25)), EnumDrawFrom.top_left);
 		currently_active_screen.onDrawConstant();
 	
 		//move the camera back

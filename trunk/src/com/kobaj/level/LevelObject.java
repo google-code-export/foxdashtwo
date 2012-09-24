@@ -4,6 +4,7 @@ import org.simpleframework.xml.Element;
 
 import android.graphics.Color;
 
+import com.kobaj.math.Constants;
 import com.kobaj.opengldrawable.Quad.Quad;
 import com.kobaj.opengldrawable.Quad.QuadColorShape;
 
@@ -24,12 +25,13 @@ public class LevelObject
 	
 	public void onInitialize()
 	{
+		//will be changed in the future
 		if(this_object == EnumLevelObject.test)
 			quad_object = new QuadColorShape(0, 200, 200, 0, Color.RED, 0);
 		else
 			quad_object = new QuadColorShape(0, 200, 200, 0, Color.GREEN, 0);
 		
-		quad_object.z_pos -= (z_plane * .00001);
+		quad_object.z_pos -= (z_plane * Constants.z_modifier);
 		quad_object.setPos(com.kobaj.math.Functions.screenXToShaderX(x_pos), com.kobaj.math.Functions.screenYToShaderY(y_pos), draw_from);
 	}
 }

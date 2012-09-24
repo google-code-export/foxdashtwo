@@ -12,7 +12,6 @@ public class GameInputModifier
 	private InputTypeBase[] input_types = new InputTypeBase[total];
 	
 	private int swipes = 0;
-	private final int swipe_sensitivity = 55;
 	
 	public GameInputModifier()
 	{
@@ -51,7 +50,7 @@ public class GameInputModifier
 		else
 			swipes = 0;
 			
-		if(swipes < -swipe_sensitivity * Constants.dip_scale || swipes > swipe_sensitivity * Constants.dip_scale)
+		if(swipes < -Constants.input_swipe_sensitivity * Constants.dip_scale || swipes > Constants.input_swipe_sensitivity * Constants.dip_scale)
 		{
 			current_selection = (current_selection + 1) % total;
 			swipes = 0;

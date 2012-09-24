@@ -134,5 +134,5 @@
    <left_limit>-800</left_limit>
    <top_limit>2000</top_limit>
    <right_limit>2000</right_limit>
-   <bottom_limit>-2000</bottom_limit>
+   <bottom_limit>0</bottom_limit>
 </level>

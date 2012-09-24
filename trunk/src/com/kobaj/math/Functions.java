@@ -65,15 +65,15 @@ public class Functions
 	}
 	
 	// used to translate screen widths to shader widths
-	// for example, screen width is 0 to 800, shader is 0 to 1
+	// for example, screen width is 0 to 800, shader is 0 to 1 ish
 	public static final double screenWidthToShaderWidth(double input_x)
 	{
-		return linearInterpolateUnclamped(0, Constants.width, input_x, 0, Constants.ratio);
+		return linearInterpolateUnclamped(0, Constants.width, input_x, 0, Constants.shader_width);
 	}
 	
 	public static final double screenHeightToShaderHeight(double input_y)
 	{
-		return linearInterpolateUnclamped(0, Constants.height, input_y, 0, 1);
+		return linearInterpolateUnclamped(0, Constants.height, input_y, 0, Constants.shader_height);
 	}
 	
 	// used to translate screen coordinates to shader coordinates
@@ -99,6 +99,16 @@ public class Functions
 	public static final double shaderYToScreenY(double input_y)
 	{
 		return linearInterpolateUnclamped(-1, 1, input_y, 0, Constants.height);
+	}
+	
+	public static final double shaderWidthToScreenWidth(double input_x)
+	{
+		return linearInterpolateUnclamped(0, Constants.shader_width, input_x, 0, Constants.width);
+	}
+	
+	public static final double shaderHeightToScreenHeight(double input_y)
+	{
+		return linearInterpolateUnclamped(0, Constants.shader_height, input_y, 0, Constants.height);
 	}
 	
 	// random between two values
@@ -491,5 +501,21 @@ public class Functions
 		bitmap.setPixels(pix, 0, w, 0, 0, w, h);
 		
 		return bitmap;
+	}
+	
+	//setup the constants
+	public static void adjustConstantsToScreen()
+	{
+		double start = Functions.screenXToShaderX(0);
+		double distance = Functions.screenXToShaderX(1600);
+		
+		Constants.gravity = -Functions.screenHeightToShaderHeight(Constants.gravity_default);
+		Constants.max_y_velocity = Functions.screenHeightToShaderHeight(Constants.max_y_velocity_default);
+		Constants.max_x_velocity = Functions.screenWidthToShaderWidth(Constants.max_x_velocity_default);
+		Constants.normal_acceleration = Functions.screenWidthToShaderWidth(Constants.normal_acceleration_default);
+		Constants.normal_reverse_acceleration = Functions.screenWidthToShaderWidth(Constants.normal_reverse_acceleration_default);
+		Constants.collision_detection_height = Functions.screenHeightToShaderHeight(Constants.collision_detection_height_default);
+		Constants.jump_velocity = Functions.screenHeightToShaderHeight(Constants.jump_velocity_default);
+		Constants.jump_limiter = Functions.screenHeightToShaderHeight(Constants.jump_limiter_default);
 	}
 }

@@ -15,6 +15,7 @@ public abstract class AudioBase
 	//use this to ensure volumes are what the user specified
 	protected double getCorrectedVolume(double volume)
 	{
+		//same for every device
 		volume = com.kobaj.math.Functions.clamp(.99999, volume, .00001);
 		
 		double streamVolume = audio_manager.getStreamVolume(AudioManager.STREAM_MUSIC);

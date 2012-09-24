@@ -2,11 +2,12 @@ package com.kobaj.math;
 
 import android.graphics.RectF;
 
+//you would think this would extend rectF, but it is too different to use that as a base.
 public class ExtendedRectF
 {
 	//truley this should not be public
 	//and should only be accessed by accessors
-	//but that would incure too much extra overhead
+	//but that would incur too much extra overhead
 	public RectF main_rect;
 	
 	public final double x_offset;

@@ -15,6 +15,7 @@ import android.opengl.Matrix;
 
 import com.kobaj.loader.GLLoadedTexture;
 import com.kobaj.math.ExtendedRectF;
+import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.EnumDrawFrom;
 import com.kobaj.openglgraphics.AmbientLightShader;
 import com.kobaj.openglgraphics.BaseLightShader;
@@ -111,11 +112,11 @@ public class Quad
 		this.height = height;
 		
 		// Define points for a cube.
-		final float tr_x = (float) com.kobaj.math.Functions.screenWidthToShaderWidth(width);
-		final float tr_y = (float) com.kobaj.math.Functions.screenHeightToShaderHeight(height);
+		this.shader_width = Functions.screenWidthToShaderWidth(width);
+		this.shader_height = Functions.screenHeightToShaderHeight(height);
 		
-		this.shader_width = tr_x * 2.0;
-		this.shader_height = tr_y * 2.0;
+		final float tr_x = (float) (this.shader_width / 2.0);
+		final float tr_y = (float) (this.shader_height / 2.0);
 		
 		// X, Y, Z
 		final float[] cubePositionData = {

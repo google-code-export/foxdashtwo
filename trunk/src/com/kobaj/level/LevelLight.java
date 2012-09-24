@@ -26,6 +26,7 @@ public class LevelLight
 	
 	public void onInitialize()
 	{
+		//again these will be modified
 		if(light == EnumLevelLight.ambient)
 			quad_light = new QuadColorShape(0, com.kobaj.math.Constants.height, com.kobaj.math.Constants.width, 0, color, 0);
 		else if(light == EnumLevelLight.point)

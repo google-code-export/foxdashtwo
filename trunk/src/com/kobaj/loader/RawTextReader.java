@@ -11,7 +11,6 @@ import android.content.Context;
 
 public class RawTextReader
 {
-	
 	public static String readRawTextFile(Context ctx, int resId)
 	{
 		InputStream inputStream = ctx.getResources().openRawResource(resId);
