@@ -95,7 +95,7 @@ public class SinglePlayerScreen extends BaseScreen
 			
 			if(my_modifier.getInputType().getTouchedLeft())
 			{
-				if (my_modifier.getInputType().getTouchedLeft())
+				if (test_level.player.quad_object.x_vel < 0)
 					move_amount += -Constants.normal_acceleration;
 				else
 					move_amount += -Constants.normal_reverse_acceleration;
@@ -106,7 +106,7 @@ public class SinglePlayerScreen extends BaseScreen
 				move_amount *= Constants.normal_air_damping;
 			
 			// add to it
-			test_level.player.quad_object.x_acc += move_amount * delta;
+			test_level.player.quad_object.x_acc += move_amount;
 		}
 		
 		// add forces
@@ -116,7 +116,7 @@ public class SinglePlayerScreen extends BaseScreen
 		// add friction
 		if (!touched && jump_time) 
 		{
-			double friction = -Constants.normal_friction * delta * test_level.player.quad_object.x_vel;
+			double friction = -Constants.normal_friction * test_level.player.quad_object.x_vel;
 			test_level.player.quad_object.x_acc += friction;
 		}
 		

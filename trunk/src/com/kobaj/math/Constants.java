@@ -41,14 +41,14 @@ public class Constants
 	public static final double z_modifier = 0.00001;
 	
 	//physics constants
-	public static final double gravity_default						= .000550;
+	public static final double gravity_default						= 0.000550;
 	public static final double max_y_velocity_default				= 2.5;
-	public static final double max_x_velocity_default 				= 0.25;
-	public static final double normal_acceleration_default 			= .000048;
-	public static final double normal_reverse_acceleration_default 	= .000064;
-	public static final double collision_detection_height_default 	= 1;
-	public static final double jump_velocity_default 				= .550;
-	public static final double jump_limiter_default					= .184;
+	public static final double max_x_velocity_default 				= 2.5;
+	public static final double normal_acceleration_default 			= 0.00050;
+	public static final double normal_reverse_acceleration_default 	= 0.00600;
+	public static final double collision_detection_height_default 	= 2.0;
+	public static final double jump_velocity_default 				= 0.550;
+	public static final double jump_limiter_default					= 0.185;
 	
 	//physics variables
 	public static double gravity;
@@ -62,7 +62,7 @@ public class Constants
 	
 	//same regardless of screen.
 	public static final double normal_air_damping  			= .5;
-	public static final double normal_friction 				= .000500000;
+	public static final double normal_friction 				= .011;
 	
 	//graphic constants
 	public static final double max_brightness = 0.65;
