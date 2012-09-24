@@ -13,8 +13,8 @@ public class QuadRenderTo extends Quad
 {
 	// RENDER TO TEXTURE VARIABLES
 	private int[] fb, depthRb, renderTex;
-	private int texW = 800;
-	private int texH = 480;
+	private int texW;
+	private int texH;
 	private IntBuffer texBuffer;
 
 	public QuadRenderTo()

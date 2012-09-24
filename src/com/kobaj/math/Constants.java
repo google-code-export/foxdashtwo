@@ -12,44 +12,64 @@ import com.kobaj.openglgraphics.AmbientLightShader;
 public class Constants
 {
 	//you may be wondering why the heck I'm not using 
-	//getters and setters to make this class
-	//a bit more immutable.
+	//getters and setters to make this class a bit more immutable
 	//answer 1: I'm crazy
 	//answer 2: This is faster/easier to code (I'm on a tight schedule)
 	//answer 3: I actually read somewhere (stackoverflow?) this is faster to execute. *shrugs*
 	
 	//density independent pixels
 	public static double dip_scale;
-	//if it happens to be unknown;
-	public static boolean unknown_dip = false;
 	
 	//scaled text density
 	public static double sd_scale;
 	
 	//width n height
 	public static int width;
-	public static final int static_width = 800;
 	public static int height;
-	public static final int static_height = 800;
 	
-	public static double shader_width;
-	public static final double static_shader_width = 3.0 + 1.0 / 3.0;
-	public static final double shader_height = 2.0; // always
-	public static final double static_shader_height = 2.0; //always
+	public static double shader_width; // technically double the ratio
+	public static final double shader_height = 2.0; // always regardless of phone
 	
-	//this is width / height
+	//this is (width / height)
 	public static double ratio;
-	public final static double static_ratio = 1.0 + (2.0 / 3.0);
-	
-	//for calculating bounds and positions
-	public static double delta_width;
-	public static double delta_height;
-	public static double delta_shader_width;
-	public static double delta_shader_height;
 	
 	//this is where the camera is translated to
 	public static double x_shader_translation;
 	public static double y_shader_translation;
+	
+	//and for when a level loads
+	public static final double z_modifier = 0.00001;
+	
+	//physics constants
+	public static final double gravity_default						= .000550;
+	public static final double max_y_velocity_default				= 2.5;
+	public static final double max_x_velocity_default 				= 0.25;
+	public static final double normal_acceleration_default 			= .000048;
+	public static final double normal_reverse_acceleration_default 	= .000064;
+	public static final double collision_detection_height_default 	= 1;
+	public static final double jump_velocity_default 				= .550;
+	public static final double jump_limiter_default					= .184;
+	
+	//physics variables
+	public static double gravity;
+	public static double max_y_velocity;
+	public static double max_x_velocity;
+	public static double normal_acceleration;
+	public static double normal_reverse_acceleration;
+	public static double collision_detection_height;
+	public static double jump_velocity;
+	public static double jump_limiter;
+	
+	//same regardless of screen.
+	public static final double normal_air_damping  			= .5;
+	public static final double normal_friction 				= .000500000;
+	
+	//graphic constants
+	public static final double max_brightness = 0.65;
+	public static final double min_brightness = 0.45;
+	
+	//While the below are not really constant and don't belong here
+	//this is a convenient way of being able to see all objects a game screen can see and use
 	
 	//mmmm context
 	//you may be saying "BUT THATS A MEMORY LEAK"
@@ -60,32 +80,22 @@ public class Constants
 	//the ever static reference to resources.
 	public static Resources resources;
 	
-	//physics constants
-	public static final double gravity 						= -.0000015; //well thats a random number.
-	public static final double max_y_velocity 				= .01;
-	public static final double max_x_velocity 				= .006;
-	public static final double normal_acceleration 			= .000000075;
-	public static final double normal_reverse_acceleration  = .000000100;
-	public static final double normal_air_damping  			= .5;
-	public static final double normal_friction 				= .000500000;
-	
-	//graphic constants
-	public static final double max_brightness = 0.65;
-	public static final double min_brightness = 0.45;
-	
-	//While the below are not really constant and don't belong here
-	//this is a convenient way of being able to see all objects a game screen can see and use
 	public static Physics physics;
 	
 	public static MusicPlayList music_play_list;
 	public static Sound sound;
-	
+
 	public static InputManager input_manager;
+	//input constants
+	public static final int input_draw_color = 0xAAFFFFFF;
+	public static final double input_circle_width = 50;
+	public static final int input_swipe_sensitivity = 55;
 	
 	public static Text text;
+	public static double text_size = 16.0; //all text is the same size (how lame!)
 	
-	public static float[] my_view_matrix;
-	public static float[] my_proj_matrix;
+	public static float[] my_view_matrix = new float[16];
+	public static float[] my_proj_matrix = new float[16];
 	public static final float[] identity_matrix = {1, 0, 0, 0,
 												   0, 1, 0, 0,
 												   0, 0, 1, 0,

@@ -1,7 +1,5 @@
 package com.kobaj.input.InputType;
 
-import android.graphics.Color;
-
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.EnumDrawFrom;
@@ -16,7 +14,7 @@ public class InputTypeHalfHalf extends InputTypeBase
 	@Override
 	public void onInitialize()
 	{
-		my_quad = new QuadColorShape(0, Constants.height, 1, 0, Color.WHITE, 0);
+		my_quad = new QuadColorShape(0, Constants.height, 1, 0, Constants.input_draw_color, 0);
 		my_ambient_light = new AmbientLight();
 	}
 	
@@ -74,6 +72,7 @@ public class InputTypeHalfHalf extends InputTypeBase
 	@Override
 	public void onDraw()
 	{
+		//draw left
 		if(getTouchedLeft())
 			my_ambient_light.brightness = Constants.min_brightness;
 		else
@@ -82,6 +81,7 @@ public class InputTypeHalfHalf extends InputTypeBase
 		my_quad.setPos(Functions.screenXToShaderX(1), Functions.screenYToShaderY(0), EnumDrawFrom.bottom_left);
 		my_quad.onDrawAmbient(Constants.my_view_matrix, Constants.my_proj_matrix, Constants.ambient_light, true);
 		
+		//draw right
 		if(getTouchedRight())
 			my_ambient_light.brightness = Constants.min_brightness;
 		else

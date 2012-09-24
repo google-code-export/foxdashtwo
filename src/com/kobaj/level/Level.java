@@ -46,19 +46,14 @@ public class Level
 		//setup player
 		//todo, set player position
 		player.quad_object = new com.kobaj.opengldrawable.Quad.QuadColorShape(0, 64, 64, 0, Color.GRAY, 0);//new com.kobaj.opengldrawable.Quad(R.drawable.ic_launcher);
-		player.quad_object.z_pos -= (player.z_plane * .00001);
+		player.quad_object.z_pos -= (player.z_plane * Constants.z_modifier);
 	
 		//set widths and heights for the camera
-		double widths = Constants.delta_shader_width / 2.0;
-		double x_ratio_helper_minus = Constants.ratio - widths;
-		double x_ratio_helper_plus = Constants.ratio + widths;
+		left_shader_limit = -(Functions.screenXToShaderX(left_limit) + Constants.ratio);
+		right_shader_limit = -(Functions.screenXToShaderX(right_limit) - Constants.ratio);
 		
-		left_shader_limit = -(Functions.screenXToShaderX(left_limit) + x_ratio_helper_minus);
-		right_shader_limit = -(Functions.screenXToShaderX(right_limit) - x_ratio_helper_plus);
-		
-		//todo, proper top and bottom limits
-		top_shader_limit = Functions.screenXToShaderX(top_limit);
-		bottom_shader_limit = Functions.screenXToShaderX(bottom_limit);
+		top_shader_limit = -Functions.screenYToShaderY(top_limit) + Constants.shader_height / 2.0;
+		bottom_shader_limit = -Functions.screenYToShaderY(bottom_limit) - Constants.shader_height / 2.0;
 	}
 	
 	//this method will be deleted.

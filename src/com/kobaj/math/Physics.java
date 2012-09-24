@@ -10,20 +10,9 @@ import com.kobaj.opengldrawable.Quad.Quad;
 //3. Collision handling
 public class Physics
 {	
-	private double gravity;
-	private double max_y_velocity;
-	private double max_x_velocity;
-	
-	public Physics()
-	{
-		gravity = Constants.gravity * Constants.dip_scale; //should this be a dip scale?
-		max_y_velocity = Constants.max_y_velocity * Constants.dip_scale;
-		max_x_velocity = Constants.max_x_velocity * Constants.dip_scale;
-	}
-	
 	public <T extends Quad> void add_gravity(T the_quad)
 	{
-		the_quad.y_acc += gravity;
+		the_quad.y_acc += Constants.gravity;
 	}
 	
 	//applies gravity
@@ -38,17 +27,17 @@ public class Physics
 		//set acceleration
 		the_quad.y_acc = 0;
 		the_quad.x_acc = 0;
-		
+		/*
 		//clamp velocities
-		if(the_quad.y_vel > max_y_velocity)
-			the_quad.y_vel = max_y_velocity;
-		else if(the_quad.y_vel < -max_y_velocity)
-			the_quad.y_vel = -max_y_velocity;
+		if(the_quad.y_vel > Constants.max_y_velocity)
+			the_quad.y_vel = Constants.max_y_velocity;
+		else if(the_quad.y_vel < -Constants.max_y_velocity)
+			the_quad.y_vel = -Constants.max_y_velocity;
 		
-		if(the_quad.x_vel > max_x_velocity)
-			the_quad.x_vel = max_x_velocity;
-		else if(the_quad.x_vel < -max_x_velocity)
-			the_quad.x_vel = -max_x_velocity;
+		if(the_quad.x_vel > Constants.max_x_velocity)
+			the_quad.x_vel = Constants.max_x_velocity;
+		else if(the_quad.x_vel < -Constants.max_x_velocity)
+			the_quad.x_vel = -Constants.max_x_velocity;*/
 		
 		//add position
 		the_quad.setPos(the_quad.getXPos() + the_quad.x_vel * delta, the_quad.getYPos() + the_quad.y_vel * delta, com.kobaj.opengldrawable.EnumDrawFrom.center);
@@ -99,14 +88,17 @@ public class Physics
 					final double width = Math.abs(collision.width());
 					final double height = Math.abs(collision.height());
 				
-					if(width > height)
+					if(width >= height)
 						collision.left = collision.right;
-					else
+					else if(height > Constants.collision_detection_height)
 						collision.top = collision.bottom;
+					else
+						collision = null;
 							
 					//and here we would decide reaction (if it were programmed)
-						
-					return collision;
+					
+					if(collision != null)
+						return collision;
 				}
 			}
 		

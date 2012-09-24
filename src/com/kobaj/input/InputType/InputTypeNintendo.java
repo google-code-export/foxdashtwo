@@ -14,22 +14,25 @@ public class InputTypeNintendo extends InputTypeBase
 	
 	private AmbientLight my_ambient_light;
 	
-	private final double circle_width = 50;
-	
 	@Override
 	public void onInitialize()
 	{
+		//these will be replaced with images in the future.
+		double circle_size = Constants.input_circle_width * Constants.dip_scale;
+		double shader_circle_size_x = Functions.screenXToShaderX(circle_size);
+		double shader_circle_size_y = Functions.screenYToShaderY(circle_size);
+		
 		//left
-		my_quad_left = new QuadColorShape(circle_width * Constants.dip_scale, 0x88FFFFFF, 0);
-		my_quad_left.setPos(Functions.screenXToShaderX(circle_width * Constants.dip_scale), Functions.screenYToShaderY(circle_width * Constants.dip_scale), EnumDrawFrom.bottom_left);
+		my_quad_left = new QuadColorShape(circle_size, Constants.input_draw_color, 0);
+		my_quad_left.setPos(shader_circle_size_x, shader_circle_size_y, EnumDrawFrom.bottom_left);
 		
 		//right
-		my_quad_right = new QuadColorShape(circle_width * Constants.dip_scale, 0x88FFFFFF, 0);
-		my_quad_right.setPos(Functions.screenXToShaderX(circle_width * Constants.dip_scale * 3), Functions.screenYToShaderY(circle_width* Constants.dip_scale), EnumDrawFrom.bottom_left);
+		my_quad_right = new QuadColorShape(circle_size, Constants.input_draw_color, 0);
+		my_quad_right.setPos(Functions.screenXToShaderX(Constants.input_circle_width * Constants.dip_scale * 3), shader_circle_size_y, EnumDrawFrom.bottom_left);
 		
 		//jump
-		my_quad_jump = new QuadColorShape(circle_width * Constants.dip_scale, 0x88FFFFFF, 0);
-		my_quad_jump.setPos(Functions.screenXToShaderX(Constants.width - (circle_width * Constants.dip_scale)), Functions.screenYToShaderY(circle_width * Constants.dip_scale), EnumDrawFrom.bottom_right);
+		my_quad_jump = new QuadColorShape(circle_size, Constants.input_draw_color, 0);
+		my_quad_jump.setPos(Functions.screenXToShaderX(Constants.width - circle_size), shader_circle_size_y, EnumDrawFrom.bottom_right);
 		
 		my_ambient_light = new AmbientLight();
 	}
@@ -47,8 +50,6 @@ public class InputTypeNintendo extends InputTypeBase
 	@Override
 	public boolean getPressedJump()
 	{
-		//return getTouchedJump();
-		
 		for(int i = 0; i < Constants.input_manager.fingerCount; i++)
 			if(Constants.input_manager.getPressed(i))
 				if(Functions.inRectF(my_quad_jump.phys_rect_list.get(0).main_rect, Functions.screenXToShaderX(Constants.input_manager.getX(i)), Functions.screenYToShaderY(Constants.input_manager.getY(i))))
@@ -115,6 +116,7 @@ public class InputTypeNintendo extends InputTypeBase
 		my_ambient_light.applyShaderProperties();
 		my_quad_right.onDrawAmbient(Constants.my_view_matrix, Constants.my_proj_matrix, Constants.ambient_light, true);
 		
+		//jump
 		if(getTouchedJump())
 			my_ambient_light.brightness = Constants.min_brightness;
 		else

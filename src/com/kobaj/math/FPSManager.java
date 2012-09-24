@@ -9,7 +9,7 @@ public class FPSManager
 	private long delta = 0;
 	
 	private long reset = 0;
-	private final long wait = 1000;
+	private final long wait = 1000; //always 1 second
 	
 	//call this method at the top of surfacepanel onUpdate
 	public void onUpdate(long gameTime)
@@ -38,6 +38,7 @@ public class FPSManager
 	//new method, fakeing our own queue soz we can save on memory
 	private void offer(double value)
 	{
+		//not that slow considering it is 4 elemsent
 		for(int i = max - 1; i >= 1; i--)
 			averageList[i] = averageList[i-1];
 		
