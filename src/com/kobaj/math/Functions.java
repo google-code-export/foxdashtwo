@@ -506,9 +506,6 @@ public class Functions
 	//setup the constants
 	public static void adjustConstantsToScreen()
 	{
-		double start = Functions.screenXToShaderX(0);
-		double distance = Functions.screenXToShaderX(1600);
-		
 		Constants.gravity = -Functions.screenHeightToShaderHeight(Constants.gravity_default);
 		Constants.max_y_velocity = Functions.screenHeightToShaderHeight(Constants.max_y_velocity_default);
 		Constants.max_x_velocity = Functions.screenWidthToShaderWidth(Constants.max_x_velocity_default);

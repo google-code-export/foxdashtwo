@@ -27,7 +27,7 @@ public class Physics
 		//set acceleration
 		the_quad.y_acc = 0;
 		the_quad.x_acc = 0;
-		/*
+		
 		//clamp velocities
 		if(the_quad.y_vel > Constants.max_y_velocity)
 			the_quad.y_vel = Constants.max_y_velocity;
@@ -37,7 +37,7 @@ public class Physics
 		if(the_quad.x_vel > Constants.max_x_velocity)
 			the_quad.x_vel = Constants.max_x_velocity;
 		else if(the_quad.x_vel < -Constants.max_x_velocity)
-			the_quad.x_vel = -Constants.max_x_velocity;*/
+			the_quad.x_vel = -Constants.max_x_velocity;
 		
 		//add position
 		the_quad.setPos(the_quad.getXPos() + the_quad.x_vel * delta, the_quad.getYPos() + the_quad.y_vel * delta, com.kobaj.opengldrawable.EnumDrawFrom.center);
