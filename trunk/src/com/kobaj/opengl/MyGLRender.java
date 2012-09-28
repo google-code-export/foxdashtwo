@@ -90,7 +90,7 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 	}
 	
 	public void onDrawFrame(GL10 unused)
-	{
+	{	
 		onUpdateFrame();
 		
 		// Redraw background color

@@ -14,7 +14,7 @@ public class InputTypeHalfHalf extends InputTypeBase
 	@Override
 	public void onInitialize()
 	{
-		my_quad = new QuadColorShape(0, Constants.height, 1, 0, Constants.input_draw_color, 0);
+		my_quad = new QuadColorShape(0, Constants.height, 2, 0, Constants.input_draw_color, 0);
 		my_ambient_light = new AmbientLight();
 	}
 	
