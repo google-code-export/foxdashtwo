@@ -19,7 +19,7 @@ public class FoxdashtwoActivity extends Activity {
 	
 	private PowerManager.WakeLock wl;
 	
-	private com.kobaj.opengl.MyGLSurfaceView mGLView;
+	public static com.kobaj.opengl.MyGLSurfaceView mGLView;
 	
 	//saving state
 	public static SharedPreferences mPrefs;
@@ -52,37 +52,10 @@ public class FoxdashtwoActivity extends Activity {
 		DisplayMetrics metrics = new DisplayMetrics();
 		Display display = getWindowManager().getDefaultDisplay();
 		display.getMetrics(metrics);
-
-		/*still needs work*/
-		switch(metrics.densityDpi)
-		{
-			default:
-				Constants.dip_scale = ((double) metrics.densityDpi) / DisplayMetrics.DENSITY_HIGH;
-				com.kobaj.message.ToastManager.makeLongToast("Unknown dp: " + metrics.densityDpi);
-				//com.kobaj.message.ToastManager.makeLongToast(getString(R.string.unknown_screen_size_message));
-				break;
-			case DisplayMetrics.DENSITY_XHIGH: //xhdpi 320
-				Constants.dip_scale = 1.0 + 1.0 / 3.0;
-				break;
-			case DisplayMetrics.DENSITY_HIGH: //HDPI 240
-				Constants.dip_scale = 1.0;
-				break;
-			case DisplayMetrics.DENSITY_MEDIUM: //MDPI 160
-				Constants.dip_scale = 2.0 / 3.0;
-				break;
-			case DisplayMetrics.DENSITY_LOW:  //LDPI 120
-				Constants.dip_scale = 0.5;
-				break;
-		}
+		Constants.dip_scale = ((double) metrics.densityDpi) / DisplayMetrics.DENSITY_HIGH;
 
 		//fonts and text scale
 		Constants.sd_scale = metrics.scaledDensity;
-		
-		//put in the other stuffs.
-		//Constants.width = display.getWidth();
-		//Constants.height = display.getHeight();
-		
-	    //Constants.ratio = (double) display.getWidth() / (double) display.getHeight();
 		
 		//touchy
 		com.kobaj.math.Constants.input_manager = new com.kobaj.input.InputManager();

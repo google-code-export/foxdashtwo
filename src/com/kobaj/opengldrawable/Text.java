@@ -147,7 +147,7 @@ public class Text
 		
         // set the light
         my_ambient_light.applyShaderProperties();
-		
+        
 		// for now we only do positives (sorry).
 		this_number = (int) Math.abs(this_number);
 		

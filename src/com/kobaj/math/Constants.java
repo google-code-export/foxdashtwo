@@ -41,13 +41,13 @@ public class Constants
 	public static final double z_modifier = 0.00001;
 	
 	//physics constants
-	public static final double gravity_default						= 0.000550;
+	public static final double gravity_default						= 0.000650;
 	public static final double max_y_velocity_default				= 2.5;
 	public static final double max_x_velocity_default 				= 2.5;
 	public static final double normal_acceleration_default 			= 0.00050;
 	public static final double normal_reverse_acceleration_default 	= 0.00600;
 	public static final double collision_detection_height_default 	= 2.0;
-	public static final double jump_velocity_default 				= 0.550;
+	public static final double jump_velocity_default 				= 0.650;
 	public static final double jump_limiter_default					= 0.185;
 	
 	//physics variables
@@ -89,7 +89,7 @@ public class Constants
 	//input constants
 	public static final int input_draw_color = 0xAAFFFFFF;
 	public static final double input_circle_width = 50;
-	public static final int input_swipe_sensitivity = 55;
+	public static final int input_swipe_sensitivity = 240;
 	
 	public static Text text;
 	public static double text_size = 16.0; //all text is the same size (how lame!)
