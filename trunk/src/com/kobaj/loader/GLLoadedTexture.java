@@ -6,4 +6,5 @@ public class GLLoadedTexture
 	public int texture_id;
 	public int width;
 	public int height;
+	public int bitmap_hash;
 }

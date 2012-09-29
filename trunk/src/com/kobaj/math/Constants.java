@@ -89,7 +89,7 @@ public class Constants
 	//input constants
 	public static final int input_draw_color = 0xAAFFFFFF;
 	public static final double input_circle_width = 50;
-	public static final int input_swipe_sensitivity = 240;
+	public static final int input_swipe_sensitivity = 140;
 	
 	public static Text text;
 	public static double text_size = 16.0; //all text is the same size (how lame!)

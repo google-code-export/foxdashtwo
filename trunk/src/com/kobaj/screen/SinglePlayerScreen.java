@@ -89,7 +89,7 @@ public class SinglePlayerScreen extends BaseScreen
 			{
 				if (test_level.player.quad_object.x_vel > 0)
 					move_amount += Constants.normal_acceleration;
-				else
+				else if(jump_time)
 					move_amount += Constants.normal_reverse_acceleration;
 			}
 			
@@ -97,7 +97,7 @@ public class SinglePlayerScreen extends BaseScreen
 			{
 				if (test_level.player.quad_object.x_vel < 0)
 					move_amount += -Constants.normal_acceleration;
-				else
+				else if(jump_time)
 					move_amount += -Constants.normal_reverse_acceleration;
 			}
 			

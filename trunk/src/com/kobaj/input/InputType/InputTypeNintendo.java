@@ -18,21 +18,19 @@ public class InputTypeNintendo extends InputTypeBase
 	public void onInitialize()
 	{
 		//these will be replaced with images in the future.
-		double circle_size = Constants.input_circle_width;
-		double shader_circle_size_x = Functions.screenWidthToShaderWidth(circle_size);
-		double shader_circle_pos_y = Functions.screenYToShaderY(circle_size);
+		double shader_circle_pos_y = Functions.screenYToShaderY(Constants.input_circle_width);
 		
 		//left
-		my_quad_left = new QuadColorShape(circle_size, Constants.input_draw_color, 0);
+		my_quad_left = new QuadColorShape(Constants.input_circle_width, Constants.input_draw_color, 0);
 		my_quad_left.setPos(Functions.screenXToShaderX(Constants.input_circle_width), shader_circle_pos_y, EnumDrawFrom.bottom_left);
 		
 		//right
-		my_quad_right = new QuadColorShape(circle_size, Constants.input_draw_color, 0);
+		my_quad_right = new QuadColorShape(Constants.input_circle_width, Constants.input_draw_color, 0);
 		my_quad_right.setPos(Functions.screenXToShaderX(Constants.input_circle_width * 3), shader_circle_pos_y, EnumDrawFrom.bottom_left);
 		
 		//jump
-		my_quad_jump = new QuadColorShape(circle_size, Constants.input_draw_color, 0);
-		my_quad_jump.setPos(Functions.screenXToShaderX(Constants.width - circle_size), shader_circle_pos_y, EnumDrawFrom.bottom_right);
+		my_quad_jump = new QuadColorShape(Constants.input_circle_width, Constants.input_draw_color, 0);
+		my_quad_jump.setPos(Functions.screenXToShaderX(Constants.width - Constants.input_circle_width), shader_circle_pos_y, EnumDrawFrom.bottom_right);
 		
 		my_ambient_light = new AmbientLight();
 	}

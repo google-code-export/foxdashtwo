@@ -132,7 +132,7 @@ public class Text
 			
 			// stuff it in the buffer
 			// note this automatically destroys the bitmap
-			bitmap_buffer.put(key, new Quad(key, bitmap_temp));
+			bitmap_buffer.put(key, new Quad(key, bitmap_temp, bitmap_temp.getWidth(), bitmap_temp.getHeight()));
 			
 			count++;
 		}

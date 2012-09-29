@@ -12,7 +12,7 @@ import android.opengl.GLES20;
 public class QuadRenderTo extends Quad
 {
 	// RENDER TO TEXTURE VARIABLES
-	private int[] fb, depthRb, renderTex;
+	private int fb, depthRb;
 	private int texW;
 	private int texH;
 	private IntBuffer texBuffer;
@@ -31,15 +31,15 @@ public class QuadRenderTo extends Quad
 		texH = square;
 		
 		setupRenderToTexture();
-		onCreate(renderTex[0], orig_tex_w, orig_tex_h);
+		onCreate(my_texture_data_handle, orig_tex_w, orig_tex_h);
 		complexUpdateTexCoords(0, (float) com.kobaj.math.Functions.linearInterpolateUnclamped(0, square, orig_tex_w, 0, 1), 
 							   1.0f - (float) com.kobaj.math.Functions.linearInterpolateUnclamped(0, square, orig_tex_h, 0, 1), 1);
 	}
 	
 	private void setupRenderToTexture() {
-		fb = new int[1];
-		depthRb = new int[1];
-		renderTex = new int[1];
+		int[] fb = new int[1];
+		int[] depthRb = new int[1];
+		int[] renderTex = new int[1];
 		
 		// generate
 		GLES20.glGenFramebuffers(1, fb, 0);
@@ -64,20 +64,23 @@ public class QuadRenderTo extends Quad
 		GLES20.glBindRenderbuffer(GLES20.GL_RENDERBUFFER, depthRb[0]);
 		GLES20.glRenderbufferStorage(GLES20.GL_RENDERBUFFER, GLES20.GL_DEPTH_COMPONENT16, texW, texH);
 		
-		this.my_texture_data_handle = this.renderTex[0];
+		this.my_texture_data_handle = renderTex[0];
+		this.depthRb = depthRb[0];
+		this.fb = fb[0];
 	}
 	
 	public boolean beginRenderToTexture()
 	{	
-		GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, fb[0]);
-			
-		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+		GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, fb);
 		
 		// specify texture as color attachment
-		GLES20.glFramebufferTexture2D(GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0, GLES20.GL_TEXTURE_2D, renderTex[0], 0);		
+		GLES20.glFramebufferTexture2D(GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0, GLES20.GL_TEXTURE_2D, my_texture_data_handle, 0);		
 		
 		// attach render buffer as depth buffer
-		GLES20.glFramebufferRenderbuffer(GLES20.GL_FRAMEBUFFER, GLES20.GL_DEPTH_ATTACHMENT, GLES20.GL_RENDERBUFFER, depthRb[0]);
+		GLES20.glFramebufferRenderbuffer(GLES20.GL_FRAMEBUFFER, GLES20.GL_DEPTH_ATTACHMENT, GLES20.GL_RENDERBUFFER, depthRb);
+		
+		//clear
+		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 		
 		// check status
 		int status = GLES20.glCheckFramebufferStatus(GLES20.GL_FRAMEBUFFER);

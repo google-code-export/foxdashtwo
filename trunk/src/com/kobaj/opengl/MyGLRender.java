@@ -13,6 +13,7 @@ import com.kobaj.audio.MusicPlayList;
 import com.kobaj.audio.Sound;
 import com.kobaj.math.Constants;
 import com.kobaj.math.FPSManager;
+import com.kobaj.math.Functions;
 import com.kobaj.math.Physics;
 import com.kobaj.opengldrawable.Text;
 import com.kobaj.openglgraphics.AmbientLightShader;
@@ -82,6 +83,9 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		Constants.text = new Text();
 		
 		onInitialize();
+		
+		//after all that, see if we have any opengl errors
+		Functions.checkGlError();
 	}
 	
 	public void onSurfaceDestroyed()
