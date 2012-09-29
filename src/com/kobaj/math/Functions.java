@@ -212,14 +212,24 @@ public class Functions
 		return Math.toDegrees(Math.atan2(y, x));
 	}
 	
+	public static final double polarRadToX(double rads, double radius)
+	{
+		return radius * Math.sin(rads);
+	}
+	
+	public static final double polarRadToY(double rads, double radius)
+	{
+		return radius * Math.cos(rads);
+	}
+	
 	public static final double polarToX(double degree, double radius)
 	{
-		return radius * Math.sin(Math.toRadians(degree));
+		return polarRadToX(Math.toRadians(degree), radius);
 	}
 	
 	public static final double polarToY(double degree, double radius)
 	{
-		return radius * Math.cos(Math.toRadians(degree));
+		return polarRadToY(Math.toRadians(degree), radius);
 	}
 	
 	// not really a math function, but we need a static error check for open gl
