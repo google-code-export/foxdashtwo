@@ -37,4 +37,18 @@ public class TitleScreen extends BaseScreen
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void onLoad()
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onDrawLoading(double delta)
+	{
+		// TODO Auto-generated method stub
+		
+	}
 }

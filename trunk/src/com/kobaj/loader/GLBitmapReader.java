@@ -22,6 +22,8 @@ public class GLBitmapReader
 	// it can contain sounds and other actually loaded resources.
 	// but most likely not :/
 	public static SparseArray<GLLoadedTexture> loaded_textures = new SparseArray<GLLoadedTexture>();
+	
+	// way of giving out resource id's to objects that dont have them natively
 	private static int loaded_resource_id = 9;
 	
 	// in case context is lost
@@ -30,7 +32,7 @@ public class GLBitmapReader
 		loaded_textures = new SparseArray<GLLoadedTexture>();
 	}
 	
-	//get a new unused resource id
+	// get a new unused resource id
 	public static int newResourceID()
 	{
 		loaded_resource_id++;
@@ -63,72 +65,69 @@ public class GLBitmapReader
 	public static void loadTextureFromBitmap(final int resource, final Bitmap temp)
 	{
 		FoxdashtwoActivity.mGLView.queueEvent(new Runnable() { public void run() {
-				
-				//get an item from our loaded resources (to see if this is a duplicate entry and thus can be skipped).
-				GLLoadedTexture loaded_item = loaded_textures.get(resource);
-				if (loaded_item != null)
-				{
-					//see if its a duplicate
-					if(loaded_item.width != temp.getWidth() ||
-					   loaded_item.height != temp.getHeight() ||
-					   loaded_item.bitmap_hash != temp.hashCode())
-					
-					//there is a collision
+			
+			// get an item from our loaded resources (to see if this is a duplicate entry and thus can be skipped).
+			GLLoadedTexture loaded_item = loaded_textures.get(resource);
+			if (loaded_item != null)
+			{
+				// see if its a duplicate
+				if(loaded_item.width != temp.getWidth() ||
+						loaded_item.height != temp.getHeight() ||
+						loaded_item.bitmap_hash != temp.hashCode())
 					Log.e("loading_collision", ": loadTextureFromBitmap There was a collision with texture. Resource ID: " + resource + " ... " + loaded_item.bitmap_hash + ":" + temp.hashCode());
 				
-					//don't overwrite
-					return;
-				}
-				
-				// flip it the right way around.
-				Matrix flip = new Matrix();
-				flip.postScale(1f, -1f);
-				
-				int original_width = temp.getWidth();
-				int original_height = temp.getHeight();
-				int original_hash = temp.hashCode();
-				
-				Bitmap bmp1 = Bitmap.createBitmap(temp, 0, 0, original_width, original_height, flip, true);
-				temp.recycle();
-				
-				int square_width = com.kobaj.math.Functions.nearestPowerOf2(bmp1.getWidth());
-				int square_height = com.kobaj.math.Functions.nearestPowerOf2(bmp1.getHeight());
-				
-				int new_size = Math.max(square_width, square_height);
-				
-				Bitmap bmp = Bitmap.createBitmap(new_size, new_size, Bitmap.Config.ARGB_8888);
-				Canvas temp_canvas = new Canvas(bmp);
-				temp_canvas.drawBitmap(bmp1, 0, new_size - original_height, new Paint());
-				
-				bmp1.recycle();
-				
-				// In which ID will we be storing this texture?
-				int id = newTextureID();
-				GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, id);
-				
-				// make a loader
-				// put out info into someplace safe.
-				GLLoadedTexture load = new GLLoadedTexture();
-				load.resource_id = resource;
-				load.height = original_height;
-				load.width = original_width;
-				load.texture_id = id;
-				load.bitmap_hash = original_hash;
-				
-				// Set all of our texture parameters:
-				GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_REPEAT);
-				GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_REPEAT);
-				GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
-				GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
-				
-				// Push the bitmap onto the GPU:
-				GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bmp, 0);
-				
-				loaded_textures.put(resource, load);
-				
-				// cleanup!
-				bmp.recycle();
-			}});
+				// don't overwrite
+				return;
+			}
+			
+			// flip it the right way around.
+			Matrix flip = new Matrix();
+			flip.postScale(1f, -1f);
+			
+			int original_width = temp.getWidth();
+			int original_height = temp.getHeight();
+			int original_hash = temp.hashCode();
+			
+			Bitmap bmp1 = Bitmap.createBitmap(temp, 0, 0, original_width, original_height, flip, true);
+			temp.recycle();
+			
+			int square_width = com.kobaj.math.Functions.nearestPowerOf2(bmp1.getWidth());
+			int square_height = com.kobaj.math.Functions.nearestPowerOf2(bmp1.getHeight());
+			
+			int new_size = Math.max(square_width, square_height);
+			
+			Bitmap bmp = Bitmap.createBitmap(new_size, new_size, Bitmap.Config.ARGB_8888);
+			Canvas temp_canvas = new Canvas(bmp);
+			temp_canvas.drawBitmap(bmp1, 0, new_size - original_height, new Paint());
+			
+			bmp1.recycle();
+			
+			// In which ID will we be storing this texture?
+			int id = newTextureID();
+			GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, id);
+			
+			// make a loader
+			// put out info into someplace safe.
+			GLLoadedTexture load = new GLLoadedTexture();
+			load.resource_id = resource;
+			load.height = original_height;
+			load.width = original_width;
+			load.texture_id = id;
+			load.bitmap_hash = original_hash;
+			
+			// Set all of our texture parameters:
+			GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_REPEAT);
+			GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_REPEAT);
+			GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
+			GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
+			
+			// Push the bitmap onto the GPU:
+			GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bmp, 0);
+			
+			loaded_textures.put(resource, load);
+			
+			// cleanup!
+			bmp.recycle();
+		}});
 	}
-	
 }

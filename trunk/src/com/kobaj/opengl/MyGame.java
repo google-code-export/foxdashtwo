@@ -8,13 +8,14 @@ import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.EnumDrawFrom;
 import com.kobaj.opengldrawable.Quad.QuadRenderTo;
 import com.kobaj.screen.BaseScreen;
+import com.kobaj.screen.EnumScreenState;
 import com.kobaj.screen.SinglePlayerScreen;
 
 public class MyGame extends MyGLRender
 {	
 	//test screen
-	SinglePlayerScreen single_player_screen;
-	BaseScreen currently_active_screen;
+	private SinglePlayerScreen single_player_screen;
+	private BaseScreen currently_active_screen;
 	
 	//dont touch the stuff below this line
 	//final drawable.
@@ -27,7 +28,7 @@ public class MyGame extends MyGLRender
     }
     
 	@Override
-	void onInitialize()
+	protected void onInitialize()
 	{
 		//begin by aligning our functions
 		Functions.adjustConstantsToScreen();
@@ -44,16 +45,36 @@ public class MyGame extends MyGLRender
 	}
 	
 	@Override
-	public void onUpdate(double delta)
+	protected void onUpdate(double delta)
 	{
-		currently_active_screen.onUpdate(delta);
+		if(currently_active_screen.current_state == EnumScreenState.running)
+			currently_active_screen.onUpdate(delta);
 	}
 	
 	@Override
-	void onDraw()
+	protected void onDraw()
 	{	
 		GLES20.glUseProgram(Constants.ambient_light.my_shader);
 		
+		currently_active_screen.al_ambient_light.applyShaderProperties();
+		
+		
+		if(currently_active_screen.current_state == EnumScreenState.running)
+			onRunningDraw();
+		else if(currently_active_screen.current_state == EnumScreenState.loading)
+			onLoadingDraw();
+		
+		//fps
+		Constants.text.DrawNumber(fps.fps, Functions.screenXToShaderX(25), Functions.screenYToShaderY((int)Functions.fix_y(25)), EnumDrawFrom.top_left);
+	}
+	
+	private void onLoadingDraw()
+	{
+		currently_active_screen.onDrawLoading(fps.getDelta());
+	}
+	
+	private void onRunningDraw()
+	{	
 		//regular objects
 		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA); // no see thru
 		if(scene.beginRenderToTexture())
@@ -70,6 +91,7 @@ public class MyGame extends MyGLRender
 		currently_active_screen.onDrawLight();
 		
 		//reset the camera so the following is drawn correctly
+		//TODO make this use identity in the future.
 		Matrix.setIdentityM(Constants.my_view_matrix, 0);
 		
 		//final scene
@@ -78,15 +100,14 @@ public class MyGame extends MyGLRender
 		
 		//text below this line
 		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA); // no see thru
-		Constants.text.DrawNumber(fps.fps, Functions.screenXToShaderX(25), Functions.screenYToShaderY((int)Functions.fix_y(25)), EnumDrawFrom.top_left);
 		currently_active_screen.onDrawConstant();
 	
 		//move the camera back
-		Matrix.translateM(Constants.my_view_matrix, 0, (float) Constants.x_shader_translation, (float) Constants.y_shader_translation, 0);
+		Matrix.translateM(Constants.my_view_matrix, 0, (float) Constants.x_shader_translation, (float) Constants.y_shader_translation, 0);	
 	}
 
 	@Override
-	void onPause()
+	protected void onPause()
 	{
 		
 	}

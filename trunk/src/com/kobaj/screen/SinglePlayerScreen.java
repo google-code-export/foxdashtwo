@@ -10,6 +10,8 @@ import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.EnumDrawFrom;
 import com.kobaj.opengldrawable.Quad.QuadColorShape;
 import com.kobaj.openglgraphics.AmbientLight;
+import com.kobaj.screenaddons.BaseDebugScreen;
+import com.kobaj.screenaddons.BaseLoadingScreen;
 
 public class SinglePlayerScreen extends BaseScreen
 {
@@ -19,17 +21,16 @@ public class SinglePlayerScreen extends BaseScreen
 	// get to drawing stuff
 	private QuadColorShape real_ambient_light;
 	
-	//0,0
-	private QuadColorShape zero_screen;
-	
-	// basic light
-	private AmbientLight al_ambient_light;
-	
 	// test level
 	private com.kobaj.level.Level test_level;
 	
+	//addons
+	BaseDebugScreen debug_addon;
+	BaseLoadingScreen loading_addon;
+	
 	public SinglePlayerScreen()
 	{
+		//initialize everything
 		my_modifier = new GameInputModifier();
 		
 		/*
@@ -41,23 +42,38 @@ public class SinglePlayerScreen extends BaseScreen
 		 */
 		
 		test_level = com.kobaj.loader.XMLHandler.readSerialFile(com.kobaj.math.Constants.resources, R.raw.test_level, com.kobaj.level.Level.class);
-	
 	}
 	
 	@Override
-	public void onInitialize()
+	public void onLoad()
 	{
-		al_ambient_light = new AmbientLight();
+		//load our addons. Do the loader first
+		loading_addon = new BaseLoadingScreen();
+		debug_addon = new BaseDebugScreen();
 		
+		//main light
 		real_ambient_light = new QuadColorShape(0, Constants.height, Constants.width, 0, 0xFF444444, 0);
 		
-		zero_screen = new QuadColorShape(4, Color.YELLOW, 0);
-		zero_screen.setPos(Functions.screenXToShaderX(0), Functions.screenYToShaderY(465), EnumDrawFrom.center);
-		
+		//level
 		if (test_level != null)
 			test_level.onInitialize();
 		
+		//control input
 		my_modifier.onInitialize();
+		
+		//put in some fake loading time.
+		for(int i = 0; i < 6; i++)
+		{
+			try
+			{
+				Thread.sleep(1000);
+			}
+			catch (InterruptedException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	@Override
@@ -160,48 +176,18 @@ public class SinglePlayerScreen extends BaseScreen
 	@Override
 	public void onDrawObject()
 	{
-		al_ambient_light.applyShaderProperties();
-		
 		// player
 		test_level.player.quad_object.onDrawAmbient();
 		
 		for (com.kobaj.level.LevelObject level_object : test_level.object_array)
 			level_object.quad_object.onDrawAmbient();
 		
-		// draw some helpful bounding boxes
-		/*
-		 * for(com.kobaj.level.LevelObject level_object:
-		 * test_level.object_array) for(int i =
-		 * level_object.quad_object.phys_rect_list.size() - 1; i>= 0; i--)
-		 * onDrawBoundingBox
-		 * (level_object.quad_object.phys_rect_list.get(i).main_rect); for(int i
-		 * = test_level.player.quad_object.phys_rect_list.size() - 1; i>= 0;
-		 * i--)
-		 * onDrawBoundingBox(test_level.player.quad_object.phys_rect_list.get
-		 * (i).main_rect);
-		 */
+		//draw some helpful bounding boxes
+		//debug_addon.onDrawObject(test_level);
 		
 		for (com.kobaj.level.LevelLight level_light : test_level.light_array)
 			if (level_light.is_bloom)
 				level_light.quad_bloom.onDrawAmbient();
-		
-		zero_screen.onDrawAmbient();
-	}
-	
-	private void onDrawBoundingBox(RectF bounding_box)
-	{
-		double left = Functions.shaderXToScreenX(bounding_box.left);
-		double top = Functions.shaderYToScreenY(bounding_box.top);
-		double right = Functions.shaderXToScreenX(bounding_box.right);
-		double bottom = Functions.shaderYToScreenY(bounding_box.bottom);
-		
-		double x_center = bounding_box.centerX();
-		double y_center = bounding_box.centerY();
-		
-		// holy garbage creation batman
-		QuadColorShape outline = new QuadColorShape((int) left, (int) top, (int) right, (int) bottom, 0x99FF00FF, 0);
-		outline.setPos(x_center, y_center, EnumDrawFrom.center);
-		outline.onDrawAmbient(Constants.my_view_matrix, Constants.my_proj_matrix, Constants.ambient_light, true);
 	}
 	
 	@Override
@@ -218,5 +204,13 @@ public class SinglePlayerScreen extends BaseScreen
 	{
 		//draw the controls
 		my_modifier.onDraw();
+	}
+
+	@Override
+	public void onDrawLoading(double delta)
+	{
+		//we want all loading screens to look the same, so we use this helper loader thingy :)
+		if(loading_addon != null)
+			loading_addon.onDrawLoading(delta);
 	}
 }

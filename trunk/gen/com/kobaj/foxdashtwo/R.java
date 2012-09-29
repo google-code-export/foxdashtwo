@@ -27,9 +27,9 @@ public final class R {
         public static final int test_level=0x7f040003;
     }
     public static final class string {
-        public static final int app_name=0x7f050002;
+        public static final int app_name=0x7f050001;
         public static final int blank=0x7f050003;
-        public static final int hello=0x7f050001;
-        public static final int unknown_screen_size_message=0x7f050000;
+        public static final int hello=0x7f050000;
+        public static final int loading=0x7f050002;
     }
 }

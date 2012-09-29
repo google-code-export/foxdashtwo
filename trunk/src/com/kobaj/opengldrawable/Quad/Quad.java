@@ -30,7 +30,7 @@ public class Quad
 	// and placed in the exact center of the quad
 	private double x_pos = 0.0;
 	private double y_pos = 0.0;
-	public EnumDrawFrom currently_drawn;
+	public EnumDrawFrom currently_drawn = EnumDrawFrom.center;
 	
 	//I would much rather extend a physics object
 	//but that wouldn't really fit in with this model.

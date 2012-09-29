@@ -55,7 +55,7 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		Constants.physics = new Physics();
 	}
 	
-	abstract void onInitialize();
+	protected abstract void onInitialize();
 	
 	public void onSurfaceChanged(GL10 unused, int width, int height)
 	{
@@ -103,7 +103,7 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		onDraw();
 	}
 	
-	abstract void onDraw();
+	protected abstract void onDraw();
 	
 	public void onUpdateFrame()
 	{
@@ -113,12 +113,12 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		onUpdate(fps.getDelta());
 	}
 	
-	abstract void onUpdate(double delta);
+	protected abstract void onUpdate(double delta);
 	
 	public void onScreenPause()
 	{
 		onPause();
 	}
 	
-	abstract void onPause();
+	protected abstract void onPause();
 }
