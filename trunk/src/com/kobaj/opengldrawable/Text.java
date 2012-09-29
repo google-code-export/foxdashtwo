@@ -141,8 +141,15 @@ public class Text
 	}
 	
 	// x and y are in shader coordinates 0 to 1
-	public void DrawNumber(int this_number, double x, double y, EnumDrawFrom where)
+	public void drawNumber(int this_number, double x, double y, EnumDrawFrom where)
 	{
+		drawNumber(this_number, x, y, where, Color.WHITE);
+	}
+	
+	public void drawNumber(int this_number, double x, double y, EnumDrawFrom where, int color)
+	{
+		my_ambient_light.color = color;
+		
 		double total_width = 0;
 		
         // set the light
@@ -187,12 +194,19 @@ public class Text
 			
 			//continue
 			number = number / 10;
-		}
+		}	
 	}
 	
 	// x and y are in shader coordinates 0 to 1
-	public void DrawText(int resource_value, double x, double y, EnumDrawFrom where)
+	public void drawText(int resource_value, double x, double y, EnumDrawFrom where)
 	{
+		drawText(resource_value, x, y, where, Color.WHITE);
+	}
+	
+	public void drawText(int resource_value, double x, double y, EnumDrawFrom where, int color)
+	{
+		my_ambient_light.color = color;
+		
 		if (bitmap_buffer.indexOfKey(resource_value) >= 0)
 		{
 			// optimize the gets

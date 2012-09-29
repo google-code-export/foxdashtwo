@@ -65,7 +65,7 @@ public class MyGame extends MyGLRender
 			onLoadingDraw();
 		
 		//fps
-		Constants.text.DrawNumber(fps.fps, Functions.screenXToShaderX(25), Functions.screenYToShaderY((int)Functions.fix_y(25)), EnumDrawFrom.top_left);
+		Constants.text.drawNumber(fps.fps, Functions.screenXToShaderX(25), Functions.screenYToShaderY((int)Functions.fix_y(25)), EnumDrawFrom.top_left);
 	}
 	
 	private void onLoadingDraw()
@@ -90,20 +90,13 @@ public class MyGame extends MyGLRender
 		//put translucent (lights) here
 		currently_active_screen.onDrawLight();
 		
-		//reset the camera so the following is drawn correctly
-		//TODO make this use identity in the future.
-		Matrix.setIdentityM(Constants.my_view_matrix, 0);
-		
 		//final scene
 		GLES20.glBlendFunc(GLES20.GL_DST_COLOR, GLES20.GL_ZERO); // masking
-		scene.onDrawAmbient(Constants.my_view_matrix, Constants.my_proj_matrix, Constants.ambient_light, true);
+		scene.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, Constants.ambient_light, true);
 		
 		//text below this line
 		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA); // no see thru
-		currently_active_screen.onDrawConstant();
-	
-		//move the camera back
-		Matrix.translateM(Constants.my_view_matrix, 0, (float) Constants.x_shader_translation, (float) Constants.y_shader_translation, 0);	
+		currently_active_screen.onDrawConstant();	
 	}
 
 	@Override

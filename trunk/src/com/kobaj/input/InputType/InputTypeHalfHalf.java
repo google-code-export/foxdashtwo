@@ -79,7 +79,7 @@ public class InputTypeHalfHalf extends InputTypeBase
 			my_ambient_light.brightness = Constants.max_brightness;
 		my_ambient_light.applyShaderProperties();
 		my_quad.setPos(Functions.screenXToShaderX(1), Functions.screenYToShaderY(0), EnumDrawFrom.bottom_left);
-		my_quad.onDrawAmbient(Constants.my_view_matrix, Constants.my_proj_matrix, Constants.ambient_light, true);
+		my_quad.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, Constants.ambient_light, true);
 		
 		//draw right
 		if(getTouchedRight())
@@ -88,6 +88,6 @@ public class InputTypeHalfHalf extends InputTypeBase
 			my_ambient_light.brightness = Constants.max_brightness;
 		my_ambient_light.applyShaderProperties();
 		my_quad.setPos(Functions.screenXToShaderX(Constants.width), Functions.screenYToShaderY(0), EnumDrawFrom.bottom_right);
-		my_quad.onDrawAmbient(Constants.my_view_matrix, Constants.my_proj_matrix, Constants.ambient_light, true);	
+		my_quad.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, Constants.ambient_light, true);	
 	}
 }

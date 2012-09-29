@@ -263,6 +263,7 @@ public class Quad
 		
 		
 		// set the quad up
+		//Functions.setIdentity(my_model_matrix);	
 		Matrix.setIdentityM(my_model_matrix, 0);
 		Matrix.translateM(my_model_matrix, 0, (float) x_pos, (float) y_pos, (float) z_pos);
 		

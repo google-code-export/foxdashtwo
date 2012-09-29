@@ -103,18 +103,18 @@ public class SinglePlayerScreen extends BaseScreen
 			
 			if (my_modifier.getInputType().getTouchedRight())
 			{
-				if (test_level.player.quad_object.x_vel > 0)
-					move_amount += Constants.normal_acceleration;
-				else if(jump_time)
+				if(jump_time)
 					move_amount += Constants.normal_reverse_acceleration;
+				else
+					move_amount += Constants.normal_acceleration;
 			}
 			
 			if(my_modifier.getInputType().getTouchedLeft())
 			{
-				if (test_level.player.quad_object.x_vel < 0)
-					move_amount += -Constants.normal_acceleration;
-				else if(jump_time)
+				if(jump_time)
 					move_amount += -Constants.normal_reverse_acceleration;
+				else
+					move_amount += -Constants.normal_acceleration;
 			}
 			
 			// if in the air, apply a damping.
