@@ -227,7 +227,7 @@ public class Functions
 	{
 		int error;
 		while ((error = GLES20.glGetError()) != GLES20.GL_NO_ERROR)
-			Log.e("gl_error", ": glError " + error);
+			Log.e("gl_error", ": checkGlError " + error);
 	}
 	
 	// thanks to http://www.gamedev.net/topic/229831-nearest-power-of-2/

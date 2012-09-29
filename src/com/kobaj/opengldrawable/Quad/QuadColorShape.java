@@ -1,5 +1,6 @@
 package com.kobaj.opengldrawable.Quad;
 
+import com.kobaj.loader.GLBitmapReader;
 import com.kobaj.math.Functions;
 
 import android.graphics.Bitmap;
@@ -18,14 +19,14 @@ public class QuadColorShape extends Quad
 	//square/rectangle
 	public QuadColorShape(int left, int top, int right, int bottom, int color, int blur_amount)
 	{	
-		super(findKey(), Functions.fastBlur(makeSquare(left, top, right, bottom, color), blur_amount));
+		super(GLBitmapReader.newResourceID(), Functions.fastBlur(makeSquare(left, top, right, bottom, color), blur_amount), right-left, top-bottom);
 	}
 	
 	//this is in screen coordinates 0-800
 	//circle
 	public QuadColorShape(double radius, int color, int blur_amount)
 	{
-		super(findKey(), Functions.fastBlur(makeCircle(radius, color), blur_amount));
+		super(GLBitmapReader.newResourceID(), Functions.fastBlur(makeCircle(radius, color), blur_amount), (int)radius * 2, (int)radius * 2);
 	}
 	
 	//gradient circle
@@ -35,25 +36,14 @@ public class QuadColorShape extends Quad
 	//this is in screen coordinates 0-800
 	public QuadColorShape(double radius, int color, boolean is_bloom, int blur_amount)
 	{
-		super(findKey(), Functions.fastBlur(makeCircleGradient(radius, color, is_bloom), blur_amount));
+		super(GLBitmapReader.newResourceID(), Functions.fastBlur(makeCircleGradient(radius, color, is_bloom), blur_amount), (int)radius * 2, (int)radius * 2);
 	}
 	
 	//gradient circle with mask
 	//this is in screen coordinates 0-800
 	public QuadColorShape(double radius, int color, int close_width, int far_width, double degree, boolean is_bloom, int blur_amount)
 	{
-		super(findKey(), Functions.fastBlur(makeCircleGradientWithMask(radius, color, close_width, far_width, degree, is_bloom), blur_amount));
-	}
-	
-	private static int findKey()
-	{
-		int key = 20;
-		//could potentially get slow
-		//but I hope nobody is making thousands of quads and getting to that slow point.
-		while(com.kobaj.loader.GLBitmapReader.loaded_textures.get(key) != null)
-			key += 1;
-		
-		return key;	
+		super(GLBitmapReader.newResourceID(), Functions.fastBlur(makeCircleGradientWithMask(radius, color, close_width, far_width, degree, is_bloom), blur_amount), (int)radius * 2, (int)radius * 2);
 	}
 	
 	private static Bitmap makeSquare(int left, int top, int right, int bottom, int color)

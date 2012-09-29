@@ -13,6 +13,7 @@ import android.graphics.Bitmap;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 
+import com.kobaj.loader.GLBitmapReader;
 import com.kobaj.loader.GLLoadedTexture;
 import com.kobaj.math.ExtendedRectF;
 import com.kobaj.math.Functions;
@@ -63,7 +64,8 @@ public class Quad
 	private float[] my_mvp_matrix = new float[16];
 	
 	// handle to texture
-	protected int my_texture_data_handle;
+	protected int my_texture_data_handle = -1;
+	private int texture_resource = -1;
 	
 	//constructores
 	protected Quad()
@@ -71,41 +73,44 @@ public class Quad
 		//do nothing. Assume whoever is extending knows what he/she is doing.
 	}
 	
-	public Quad(int texture_resource)
-	{
-		this(texture_resource, -1, -1);
-	}
-	
 	public Quad(int texture_resource, int width, int height)
 	{
 		// load dat texture.
-		my_texture_data_handle = com.kobaj.loader.GLBitmapReader.loadTextureFromResource(texture_resource);
+		com.kobaj.loader.GLBitmapReader.loadTextureFromResource(texture_resource);
 		onCreate(texture_resource, width, height);
-	}
-	
-	public Quad(int texture_resource, Bitmap bmp)
-	{
-		this(texture_resource, bmp, -1, -1);
 	}
 	
 	public Quad(int texture_resource, Bitmap bmp, int width, int height)
 	{
-		my_texture_data_handle = com.kobaj.loader.GLBitmapReader.loadTextureFromBitmap(texture_resource, bmp);
+		com.kobaj.loader.GLBitmapReader.loadTextureFromBitmap(texture_resource, bmp);
 		onCreate(texture_resource, width, height);
+	}
+	
+	//method that will go and get the texture handle after it has been loaded so that we can draw the texture!
+	private boolean setTextureDataHandle()
+	{
+		if(my_texture_data_handle != -1)
+			return true;
+		
+		if(texture_resource != -1)
+		{
+			GLLoadedTexture proposed_handle = GLBitmapReader.loaded_textures.get(texture_resource);
+			if(proposed_handle != null)
+			{
+				my_texture_data_handle = proposed_handle.texture_id;
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	//actual constructor
 	//width and height in screen coordinates 0 - 800
 	protected void onCreate(int texture_resource, int width, int height)
-	{
-		if (width == -1 && height == -1)
-		{
-			//optimize get
-			GLLoadedTexture gl_loaded_texture = com.kobaj.loader.GLBitmapReader.loaded_textures.get(texture_resource); 
-			
-			width = gl_loaded_texture.width;
-			height = gl_loaded_texture.height;
-		}
+	{	
+		//set our texture resource
+		this.texture_resource = texture_resource;
 		
 		//store these for our bounding rectangle
 		this.width = width;
@@ -304,6 +309,10 @@ public class Quad
 	
 	public void onDrawAmbient(float[] my_view_matrix, float[] my_proj_matrix, AmbientLightShader ambient_light, boolean skip_draw_check)
 	{
+		//if we have a handle, draw.
+		if(!setTextureDataHandle())
+			return;
+		
 		//If on screen, draw.
 		if(skip_draw_check || com.kobaj.math.Functions.onShader(phys_rect_list))
 		{
