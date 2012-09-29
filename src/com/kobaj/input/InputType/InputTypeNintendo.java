@@ -104,7 +104,7 @@ public class InputTypeNintendo extends InputTypeBase
 		else
 			my_ambient_light.brightness = Constants.max_brightness;
 		my_ambient_light.applyShaderProperties();
-		my_quad_left.onDrawAmbient(Constants.my_view_matrix, Constants.my_proj_matrix, Constants.ambient_light, true);
+		my_quad_left.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, Constants.ambient_light, true);
 		
 		//right
 		if(getTouchedRight())
@@ -112,7 +112,7 @@ public class InputTypeNintendo extends InputTypeBase
 		else
 			my_ambient_light.brightness = Constants.max_brightness;
 		my_ambient_light.applyShaderProperties();
-		my_quad_right.onDrawAmbient(Constants.my_view_matrix, Constants.my_proj_matrix, Constants.ambient_light, true);
+		my_quad_right.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, Constants.ambient_light, true);
 		
 		//jump
 		if(getTouchedJump())
@@ -120,6 +120,6 @@ public class InputTypeNintendo extends InputTypeBase
 		else
 			my_ambient_light.brightness = Constants.max_brightness;
 		my_ambient_light.applyShaderProperties();
-		my_quad_jump.onDrawAmbient(Constants.my_view_matrix, Constants.my_proj_matrix, Constants.ambient_light, true);
+		my_quad_jump.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, Constants.ambient_light, true);
 	}
 }
