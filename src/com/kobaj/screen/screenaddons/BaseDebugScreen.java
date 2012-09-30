@@ -1,4 +1,4 @@
-package com.kobaj.screenaddons;
+package com.kobaj.screen.screenaddons;
 
 import android.graphics.RectF;
 
@@ -13,7 +13,7 @@ public class BaseDebugScreen
 	public void onDrawObject(Level test_level)
 	{
 		// draw some helpful bounding boxes
-		for (com.kobaj.level.LevelObject level_object : test_level.object_array)
+		for (com.kobaj.level.LevelObject level_object : test_level.object_list)
 			for (int i = level_object.quad_object.phys_rect_list.size() - 1; i >= 0; i--)
 				onDrawBoundingBox(level_object.quad_object.phys_rect_list.get(i).main_rect);
 		for (int i = test_level.player.quad_object.phys_rect_list.size() - 1; i >= 0; i--)

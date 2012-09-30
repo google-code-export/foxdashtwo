@@ -61,7 +61,7 @@ public class Constants
 	public static double jump_limiter;
 	
 	//same regardless of screen.
-	public static final double normal_air_damping  			= .5;
+	public static final double normal_air_damping  			= .90;
 	public static final double normal_friction 				= .011;
 	
 	//input constants

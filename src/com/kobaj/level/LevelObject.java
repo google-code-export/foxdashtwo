@@ -20,6 +20,10 @@ public class LevelObject
 	public double y_pos; //screen coordinates
 	@Element
 	public double z_plane; //generally 0-10, with 0 being closes to the 'front'
+	@Element
+	public boolean active;
+	@Element
+	public int id;
 	
 	public Quad quad_object;
 	
@@ -33,5 +37,10 @@ public class LevelObject
 		
 		quad_object.z_pos -= (z_plane * Constants.z_modifier);
 		quad_object.setPos(com.kobaj.math.Functions.screenXToShaderX(x_pos), com.kobaj.math.Functions.screenYToShaderY(y_pos), draw_from);
+	}
+	
+	public void onDrawObject()
+	{
+		quad_object.onDrawAmbient();
 	}
 }
