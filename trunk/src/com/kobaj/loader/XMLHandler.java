@@ -16,7 +16,7 @@ import android.util.Log;
 
 public class XMLHandler
 {
-	private final static String file_directory = "/com.kobaj.foxdashtwo";
+	private final static String file_directory = "/foxdashtwo";
 	private final static String error_tag = "XML Serial Error";
 	private final static String save_format = ".xml";
 	private final static String file_format = "UTF-8";
@@ -56,7 +56,7 @@ public class XMLHandler
 			Serializer serial = new Persister();
 			
 			File sdCard = Environment.getExternalStorageDirectory();
-			File dir = new File(sdCard.getAbsolutePath() + "/com.kobaj.foxdashtwo");
+			File dir = new File(sdCard.getAbsolutePath() + file_directory);
 			dir.mkdirs();
 			
 			File sdcardFile = new File(dir, fileName + save_format);

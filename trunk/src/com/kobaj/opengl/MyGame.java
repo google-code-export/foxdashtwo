@@ -1,7 +1,6 @@
 package com.kobaj.opengl;
 
 import android.opengl.GLES20;
-import android.opengl.Matrix;
 
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
@@ -27,14 +26,14 @@ public class MyGame extends MyGLRender
     	currently_active_screen = single_player_screen;
     }
     
+	
+	//for the record this is called everytime the screen is reset/paused/resumed
+	//all graphics are destroyed (dunno about sounds >.>).
 	@Override
 	protected void onInitialize()
 	{
 		//begin by aligning our functions
 		Functions.adjustConstantsToScreen();
-		
-		//for the record this is called everytime the screen is reset/paused/resumed
-		//all graphics are destroyed (dunno about sounds >.>).
 		
 		currently_active_screen.onInitialize();
 		

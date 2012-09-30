@@ -1,4 +1,4 @@
-package com.kobaj.screenaddons;
+package com.kobaj.screen.screenaddons;
 
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Constants;

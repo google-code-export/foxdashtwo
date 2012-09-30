@@ -130,6 +130,7 @@ public class QuadColorShape extends Quad
 		double diameter = radius * 2;
 		
 		//draw mask
+		//TODO double check and see if this is correct...(should width be able to be > radius?
 		if(half_far_width > radius)
 		{
 			double extra = half_far_width - radius;
