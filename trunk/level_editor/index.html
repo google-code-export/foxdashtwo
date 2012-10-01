@@ -2,26 +2,179 @@
 "http://www.w3.org/TR/html4/strict.dtd">
 <!--above line makes game playable in IE 9-->
 <html>
-	<head>
-		<script type="text/javascript" src="vector.js"></script>
-		<script type="text/javascript" src="globals.js"></script>
-		<script type="text/javascript" src="player.js"></script>
-		<script type="text/javascript" src="planet.js"></script>
-		<script type="text/javascript" src="drawing.js"></script>
-		<script type="text/javascript" src="gamemechanics.js"></script>
-		
-		<style type="text/css">
-		html, body {
-		  width:  100%;
-		  height: 100%;
-		  margin: 0px;
-		}
-		</style>
-	</head>
+<head>
+<script type="text/javascript" src="vector.js"></script>
+<script type="text/javascript" src="Player.js"></script>
+<script type="text/javascript" src="my_objects.js"></script>
+<script type="text/javascript" src="globals.js"></script>
+<script type="text/javascript" src="drawing.js"></script>
+<script type="text/javascript" src="gamemechanics.js"></script>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="interface.js"></script>
+
+<style type="text/css">
+html,body {
+	width: 100%;
+	height: 100%;
+	margin: 0px;
+	background-color: #aaaabb;
+	overflow: auto;
+}
+
+#tabcontent {
+	border: 1px solid black;
+	height: 735px;
+	background-color: white;
+	text-align: left;
+	padding: 5px;
+	width: 259px;
+}
+
+.taboption {
+	border: 1px solid black;
+	padding: 5px;
+	padding-bottom: 0px;
+	padding-top: 0px;
+	border-top-right-radius: 10px;
+	background-color: #ddd;
+	cursor: pointer;
+}
+
+.central_div {
+	margin-left: auto; 
+	margin-right: auto; 
+	margin-top: 10px; 
+	width: 1562px; 
+	overflow: auto;
+}
+
+h1, h2, h3, h4, h5, h6, h7{
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+
+label{
+	display: inline-block;
+    padding-right: 5px;
+    text-align: right;
+    width: 95px;
+    margin-top: 5px;
+}
+
+.control_scheme{
+	width: 50px;
+	height: 20p;
+	display: inline-block;
+}
+
+.control_scheme_button{
+	width: 50px;
+}
+
+.vertical_divider{
+	border-left: 1px solid black;
+	float: left;
+	height: 72px;
+	margin-left: 10px;
+}
+</style>
+
+<!--[if IE]>
+<style type="text/css">
+.taboption{
+	display: inline-block;
+	width: 39px;
+}
+</style>
+<![endif]-->
+
+
+</head>
+
+<!-- didload is in gameMechanics.js and init's the variables for the game and the canvas -->
+<body onLoad="didload(); interfaceload();">
+<div align="center" class="central_div">
+		<div style="float: left;" id="canvas"></div>
+		<div style="float: right;" id="tabholder">
+			<div id="tablist">
+				<span name="level" class="taboption">Level</span> 
+				<span name="player" class="taboption">Player</span> 
+				<span name="objects" class="taboption">Objects</span> 
+				<span name="lights" class="taboption">Lights</span> 
+				<span name="events" class="taboption">Events</span>
+			</div>
+			<div id="tabcontent">
+				<span class="tab_hideable">Hi! Welcome to the level editor for Fox Dash Two. Click
+					a tab to begin.</span>
+					
+						<!-- divs that go in tab content -->
+	<div class="tab_hideable" style="display: none;" id="tab_level">
+		<h4>Level Limits: </h4>
+		<label>left-limit: </label><input type="text" id="left-limit" value="0" /><br />
+		<label>top-limit: </label><input type="text" id="top-limit" value="750" /><br />
+		<label>right-limit: </label><input type="text" id="right-limit" value="1600" /><br />
+		<label>bottom-limit: </label><input type="text" id="bottom-limit" value="0" /><br />
+		<hr />
+	</div>
+
+	<div class="tab_hideable" style="display: none;" id="tab_player">
+		<h4>Player Position: </h4>
+		<label>X:</label><input type="text" id="player_x" value="25" /><br />
+		<label>Y:</label><input type="text" id="player_y" value="25" /><br />
+		<hr />
+	</div>
+
+	<div class="tab_hideable" style="display: none;" id="tab_objects">
+		<h4>Selected Object:</h4>
+		<div style="overflow: auto;">
+		<select style="float: right;" id="object_drop_down"><option value="">None</option></select>
+		</div>
+		<hr />
+		<h4>Object Type:</h4>
+		<div style="overflow: auto;">
+		<select style="float: right;" id="type_drop_down">
+		<option value="A1" my_width="200" my_height="200">A1</option>
+		<option value="A2" my_width="100" my_height="100">A2</option>
+		</select>
+		</div>
+		<hr />
+		<h4>Object Position: </h4>
+		<label>X:</label><input type="text" id="object_x" value="0" /><br />
+		<label>Y:</label><input type="text" id="object_y" value="0" /><br />
+		<hr />
+	</div>
+
+	<div class="tab_hideable" style="display: none;" id="tab_lights">lights</div>
+
+	<div class="tab_hideable" style="display: none;" id="tab_events">events</div>
+					
+			</div>
+		</div>
+		<button style="margin-top: 10px;" onClick="openLevelCode(false);">View/Edit
+			Level Code</button>
+	</div>
 	
-	<!-- didload is in gameMechanics.js and init's the variables for the game and the canvas -->
-	<body onLoad="didload()">
-		<div align="center" id="canvas"></div>
-		<center><button onClick="openLevelCode(false);">View/Edit Level Code</button></center>
-	</body>
+	<div class="central_div" style="background-color: white; border: 1px solid black;">
+	<div style="padding: 10px; overflow: auto;" >
+	
+	<div style="float: left; width: 150px;">
+		<span class="control_scheme"></span><span class="control_scheme"><input class="control_scheme_button" e="38" type="button" id="go_up" value="up" /></span> <br />
+		<span class="control_scheme"><input e="37" class="control_scheme_button" type="button" id="go_left" value="left" /></span><span class="control_scheme">&nbsp</span><span class="control_scheme"><input e="39" class="control_scheme_button" type="button" id="go_right" value="right" /></span> <br />
+		<span class="control_scheme"></span><span class="control_scheme"><input class="control_scheme_button" type="button" e="40" id="go_down" value="down" /></span> <br />
+	</div>
+	<div class="vertical_divider"></div>
+	<div style="float: left; margin-left: 10px;">
+		<label>Overlay Phone:</label><input type="checkbox" id="phonecheck" /><br />
+		<label>FPS:</label><input checked="checked" type="checkbox" id="fpscheck" /><br />
+		<label>Labels:</label><input checked="checked" type="checkbox" id="labelcheck" /><br />
+	</div>
+	<div class="vertical_divider" style="border: none;"></div>
+	<div style="float: left; margin-left: 10px;">
+		<label>MouseCoords:</label><input checked="checked" type="checkbox" id="mousecheck" /><br />
+	</div>
+		<div class="vertical_divider"></div>
+		
+	</div>
+	</div>
+</body>
 </html>

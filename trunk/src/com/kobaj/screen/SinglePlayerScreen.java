@@ -27,21 +27,22 @@ public class SinglePlayerScreen extends BaseScreen
 		
 		/*
 		  helpful while I build the level class
-		 */ 
+		  
 		com.kobaj.level.Level test = new com.kobaj.level.Level();
 		test.writeOut(); com.kobaj.loader.XMLHandler.writeSerialFile(test,
-		"test_level");
-		 
-		test_level = com.kobaj.loader.XMLHandler.readSerialFile(com.kobaj.math.Constants.resources, R.raw.test_level, com.kobaj.level.Level.class);
+		"test_level");*/
 	}
 	
 	@Override
 	public void onLoad()
-	{
+	{	
 		//load our addons. Do the loader first
 		loading_addon = new BaseLoadingScreen();
 		debug_addon = new BaseDebugScreen();
 		interaction_addon = new BaseInteractionScreen();
+	
+		//grab from disk
+		test_level = com.kobaj.loader.XMLHandler.readSerialFile(com.kobaj.math.Constants.resources, R.raw.test_level, com.kobaj.level.Level.class);
 		
 		//level
 		if (test_level != null)
