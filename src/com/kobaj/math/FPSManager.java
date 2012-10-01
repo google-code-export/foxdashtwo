@@ -4,8 +4,8 @@ package com.kobaj.math;
 public class FPSManager
 {
 	public int fps = 0;
-	private long lastTime = 0;
-	private long nowTime = 0;
+	private long last_time = 0;
+	private long now_time = 0;
 	private long delta = 0;
 	
 	private long reset = 0;
@@ -14,9 +14,9 @@ public class FPSManager
 	//call this method at the top of surfacepanel onUpdate
 	public void onUpdate(long gameTime)
 	{
-		nowTime = gameTime;
+		now_time = gameTime;
 		
-		delta = nowTime - lastTime;
+		delta = now_time - last_time;
 		
 		if (reset < wait)
 			reset += delta;
@@ -26,7 +26,7 @@ public class FPSManager
 			reset = 0;
 		}
 		
-		lastTime = nowTime;
+		last_time = now_time;
 	}
 	
 	// averages

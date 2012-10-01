@@ -57,7 +57,7 @@ public class Level
 		}
 		
 		//setup player
-		player.quad_object = new com.kobaj.opengldrawable.Quad.QuadColorShape(0, 64, 64, 0, Color.GRAY, 0);//new com.kobaj.opengldrawable.Quad(R.drawable.ic_launcher);
+		player.quad_object = new com.kobaj.opengldrawable.Quad.QuadColorShape(0, 64, 64, 0, Color.GRAY, 0);
 		player.quad_object.z_pos -= (player.z_plane * Constants.z_modifier);
 		player.quad_object.setPos(Functions.screenXToShaderX(player.x_pos), Functions.screenYToShaderY(player.y_pos), player.draw_from);
 	
