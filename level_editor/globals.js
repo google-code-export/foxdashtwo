@@ -24,7 +24,7 @@ var levelAdj = new Vector(-width/2, -height/2);
 var world_coords = new Vector(0,0);
 
 //movement of camera
-var multiplier = 2;
+var multiplier = 1;
 var left_vector = new Vector(-1 * multiplier, 0);
 var right_vector = new Vector(1 * multiplier,0);
 var up_vector = new Vector(0, 1 * multiplier);
