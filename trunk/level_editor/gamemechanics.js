@@ -4,25 +4,77 @@
  */
 
 /* begin with general event management*/
+var shift = false;
+
 function keypressed(e)
 {
 	//37 = left
 	//39 = right
 	//38 = up
 	//40 = down
+	//46 = delete
 	//alert(e.keyCode);
 	
-	//movement of screen
+	if(e.shiftKey)
+		shift = true;
+	
+	//move tabs
+	if(e.keyCode == 9 && !shift)
+	{
+		var current_select = parseInt($('.taboption[name="' + current_tab + '"]').attr('number'));
+		var next = $('.taboption[number="'+ (current_select + 1) +'"]');
+		if(next.length == 0)
+			next = $('.taboption[number="1"]');
+		next.trigger('click');
+		return false;
+	}
+	else if (e.keyCode == 9)
+	{
+		var current_select = parseInt($('.taboption[name="' + current_tab + '"]').attr('number'));
+		var next = $('.taboption[number="'+ (current_select - 1) +'"]');
+		if(next.length == 0)
+			next = $('.taboption').last();
+		next.trigger('click');
+		return false;
+	}
+	
+	var change_vector;
+	
 	if(e.keyCode == 37)
-		world_coords = world_coords.add(left_vector);
+		change_vector = left_vector;
 	else if(e.keyCode == 39)
-		world_coords = world_coords.add(right_vector);
+		change_vector = right_vector;
 	else if(e.keyCode == 38)
-		world_coords = world_coords.add(up_vector);
+		change_vector = up_vector;
 	else if(e.keyCode == 40)
-		world_coords = world_coords.add(down_vector);
+		change_vector = down_vector;
+	
+	//movement of screen
+	if(change_vector != null)
+	{
+		if(current_tab == "level" || current_tab == null)
+			world_coords = world_coords.add(change_vector);
+		else if(current_tab == "player")
+		{
+			$('#player_x').val(parseInt($('#player_x').val()) + change_vector.x);
+			$('#player_y').val(parseInt($('#player_y').val()) + change_vector.y);
+		}
+		else if(current_tab == 'objects')
+			move_object(change_vector);
+	}
+	else if(e.keyCode == 46)
+	{
+		if(current_tab == 'objects')
+			delete_object();
+	}
 	
 	setLevelDefinition();
+}
+
+function keyup(e)
+{
+	if(!e.shiftKey)
+		shift = false;
 }
 
 function mouseDown(e) {
@@ -31,8 +83,6 @@ function mouseDown(e) {
 
 	mouse_down = true;
 
-	var something_selected = false;
-	
 	//unselect everything
 	for(var i = 0; i < objects_array.length; i++)
 	{
@@ -45,47 +95,7 @@ function mouseDown(e) {
 	if(current_tab == "player")
 		player.selected = player.contains(click_point);
 	else if(current_tab == "objects")
-	{
-		$('#object_drop.down').val('');
-		
-		//select an object		
-		for(var i = 0; i < objects_array.length; i++)
-			if(objects_array[i].contains(click_point))
-			{
-				//setup the local stats
-				objects_array[i].draggable = true;
-				objects_array[i].selected = true;
-				something_selected = true;
-				
-				//setup the interface
-				setup_objects_interface(objects_array[i]);
-				
-				//exit
-				break; // only one
-			}
-		
-		if(!something_selected)
-		{
-			//add an object to our array.
-			var selected_type = $('#type_drop_down').val();
-			objects_array.push(new my_objects(world_drag_point.x,
-				world_drag_point.y,
-				$('option[value="' + selected_type + '"]').attr('my_width'),
-				$('option[value="' + selected_type + '"]').attr('my_height'),
-				selected_type,
-				objects_array.length));
-			
-			var id = objects_array.length - 1;
-			
-			//add object to select
-			$('#object_drop_down').append($("<option></option>")
-			         .attr("value", id)
-			         .text(id)); 
-			
-			//setup our interface
-			setup_objects_interface(objects_array[id]);
-		}
-	}
+		mouse_move_object(click_point);
 	
 	setLevelDefinition();
 }
@@ -159,6 +169,7 @@ function reallyLoad()
 	canvas = document.getElementById("theCanvas");
 	context = canvas.getContext("2d");
 	document.onkeydown = keypressed;
+	document.onkeyup = keyup;
 	canvas.addEventListener('mousedown', mouseDown, false);
 	canvas.addEventListener('mousemove', mouseMove, false);
 	canvas.addEventListener('mouseup',   mouseUp, false);
@@ -288,27 +299,6 @@ function mainUpdateGame()
 				break;
 			}
 	}
-}
-
-function setup_objects_interface(selected_object)
-{
-	//find selected
-	if(selected_object == null)
-	for(var i = 0; i < objects_array.length; i++)
-		if(objects_array[i].selected)
-		{
-			selected_object = objects_array[i];
-			break;
-		}
-	
-	if(selected_object == null)
-		return;
-	
-	//set all values
-	$('#object_drop_down').val(selected_object.id);
-	$('#type_drop_down').val(selected_object.type);
-	$('#object_x').val(selected_object.x);
-	$('#object_y').val(selected_object.y);
 }
 
 function reset()

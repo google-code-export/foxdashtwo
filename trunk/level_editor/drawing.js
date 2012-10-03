@@ -146,6 +146,9 @@ function drawBox(x1, y1, x2, y2, color)
 
 function drawRectwh(x1,y1, width, height,color)
 {	
+	var origx = x1;
+	var origy = y1;
+	
 	//set position to be relative
 	x1 = x1 - world_coords.x;
 	y1 = y1 - world_coords.y;
@@ -159,6 +162,9 @@ function drawRectwh(x1,y1, width, height,color)
 	context.fillRect(x1,y1,width,-height);
 	context.closePath();
 	context.fill();
+	
+	if($('#outlines').is(":checked"))
+		drawBoxwh(origx,origy,width,height, darkgreyFill)
 };
 
 //only used for boss health outline

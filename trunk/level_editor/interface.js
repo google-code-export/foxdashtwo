@@ -10,15 +10,13 @@ function interfaceload()
 		//hide everything
 		$('.tab_hideable').css('display', 'none');
 		
-		var name = $(this).attr('name');
-		//store active
-		current_tab = name;
+		current_tab = $(this).attr('name');
 		
 		//display what we care about
-		$('#tab_' + name).css('display', 'inline-block');
+		$('#tab_' + current_tab).css('display', 'inline-block');
 	});
 	
-	//handle click buttons
+	//handle click/navigation buttons
 	var intervalID;
 	$('.control_scheme_button').mousedown(function() {
 		var e = new Object;
@@ -62,5 +60,10 @@ function interfaceload()
 		for(var i = 0; i < objects_array.length; i++)
 		if(objects_array[i].selected)
 			objects_array[i].y = parseInt($(this).val());
+	});
+	$('#object_z').change(function(){
+		for(var i = 0; i < objects_array.length; i++)
+			if(objects_array[i].selected)
+				objects_array[i].z_plane = parseInt($(this).val());		
 	});
 }

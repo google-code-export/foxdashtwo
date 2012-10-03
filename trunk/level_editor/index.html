@@ -1,6 +1,8 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
 "http://www.w3.org/TR/html4/strict.dtd">
 <!--above line makes game playable in IE 9-->
+<!--* Thanks to Charlie Wynn 
+ 	* http://cwynn.com/gravity -->
 <html>
 <head>
 <script type="text/javascript" src="vector.js"></script>
@@ -27,7 +29,7 @@ html,body {
 	background-color: white;
 	text-align: left;
 	padding: 5px;
-	width: 259px;
+	width: 275px;
 }
 
 .taboption {
@@ -40,11 +42,15 @@ html,body {
 	cursor: pointer;
 }
 
+.tab_hideable{
+	width: 275px;
+}
+
 .central_div {
 	margin-left: auto; 
 	margin-right: auto; 
 	margin-top: 10px; 
-	width: 1562px; 
+	width: 1575px; 
 	overflow: auto;
 }
 
@@ -79,14 +85,7 @@ label{
 }
 </style>
 
-<!--[if IE]>
-<style type="text/css">
-.taboption{
-	display: inline-block;
-	width: 39px;
-}
-</style>
-<![endif]-->
+
 
 
 </head>
@@ -95,13 +94,13 @@ label{
 <body onLoad="didload(); interfaceload();">
 <div align="center" class="central_div">
 		<div style="float: left;" id="canvas"></div>
-		<div style="float: right;" id="tabholder">
-			<div id="tablist">
-				<span name="level" class="taboption">Level</span> 
-				<span name="player" class="taboption">Player</span> 
-				<span name="objects" class="taboption">Objects</span> 
-				<span name="lights" class="taboption">Lights</span> 
-				<span name="events" class="taboption">Events</span>
+		<div style="display: inline-block; float: right; overflow: hidden; width: 287px;" id="tabholder">
+			<div id="tablist" style="text-align: left; margin-top: 1px;">
+				<span number="1" name="level" class="taboption">Level</span> 
+				<span number="2" name="player" class="taboption">Player</span> 
+				<span number="3" name="objects" class="taboption">Objects</span> 
+				<span number="4" name="lights" class="taboption">Lights</span> 
+				<span number="5" name="events" class="taboption">Events</span>
 			</div>
 			<div id="tabcontent">
 				<span class="tab_hideable">Hi! Welcome to the level editor for Fox Dash Two. Click
@@ -114,6 +113,11 @@ label{
 		<label>top-limit: </label><input type="text" id="top-limit" value="750" /><br />
 		<label>right-limit: </label><input type="text" id="right-limit" value="1600" /><br />
 		<label>bottom-limit: </label><input type="text" id="bottom-limit" value="0" /><br />
+		<hr />
+		<h4>Background: </h4>
+		<div style="overflow: auto;">
+		<select style="float: right;"><option>black</option></select>
+		</div>
 		<hr />
 	</div>
 
@@ -141,6 +145,8 @@ label{
 		<h4>Object Position: </h4>
 		<label>X:</label><input type="text" id="object_x" value="0" /><br />
 		<label>Y:</label><input type="text" id="object_y" value="0" /><br />
+		<label>Z-layer:</label><select id="object_z"><option value="0">0 Closest to Camera</option> <option value="1">1</option> <option value="2">2</option> <option value="3">3</option> <option value="4">4</option>
+													 <option value="5">5 Player/Interaction</option> <option value="6">6</option> <option value="7">7</option> <option value="8">8</option> <option value="9">9 Farthest From Camera</option></select><br />
 		<hr />
 	</div>
 
@@ -157,10 +163,10 @@ label{
 	<div class="central_div" style="background-color: white; border: 1px solid black;">
 	<div style="padding: 10px; overflow: auto;" >
 	
-	<div style="float: left; width: 150px;">
+	<div style="float: left; width: 200px;">
 		<span class="control_scheme"></span><span class="control_scheme"><input class="control_scheme_button" e="38" type="button" id="go_up" value="up" /></span> <br />
 		<span class="control_scheme"><input e="37" class="control_scheme_button" type="button" id="go_left" value="left" /></span><span class="control_scheme">&nbsp</span><span class="control_scheme"><input e="39" class="control_scheme_button" type="button" id="go_right" value="right" /></span> <br />
-		<span class="control_scheme"></span><span class="control_scheme"><input class="control_scheme_button" type="button" e="40" id="go_down" value="down" /></span> <br />
+		<span class="control_scheme"></span><span class="control_scheme"><input class="control_scheme_button" type="button" e="40" id="go_down" value="down" /></span><span class="control_scheme"></span><span class="control_scheme"><input class="control_scheme_button" type="button" e="46" id="delete" value="delete" /></span> <br />
 	</div>
 	<div class="vertical_divider"></div>
 	<div style="float: left; margin-left: 10px;">
@@ -171,6 +177,7 @@ label{
 	<div class="vertical_divider" style="border: none;"></div>
 	<div style="float: left; margin-left: 10px;">
 		<label>MouseCoords:</label><input checked="checked" type="checkbox" id="mousecheck" /><br />
+		<label>Outlines:</label><input checked="checked" type="checkbox" id="outlines" /><br />
 	</div>
 		<div class="vertical_divider"></div>
 		
