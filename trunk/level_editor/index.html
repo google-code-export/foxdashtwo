@@ -8,6 +8,7 @@
 <script type="text/javascript" src="vector.js"></script>
 <script type="text/javascript" src="Player.js"></script>
 <script type="text/javascript" src="my_objects.js"></script>
+<script type="text/javascript" src="my_lights.js"></script>
 <script type="text/javascript" src="globals.js"></script>
 <script type="text/javascript" src="drawing.js"></script>
 <script type="text/javascript" src="gamemechanics.js"></script>
@@ -150,7 +151,37 @@ label{
 		<hr />
 	</div>
 
-	<div class="tab_hideable" style="display: none;" id="tab_lights">lights</div>
+	<div class="tab_hideable" style="display: none;" id="tab_lights">
+		<h4>Selected Light:</h4>
+		<div style="overflow: auto;">
+		<select style="float: right;" id="light_drop_down"><option value="">None</option></select>
+		</div>
+		<hr />
+		<h4>Light Type:</h4>
+		<div style="overflow: auto;">
+		<select style="float: right;" id="light_type_drop_down">
+			<option value="ambient">Ambient</option>
+			<option value="point">Point</option>
+			<option selected="selected" value="spot">Spot</option>
+		</select>
+		</div>
+		<hr />
+		<h4>Light Position: </h4>
+		<label>X:</label><input type="text" id="light_x" value="0" /><br />
+		<label>Y:</label><input type="text" id="light_y" value="0" /><br />
+		<hr />
+		<h4>Attributes</h4>
+		<label>Color:</label><input type="text" id="light_color" value="rgba(100,100,100,1)" /><br />
+		
+		<span id="light_throw_wrap"><label>Throw:</label><input type="text" id="light_throw" value="100" /><br /></span>
+		
+		<span class="light_spot_show_wrap"><label>closewidth:</label><input type="text" id="light_closewidth" value="10" /><br />
+		<label>farwidth:</label><input type="text" id="light_farwidth" value="100" /><br />
+		<label>Degree:</label><input type="text" id="light_degree" value="90" /><br /></span>
+		
+		<span id="light_bloom_wrap"><label>Bloom:</label><input type="checkbox" id="light_bloom" /></span><br />
+		<label>Active:</label><input type="checkbox" id="light_active" /><br />
+	</div>
 
 	<div class="tab_hideable" style="display: none;" id="tab_events">events</div>
 					

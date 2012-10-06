@@ -169,3 +169,89 @@ function remove_from_objects_array(selected_object)
 	         .text(i)); 
 	
 }
+
+//and the initialization
+function initialize_object_interface()
+{
+	//handle object selection
+	$('#object_drop_down').change(function(){
+		for(var i = 0; i < objects_array.length; i++)
+			objects_array[i].selected = false;
+		
+		if($(this).val() != '')
+		{	
+			//setup active object
+			var e = $(this).val();
+			objects_array[e].selected = true;
+			setup_objects_interface(objects_array[e]);
+		}
+	});
+	//changing type
+	$('#type_drop_down').change(function(){
+		for(var i = 0; i < objects_array.length; i++)
+		if(objects_array[i].selected)
+		{
+			objects_array[i].width = parseInt($("#type_drop_down option:selected").attr('my_width'));
+			objects_array[i].height = parseInt($("#type_drop_down option:selected").attr('my_height'));
+			objects_array[i].type = $("#type_drop_down").val();
+			break;
+		}
+	});
+	//change x and y
+	$('#object_x').change(function(){
+		for(var i = 0; i < objects_array.length; i++)
+		if(objects_array[i].selected)
+		{
+			objects_array[i].x = parseInt($(this).val());
+			break;
+		}
+	});
+	$('#object_y').change(function(){
+		for(var i = 0; i < objects_array.length; i++)
+		if(objects_array[i].selected)
+		{
+			objects_array[i].y = parseInt($(this).val());
+			break;
+		}
+	});
+	$('#object_z').change(function(){
+		for(var i = 0; i < objects_array.length; i++)
+			if(objects_array[i].selected)
+			{
+				objects_array[i].z_plane = parseInt($(this).val());
+				break;
+			}
+	});	
+}
+
+function object_mouse_up(click_point)
+{
+	for(var i = 0; i < objects_array.length; i++)
+	{
+		//remove draggability
+		objects_array[i].draggable = false;
+		
+		//see if selected
+		if(objects_array[i].contains(click_point) && current_tab == "objects")
+			objects_array[i].selected = true;
+		else
+			objects_array[i].selected = false;
+	}	
+}
+
+function more_object_stuff()
+{
+	for(var i = 0; i < objects_array.length; i++)
+		if(objects_array[i].selected)
+		{
+			//set object coords
+			objects_array[i].x -= drag_delta.x;
+			objects_array[i].y -= drag_delta.y;
+			
+			//set interface
+			setup_objects_interface(objects_array[i]);
+			
+			//exit
+			break;
+		}	
+}

@@ -26,44 +26,7 @@ function interfaceload()
 	  clearInterval(intervalId);
 	});
 	
-	//handle object selection
-	$('#object_drop_down').change(function(){
-		for(var i = 0; i < objects_array.length; i++)
-			objects_array[i].selected = false;
-		
-		if($(this).val() != '')
-		{	
-			//setup active object
-			var e = $(this).val();
-			objects_array[e].selected = true;
-			setup_objects_interface(objects_array[e]);
-		}
-	});
-	//changing type
-	$('#type_drop_down').change(function(){
-		for(var i = 0; i < objects_array.length; i++)
-		if(objects_array[i].selected)
-		{
-			objects_array[i].width = parseInt($("#type_drop_down option:selected").attr('my_width'));
-			objects_array[i].height = parseInt($("#type_drop_down option:selected").attr('my_height'));
-			objects_array[i].type = $("#type_drop_down").val();
-			break;
-		}
-	});
-	//change x and y
-	$('#object_x').change(function(){
-		for(var i = 0; i < objects_array.length; i++)
-		if(objects_array[i].selected)
-			objects_array[i].x = parseInt($(this).val());
-	});
-	$('#object_y').change(function(){
-		for(var i = 0; i < objects_array.length; i++)
-		if(objects_array[i].selected)
-			objects_array[i].y = parseInt($(this).val());
-	});
-	$('#object_z').change(function(){
-		for(var i = 0; i < objects_array.length; i++)
-			if(objects_array[i].selected)
-				objects_array[i].z_plane = parseInt($(this).val());		
-	});
+	//setup objects interface
+	initialize_object_interface();
+	initialize_light_interface();
 }

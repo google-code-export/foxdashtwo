@@ -5,6 +5,7 @@ var context;
 //very important
 var player = new Player(20,20);
 var objects_array = new Array();
+var lights_array = new Array();
 
 //manage screen size
 var width  = 1280;
