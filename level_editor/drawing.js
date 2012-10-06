@@ -1,7 +1,7 @@
 function getTextWidth(text, font)
 {
 	context.font = typeof font == 'undefined' ? default_font : font;
-	return context.measureText(text);
+	return context.measureText(text).width;
 }
 
 //draws text to screen, font is optional
@@ -110,6 +110,10 @@ function redraw()
 	for(var i = 0; i < objects_array.length; i++)
 		objects_array[i].draw();
 	
+	//draw lights
+	for(var i = 0; i < lights_array.length; i++)
+		lights_array[i].draw();
+	
 	//context.drawImage(breadCrumbsImg,0,0);
 };
 
@@ -160,8 +164,8 @@ function drawRectwh(x1,y1, width, height,color)
 	context.beginPath();
 	context.fillStyle = color;
 	context.fillRect(x1,y1,width,-height);
-	context.closePath();
 	context.fill();
+	context.closePath();
 	
 	if($('#outlines').is(":checked"))
 		drawBoxwh(origx,origy,width,height, darkgreyFill)
@@ -181,12 +185,17 @@ function drawBoxwh(x1,y1, width, height, color)
 	context.beginPath();
 	context.strokeStyle = color;
 	context.strokeRect(x1,y1,width,-height);
+	context.stroke();
 	context.closePath();
-	context.fill();
 };
 
 //only used for drawing the weapon type
 function drawCircle(x,y,radius,color)
+{
+	drawArc(x, y, radius, 0, Math.PI * 2, color);
+}
+
+function drawArc(x, y, radius, arc_start, arc_end, color)
 {
 	//set position to be relative
 	x = x - world_coords.x;
@@ -197,8 +206,53 @@ function drawCircle(x,y,radius,color)
 	
 	//draw
 	context.beginPath();
-	context.fillStyle = color;
-	context.arc(x, y, radius, 0, Math.PI*2,false);
-	context.closePath();	
-	context.fill();
-};
+	context.lineWidth = 10;
+	context.strokeStyle = color;
+	context.arc(x, y, radius, arc_start, arc_end,false);
+	context.stroke();
+	context.closePath();
+	
+	context.lineWidth = 1;
+}
+
+function drawLamp(x, y, radius, degree, closewidth, farwidth, color)
+{
+	//calculate maxes
+	if(closewidth / 2.0 > radius)
+		closewidth = radius * 2;
+	if(farwidth / 2.0 > radius)
+		farwidth = radius * 2;
+	if(closewidth > farwidth)
+		closewidth = farwidth;
+	
+	//set position to be relative
+	x = x - world_coords.x;
+	y = y - world_coords.y;
+	
+	//fix y
+	y = window.height - y;
+	
+	//save canvas and rotate
+	context.save();
+	context.translate(x + radius, y - radius);
+	context.rotate(-degree * Math.PI / 180);
+	// draw your object
+	
+	//draw
+	context.beginPath();
+	context.lineWidth = 10;
+	context.strokeStyle = color;
+	context.moveTo(0,0);
+	context.lineTo(0, closewidth / 2.0);
+	context.lineTo(radius, farwidth / 2.0);
+	context.lineTo(radius, -farwidth / 2.0);
+	context.lineTo(0, -closewidth / 2.0);
+	context.lineTo(0,0);
+	context.stroke();
+	context.closePath();
+	
+	//restore
+	context.restore();
+
+	context.lineWidth = 1;
+}

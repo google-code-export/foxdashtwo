@@ -61,11 +61,15 @@ function keypressed(e)
 		}
 		else if(current_tab == 'objects')
 			move_object(change_vector);
+		else if(current_tab == 'lights')
+			move_light(change_vector);
 	}
 	else if(e.keyCode == 46)
 	{
 		if(current_tab == 'objects')
 			delete_object();
+		else if(current_tab == 'lights')
+			delete_light();
 	}
 	
 	setLevelDefinition();
@@ -91,11 +95,20 @@ function mouseDown(e) {
 	}
 	$('#object_drop_down').val('');
 	
+	for(var i = 0; i < lights_array.length; i++)
+	{
+		lights_array[i].draggable = false;
+		lights_array[i].selected = false;
+	}
+	$('#light_drop_down').val('');
+	
 	//select one object
 	if(current_tab == "player")
 		player.selected = player.contains(click_point);
 	else if(current_tab == "objects")
 		mouse_move_object(click_point);
+	else if(current_tab == 'lights')
+		mouse_move_light(click_point);
 	
 	setLevelDefinition();
 }
@@ -119,17 +132,8 @@ function mouseUp(e) {
 	//unselect everything
 	player.selected = false;
 	
-	for(var i = 0; i < objects_array.length; i++)
-	{
-		//remove draggability
-		objects_array[i].draggable = false;
-		
-		//see if selected
-		if(objects_array[i].contains(click_point) && current_tab == "objects")
-			objects_array[i].selected = true;
-		else
-			objects_array[i].selected = false;
-	}
+	object_mouse_up(click_point);
+	light_mouse_up(click_point);
 	
 	setLevelDefinition();
 }
@@ -285,19 +289,9 @@ function mainUpdateGame()
 			$('#player_y').val(parseInt($('#player_y').val()) - drag_delta.y);
 		}
 		else if(current_tab == "objects")
-			for(var i = 0; i < objects_array.length; i++)
-			if(objects_array[i].selected)
-			{
-				//set object coords
-				objects_array[i].x -= drag_delta.x;
-				objects_array[i].y -= drag_delta.y;
-				
-				//set interface
-				setup_objects_interface(objects_array[i]);
-				
-				//exit
-				break;
-			}
+			more_object_stuff();
+		else if(current_tab == 'lights')
+			more_light_stuff();
 	}
 }
 
