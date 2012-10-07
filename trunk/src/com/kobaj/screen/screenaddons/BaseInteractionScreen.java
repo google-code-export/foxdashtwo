@@ -25,27 +25,34 @@ public class BaseInteractionScreen
 		}
 		
 		// initial touch
-		if (my_modifier.getInputType().getLeftOrRight())
+		if (my_modifier.getInputType().getLeftXorRight())
 		{
 			touched = true;
 			double move_amount = 0;
 			
 			if (my_modifier.getInputType().getTouchedRight())
 			{
-				if(test_level.player.quad_object.x_vel > 0)
-					move_amount += Constants.normal_acceleration;
-				else if (jump_time)
-					move_amount += Constants.normal_reverse_acceleration;
+				//if we are on the ground
+				if(jump_time)
+				{
+					if(test_level.player.quad_object.x_vel > 0)
+						move_amount += Constants.normal_acceleration;
+					else
+						move_amount += Constants.normal_reverse_acceleration;
+				}
 				else
 					move_amount += Constants.normal_acceleration;
 			}
 			
 			if(my_modifier.getInputType().getTouchedLeft())
 			{
-				if(test_level.player.quad_object.x_vel < 0)
-					move_amount += -Constants.normal_acceleration;
-				else if(jump_time)
-					move_amount += -Constants.normal_reverse_acceleration;
+				if(jump_time)
+				{
+					if(test_level.player.quad_object.x_vel < 0)
+						move_amount += -Constants.normal_acceleration;
+					else
+						move_amount += -Constants.normal_reverse_acceleration;
+				}
 				else
 					move_amount += -Constants.normal_acceleration;
 			}

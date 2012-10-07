@@ -3,7 +3,7 @@ var canvas;
 var context;
 
 //very important
-var player = new Player(20,20);
+var player = new Player(64,64);
 var objects_array = new Array();
 var lights_array = new Array();
 

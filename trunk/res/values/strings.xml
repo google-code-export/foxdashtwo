@@ -3,12 +3,23 @@
     <string name="hello">Hello World,\nFoxdashtwoActivity!</string>
     <string name="app_name">Fox Dash Two</string>
     <string name="loading">Loading</string>
+    
+    <!-- input -->
+    <string name="left">Left</string>
+    <string name="right">Right</string>
+    <string name="jump">Jump</string>
+    
+    <!-- spacer -->
     <string name="blank"></string>
     
+    <!-- annoying, but you have to put your string name here too -->
     <string-array name="my_sa">
         <item>hello</item>
         <item>app_name</item>
         <item>loading</item>
+        <item>left</item>
+        <item>right</item>
+        <item>jump</item>
     </string-array>
     
 </resources>

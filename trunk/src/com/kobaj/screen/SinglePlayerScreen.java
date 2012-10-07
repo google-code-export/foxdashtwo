@@ -2,6 +2,8 @@ package com.kobaj.screen;
 
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.input.GameInputModifier;
+import com.kobaj.loader.XMLHandler;
+import com.kobaj.math.Constants;
 import com.kobaj.opengldrawable.EnumDrawFrom;
 import com.kobaj.screen.screenaddons.BaseDebugScreen;
 import com.kobaj.screen.screenaddons.BaseInteractionScreen;
@@ -42,7 +44,18 @@ public class SinglePlayerScreen extends BaseScreen
 		interaction_addon = new BaseInteractionScreen();
 	
 		//grab from disk
-		test_level = com.kobaj.loader.XMLHandler.readSerialFile(com.kobaj.math.Constants.resources, R.raw.test_level, com.kobaj.level.Level.class);
+		boolean loaded = false;
+		String[] levels = XMLHandler.getFileList();
+		for(String p: levels)
+			if (p.equalsIgnoreCase("external_level"))
+			{
+				loaded = true;
+				test_level = XMLHandler.readSerialFile("external_level", com.kobaj.level.Level.class);
+				break;
+			}
+		
+		if(!loaded)
+			test_level = XMLHandler.readSerialFile(Constants.resources, R.raw.test_level, com.kobaj.level.Level.class);
 		
 		//level
 		if (test_level != null)
@@ -50,20 +63,6 @@ public class SinglePlayerScreen extends BaseScreen
 		
 		//control input
 		my_modifier.onInitialize();
-		
-		//put in some fake loading time.
-		for(int i = 0; i < 60000; i++)
-		{
-			try
-			{
-				Thread.sleep(1000);
-			}
-			catch (InterruptedException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
 	}
 	
 	@Override

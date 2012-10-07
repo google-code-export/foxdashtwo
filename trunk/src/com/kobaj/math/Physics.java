@@ -134,7 +134,7 @@ public class Physics
 				height = -height;
 			the_quad.setPos(the_quad.getXPos(), the_quad.getYPos() + height, com.kobaj.opengldrawable.EnumDrawFrom.center);
 			
-			if(the_quad.y_vel < 0)
+			if(the_quad.y_vel != 0)
 				the_quad.y_vel = 0;
 		}
 	}
