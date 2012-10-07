@@ -1,56 +1,80 @@
 <level>
-   <player>
-      <this_object>test</this_object>
-      <draw_from>top_left</draw_from>
-      <id>0</id>
-      <z_plane>5.0</z_plane>
-      <x_pos>0.0</x_pos>
-      <y_pos>100.0</y_pos>
-      <active>false</active>
-   </player>
-   <object_list>
-      <levelObject>
-         <this_object>test</this_object>
-         <draw_from>top_left</draw_from>
-         <id>0</id>
-         <z_plane>5.0</z_plane>
-         <x_pos>200.0</x_pos>
-         <y_pos>200.0</y_pos>
-         <active>true</active>
-      </levelObject>
-   </object_list>
-   <light_list>
-      <levelLight class="com.kobaj.level.LevelSpotLight">
-         <active>false</active>
-         <id>0</id>
-         <color>-1</color>
-         <is_bloom>false</is_bloom>
-         <y_pos>0.0</y_pos>
-         <radius>100.0</radius>
-         <x_pos>0.0</x_pos>
-         <blur_amount>0</blur_amount>
-         <close_width>10</close_width>
-         <degree>0.0</degree>
-         <far_width>100</far_width>
-      </levelLight>
-      <levelLight class="com.kobaj.level.LevelPointLight">
-         <active>false</active>
-         <id>0</id>
-         <color>-1</color>
-         <is_bloom>false</is_bloom>
-         <y_pos>0.0</y_pos>
-         <radius>100.0</radius>
-         <x_pos>0.0</x_pos>
-         <blur_amount>0</blur_amount>
-      </levelLight>
-      <levelLight class="com.kobaj.level.LevelAmbientLight">
-         <active>false</active>
-         <id>0</id>
-         <color>-1</color>
-      </levelLight>
-   </light_list>
-   <right_limit>0</right_limit>
-   <bottom_limit>0</bottom_limit>
-   <top_limit>0</top_limit>
-   <left_limit>0</left_limit>
+<player><this_object>player</this_object><draw_from>bottom_left</draw_from><id>0</id><z_plane>5.0</z_plane>
+<x_pos>770</x_pos>
+<y_pos>499</y_pos>
+<active>true</active></player>
+<object_list>
+<levelObject>
+<this_object>test</this_object>
+<draw_from>bottom_left</draw_from>
+<id>0</id>
+<z_plane>5</z_plane>
+<x_pos>497</x_pos>
+<y_pos>443</y_pos>
+<active>true</active>
+</levelObject>
+<levelObject>
+<this_object>test</this_object>
+<draw_from>bottom_left</draw_from>
+<id>1</id>
+<z_plane>5</z_plane>
+<x_pos>715</x_pos>
+<y_pos>234</y_pos>
+<active>true</active>
+</levelObject>
+<levelObject>
+<this_object>test</this_object>
+<draw_from>bottom_left</draw_from>
+<id>2</id>
+<z_plane>5</z_plane>
+<x_pos>932</x_pos>
+<y_pos>444</y_pos>
+<active>true</active>
+</levelObject>
+<levelObject>
+<this_object>test</this_object>
+<draw_from>bottom_left</draw_from>
+<id>3</id>
+<z_plane>5</z_plane>
+<x_pos>721</x_pos>
+<y_pos>656</y_pos>
+<active>true</active>
+</levelObject>
+</object_list><light_list>
+<levelLight class="com.kobaj.level.LevelSpotLight">
+<close_width>10</close_width>
+<degree>0</degree>
+<far_width>100</far_width>
+<is_bloom>false</is_bloom>
+<y_pos>345</y_pos>
+<radius>100</radius>
+<x_pos>601</x_pos>
+<blur_amount>0</blur_amount>
+<active>true</active>
+<id>0</id>
+<color>-10197916</color>
+</levelLight>
+<levelLight class="com.kobaj.level.LevelSpotLight">
+<close_width>10</close_width>
+<degree>90</degree>
+<far_width>100</far_width>
+<is_bloom>false</is_bloom>
+<y_pos>543</y_pos>
+<radius>100</radius>
+<x_pos>831</x_pos>
+<blur_amount>0</blur_amount>
+<active>true</active>
+<id>1</id>
+<color>-39836</color>
+</levelLight>
+<levelLight class="com.kobaj.level.LevelAmbientLight">
+<active>true</active>
+<id>2</id>
+<color>-10197916</color>
+</levelLight>
+</light_list>
+<right_limit>1600</right_limit>
+<bottom_limit>0</bottom_limit>
+<top_limit>750</top_limit>
+<left_limit>0</left_limit>
 </level>

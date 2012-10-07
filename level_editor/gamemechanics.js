@@ -40,6 +40,8 @@ function keypressed(e)
 	
 	var change_vector;
 	
+	if($("input:focus").length == 0)
+	{
 	if(e.keyCode == 37)
 		change_vector = left_vector;
 	else if(e.keyCode == 39)
@@ -48,6 +50,7 @@ function keypressed(e)
 		change_vector = up_vector;
 	else if(e.keyCode == 40)
 		change_vector = down_vector;
+	}
 	
 	//movement of screen
 	if(change_vector != null)
@@ -119,8 +122,6 @@ function mouseMove(e) {
 
 	world_drag_point.x = drag_point.x + world_coords.x;
 	world_drag_point.y = window.height - drag_point.y + world_coords.y;
-	
-	setLevelDefinition();
 }
 
 function mouseUp(e) {
@@ -183,60 +184,6 @@ function reallyLoad()
 	updateGame();
 }
 
-/*write the level out to the window*/
-function setLevelDefinition()
-{
-	openLevelCode(true);
-}
-
-function openLevelCode(refresh)
-{
-
-	if(refresh)
-	{
-		if(loadLevelWindow)
-		{
-			if(!loadLevelWindow.closed)
-			{
-				loadLevelWindow.document.getElementById("leveldef").value = getLevelDefinition();
-			}
-		}
-	}
-	else
-	{
-		if(!loadLevelWindow || loadLevelWindow.closed)
-		{
-			loadLevelWindow=window.open('','','width=600,height=600,location=no');
-			loadLevelWindow.document.write('<head><title>Load Level</title></head><textarea id="leveldef" onchange="levelChanged()" cols="70" rows="30">' + getLevelDefinition() + '</textarea><br>');
-			loadLevelWindow.document.write('<center><button onClick="window.opener.levelChanged(document.getElementById(\'leveldef\').value);">Load Level</button></center>');
-		}
-		else
-		{
-			loadLevelWindow.document.getElementById("leveldef").value = getLevelDefinition();
-			loadLevelWindow.focus();
-		}
-	}
-}
-
-/*get the level definition that will be placed in window*/
-function getLevelDefinition()
-{/*
-	var def = '[new Player(new Vector(' + player.startPos.add(levelAdj).value() + '), new Vector(' + player.lastLaunchDir.value() + '), ' + player.mass + ', ' + player.radius + '),';
-	for(p in planets)
-	{
-		def += '\n new Planet(new Vector(' + planets[p].position.add(levelAdj).value() + '), ' + planets[p].mass + ', ' + planets[p].radius + ', ' + planets[p].isGoal + ', ' + planets[p].isBonus + ')';
-		if(p < planets.length-1)
-			def += ',';
-	}
-	def += '];';
-	return def;*/
-}
-
-/*build a level that is typed in*/
-function levelChanged(level)
-{ 
-	
-}
 
 //this is called for every frame to update the location of the objects in the game
 var lastTime;

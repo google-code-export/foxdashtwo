@@ -7,6 +7,9 @@ function getTextWidth(text, font)
 //draws text to screen, font is optional
 function drawText(x, y, text, color, font)
 {
+	x = parseInt(x);
+	y = parseInt(y);
+	
 	context.fillStyle = color;
 	context.font = typeof font == 'undefined' ? default_font : font;
 	context.textBaseline = 'top';
@@ -15,6 +18,9 @@ function drawText(x, y, text, color, font)
 
 function drawTextYFix(x, y, text, color, font)
 {
+	x = parseInt(x);
+	y = parseInt(y);
+	
 	//set position to be relative
 	x = x - world_coords.x;
 	y = y - world_coords.y;
@@ -27,6 +33,9 @@ function drawTextYFix(x, y, text, color, font)
 
 function strokeText(x, y, text, color, font)
 {
+	x = parseInt(x);
+	y = parseInt(y);
+	
 	context.strokeStyle = color;
 	context.font = typeof font == 'undefined' ? default_font : font;
 	context.lineWidth = 9;
@@ -235,7 +244,7 @@ function drawLamp(x, y, radius, degree, closewidth, farwidth, color)
 	//save canvas and rotate
 	context.save();
 	context.translate(x + radius, y - radius);
-	context.rotate(-degree * Math.PI / 180);
+	context.rotate(degree * Math.PI / 180);
 	// draw your object
 	
 	//draw

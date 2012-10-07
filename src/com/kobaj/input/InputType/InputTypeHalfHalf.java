@@ -61,15 +61,6 @@ public class InputTypeHalfHalf extends InputTypeBase
 	}
 
 	@Override
-	public boolean getLeftOrRight()
-	{
-		if(Constants.input_manager.getTouched(0) || Constants.input_manager.getTouched(1))
-			return true;
-		
-		return false;
-	}
-
-	@Override
 	public void onDraw()
 	{
 		//draw left

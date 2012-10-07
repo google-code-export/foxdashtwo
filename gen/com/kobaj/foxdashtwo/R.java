@@ -9,6 +9,8 @@ package com.kobaj.foxdashtwo;
 
 public final class R {
     public static final class array {
+        /**  annoying, but you have to put your string name here too 
+         */
         public static final int my_sa=0x7f060000;
     }
     public static final class attr {
@@ -28,8 +30,15 @@ public final class R {
     }
     public static final class string {
         public static final int app_name=0x7f050001;
-        public static final int blank=0x7f050003;
+        /**  spacer 
+         */
+        public static final int blank=0x7f050006;
         public static final int hello=0x7f050000;
+        public static final int jump=0x7f050005;
+        /**  input 
+         */
+        public static final int left=0x7f050003;
         public static final int loading=0x7f050002;
+        public static final int right=0x7f050004;
     }
 }

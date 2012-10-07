@@ -1,5 +1,6 @@
 package com.kobaj.input.InputType;
 
+import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.EnumDrawFrom;
@@ -89,12 +90,7 @@ public class InputTypeNintendo extends InputTypeBase
 		return false;
 	}
 
-	@Override
-	public boolean getLeftOrRight()
-	{
-		return (getTouchedLeft() || getTouchedRight());
-	}
-
+	//this is constant, so we can do text here too
 	@Override
 	public void onDraw()
 	{
@@ -121,5 +117,10 @@ public class InputTypeNintendo extends InputTypeBase
 			my_ambient_light.brightness = Constants.max_brightness;
 		my_ambient_light.applyShaderProperties();
 		my_quad_jump.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, Constants.ambient_light, true);
+	
+		//text
+		Constants.text.drawText(R.string.left, my_quad_left.getXPos(), my_quad_left.getYPos(), EnumDrawFrom.center);
+		Constants.text.drawText(R.string.right, my_quad_right.getXPos(), my_quad_right.getYPos(), EnumDrawFrom.center);
+		Constants.text.drawText(R.string.jump, my_quad_jump.getXPos(), my_quad_jump.getYPos(), EnumDrawFrom.center);
 	}
 }
