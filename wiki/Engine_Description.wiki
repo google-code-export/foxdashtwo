@@ -19,7 +19,7 @@ There are 10 layers of sprites. 0-4 are foreground layers (objects are in front 
 https://lh4.googleusercontent.com/-i0R4WMxzlgU/UHTJN2qoc6I/AAAAAAAAAak/fksu7YZXdjU/s800/bounding+boxes+overlay+background.png
 
 ==Animation==
-Animation is accomplished by multiple frames on a sprite sheet. Any frames per second can be specified (eg .5fps, 200fps, etc) as well as any position/ordering of frames.
+Animation is accomplished by multiple frames on a sprite sheet. Any frames per second can be specified (eg .5fps, 200fps, etc) as well as any position/ordering of frames. Multiple animations can be stored in a single sprite sheet.
 
 https://lh4.googleusercontent.com/-K_sqN0diyCg/UHTNzwTBeaI/AAAAAAAAAa8/ky6u3i6uieA/s1000/animation.png
 
