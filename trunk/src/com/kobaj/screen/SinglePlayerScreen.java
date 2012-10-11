@@ -74,6 +74,8 @@ public class SinglePlayerScreen extends BaseScreen
 		//interaction
 		interaction_addon.onUpdate(delta, my_modifier, test_level);
 		
+		test_level.onUpdate(delta);
+		
 		// make sure we dont go through the level (should be deleted later)
 		if (test_level.player.quad_object.getYPos() < -1)
 		{
