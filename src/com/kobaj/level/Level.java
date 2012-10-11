@@ -30,10 +30,9 @@ public class Level
 	public ArrayList<LevelObject> object_list;
 	
 	@ElementList
-	public ArrayList<LevelLight> light_list;
+	public ArrayList<LevelLight> light_list; //all lights including blooms
 	
-	//make things a little faster by storing only those that draw
-	ArrayList<LevelPointLight> bloom_light_list = new ArrayList<LevelPointLight>();
+	ArrayList<LevelPointLight> bloom_light_list = new ArrayList<LevelPointLight>(); //only blooms
 	
 	@Element
 	public LevelObject player;
@@ -69,14 +68,20 @@ public class Level
 		bottom_shader_limit = -Functions.screenYToShaderY(bottom_limit) - Constants.shader_height / 2.0;
 	}
 	
+	public void onUpdate(double delta)
+	{
+		for(int i = light_list.size() - 1; i >= 0; i--)
+			light_list.get(i).onUpdate(delta);
+	}
+	
 	public void onDrawObject()
 	{
 		// player
 		player.quad_object.onDrawAmbient();
 		
 		// objects
-		for(LevelObject object: object_list)
-			object.onDrawObject();
+		for(int i = object_list.size() - 1; i >= 0; i--)
+			object_list.get(i).onDrawObject();
 
 		// bloom lights
 		for(int i = bloom_light_list.size() - 1; i >= 0; i--)
@@ -85,8 +90,8 @@ public class Level
 	
 	public void onDrawLight()
 	{
-		for(LevelLight light: light_list)
-			light.onDrawLight();
+		for(int i = light_list.size() - 1; i >= 0; i--)
+			light_list.get(i).onDrawLight();
 	}
 	
 	//this method will be deleted.

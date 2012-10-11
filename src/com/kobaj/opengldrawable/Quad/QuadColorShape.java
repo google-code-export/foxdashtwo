@@ -17,6 +17,11 @@ public class QuadColorShape extends Quad
 {	
 	//this is in screen coordinates 0-800
 	//square/rectangle
+	public QuadColorShape(int width, int height, int color, int blur_amount)
+	{
+		this(0, height, width, 0, color, blur_amount);
+	}
+	
 	public QuadColorShape(int left, int top, int right, int bottom, int color, int blur_amount)
 	{	
 		super(GLBitmapReader.newResourceID(), Functions.fastBlur(makeSquare(left, top, right, bottom, color), blur_amount), right-left, top-bottom);
@@ -48,6 +53,7 @@ public class QuadColorShape extends Quad
 	
 	private static Bitmap makeSquare(int left, int top, int right, int bottom, int color)
 	{
+		//very simple, draw a square
 		Bitmap bitmap_temp = Bitmap.createBitmap((int)Math.abs(right - left), (int)Math.abs(bottom - top), Bitmap.Config.ARGB_8888);
 		Canvas canvas_temp = new Canvas(bitmap_temp);
 		canvas_temp.drawColor(color);
@@ -57,12 +63,16 @@ public class QuadColorShape extends Quad
 	
 	private static Bitmap makeCircle(double radius, int color)
 	{
+		//setup our paints
 		Paint paint = new Paint();
 		paint.setColor(color);
 		paint.setAntiAlias(true);
 		
+		//make a bitmap that is the right size.
 		Bitmap bitmap_temp = Bitmap.createBitmap((int)(radius * 2.0), (int)(radius * 2.0), Bitmap.Config.ARGB_8888);
-		Canvas canvas_temp = new Canvas(bitmap_temp);	
+		Canvas canvas_temp = new Canvas(bitmap_temp);
+		
+		//draw background then circle,
 		canvas_temp.drawCircle((float)radius, (float)radius, (float)radius, paint);
 		
 		return bitmap_temp;
@@ -70,35 +80,38 @@ public class QuadColorShape extends Quad
 	
 	private static Bitmap makeCircleGradient(double radius, int color, boolean is_bloom)
 	{
-		int x = (int) radius;
-		int y = (int) radius;
+		//prepare the center of the screen
+		int xy = (int) radius;
         
+		//make our circular gradient
         RadialGradient shader_light;
+        int secondary_color;
         if(!is_bloom)
-        	shader_light = new RadialGradient(x, y, (float) radius, color, Color.BLACK, Shader.TileMode.CLAMP);
+        	secondary_color = Color.BLACK;
         else
-        	shader_light = new RadialGradient(x, y, (float) radius, color, Color.TRANSPARENT, Shader.TileMode.CLAMP);
+        	secondary_color = Color.TRANSPARENT;
+        shader_light = new RadialGradient(xy, xy, (float) radius, color, secondary_color, Shader.TileMode.CLAMP);
         
+        //this paint holds the gradient
         Paint outline_paint = new Paint();
         outline_paint.setShader(shader_light);
         outline_paint.setAntiAlias(true);
 
+        //put the gradient on a rectangle
         Rect screen = new Rect();
-        screen.left = (int) (x - radius);
-        screen.top = (int) (y - radius);
-        screen.right = (int) (x + radius);
-        screen.bottom = (int) (y + radius);
+        screen.left = (int) (xy - radius);
+        screen.top = (int) (xy - radius);
+        screen.right = (int) (xy + radius);
+        screen.bottom = (int) (xy + radius);
         
+        //create the canvas
         Bitmap bitmap_temp = Bitmap.createBitmap((int)(radius * 2), (int)(radius * 2), Bitmap.Config.ARGB_8888);
 		Canvas canvas_temp = new Canvas(bitmap_temp);
         
         // obscuring light
         outline_paint.setXfermode(null);
-        if(!is_bloom)
-        	outline_paint.setAlpha(255);
-        else
-        	outline_paint.setAlpha(100);
         
+        //draw background, then draw square/circle gradient overtop
         canvas_temp.drawRect(screen, outline_paint);
         
         return bitmap_temp;
@@ -106,8 +119,10 @@ public class QuadColorShape extends Quad
 	
 	private static Bitmap makeCircleGradientWithMask(double radius, int color, double close_width, double far_width, double degree, boolean is_bloom)
 	{
+		//begin by grabbing a full circle gradient
 		Bitmap light = makeCircleGradient(radius, color, is_bloom);
 		
+		//make a paint that will obscure parts of that full circle
 		Paint mask_paint = new Paint();
 		mask_paint.setAntiAlias(true);
 		mask_paint.setStyle(Paint.Style.FILL);
@@ -115,6 +130,7 @@ public class QuadColorShape extends Quad
 		if(is_bloom)
 			mask_paint.setXfermode(new PorterDuffXfermode(android.graphics.PorterDuff.Mode.DST_OUT));
 		
+		//draw out the path
 		Path path = new Path();
 		
 		double half_close_width = close_width / 2.0;
@@ -127,42 +143,36 @@ public class QuadColorShape extends Quad
 			close_width = 2.0 * half_close_width;
 		}
 		
-		double diameter = radius * 2;
-		
-		//draw mask
-		//TODO double check and see if this is correct...(should width be able to be > radius?
 		if(half_far_width > radius)
 		{
-			double extra = half_far_width - radius;
-			
-			path.moveTo((float)-extra, (float)diameter);
-			path.lineTo((float)-extra, 0);
-			path.lineTo((float)(diameter + extra), 0);
-			path.lineTo((float)(diameter + extra), (float)diameter);
-			path.lineTo((float)(radius + half_close_width), (float)radius);
-			path.lineTo((float)(radius - half_close_width), (float)radius);
-			path.lineTo((float)-extra, (float)diameter); //end where we started
+			half_far_width = radius;
+			far_width = 2.0 * half_close_width;
 		}
-		else	
-		{
+		
+		//draw mask
+			double diameter = radius * 2.0;	
 			double extra = radius - half_far_width;
+			float buffer = 5;
 			
-			path.moveTo((float)extra, (float)diameter);
-			path.lineTo(0, (float)diameter);
-			path.lineTo(0, 0);
-			path.lineTo((float)diameter, 0);
-			path.lineTo((float)diameter, (float)diameter);
-			path.lineTo((float)(diameter - extra), (float)diameter);
+			path.moveTo((float)extra - buffer, (float)diameter + buffer);
+			path.lineTo(0 - buffer, (float)diameter + buffer);
+			path.lineTo(0 - buffer, 0 - buffer);
+			path.lineTo((float)diameter + buffer, 0 - buffer);
+			path.lineTo((float)diameter + buffer, (float)diameter + buffer);
+			path.lineTo((float)(diameter - extra - buffer), (float)diameter + buffer);
 			path.lineTo((float)(radius + half_close_width), (float)radius);
 			path.lineTo((float)(radius - half_close_width), (float)radius);
-			path.lineTo((float)extra, (float)diameter); //end where we started
-		}
+			path.lineTo((float)extra - buffer, (float)diameter + buffer); //end where we started
+
 		path.close(); 
 		
-		Bitmap bitmap_temp = Bitmap.createBitmap((int)(radius * 2) - 2, (int)(radius * 2) - 2, Bitmap.Config.ARGB_8888);
+		//make a bitmap
+		Bitmap bitmap_temp = Bitmap.createBitmap((int)(radius * 2), (int)(radius * 2), Bitmap.Config.ARGB_8888);
 		Canvas canvas_temp = new Canvas(bitmap_temp);
+		
+		//rotate and draw
 		canvas_temp.rotate((float) degree - 90.0f, (float)radius, (float)radius);
-		canvas_temp.drawBitmap(light, -1, -1, new Paint()); // may have to use a different paint here.
+		canvas_temp.drawBitmap(light, 0, 0, new Paint()); // may have to use a different paint here.
 		canvas_temp.drawPath(path, mask_paint);
 		
 		return bitmap_temp;

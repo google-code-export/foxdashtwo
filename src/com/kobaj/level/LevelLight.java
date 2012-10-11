@@ -12,5 +12,9 @@ public abstract class LevelLight
 	public int id;
 	
 	public abstract void onInitialize();
+	public void onUpdate(double delta)
+	{
+		// do nothing.	
+	}
 	public abstract void onDrawLight();
 }

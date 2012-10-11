@@ -188,7 +188,7 @@ function levelChanged(level)
 		 temp.farwidth = parseInt(($(this).find("far_width").text() ? $(this).find("far_width").text() : 100));
 		 temp.degree = parseInt(($(this).find("degree").text() ? $(this).find("degree").text() : 100));
 		 
-		 temp.bloom = parseInt(($(this).find("is_bloom").text() ? $(this).find("is_bloom").text() : false));
+		 temp.bloom = ($(this).find("is_bloom").text() ? $(this).find("is_bloom").text() : false);
 		 temp.throw_length = parseInt(($(this).find("radius").text() ? $(this).find("radius").text() : 100));
 		 temp.active = $(this).find("active").text();
 		 

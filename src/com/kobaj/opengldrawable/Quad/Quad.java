@@ -112,6 +112,67 @@ public class Quad
 		//set our texture resource
 		this.texture_resource = texture_resource;
 		
+		//position data
+		setWidthHeight(width, height);
+		
+		//texture data
+		final int tr_square_x = com.kobaj.math.Functions.nearestPowerOf2(width);
+		final int tr_square_y = com.kobaj.math.Functions.nearestPowerOf2(height);
+		
+		square = Math.max(tr_square_x, tr_square_y);
+
+		final float tex_y = (float) com.kobaj.math.Functions.linearInterpolateUnclamped(0, square, height, 0, 1);
+		final float tex_x = (float) com.kobaj.math.Functions.linearInterpolateUnclamped(0, square, width, 0, 1);
+		
+		simpleUpdateTexCoords(tex_x, tex_y);
+		
+		final float tr_x = (float) (this.shader_width / 2.0);
+		final float tr_y = (float) (this.shader_height / 2.0);
+		
+		//up next setup phys rect list. Just a default. The user can set/add/remove more rectangles as needed.
+		if(phys_rect_list.isEmpty())
+			phys_rect_list.add(new ExtendedRectF(-tr_x, tr_y, tr_x, -tr_y));
+	}
+	
+	//methods for calculating stuffs
+	protected void simpleUpdateTexCoords(float tex_x, float tex_y)
+	{
+		complexUpdateTexCoords(0, tex_x, 0, tex_y);
+	}
+	
+	//these are in shader coordinates. start_x, end_x, start_y, end_y
+	protected void complexUpdateTexCoords(float one_x, float two_x, float one_y, float two_y)
+	{
+		//only time I use floats...
+		float buffer = -0.005f;
+		one_x -= buffer;
+		two_x += buffer;
+		one_y -= buffer;
+		two_y += buffer;
+		
+		// S, T (or X, Y)
+		// Texture coordinate data.
+		final float[] cubeTextureCoordinateData = {
+				// Front face
+				one_x, -one_y,
+				one_x, -two_y,
+				two_x, -one_y,
+				one_x, -two_y,
+				two_x, -two_y,
+				two_x, -one_y };
+	
+		if(my_tex_coord == null)
+			my_tex_coord = ByteBuffer.allocateDirect(cubeTextureCoordinateData.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
+		else
+			my_tex_coord.clear();
+		
+		my_tex_coord.put(cubeTextureCoordinateData).position(0);
+	}
+	
+	//do note: this doesn't change the physics bounding box.
+	//this is in screen size
+	public void setWidthHeight(int width, int height)
+	{
 		//store these for our bounding rectangle
 		this.width = width;
 		this.height = height;
@@ -144,53 +205,12 @@ public class Quad
 		
 		};
 		
-		final int tr_square_x = com.kobaj.math.Functions.nearestPowerOf2(width);
-		final int tr_square_y = com.kobaj.math.Functions.nearestPowerOf2(height);
-		
-		square = Math.max(tr_square_x, tr_square_y);
-
-		final float tex_y = (float) com.kobaj.math.Functions.linearInterpolateUnclamped(0, square, height, 0, 1);
-		final float tex_x = (float) com.kobaj.math.Functions.linearInterpolateUnclamped(0, square, width, 0, 1);
-		
-		simpleUpdateTexCoords(tex_x, tex_y);
-		
 		// Initialize the buffers.
-		my_position = ByteBuffer.allocateDirect(cubePositionData.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
-		my_position.put(cubePositionData).position(0);
-		
-		//up next setup phys rect list. Just a default. The user can set/add/remove more rectangles as needed.
-		phys_rect_list.add(new ExtendedRectF(-tr_x, tr_y, tr_x, -tr_y));
-	}
-	
-	//methods for calculating stuffs
-	protected void simpleUpdateTexCoords(float tex_x, float tex_y)
-	{
-		complexUpdateTexCoords(0, tex_x, 0, tex_y);
-	}
-	
-	//these are in shader coordinates. start_x, end_x, start_y, end_y
-	protected void complexUpdateTexCoords(float one_x, float two_x, float one_y, float two_y)
-	{
-		//only time I use floats...
-		
-		// S, T (or X, Y)
-		// Texture coordinate data.
-		final float[] cubeTextureCoordinateData = {
-				// Front face
-				one_x, -one_y,
-				one_x, -two_y,
-				two_x, -one_y,
-				one_x, -two_y,
-				two_x, -two_y,
-				two_x, -one_y };
-	
-		// my_tex_coord.clear();
-		if(my_tex_coord == null)
-			my_tex_coord = ByteBuffer.allocateDirect(cubeTextureCoordinateData.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
+		if(my_position == null)
+			my_position = ByteBuffer.allocateDirect(cubePositionData.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
 		else
-			my_tex_coord.clear();
-		
-		my_tex_coord.put(cubeTextureCoordinateData).position(0);
+			my_position.clear();
+		my_position.put(cubePositionData).position(0);
 	}
 	
 	//these x and y are in shader space 0 to 1
