@@ -207,15 +207,15 @@ function setup_lights_interface(selected_light)
 	$('#light_farwidth').val(selected_light.farwidth);
 	$('#light_degree').val(selected_light.degree);
 	
-	if(selected_light.color)
-		$('#light_bloom').attr('checked', 'checked');
+	if(selected_light.bloom)
+		$('#light_bloom').attr('checked', true);
 	else
-		$('#light_bloom').attr('checked', '');
+		$('#light_bloom').attr('checked', false);
 		
-	if(selected_light.color)
-		$('#light_active').attr('checked', 'checked');
+	if(selected_light.active)
+		$('#light_active').attr('checked', true);
 	else
-		$('#light_active').attr('checked', '');
+		$('#light_active').attr('checked', false);
 }
 
 //and the initialization
@@ -364,17 +364,9 @@ function initialize_light_interface()
 
 function light_mouse_up(click_point)
 {
+	//remove draggability
 	for(var i = 0; i < lights_array.length; i++)
-	{
-		//remove draggability
 		lights_array[i].draggable = false;
-		
-		//see if selected
-		if(lights_array[i].contains(click_point) && current_tab == "lights")
-			lights_array[i].selected = true;
-		else
-			lights_array[i].selected = false;
-	}	
 }
 
 function more_light_stuff()

@@ -226,17 +226,9 @@ function initialize_object_interface()
 
 function object_mouse_up(click_point)
 {
+	//remove draggability
 	for(var i = 0; i < objects_array.length; i++)
-	{
-		//remove draggability
 		objects_array[i].draggable = false;
-		
-		//see if selected
-		if(objects_array[i].contains(click_point) && current_tab == "objects")
-			objects_array[i].selected = true;
-		else
-			objects_array[i].selected = false;
-	}	
 }
 
 function more_object_stuff()

@@ -152,14 +152,14 @@ public class QuadColorShape extends Quad
 		//draw mask
 			double diameter = radius * 2.0;	
 			double extra = radius - half_far_width;
-			float buffer = 5;
+			float buffer = 0;
 			
 			path.moveTo((float)extra - buffer, (float)diameter + buffer);
 			path.lineTo(0 - buffer, (float)diameter + buffer);
 			path.lineTo(0 - buffer, 0 - buffer);
 			path.lineTo((float)diameter + buffer, 0 - buffer);
 			path.lineTo((float)diameter + buffer, (float)diameter + buffer);
-			path.lineTo((float)(diameter - extra - buffer), (float)diameter + buffer);
+			path.lineTo((float)(diameter - extra + buffer), (float)diameter + buffer);
 			path.lineTo((float)(radius + half_close_width), (float)radius);
 			path.lineTo((float)(radius - half_close_width), (float)radius);
 			path.lineTo((float)extra - buffer, (float)diameter + buffer); //end where we started
@@ -172,6 +172,8 @@ public class QuadColorShape extends Quad
 		
 		//rotate and draw
 		canvas_temp.rotate((float) degree - 90.0f, (float)radius, (float)radius);
+		if(!is_bloom)
+			canvas_temp.drawColor(Color.BLACK);
 		canvas_temp.drawBitmap(light, 0, 0, new Paint()); // may have to use a different paint here.
 		canvas_temp.drawPath(path, mask_paint);
 		

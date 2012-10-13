@@ -31,6 +31,9 @@ public class LevelPointLight extends LevelAmbientLight
 			quad_bloom = new QuadColorShape(radius, color, true, blur_amount);
 		
 		setupPositions();
+		
+		//offset so things dont blink/glow togeter
+		light_effect_timer = Functions.randomDouble(0, 1000);
 	}
 	
 	protected void setupPositions()
