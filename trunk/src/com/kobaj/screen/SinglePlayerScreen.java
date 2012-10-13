@@ -5,6 +5,7 @@ import com.kobaj.input.GameInputModifier;
 import com.kobaj.loader.XMLHandler;
 import com.kobaj.math.Constants;
 import com.kobaj.opengldrawable.EnumDrawFrom;
+import com.kobaj.opengldrawable.Quad.QuadColorShape;
 import com.kobaj.screen.screenaddons.BaseDebugScreen;
 import com.kobaj.screen.screenaddons.BaseInteractionScreen;
 import com.kobaj.screen.screenaddons.BaseLoadingScreen;
@@ -21,6 +22,8 @@ public class SinglePlayerScreen extends BaseScreen
 	BaseDebugScreen debug_addon;
 	BaseLoadingScreen loading_addon;
 	BaseInteractionScreen interaction_addon;
+	
+	QuadColorShape my_backdrop;
 	
 	public SinglePlayerScreen()
 	{
@@ -63,6 +66,8 @@ public class SinglePlayerScreen extends BaseScreen
 		
 		//control input
 		my_modifier.onInitialize();
+		
+		my_backdrop = new QuadColorShape(Constants.width, Constants.height, 0xFF111111, 0);
 	}
 	
 	@Override
@@ -88,6 +93,8 @@ public class SinglePlayerScreen extends BaseScreen
 	@Override
 	public void onDrawObject()
 	{	
+		my_backdrop.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, Constants.ambient_light, true);
+		
 		test_level.onDrawObject();
 		
 		//draw some helpful bounding boxes
