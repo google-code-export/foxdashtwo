@@ -10,6 +10,8 @@ import com.kobaj.opengldrawable.Quad.Quad;
 //3. Collision handling
 public class Physics
 {	
+	RectF collision = new RectF();
+	
 	public <T extends Quad> void add_gravity(T the_quad)
 	{
 		the_quad.y_acc += Constants.gravity;
@@ -43,12 +45,14 @@ public class Physics
 		the_quad.setPos(the_quad.getXPos() + the_quad.x_vel * delta, the_quad.getYPos() + the_quad.y_vel * delta, com.kobaj.opengldrawable.EnumDrawFrom.center);
 	}
 	
-	//check for a collision and return a collission rectf
-	public <T extends Quad> RectF check_collision(T first_quad, T second_quad)
+	//check for a collision and return true if the collision is up and down (the player can jump)
+	//otherwise return false
+	//zero based index. 0 = first quad, 1 = second_quad
+	public <T extends Quad> boolean check_collision(T first_quad, T second_quad, int quad_to_move)
 	{
 		//see if in the same z_plane
 		if(first_quad.z_pos != second_quad.z_pos)
-			return null;
+			return false;
 		
 		//quick check to even see if its possible for two quads to touch
 		double first_x = first_quad.getXPos();
@@ -65,20 +69,17 @@ public class Physics
 		second_y = second_y - second_quad.shader_height / 2.0;
 		
 		if(first_x + first_quad.shader_width < second_x || first_x > second_x + second_quad.shader_width)
-			return null; //no possibility of collision
+			return false; //no possibility of collision
 		
 		if(first_y + first_quad.shader_height < second_y || first_y > second_y + second_quad.shader_height)
-			return null; //no possibility of collision
-		
-		//Is this going to cause garbage?
-		RectF collision;
+			return false; //no possibility of collision
 		
 		//if its possible, get a detailed picture of the collision
 		for(int i = first_quad.phys_rect_list.size() - 1; i >= 0; i--)
 			for(int e = second_quad.phys_rect_list.size() - 1; i >= 0; i--)
 			{
-				collision = Functions.setEqualIntersects(first_quad.phys_rect_list.get(i).main_rect, second_quad.phys_rect_list.get(e).main_rect);
-				if(collision != null)
+				Functions.setEqualIntersects(collision, first_quad.phys_rect_list.get(i).main_rect, second_quad.phys_rect_list.get(e).main_rect);
+				if(collision.left != collision.right || collision.top != collision.bottom)
 				{
 					//we will generate normals
 					//and in addition modify the collision rectangle
@@ -93,44 +94,49 @@ public class Physics
 					else if(height > Constants.collision_detection_height)
 						collision.top = collision.bottom;
 					else
-						collision = null;
+						return false;
 							
 					//and here we would decide reaction (if it were programmed)
 					
-					if(collision != null)
-						return collision;
+					//and move the user specified quad
+					if(quad_to_move == 0)
+						handle_collision(collision, first_quad);
+					else if (quad_to_move == 1)
+						handle_collision(collision, second_quad);
+					
+					//we can still return false
+					if(height != 0)
+						return true;
+					else
+						return false;
 				}
 			}
 		
 		//if there is a collision, return a rectF, if no collision then null.
-		return null;
+		return false;
 	}
 	
-	public <T extends Quad> void handle_collision(RectF collision, T the_quad)
+	public <T extends Quad> void handle_collision(RectF my_collision, T the_quad)
 	{
 		//assume a few things
 		//no bounce
-	
-		//early copouts
-		if(collision == null)
-			return;
 		
-		double width = Math.abs(collision.width());
-		double height = Math.abs(collision.height());
+		double width = Math.abs(my_collision.width());
+		double height = Math.abs(my_collision.height());
 			
 		if(width == height)
 			return;
 		
-		if(collision.width() != 0)
+		if(my_collision.width() != 0)
 		{
-			if(collision.centerX() > the_quad.getXPos()) // push object to the right
+			if(my_collision.centerX() > the_quad.getXPos()) // push object to the right
 				width = -width;
 			the_quad.setPos(the_quad.getXPos() + width, the_quad.getYPos(), com.kobaj.opengldrawable.EnumDrawFrom.center);
 			the_quad.x_vel = 0;
 		}
 		else
 		{
-			if(collision.centerY() > the_quad.getYPos())
+			if(my_collision.centerY() > the_quad.getYPos())
 				height = -height;
 			the_quad.setPos(the_quad.getXPos(), the_quad.getYPos() + height, com.kobaj.opengldrawable.EnumDrawFrom.center);
 			

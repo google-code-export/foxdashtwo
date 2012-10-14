@@ -37,63 +37,64 @@ function openLevelCode(refresh)
 function getLevelDefinition()
 {
 	var def = '<level>\n';
-	def +=		'<player><this_object>player</this_object><draw_from>bottom_left</draw_from><id>0</id><z_plane>5.0</z_plane>\n';
-    def += 		'<x_pos>' + $('#player_x').val() + '</x_pos>\n';
-    def +=		'<y_pos>' + $('#player_y').val() + '</y_pos>\n';
-    def += 		'<active>true</active></player>\n';
-    def +=			'<object_list>\n';
+	def +=		'  <player>\n    <this_object>player</this_object>\n    <draw_from>bottom_left</draw_from>\n    <id>0</id>\n    <z_plane>5.0</z_plane>\n';
+    def += 		'    <x_pos>' + $('#player_x').val() + '</x_pos>\n';
+    def +=		'    <y_pos>' + $('#player_y').val() + '</y_pos>\n';
+    def += 		'    <active>true</active>\n  </player>\n';
+    def +=		'  <object_list>\n';
     
     for(o in objects_array)
     {
-    	def += '<levelObject>\n';
-    	def += '<this_object>' + objects_array[o].type + '</this_object>\n';
-    	def += '<draw_from>bottom_left</draw_from>\n';
-    	def += '<id>' + objects_array[o].id + '</id>\n';
-    	def += '<z_plane>' + objects_array[o].z_plane + '</z_plane>\n';
-    	def += '<x_pos>' + objects_array[o].x + '</x_pos>\n';
-    	def += '<y_pos>' + objects_array[o].y + '</y_pos>\n';
-    	def += '<active>true</active>\n';
-    	def += '</levelObject>\n';
+    	def += '    <levelObject>\n';
+    	def += '      <this_object>' + objects_array[o].type + '</this_object>\n';
+    	def += '      <draw_from>bottom_left</draw_from>\n';
+    	def += '      <id>' + objects_array[o].id + '</id>\n';
+    	def += '      <z_plane>' + objects_array[o].z_plane + '</z_plane>\n';
+    	def += '      <x_pos>' + objects_array[o].x + '</x_pos>\n';
+    	def += '      <y_pos>' + objects_array[o].y + '</y_pos>\n';
+    	def += '      <active>true</active>\n';
+    	def += '    </levelObject>\n';
     }
     
-    def += '</object_list><light_list>\n';
+    def += '  </object_list>\n  <light_list>\n';
     
     for(l in lights_array)
     {
     	if(lights_array[l].type == 'spot')
     	{
-    		def += '<levelLight class="com.kobaj.level.LevelSpotLight">\n';
-    		def += '<close_width>' + lights_array[l].closewidth + '</close_width>\n';
-    		def += '<degree>' + lights_array[l].degree + '</degree>\n';
-    		def += '<far_width>' + lights_array[l].farwidth + '</far_width>\n';
+    		def += '    <levelLight class="com.kobaj.level.LevelSpotLight">\n';
+    		def += '      <close_width>' + lights_array[l].closewidth + '</close_width>\n';
+    		def += '      <degree>' + lights_array[l].degree + '</degree>\n';
+    		def += '      <far_width>' + lights_array[l].farwidth + '</far_width>\n';
     	}
        
     	if(lights_array[l].type == 'point')
-    		def += '<levelLight class="com.kobaj.level.LevelPointLight">\n';
+    		def += '    <levelLight class="com.kobaj.level.LevelPointLight">\n';
     	
     	if(lights_array[l].type == 'point' || lights_array[l].type == 'spot')
     	{
-    		def += '<is_bloom>' + lights_array[l].bloom + '</is_bloom>\n';
-       		def += '<y_pos>' + lights_array[l].y + '</y_pos>\n';
-       		def += '<radius>' + lights_array[l].throw_length + '</radius>\n';
-       		def += '<x_pos>' + lights_array[l].x + '</x_pos>\n';
-       		def += '<blur_amount>0</blur_amount>\n';
+    		def += '      <light_effect>' + lights_array[l].light_effect + '</light_effect>\n';
+    		def += '      <is_bloom>' + lights_array[l].bloom + '</is_bloom>\n';
+       		def += '      <y_pos>' + lights_array[l].y + '</y_pos>\n';
+       		def += '      <radius>' + lights_array[l].throw_length + '</radius>\n';
+       		def += '      <x_pos>' + lights_array[l].x + '</x_pos>\n';
+       		def += '      <blur_amount>0</blur_amount>\n';
     	}
     	
        if(lights_array[l].type == 'ambient')
-    	   def += '<levelLight class="com.kobaj.level.LevelAmbientLight">\n';
+    	   def += '    <levelLight class="com.kobaj.level.LevelAmbientLight">\n';
        
-       def += '<active>' + lights_array[l].active + '</active>\n';
-       def += '<id>' + lights_array[l].id + '</id>\n';
-       def += '<color>' + rgbaToInt(lights_array[l].color) + '</color>\n';
-       def += '</levelLight>\n';
+       def += '      <active>' + lights_array[l].active + '</active>\n';
+       def += '      <id>' + lights_array[l].id + '</id>\n';
+       def += '      <color>' + rgbaToInt(lights_array[l].color) + '</color>\n';
+       def += '    </levelLight>\n';
     }
     
-    def += '</light_list>\n';
-    def += '<right_limit>' + $('#right-limit').val() + '</right_limit>\n';
-    def += '<bottom_limit>' + $('#bottom-limit').val() + '</bottom_limit>\n';
-    def += '<top_limit>' + $('#top-limit').val() + '</top_limit>\n';
-    def += '<left_limit>' + $('#left-limit').val() + '</left_limit>\n';
+    def += '  </light_list>\n';
+    def += '  <right_limit>' + $('#right-limit').val() + '</right_limit>\n';
+    def += '  <bottom_limit>' + $('#bottom-limit').val() + '</bottom_limit>\n';
+    def += '  <top_limit>' + $('#top-limit').val() + '</top_limit>\n';
+    def += '  <left_limit>' + $('#left-limit').val() + '</left_limit>\n';
     def += '</level>';
     
     return def;
@@ -192,6 +193,7 @@ function levelChanged(level)
 		 temp.throw_length = parseInt(($(this).find("radius").text() ? $(this).find("radius").text() : 100));
 		 temp.active = $(this).find("active").text();
 		 
+		 temp.light_effect = $(this).find("light_effect").text();
 		 temp.color = intToRgba($(this).find("color").text());
 		 
 		 lights_array.push(temp);

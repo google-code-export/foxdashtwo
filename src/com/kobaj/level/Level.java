@@ -30,7 +30,7 @@ public class Level
 	public ArrayList<LevelObject> object_list;
 	
 	@ElementList
-	public ArrayList<LevelLight> light_list; //all lights including blooms
+	public ArrayList<LevelAmbientLight> light_list; //all lights including blooms
 	
 	ArrayList<LevelPointLight> bloom_light_list = new ArrayList<LevelPointLight>(); //only blooms
 	
@@ -105,7 +105,7 @@ public class Level
 		player.z_plane = 5;
 		
 		object_list = new ArrayList<LevelObject>();
-		light_list = new ArrayList<LevelLight>();
+		light_list = new ArrayList<LevelAmbientLight>();
 		
 		LevelObject temp = new LevelObject();
 		temp.draw_from = com.kobaj.opengldrawable.EnumDrawFrom.top_left;

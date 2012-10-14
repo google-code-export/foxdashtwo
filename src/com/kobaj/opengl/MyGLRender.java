@@ -70,6 +70,8 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		
 		// this projection matrix is applied to object coodinates
 		// in the onDrawFrame() method
+		
+		//Matrix.frustumM(Constants.my_proj_matrix, 0, -ratio, ratio, -1, 1, .9999999999f, 2);
 		Matrix.orthoM(Constants.my_proj_matrix, 0, -ratio, ratio, -1, 1, .99999999f, 2);
 		Matrix.setLookAtM(Constants.my_view_matrix, 0, //this is the identity...
 				0, 0, 0, 

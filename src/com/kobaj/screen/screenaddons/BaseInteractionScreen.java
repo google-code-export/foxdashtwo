@@ -1,7 +1,5 @@
 package com.kobaj.screen.screenaddons;
 
-import android.graphics.RectF;
-
 import com.kobaj.input.GameInputModifier;
 import com.kobaj.level.Level;
 import com.kobaj.math.Constants;
@@ -16,12 +14,11 @@ public class BaseInteractionScreen
 		
 		// physics
 		Constants.physics.integrate_physics(delta, test_level.player.quad_object);
-		for (com.kobaj.level.LevelObject level_object : test_level.object_list)
+		for (int i = test_level.object_list.size() - 1; i >= 0; i--)
 		{
-			RectF collision = Constants.physics.check_collision(test_level.player.quad_object, level_object.quad_object);
-			if (collision != null && collision.height() != 0)
+			boolean temp = Constants.physics.check_collision(test_level.player.quad_object, test_level.object_list.get(i).quad_object, 0);
+			if(temp)
 				jump_time = true;
-			Constants.physics.handle_collision(collision, test_level.player.quad_object);
 		}
 		
 		// initial touch
