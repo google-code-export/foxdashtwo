@@ -112,9 +112,6 @@ function redraw()
 		drawBoxwh(world_coords.x, world_coords.y, 800, 480, lightredFill);
 	}
 	
-	//draw the player
-	player.draw();
-	
 	//draw objects
 	for(var i = 0; i < objects_array.length; i++)
 		objects_array[i].draw();
@@ -122,6 +119,9 @@ function redraw()
 	//draw lights
 	for(var i = 0; i < lights_array.length; i++)
 		lights_array[i].draw();
+	
+	//draw the player
+	player.draw();
 	
 	//context.drawImage(breadCrumbsImg,0,0);
 };

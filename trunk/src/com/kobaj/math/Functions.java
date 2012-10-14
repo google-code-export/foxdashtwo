@@ -171,16 +171,15 @@ public class Functions
 		return (a.left <= right && left <= a.right && ((a.top >= bottom && top >= a.bottom) || (a.top <= -bottom && -top <= a.bottom)));
 	}
 	
-	public static final RectF setEqualIntersects(RectF a, RectF b)
+	public static final boolean setEqualIntersects(RectF out, RectF a, RectF b)
 	{
-		return setEqualIntersects(a, b.left, b.top, b.right, b.bottom);
+		return setEqualIntersects(out, a, b.left, b.top, b.right, b.bottom);
 	}
 	
-	public static final RectF setEqualIntersects(RectF a, double left, double top, double right, double bottom)
+	public static final boolean setEqualIntersects(RectF send_back, RectF a, double left, double top, double right, double bottom)
 	{
 		if (equalIntersects(a, left, top, right, bottom))
 		{
-			RectF send_back = new RectF();
 			send_back.left = (float) (Math.max(a.left, left));
 			
 			// correct orientation
@@ -196,9 +195,17 @@ public class Functions
 			else
 				send_back.bottom = (float) (Math.max(a.bottom, bottom));
 			
-			return send_back;
+			return true;
 		}
-		return null;
+		else
+		{
+			send_back.left = 0;
+			send_back.top = 0;
+			send_back.right = 0;
+			send_back.bottom = 0;
+		}
+		
+		return false;
 	}
 	
 	// radius stuff.

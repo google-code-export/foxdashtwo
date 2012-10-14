@@ -64,10 +64,6 @@ public class Constants
 	public static final double normal_air_damping  			= .90;
 	public static final double normal_friction 				= .011;
 	
-	//input constants
-	public static final double max_brightness = 0.65;
-	public static final double min_brightness = 0.45;
-	
 	//loading screen pretties
 	public static final int loading_radius = 5;
 	public static final int loading_max_shapes = 8;
@@ -97,6 +93,8 @@ public class Constants
 	public static final int input_draw_color = 0xAAFFFFFF;
 	public static final double input_circle_width = 50;
 	public static final int input_swipe_sensitivity = 140;
+	public static final double max_brightness = 0.75;
+	public static final double min_brightness = 0.55;
 	
 	public static Text text;
 	public static double text_size = 16.0; //all text is the same size (how lame!)

@@ -1,5 +1,4 @@
-uniform mat4 u_MVPMatrix;		// A constant representing the combined model/view/projection matrix.      		       
-uniform mat4 u_MVMatrix;		// A constant representing the combined model/view matrix.       		
+uniform mat4 u_MVPMatrix;		// A constant representing the combined model/view/projection matrix.      		           		
 uniform float u_Brightness;		// constant brightness
 		  			
 attribute vec4 a_Position;		// Per-vertex position information we will pass in.   								   

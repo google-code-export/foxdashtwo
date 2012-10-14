@@ -5,20 +5,29 @@ import org.simpleframework.xml.Element;
 import com.kobaj.math.Constants;
 import com.kobaj.opengldrawable.Quad.QuadColorShape;
 
-public class LevelAmbientLight extends LevelLight
+public class LevelAmbientLight
 {
+	@Element
+	public boolean active;
+	
+	@Element
+	public int id;
+	
 	@Element
 	public int color;
 	
 	public QuadColorShape quad_light;
 
-	@Override
 	public void onInitialize()
 	{
 		quad_light = new QuadColorShape(0, com.kobaj.math.Constants.height, com.kobaj.math.Constants.width, 0, color, 0);
 	}
 
-	@Override
+	public void onUpdate(double delta)
+	{
+		// do nothing.	
+	}
+	
 	public void onDrawLight()
 	{
 		if(active)

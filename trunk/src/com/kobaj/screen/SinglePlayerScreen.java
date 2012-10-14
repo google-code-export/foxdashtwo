@@ -43,7 +43,6 @@ public class SinglePlayerScreen extends BaseScreen
 	{	
 		//load our addons. Do the loader first
 		loading_addon = new BaseLoadingScreen();
-		debug_addon = new BaseDebugScreen();
 		interaction_addon = new BaseInteractionScreen();
 	
 		//grab from disk
@@ -66,6 +65,8 @@ public class SinglePlayerScreen extends BaseScreen
 		
 		//control input
 		my_modifier.onInitialize();
+		
+		debug_addon = new BaseDebugScreen(test_level, true, false);
 		
 		my_backdrop = new QuadColorShape(Constants.width, Constants.height, 0xFF111111, 0);
 	}

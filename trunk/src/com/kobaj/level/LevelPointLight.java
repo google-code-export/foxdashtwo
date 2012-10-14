@@ -67,14 +67,26 @@ public class LevelPointLight extends LevelAmbientLight
 			if(light_effect_timer <= 0)
 			{
 				//generate next random number
-				light_effect_timer = Functions.randomInt(50, 900);
+				light_effect_timer = Functions.randomInt(40, 800);
 				
 				//switch on or off
 				active = !active;
 			}
 			else
-				light_effect_timer -= delta;
-				
+				light_effect_timer -= delta;	
+		}
+		else if(light_effect == EnumLightEffect.rotate)
+		{
+			float update_amount = (float) (delta / 8.0);
+			light_effect_timer += update_amount;
+			
+			if(light_effect_timer >= 360)
+				light_effect_timer = 0;
+			
+			quad_light.setRotationZ(light_effect_timer);
+			
+			if(is_bloom)
+				quad_bloom.setRotationZ(light_effect_timer);
 		}
 	}
 	

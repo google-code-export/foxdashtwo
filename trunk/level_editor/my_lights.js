@@ -13,6 +13,7 @@ function my_lights(x, y, type, i)
 	this.degree = 0;
 	this.bloom = false;
 	this.active = true;
+	this.light_effect = 'none';
 	
 	this.selected = true;
 	this.draggable = false;
@@ -201,6 +202,7 @@ function setup_lights_interface(selected_light)
 	$('#light_x').val(selected_light.x);
 	$('#light_y').val(selected_light.y);
 	
+	$('#light_effect_drop_down').val(selected_light.light_effect);
 	$('#light_color').val(selected_light.color);
 	$('#light_throw').val(selected_light.throw_length);
 	$('#light_closewidth').val(selected_light.closewidth);
@@ -243,21 +245,18 @@ function initialize_light_interface()
 		// show the right info
 		if(selected_type == 'ambient')
 		{
-			$('#light_bloom_wrap').css('display', 'none');
 			$('.light_spot_show_wrap').css('display', 'none');
-			$('#light_throw_wrap').css('display', 'none');
+			$('.light_throw_wrap').css('display', 'none');
 		}
 		else if(selected_type == 'point')
 		{
-			$('#light_bloom_wrap').css('display', 'inline-block');
 			$('.light_spot_show_wrap').css('display', 'none');
-			$('#light_throw_wrap').css('display', 'inline-block');
+			$('.light_throw_wrap').css('display', 'inline-block');
 		}
 		else if(selected_type == 'spot')
 		{
-			$('#light_bloom_wrap').css('display', 'inline-block');
 			$('.light_spot_show_wrap').css('display', 'inline-block');
-			$('#light_throw_wrap').css('display', 'inline-block');
+			$('.light_throw_wrap').css('display', 'inline-block');
 		}
 		
 		for(var i = 0; i < lights_array.length; i++)
@@ -267,6 +266,15 @@ function initialize_light_interface()
 			
 			break;
 		}
+	});
+	
+	$('#light_effect_drop_down').change(function(){
+		for(var i = 0; i < lights_array.length; i++)
+			if(lights_array[i].selected)
+			{
+				lights_array[i].light_effect = $(this).val();
+				break;
+			}
 	});
 	
 	//change x and y
