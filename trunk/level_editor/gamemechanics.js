@@ -91,15 +91,23 @@ function mouseDown(e) {
 	mouse_down = true;
 
 	//unselect everything
+	var selected_object;
 	for(var i = 0; i < objects_array.length; i++)
 	{
+		if(objects_array[i].selected)
+			selected_object = objects_array[i];
+		
 		objects_array[i].draggable = false;
 		objects_array[i].selected = false;
 	}
 	$('#object_drop_down').val('');
 	
+	var selected_light;
 	for(var i = 0; i < lights_array.length; i++)
 	{
+		if(lights_array[i].selected)
+			selected_light = lights_array[i];
+		
 		lights_array[i].draggable = false;
 		lights_array[i].selected = false;
 	}
@@ -109,9 +117,9 @@ function mouseDown(e) {
 	if(current_tab == "player")
 		player.selected = player.contains(click_point);
 	else if(current_tab == "objects")
-		mouse_move_object(click_point);
+		mouse_move_object(click_point, selected_object);
 	else if(current_tab == 'lights')
-		mouse_move_light(click_point);
+		mouse_move_light(click_point, selected_light);
 	
 	setLevelDefinition();
 }

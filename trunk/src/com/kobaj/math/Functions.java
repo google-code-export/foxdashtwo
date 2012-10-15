@@ -147,10 +147,12 @@ public class Functions
 	
 	public static final boolean onShader(ArrayList<ExtendedRectF> objects)
 	{
-		final double left = (-Constants.ratio - Constants.x_shader_translation);
-		final double top = (1 + -Constants.y_shader_translation);
-		final double right = (Constants.ratio - Constants.x_shader_translation);
-		final double bottom = (-1 + -Constants.y_shader_translation);
+		final double neg_zoom = Constants.ratio * Constants.z_shader_translation;
+		
+		final double left = (-Constants.ratio - Constants.x_shader_translation + neg_zoom);
+		final double top = (1 + -Constants.y_shader_translation - Constants.z_shader_translation);
+		final double right = (Constants.ratio - Constants.x_shader_translation - neg_zoom);
+		final double bottom = (-1 + -Constants.y_shader_translation + Constants.z_shader_translation);
 		
 		for (int i = objects.size() - 1; i >= 0; i--)
 			if (equalIntersects(objects.get(i).main_rect, left, top, right, bottom))
@@ -270,10 +272,29 @@ public class Functions
 	
 	public static void setCamera(double x_camera, double y_camera)
 	{
+		//nothing has changed
+		if(x_camera == Constants.x_shader_translation &&
+		   y_camera == Constants.y_shader_translation)
+			return;
+		
 		Matrix.setIdentityM(Constants.my_view_matrix, 0);
 		Matrix.translateM(Constants.my_view_matrix, 0, (float) x_camera, (float) y_camera, 0);
 		Constants.x_shader_translation = x_camera;
 		Constants.y_shader_translation = y_camera;
+	}
+	
+	public static void setCameraZ(double z_camera)
+	{
+		if(z_camera < 0)
+			return;
+		
+		z_camera = -z_camera;
+		if(Constants.z_shader_translation == z_camera)
+			return;
+		
+		Matrix.setIdentityM(Constants.my_view_matrix, 0);
+		Matrix.translateM(Constants.my_view_matrix, 0, (float) Constants.x_shader_translation, (float) Constants.y_shader_translation, (float) z_camera);
+		Constants.z_shader_translation = z_camera;
 	}
 	
 	// when needing to blur something

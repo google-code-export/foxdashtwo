@@ -48,7 +48,7 @@ function getLevelDefinition()
     	def += '    <levelObject>\n';
     	def += '      <this_object>' + objects_array[o].type + '</this_object>\n';
     	def += '      <draw_from>bottom_left</draw_from>\n';
-    	def += '      <id>' + objects_array[o].id + '</id>\n';
+    	def += '      <id>' + objects_array[o].object_name_id + '</id>\n';
     	def += '      <z_plane>' + objects_array[o].z_plane + '</z_plane>\n';
     	def += '      <x_pos>' + objects_array[o].x + '</x_pos>\n';
     	def += '      <y_pos>' + objects_array[o].y + '</y_pos>\n';
@@ -85,7 +85,7 @@ function getLevelDefinition()
     	   def += '    <levelLight class="com.kobaj.level.LevelAmbientLight">\n';
        
        def += '      <active>' + lights_array[l].active + '</active>\n';
-       def += '      <id>' + lights_array[l].id + '</id>\n';
+       def += '      <id>' + lights_array[l].light_name_id + '</id>\n';
        def += '      <color>' + rgbaToInt(lights_array[l].color) + '</color>\n';
        def += '    </levelLight>\n';
     }
@@ -161,6 +161,7 @@ function levelChanged(level)
 				 objects_array.length); // remember, this is zero based indexing
 		 
 		 temp.z_plane =  parseInt($(this).find("z_plane").text());
+		 temp.object_name_id = ($(this).find("id").text() ? $(this).find("id").text() : "000x0")
 		 
 		 objects_array.push(temp);
 	 });
@@ -168,10 +169,14 @@ function levelChanged(level)
 		 setup_objects_interface(objects_array[objects_array.length - 1]);
 	 
 	 //then lights
+	 var ambient_light_count = 0;
 	 $xml.find("levelLight").each(function(){
 		 
 		 if($(this).attr('class') == 'com.kobaj.level.LevelAmbientLight')
+		 {
 			 var the_type = 'ambient';
+			 ambient_light_count += 1;
+		 }
 
 		 if($(this).attr('class') == 'com.kobaj.level.LevelPointLight')
 			 var the_type = 'point';
@@ -180,11 +185,12 @@ function levelChanged(level)
 			 var the_type = 'spot';
 		 
 		 var temp = new my_lights(
-				 parseInt(($(this).find("x_pos").text() ? $(this).find("x_pos").text() : 0)),
+				 parseInt(($(this).find("x_pos").text() ? $(this).find("x_pos").text() : 100 * ambient_light_count)),
 				 parseInt(($(this).find("y_pos").text() ? $(this).find("y_pos").text() : 0)),
 				 the_type,
 				lights_array.length);
 		 
+		 temp.light_name_id = ($(this).find("id").text() ? $(this).find("id").text() : '000x0');
 		 temp.closewidth = parseInt(($(this).find("close_width").text() ? $(this).find("close_width").text() : 10));
 		 temp.farwidth = parseInt(($(this).find("far_width").text() ? $(this).find("far_width").text() : 100));
 		 temp.degree = parseInt(($(this).find("degree").text() ? $(this).find("degree").text() : 100));
@@ -193,7 +199,7 @@ function levelChanged(level)
 		 temp.throw_length = parseInt(($(this).find("radius").text() ? $(this).find("radius").text() : 100));
 		 temp.active = $(this).find("active").text();
 		 
-		 temp.light_effect = $(this).find("light_effect").text();
+		 temp.light_effect = ($(this).find("light_effect").text() ? $(this).find("light_effect").text() : 'none');
 		 temp.color = intToRgba($(this).find("color").text());
 		 
 		 lights_array.push(temp);
