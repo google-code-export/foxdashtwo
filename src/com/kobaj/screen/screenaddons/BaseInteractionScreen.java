@@ -2,11 +2,15 @@ package com.kobaj.screen.screenaddons;
 
 import com.kobaj.input.GameInputModifier;
 import com.kobaj.level.Level;
+import com.kobaj.math.AverageMaker;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 
 public class BaseInteractionScreen
 {
+	//camera zoom
+	AverageMaker my_test_average = new AverageMaker(20);
+		
 	public void onUpdate(double delta, GameInputModifier my_modifier, Level test_level)
 	{
 		boolean jump_time = false;
@@ -78,18 +82,24 @@ public class BaseInteractionScreen
 		double y_camera = -test_level.player.quad_object.getYPos();
 		
 		// restrict camera movement
-		if (x_camera > test_level.left_shader_limit)
-			x_camera = test_level.left_shader_limit;
-		else if (x_camera < test_level.right_shader_limit)
-			x_camera = test_level.right_shader_limit;
+		double x_buffer = Constants.ratio * Constants.z_shader_translation;
 		
-		if (y_camera < test_level.top_shader_limit)
-			y_camera = test_level.top_shader_limit;
-		else if (y_camera > test_level.bottom_shader_limit)
-			y_camera = test_level.bottom_shader_limit;
+		if (x_camera > test_level.left_shader_limit + x_buffer)
+			x_camera = test_level.left_shader_limit + x_buffer;
+		else if (x_camera < test_level.right_shader_limit - x_buffer)
+			x_camera = test_level.right_shader_limit - x_buffer;
+		
+		if (y_camera < test_level.top_shader_limit - Constants.z_shader_translation)
+			y_camera = test_level.top_shader_limit - Constants.z_shader_translation;
+		else if (y_camera > test_level.bottom_shader_limit + Constants.z_shader_translation)
+			y_camera = test_level.bottom_shader_limit + Constants.z_shader_translation;
 		
 		// set camera
 		Functions.setCamera(x_camera, y_camera);
+		
+		//update the camera zoom effect
+		double buffer = (float) Functions.linearInterpolate(0, Constants.max_x_velocity, Math.abs(test_level.player.quad_object.x_vel), Constants.min_zoom, Constants.max_zoom);
+		Functions.setCameraZ(my_test_average.calculateAverage(buffer));
 		
 		// jump
 		if (my_modifier.getInputType().getPressedJump() && jump_time)
