@@ -11,7 +11,11 @@ public class LevelAmbientLight
 	public boolean active;
 	
 	@Element
-	public int id;
+	private String id; //identifier. 
+	public final String getID()
+	{
+		return id;
+	}
 	
 	@Element
 	public int color;

@@ -36,6 +36,7 @@ public class Constants
 	//this is where the camera is translated to
 	public static double x_shader_translation;
 	public static double y_shader_translation;
+	public static double z_shader_translation;
 	
 	//and for when a level loads
 	public static final double z_modifier = 0.00001;

@@ -133,7 +133,8 @@ label{
 	<div class="tab_hideable" style="display: none;" id="tab_objects">
 		<h4>Selected Object:</h4>
 		<div style="overflow: auto;">
-		<select style="float: right;" id="object_drop_down"><option value="">None</option></select>
+		<select style="float: right;" id="object_drop_down"><option value="">None</option></select><br/>
+		<label>Name/ID:</label><input type="text" id="object_name_id" value="000x0" /><br />
 		</div>
 		<hr />
 		<h4>Object Type:</h4>
@@ -155,7 +156,8 @@ label{
 	<div class="tab_hideable" style="display: none;" id="tab_lights">
 		<h4>Selected Light:</h4>
 		<div style="overflow: auto;">
-		<select style="float: right;" id="light_drop_down"><option value="">None</option></select>
+		<select style="float: right;" id="light_drop_down"><option value="">None</option></select><br/>
+		<label>Name/ID:</label><input type="text" id="light_name_id" value="000x0" /><br />
 		</div>
 		<hr />
 		<h4>Light Type:</h4>
@@ -185,7 +187,7 @@ label{
 		<span class="light_throw_wrap"><label>Bloom:</label><input type="checkbox" id="light_bloom" /></span><br />
 		<label>Active:</label><input type="checkbox" id="light_active" /><br />
 		<span class="light_throw_wrap">
-		<label>Effect:</label><select style="float: right;" id="light_effect_drop_down">
+		<label>Effect:</label><select id="light_effect_drop_down">
 			<option selected="selected" value="none">none</option>
 			<option value="rotate">Rotate</option>
 			<option value="pulse">Pulse</option>

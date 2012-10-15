@@ -15,6 +15,8 @@ function my_lights(x, y, type, i)
 	this.active = true;
 	this.light_effect = 'none';
 	
+	this.light_name_id = '000x0';
+	
 	this.selected = true;
 	this.draggable = false;
 }
@@ -51,7 +53,7 @@ my_lights.prototype.draw = function()
 	drawTextYFix(this.x + (this_height_thing / 2.0) - (text_width / 2.0), this.y + (this_height_thing / 2.0) - 7.5, statement, blackFill);
 	
 	if($('#labelcheck').is(':checked'))
-		drawTextYFix(this.x, 5 + this.y + this_height_thing, "my_lights(" + this.type + "): " + this.id, lightblueFill);
+		drawTextYFix(this.x, 5 + this.y + this_height_thing, "my_lights(" + this.type + "): " + this.light_name_id, lightblueFill);
 }
 
 my_lights.prototype.contains = function(v2)
@@ -106,23 +108,37 @@ function delete_light()
 		}	
 }
 
-function mouse_move_light(click_point)
+function mouse_move_light(click_point, previously_selected)
 {
 	$('#light_drop.down').val('');
 	
 	var something_selected = false;
 	
+	//previous check first
+	if(previously_selected != null && previously_selected.contains(click_point))
+	{
+		//setup the local stats
+		previously_selected.draggable = true;
+		previously_selected.selected = true;
+		//setup the interface
+		setup_lights_interface(previously_selected);
+		
+		something_selected = true;
+	}
+	
 	//select an light		
+	if(!something_selected)
 	for(var i = 0; i < lights_array.length; i++)
 		if(lights_array[i].contains(click_point))
 		{
 			//setup the local stats
 			lights_array[i].draggable = true;
 			lights_array[i].selected = true;
-			something_selected = true;
 			
 			//setup the interface
 			setup_lights_interface(lights_array[i]);
+			
+			something_selected = true;
 			
 			//exit
 			break; // only one
@@ -142,7 +158,7 @@ function mouse_move_light(click_point)
 		//add light to select
 		$('#light_drop_down').append($("<option></option>")
 		         .attr("value", id)
-		         .text(id)); 
+		         .text(lights_array[id].light_name_id + ': ' + id)); 
 		
 		//setup our interface
 		setup_lights_interface(lights_array[id]);
@@ -178,7 +194,7 @@ function remove_from_lights_array(selected_light)
 	for(var i = 0; i < lights_array.length; i++)
 	$('#light_drop_down').append($("<option></option>")
 	         .attr("value", i)
-	         .text(i)); 
+	         .text(lights_array[i].light_name_id + ': ' + i)); 
 	
 }
 
@@ -197,6 +213,7 @@ function setup_lights_interface(selected_light)
 		return;
 	
 	//set all values
+	$('#light_name_id').val(selected_light.light_name_id);
 	$('#light_drop_down').val(selected_light.id);
 	$('#light_type_drop_down').val(selected_light.type);
 	$('#light_x').val(selected_light.x);
@@ -268,6 +285,7 @@ function initialize_light_interface()
 		}
 	});
 	
+	//effect
 	$('#light_effect_drop_down').change(function(){
 		for(var i = 0; i < lights_array.length; i++)
 			if(lights_array[i].selected)
@@ -276,7 +294,15 @@ function initialize_light_interface()
 				break;
 			}
 	});
-	
+	//name
+	$('#light_name_id').change(function(){
+		for(var i = 0; i < lights_array.length; i++)
+		if(lights_array[i].selected)
+		{
+			lights_array[i].light_name_id = $(this).val();
+			break;
+		}
+	})
 	//change x and y
 	$('#light_x').change(function(){
 		for(var i = 0; i < lights_array.length; i++)

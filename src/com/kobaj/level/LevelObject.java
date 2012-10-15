@@ -19,11 +19,15 @@ public class LevelObject
 	@Element
 	public double y_pos; //screen coordinates
 	@Element
-	public double z_plane; //generally 0-10, with 0 being closes to the 'front'
+	public double z_plane; //generally 0-10, with 0 being farthest from the 'front'
 	@Element
-	public boolean active;
+	public boolean active; // render or not?
 	@Element
-	public int id;
+	private String id; //identifier. 
+	public final String getID()
+	{
+		return id;
+	}
 	
 	public Quad quad_object;
 	

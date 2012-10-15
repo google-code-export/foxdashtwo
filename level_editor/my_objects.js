@@ -9,6 +9,8 @@ function my_objects(x, y, width, height, type, i)
 	this.type = type;
 	this.selected = true;
 	this.draggable = false;
+	
+	this.object_name_id = '000x0';
 }
 
 my_objects.prototype.draw = function()
@@ -21,7 +23,7 @@ my_objects.prototype.draw = function()
 	
 	if($('#labelcheck').is(':checked'))
 	{
-		drawTextYFix(this.x, 5 + this.y + this.height, "my_objects(" + this.type + "): " + this.id, lightblueFill);
+		drawTextYFix(this.x, 5 + this.y + this.height, "my_objects(" + this.type + "): " + this.object_name_id, lightblueFill);
 		drawTextYFix(this.x, this.y + this.height - 20, "z" + this.z_plane, blackFill);
 	}
 }
@@ -70,23 +72,35 @@ function delete_object()
 		}	
 }
 
-function mouse_move_object(click_point)
+function mouse_move_object(click_point, previously_selected)
 {
 	$('#object_drop.down').val('');
-	
 	var something_selected = false;
 	
+	//previous check first
+	if(previously_selected != null && previously_selected.contains(click_point))
+	{
+		//setup the local stats
+		previously_selected.draggable = true;
+		previously_selected.selected = true;
+		//setup the interface
+		setup_objects_interface(previously_selected);
+		
+		something_selected = true;
+	}
+	
 	//select an object		
+	if(!something_selected)
 	for(var i = 0; i < objects_array.length; i++)
 		if(objects_array[i].contains(click_point))
 		{
 			//setup the local stats
 			objects_array[i].draggable = true;
 			objects_array[i].selected = true;
-			something_selected = true;
-			
 			//setup the interface
 			setup_objects_interface(objects_array[i]);
+			
+			something_selected = true;
 			
 			//exit
 			break; // only one
@@ -108,7 +122,7 @@ function mouse_move_object(click_point)
 		//add object to select
 		$('#object_drop_down').append($("<option></option>")
 		         .attr("value", id)
-		         .text(id)); 
+		         .text(objects_array[id].object_name_id + ': ' + id));  
 		
 		//setup our interface
 		setup_objects_interface(objects_array[id]);
@@ -166,7 +180,7 @@ function remove_from_objects_array(selected_object)
 	for(var i = 0; i < objects_array.length; i++)
 	$('#object_drop_down').append($("<option></option>")
 	         .attr("value", i)
-	         .text(i)); 
+	         .text(objects_array[i].object_name_id +': '+ i)); 
 	
 }
 
@@ -185,6 +199,15 @@ function initialize_object_interface()
 			objects_array[e].selected = true;
 			setup_objects_interface(objects_array[e]);
 		}
+	});
+	//change name
+	$('#object_name_id').change(function(){
+		for(var i = 0; i < objects_array.length; i++)
+			if(objects_array[i].selected)
+			{
+				objects_array[i].object_name_id = $(this).val();
+				break;
+			}
 	});
 	//changing type
 	$('#type_drop_down').change(function(){
