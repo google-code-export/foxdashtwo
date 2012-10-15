@@ -3,9 +3,7 @@ package com.kobaj.screen;
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.input.GameInputModifier;
 import com.kobaj.loader.XMLHandler;
-import com.kobaj.math.AverageMaker;
 import com.kobaj.math.Constants;
-import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.EnumDrawFrom;
 import com.kobaj.opengldrawable.Quad.QuadColorShape;
 import com.kobaj.screen.screenaddons.BaseDebugScreen;
@@ -19,7 +17,7 @@ public class SinglePlayerScreen extends BaseScreen
 
 	// test level
 	private com.kobaj.level.Level test_level;
-	
+
 	//addons
 	BaseDebugScreen debug_addon;
 	BaseLoadingScreen loading_addon;
@@ -73,7 +71,6 @@ public class SinglePlayerScreen extends BaseScreen
 		my_backdrop = new QuadColorShape(Constants.width, Constants.height, 0xFF111111, 0);
 	}
 	
-	AverageMaker my_test_average = new AverageMaker(20);
 	@Override
 	public void onUpdate(double delta)
 	{
@@ -85,11 +82,6 @@ public class SinglePlayerScreen extends BaseScreen
 		
 		//update all our objects and lights and things
 		test_level.onUpdate(delta);
-		
-		//update the camera zoom effect
-		double max_zoom = .5f;
-		double buffer = (float) Functions.linearInterpolate(0, Constants.max_x_velocity, Math.abs(test_level.player.quad_object.x_vel), -.03, max_zoom);
-		Functions.setCameraZ(my_test_average.calculateAverage(buffer));
 		
 		// make sure we dont go through the level (should be deleted later)
 		if (test_level.player.quad_object.getYPos() < -1)
