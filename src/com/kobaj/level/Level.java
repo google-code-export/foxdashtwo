@@ -37,6 +37,9 @@ public class Level
 	@Element
 	public LevelObject player;
 	
+	@ElementList
+	public ArrayList<LevelEvent> event_list;
+	
 	//no constructor
 	
 	public void onInitialize()
@@ -54,6 +57,8 @@ public class Level
 					bloom_light_list.add(temp);
 			}
 		}
+		for(int i = event_list.size() - 1; i >= 0; i--)
+			event_list.get(i).onInitialize();
 		
 		//setup player
 		player.quad_object = new com.kobaj.opengldrawable.Quad.QuadColorShape(0, 64, 64, 0, Color.GRAY, 0);
@@ -72,6 +77,9 @@ public class Level
 	{
 		for(int i = light_list.size() - 1; i >= 0; i--)
 			light_list.get(i).onUpdate(delta);
+		
+		for(int i = event_list.size() - 1; i >= 0; i--)
+			event_list.get(i).checkActivity(delta, player.quad_object);
 	}
 	
 	public void onDrawObject()
@@ -94,6 +102,12 @@ public class Level
 			light_list.get(i).onDrawLight();
 	}
 	
+	public void onDrawConstant()
+	{
+		for(int i = event_list.size() - 1; i >= 0; i--)
+			event_list.get(i).onDraw();
+	}
+	
 	//this method will be deleted.
 	public void writeOut()
 	{
@@ -103,10 +117,14 @@ public class Level
 		player.x_pos = 0;
 		player.y_pos = 100;
 		player.z_plane = 5;
+		player.active = true;
 		
+		//initialize everything
 		object_list = new ArrayList<LevelObject>();
 		light_list = new ArrayList<LevelAmbientLight>();
+		event_list = new ArrayList<LevelEvent>();
 		
+		//make everything
 		LevelObject temp = new LevelObject();
 		temp.draw_from = com.kobaj.opengldrawable.EnumDrawFrom.top_left;
 		temp.this_object = EnumLevelObject.test;
@@ -125,6 +143,7 @@ public class Level
 		templ.blur_amount = 0;
 		templ.close_width = 10;
 		templ.far_width = 100;
+		templ.active = true;
 		
 		LevelPointLight templ2 = new LevelPointLight();
 		templ2.is_bloom = false;
@@ -133,13 +152,25 @@ public class Level
 		templ2.x_pos = 0;
 		templ2.y_pos = 0;
 		templ2.blur_amount = 0;
+		templ2.active = true;
 
 		LevelAmbientLight templ3 = new LevelAmbientLight();
 		templ3.color = Color.WHITE;
+		templ3.active = true;
 		
+		LevelEvent tempe = new LevelEvent();
+		tempe.height = 200;
+		tempe.width = 600;
+		tempe.affected_object_ids = new ArrayList<String>();
+		tempe.affected_object_ids.add("empty");
+		tempe.x_pos = 0;
+		tempe.y_pos = 0;
+		
+		//fill everything in
 		object_list.add(temp);
 		light_list.add(templ);
 		light_list.add(templ2);
 		light_list.add(templ3);
+		event_list.add(tempe);
 	}
 }

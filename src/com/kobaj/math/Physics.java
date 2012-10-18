@@ -86,13 +86,19 @@ public class Physics
 					//based on how the object should react (bounce, fly through, stick, etc
 					
 					//then decide normal
-					final double width = Math.abs(collision.width());
-					final double height = Math.abs(collision.height());
+					double width = Math.abs(collision.width());
+					double height = Math.abs(collision.height());
 				
 					if(width >= height)
+					{
 						collision.left = collision.right;
+						width = 0;
+					}
 					else if(height > Constants.collision_detection_height)
+					{
 						collision.top = collision.bottom;
+						height = 0;
+					}
 					else
 						return false;
 							

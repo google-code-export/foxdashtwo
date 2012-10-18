@@ -165,12 +165,27 @@ public class Functions
 	// strangly, it is programmed different than RectF.intersects...
 	public static final boolean equalIntersects(RectF a, RectF b)
 	{
+		//right the rects
+		if(a.top < a.bottom)
+		{
+			float temp = a.top;
+			a.top = a.bottom;
+			a.bottom = temp;
+		}
+		
+		if(b.top < b.bottom)
+		{
+			float temp = b.top;
+			b.top = b.bottom;
+			b.bottom = temp;
+		}
+		
 		return equalIntersects(a, b.left, b.top, b.right, b.bottom);
 	}
 	
 	public static final boolean equalIntersects(RectF a, double left, double top, double right, double bottom)
 	{
-		return (a.left <= right && left <= a.right && ((a.top >= bottom && top >= a.bottom) || (a.top <= -bottom && -top <= a.bottom)));
+		return (a.left <= right && left <= a.right && a.top >= bottom && top >= a.bottom);
 	}
 	
 	public static final boolean setEqualIntersects(RectF out, RectF a, RectF b)

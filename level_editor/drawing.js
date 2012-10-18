@@ -77,6 +77,33 @@ function redraw()
 	context.fillRect(0,0,width,height);
 	context.fill();
 	
+	//draw objects
+	for(var i = 0; i < objects_array.length; i++)
+		objects_array[i].draw();
+	
+	//draw lights
+	for(var i = 0; i < lights_array.length; i++)
+		lights_array[i].draw();
+	
+	//draw the player
+	player.draw();
+	
+	//draw the map limits
+	if($('#labelcheck').is(':checked'))
+		drawTextYFix($('#left-limit').val(), $('#top-limit').val(), "Level Limits", lightgreyFill);
+	drawBox($('#left-limit').val(),
+			 $('#top-limit').val(),
+			 $('#right-limit').val(),
+			 $('#bottom-limit').val(), lightgreyFill);
+	
+	//draw the phone overlay
+	if($('#phonecheck').is(':checked'))
+	{
+		if($('#labelcheck').is(':checked'))
+			drawText(0, 305, "Phone Overlay", lightredFill);
+		drawBoxwh(world_coords.x, world_coords.y, 800, 480, lightredFill);
+	}
+	
 	//draw fps
 	if($('#fpscheck').is(':checked'))
 		drawText(10, 10, "fps: " + fps, whiteFill);
@@ -95,33 +122,6 @@ function redraw()
 		drawText(drag_point.x, drag_point.y - 30, 'World (' + world_drag_point.x + ', ' + world_drag_point.y + ')', blueFill);
 		drawText(drag_point.x, drag_point.y - 15, 'Screen (' + drag_point.x + ', ' + drag_point.y + ')', whiteFill);
 	}
-	
-	//draw the map limits
-	if($('#labelcheck').is(':checked'))
-		drawTextYFix($('#left-limit').val(), $('#top-limit').val(), "Level Limits", lightgreyFill);
-	drawBox($('#left-limit').val(),
-			 $('#top-limit').val(),
-			 $('#right-limit').val(),
-			 $('#bottom-limit').val(), lightgreyFill);
-	
-	//draw the phone overlay
-	if($('#phonecheck').is(':checked'))
-	{
-		if($('#labelcheck').is(':checked'))
-			drawText(0, 305, "Phone Overlay", lightredFill);
-		drawBoxwh(world_coords.x, world_coords.y, 800, 480, lightredFill);
-	}
-	
-	//draw objects
-	for(var i = 0; i < objects_array.length; i++)
-		objects_array[i].draw();
-	
-	//draw lights
-	for(var i = 0; i < lights_array.length; i++)
-		lights_array[i].draw();
-	
-	//draw the player
-	player.draw();
 	
 	//context.drawImage(breadCrumbsImg,0,0);
 };

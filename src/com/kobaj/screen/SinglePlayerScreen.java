@@ -4,7 +4,6 @@ import com.kobaj.foxdashtwo.R;
 import com.kobaj.input.GameInputModifier;
 import com.kobaj.loader.XMLHandler;
 import com.kobaj.math.Constants;
-import com.kobaj.opengldrawable.EnumDrawFrom;
 import com.kobaj.opengldrawable.Quad.QuadColorShape;
 import com.kobaj.screen.screenaddons.BaseDebugScreen;
 import com.kobaj.screen.screenaddons.BaseInteractionScreen;
@@ -31,8 +30,9 @@ public class SinglePlayerScreen extends BaseScreen
 		my_modifier = new GameInputModifier();
 		
 		/*
-		  helpful while I build the level class
-		  
+		 * helpful while I build the level class
+		 */
+		/*
 		com.kobaj.level.Level test = new com.kobaj.level.Level();
 		test.writeOut(); com.kobaj.loader.XMLHandler.writeSerialFile(test,
 		"test_level");*/
@@ -40,7 +40,7 @@ public class SinglePlayerScreen extends BaseScreen
 	
 	@Override
 	public void onLoad()
-	{	
+	{
 		//load our addons. Do the loader first
 		loading_addon = new BaseLoadingScreen();
 		interaction_addon = new BaseInteractionScreen();
@@ -68,7 +68,7 @@ public class SinglePlayerScreen extends BaseScreen
 		
 		debug_addon = new BaseDebugScreen(test_level, true, false);
 		
-		my_backdrop = new QuadColorShape(Constants.width, Constants.height, 0xFF111111, 0);
+		my_backdrop = new QuadColorShape(Constants.width, Constants.height, 0xFF333333, 0);
 	}
 	
 	@Override
@@ -84,12 +84,12 @@ public class SinglePlayerScreen extends BaseScreen
 		test_level.onUpdate(delta);
 		
 		// make sure we dont go through the level (should be deleted later)
-		if (test_level.player.quad_object.getYPos() < -1)
+		/*if (test_level.player.quad_object.getYPos() < -1)
 		{
 			test_level.player.quad_object.y_acc = 0;
 			test_level.player.quad_object.y_vel = 0;
 			test_level.player.quad_object.setPos(test_level.player.quad_object.getXPos(), 1, EnumDrawFrom.center);
-		}
+		}*/
 	}
 	
 	@Override
@@ -98,9 +98,6 @@ public class SinglePlayerScreen extends BaseScreen
 		my_backdrop.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, Constants.ambient_light, true);
 		
 		test_level.onDrawObject();
-		
-		//draw some helpful bounding boxes
-		//debug_addon.onDrawObject(test_level);
 	}
 	
 	@Override
@@ -112,6 +109,11 @@ public class SinglePlayerScreen extends BaseScreen
 	@Override
 	public void onDrawConstant()
 	{
+		test_level.onDrawConstant();
+		
+		//draw some helpful bounding boxes
+		//debug_addon.onDrawObject(test_level);
+		
 		//draw the controls
 		my_modifier.onDraw();
 	}

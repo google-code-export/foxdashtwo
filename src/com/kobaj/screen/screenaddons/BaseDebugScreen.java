@@ -28,6 +28,10 @@ public class BaseDebugScreen
 		for (int i = test_level.light_list.size() - 1; i >= 0; i--)
 			outline_quads.add(onMakeBoundingBox(test_level.light_list.get(i).quad_light));
 		
+		//events
+		for (int i = test_level.event_list.size() - 1; i >= 0; i--)
+			outline_quads.add(onMakeBoundingBox(test_level.event_list.get(i).my_collision_rect));
+		
 		// object
 		if (only_outlines)
 		{
@@ -49,11 +53,17 @@ public class BaseDebugScreen
 	
 	public void onDrawObject(Level test_level)
 	{
+		//update everything
+		
 		// lights
 		int j = 0;
 		if(show_lights)
 		for (int i = test_level.light_list.size() - 1; i >= 0; i--, j++)
 			onUpdateBoundingBox(test_level.light_list.get(i).quad_light, j);
+		
+		//events
+		for(int i = test_level.event_list.size() - 1; i>=0; i--, j++)
+			onUpdateBoundingBox(test_level.event_list.get(i).my_collision_rect, j);
 		
 		// object
 		if (only_outlines)
@@ -73,6 +83,7 @@ public class BaseDebugScreen
 				onUpdateBoundingBox(test_level.player.quad_object.phys_rect_list.get(i).main_rect, j);
 		}
 		
+		//draw everything
 		for(int q = outline_quads.size() - 1; q >= 0; q--)
 			outline_quads.get(q).onDrawAmbient(Constants.my_view_matrix, Constants.my_proj_matrix, Constants.ambient_light, true);
 	}
