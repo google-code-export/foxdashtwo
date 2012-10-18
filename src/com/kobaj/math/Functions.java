@@ -166,13 +166,6 @@ public class Functions
 	public static final boolean equalIntersects(RectF a, RectF b)
 	{
 		//right the rects
-		if(a.top < a.bottom)
-		{
-			float temp = a.top;
-			a.top = a.bottom;
-			a.bottom = temp;
-		}
-		
 		if(b.top < b.bottom)
 		{
 			float temp = b.top;
@@ -185,6 +178,14 @@ public class Functions
 	
 	public static final boolean equalIntersects(RectF a, double left, double top, double right, double bottom)
 	{
+		//right the rects
+		if(a.top < a.bottom)
+		{
+			float temp = a.top;
+			a.top = a.bottom;
+			a.bottom = temp;
+		}
+		
 		return (a.left <= right && left <= a.right && a.top >= bottom && top >= a.bottom);
 	}
 	
