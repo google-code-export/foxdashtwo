@@ -6,13 +6,15 @@ import android.util.Log;
 
 public abstract class BaseLightShader
 {
+	//TODO make all of these handles readonly
+	
 	// shader (point light)
 	public int my_shader;
 	
 	// handles to everything in the shader
-	public int my_position_handle;
-	public int my_color_handle;
-	public int my_tex_coord_handle;
+	public int my_position_handle; 
+	public int my_color_handle; 
+	public int my_tex_coord_handle; 
 	public int my_texture_uniform_handle;
 	public int my_mvp_matrix_handle;
 	public int my_mv_matrix_handle;
