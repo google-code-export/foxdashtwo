@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
 
-import android.graphics.RectF;
+import com.kobaj.math.android.RectF;
 
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Constants;

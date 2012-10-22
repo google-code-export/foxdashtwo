@@ -159,7 +159,12 @@ public class Quad
 		// Texture coordinate data.
 		final float[] cubeTextureCoordinateData = {
 				// Front face
-				one_x, -one_y, one_x, -two_y, two_x, -one_y, one_x, -two_y, two_x, -two_y, two_x, -one_y };
+				one_x, -one_y,
+				one_x, -two_y,
+				two_x, -one_y,
+				one_x, -two_y,
+				two_x, -two_y,
+				two_x, -one_y };
 		
 		if (my_tex_coord == null)
 			my_tex_coord = ByteBuffer.allocateDirect(cubeTextureCoordinateData.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();

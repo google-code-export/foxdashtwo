@@ -3,7 +3,7 @@ package com.kobaj.screen.screenaddons;
 import java.util.ArrayList;
 
 import android.graphics.Color;
-import android.graphics.RectF;
+import com.kobaj.math.android.RectF;
 
 import com.kobaj.level.Level;
 import com.kobaj.math.Constants;
