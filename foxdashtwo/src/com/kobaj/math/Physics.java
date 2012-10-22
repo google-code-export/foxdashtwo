@@ -1,6 +1,6 @@
 package com.kobaj.math;
 
-import android.graphics.RectF;
+import com.kobaj.math.android.RectF;
 
 import com.kobaj.opengldrawable.Quad.Quad;
 

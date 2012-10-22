@@ -1,6 +1,6 @@
 package com.kobaj.math;
 
-import android.graphics.RectF;
+import com.kobaj.math.android.RectF;
 
 //you would think this would extend rectF, but it is too different to use that as a base.
 public class ExtendedRectF
@@ -24,8 +24,8 @@ public class ExtendedRectF
 		half_width = (right - left) / 2.0;
 		half_height = (top - bottom) / 2.0;
 		
-		main_rect = new RectF((float) (x_offset - half_width), (float) (x_offset + half_height),
-				              (float) (y_offset + half_width), (float) (y_offset - half_height));
+		main_rect = new RectF((float) (x_offset - half_width), (float) (y_offset + half_height),
+				              (float) (x_offset + half_width), (float) (y_offset - half_height));
 	}
 	
 	// shader coordinates

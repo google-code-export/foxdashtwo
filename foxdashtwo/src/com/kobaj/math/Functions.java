@@ -4,10 +4,11 @@ import java.util.ArrayList;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.RectF;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 import android.util.Log;
+
+import com.kobaj.math.android.RectF;
 
 public class Functions
 {
@@ -168,28 +169,12 @@ public class Functions
 	// helpful method
 	// strangly, it is programmed different than RectF.intersects...
 	public static final boolean equalIntersects(RectF a, RectF b)
-	{
-		//right the rects
-		if(b.top < b.bottom)
-		{
-			float temp = b.top;
-			b.top = b.bottom;
-			b.bottom = temp;
-		}
-		
+	{	
 		return equalIntersects(a, b.left, b.top, b.right, b.bottom);
 	}
 	
 	public static final boolean equalIntersects(RectF a, double left, double top, double right, double bottom)
-	{
-		//right the rects
-		if(a.top < a.bottom)
-		{
-			float temp = a.top;
-			a.top = a.bottom;
-			a.bottom = temp;
-		}
-		
+	{	
 		return (a.left <= right && left <= a.right && a.top >= bottom && top >= a.bottom);
 	}
 	
@@ -198,24 +183,16 @@ public class Functions
 		return setEqualIntersects(out, a, b.left, b.top, b.right, b.bottom);
 	}
 	
+	// a and the coordinates are the colliding rect
+	// return true and send_back if there is a collision
 	public static final boolean setEqualIntersects(RectF send_back, RectF a, double left, double top, double right, double bottom)
 	{
 		if (equalIntersects(a, left, top, right, bottom))
 		{
 			send_back.left = (float) (Math.max(a.left, left));
-			
-			// correct orientation
-			if (a.top < a.bottom && top < bottom)
-				send_back.top = (float) (Math.max(a.top, top));
-			else
-				send_back.top = (float) (Math.min(a.top, top));
-			
+			send_back.top = (float) (Math.min(a.top, top));
 			send_back.right = (float) (Math.min(a.right, right));
-			
-			if (a.top < a.bottom && top < bottom)
-				send_back.bottom = (float) (Math.min(a.bottom, bottom));
-			else
-				send_back.bottom = (float) (Math.max(a.bottom, bottom));
+			send_back.bottom = (float) (Math.max(a.bottom, bottom));
 			
 			return true;
 		}
@@ -243,12 +220,12 @@ public class Functions
 	
 	public static final double polarRadToX(double rads, double radius)
 	{
-		return radius * Math.sin(rads);
+		return radius * Math.cos(rads);
 	}
 	
 	public static final double polarRadToY(double rads, double radius)
 	{
-		return radius * Math.cos(rads);
+		return radius * Math.sin(rads);
 	}
 	
 	public static final double polarToX(double degree, double radius)
@@ -258,7 +235,12 @@ public class Functions
 	
 	public static final double polarToY(double degree, double radius)
 	{
-		return polarRadToY(Math.toRadians(degree), radius);
+		return polarRadToY(toRadians(degree), radius);
+	}
+	
+	private static final double toRadians(double degree)
+	{
+		return degree * Math.PI / 180.0;
 	}
 	
 	// not really a math function, but we need a static error check for open gl
@@ -303,6 +285,7 @@ public class Functions
 		Constants.y_shader_translation = y_camera;
 	}
 	
+	// positive values make the camera move away from objects towards player
 	public static void setCameraZ(double z_camera)
 	{
 		if(z_camera < 0)
