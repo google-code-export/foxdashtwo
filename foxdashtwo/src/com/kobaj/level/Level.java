@@ -66,11 +66,11 @@ public class Level
 		player.quad_object.setPos(Functions.screenXToShaderX(player.x_pos), Functions.screenYToShaderY(player.y_pos), player.draw_from);
 	
 		//set widths and heights for the camera
-		left_shader_limit = -(Functions.screenXToShaderX(left_limit) + Constants.ratio);
-		right_shader_limit = -(Functions.screenXToShaderX(right_limit) - Constants.ratio);
+		left_shader_limit = (Functions.screenXToShaderX(left_limit) + Constants.ratio);
+		right_shader_limit = (Functions.screenXToShaderX(right_limit) - Constants.ratio);
 		
-		top_shader_limit = -Functions.screenYToShaderY(top_limit) + Constants.shader_height / 2.0;
-		bottom_shader_limit = -Functions.screenYToShaderY(bottom_limit) - Constants.shader_height / 2.0;
+		top_shader_limit = Functions.screenYToShaderY(top_limit) - Constants.shader_height / 2.0;
+		bottom_shader_limit = Functions.screenYToShaderY(bottom_limit) + Constants.shader_height / 2.0;
 	}
 	
 	public void onUpdate(double delta)

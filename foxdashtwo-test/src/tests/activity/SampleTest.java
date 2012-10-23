@@ -13,12 +13,50 @@ import tests.runner.SampleTestRunner;
 import android.graphics.Color;
 import com.kobaj.math.android.RectF;
 
+import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 
 @RunWith(SampleTestRunner.class)
 public class SampleTest
 {
 	//TODO test every other functions method
+	
+	@Test
+	public void testUpdateShaderRectFView() throws Exception
+	{
+		//set constants.
+		Constants.ratio = 2.0;
+		Constants.y_shader_translation = 1.0;
+		Constants.x_shader_translation = 1.0;
+		Constants.z_shader_translation = 0.0;
+		
+		//update the shader rectf
+		tests.classes.FunctionsExtended.publicUpdateShaderRectFView();
+	
+		//test the shader rectf
+		
+		//assert correct orientation
+		RectF local_copy = tests.classes.FunctionsExtended.publicShaderRectFView();
+		assertThat(local_copy.left < local_copy.right, equalTo(true));
+		assertThat(local_copy.top > local_copy.bottom, equalTo(true));
+		
+		//assert actual values
+		assertThat(equalRectF(local_copy, new RectF(-1, 2, 3, 0)), equalTo(true));
+		
+		//shift the z
+		Constants.z_shader_translation = .5;
+		
+		//update the shader rectf
+		tests.classes.FunctionsExtended.publicUpdateShaderRectFView();
+	
+		//test the shader rectf
+		local_copy = tests.classes.FunctionsExtended.publicShaderRectFView();
+		assertThat(local_copy.left < local_copy.right, equalTo(true));
+		assertThat(local_copy.top > local_copy.bottom, equalTo(true));
+		
+		//assert actual values
+		assertThat(equalRectF(local_copy, new RectF(-2, 2.5f, 4, -.5f)), equalTo(true));
+	}
 	
 	@Test
 	public void testFunctionsSetEqualIntersects() throws Exception
