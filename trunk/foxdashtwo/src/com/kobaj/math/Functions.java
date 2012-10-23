@@ -133,18 +133,19 @@ public class Functions
 	}
 	
 	// helpful to see whats on screen
+	//screen coordinates
 	public static final boolean onScreen(int x, int y)
 	{
 		return onShader(screenXToShaderX(x), screenYToShaderY(y));
 	}
 	
+	//shader coordinates
 	public static final boolean onShader(double x, double y)
 	{
-		//TODO FINISH THIS
-		final double neg_zoom = Constants.ratio * Constants.z_shader_translation;
+		updateShaderRectFView();
 		
-		if (x > -Constants.ratio + Constants.x_shader_translation && x < Constants.ratio + Constants.x_shader_translation)
-			if (y > -1 + Constants.y_shader_translation && y < 1 + Constants.y_shader_translation)
+		if (x >= shader_rectf_view.left && x <= shader_rectf_view.right
+			&& y >= shader_rectf_view.bottom && y <= shader_rectf_view.top)
 				return true;
 		
 		return false;
@@ -152,18 +153,25 @@ public class Functions
 	
 	public static final boolean onShader(ArrayList<ExtendedRectF> objects)
 	{
-		final double neg_zoom = Constants.ratio * Constants.z_shader_translation;
-		
-		final double left = (-Constants.ratio - Constants.x_shader_translation + neg_zoom);
-		final double top = (1 + -Constants.y_shader_translation - Constants.z_shader_translation);
-		final double right = (Constants.ratio - Constants.x_shader_translation - neg_zoom);
-		final double bottom = (-1 + -Constants.y_shader_translation + Constants.z_shader_translation);
+		updateShaderRectFView();
 		
 		for (int i = objects.size() - 1; i >= 0; i--)
-			if (equalIntersects(objects.get(i).main_rect, left, top, right, bottom))
+			if (equalIntersects(objects.get(i).main_rect, shader_rectf_view))
 				return true;
 		
 		return false;
+	}
+	
+	//helper method for the above so the two onShaders are consistent.
+	protected static RectF shader_rectf_view = new RectF();
+	protected static final void updateShaderRectFView()
+	{
+		final double neg_zoom = Constants.ratio * Constants.z_shader_translation;
+		
+		shader_rectf_view.left = (float) (-Constants.ratio + Constants.x_shader_translation - neg_zoom);
+		shader_rectf_view.top = (float) (1 + Constants.y_shader_translation + Constants.z_shader_translation);
+		shader_rectf_view.right = (float) (Constants.ratio + Constants.x_shader_translation + neg_zoom);
+		shader_rectf_view.bottom = (float) (-1 + Constants.y_shader_translation - Constants.z_shader_translation);
 	}
 	
 	// helpful method
@@ -265,22 +273,15 @@ public class Functions
 	
 	// just one simple place to update all the camera variables
 	// this is in shader coordinates
-	public static void addCamera(double x_camera, double y_camera)
-	{
-		Matrix.translateM(Constants.my_view_matrix, 0, (float) x_camera, (float) y_camera, 0);
-		Constants.x_shader_translation += x_camera;
-		Constants.y_shader_translation += y_camera;
-	}
-	
 	public static void setCamera(double x_camera, double y_camera)
-	{
+	{	
 		//nothing has changed
 		if(x_camera == Constants.x_shader_translation &&
 		   y_camera == Constants.y_shader_translation)
 			return;
 		
 		Matrix.setIdentityM(Constants.my_view_matrix, 0);
-		Matrix.translateM(Constants.my_view_matrix, 0, (float) x_camera, (float) y_camera, 0);
+		Matrix.translateM(Constants.my_view_matrix, 0, (float) -x_camera, (float) -y_camera, 0);
 		Constants.x_shader_translation = x_camera;
 		Constants.y_shader_translation = y_camera;
 	}
@@ -291,12 +292,11 @@ public class Functions
 		if(z_camera < 0)
 			return;
 		
-		z_camera = -z_camera;
 		if(Constants.z_shader_translation == z_camera)
 			return;
 		
 		Matrix.setIdentityM(Constants.my_view_matrix, 0);
-		Matrix.translateM(Constants.my_view_matrix, 0, (float) Constants.x_shader_translation, (float) Constants.y_shader_translation, (float) z_camera);
+		Matrix.translateM(Constants.my_view_matrix, 0, (float) -Constants.x_shader_translation, (float) -Constants.y_shader_translation, (float) -z_camera);
 		Constants.z_shader_translation = z_camera;
 	}
 	

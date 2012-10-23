@@ -74,11 +74,12 @@ public class BaseLoadingScreen
 		//double r = Math.cos(.5 * local_total_delta); //2 smaller circles in 2 bigger circles
 		double r = Math.cos(.5 * local_total_delta) * 2.0 * Math.sin(local_total_delta); //jumpy one.
 		
+		//these are purposly flipped to make it 'look cooler'
 		//calculate x;
-		double x = Functions.polarRadToX(local_total_delta, r);
+		double y = Functions.polarRadToX(local_total_delta, r);
 		
 		//calculate y;
-		double y = Functions.polarRadToY(local_total_delta, r);
+		double x = Functions.polarRadToY(local_total_delta, r);
 		
 		//set it all
 		my_quad.setPos(x, y, EnumDrawFrom.center);
