@@ -18,7 +18,7 @@ public class MyGLSurfaceView extends GLSurfaceView {
         setRenderer(my_game);
     }
     
-	public void onScreenPause()
+    public void onScreenPause()
     {
     	my_game.onScreenPause();
 		

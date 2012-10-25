@@ -129,7 +129,7 @@ public class Functions
 	public static final boolean inRectF(RectF rectangle, double x, double y)
 	{
 		return (x <= rectangle.right && x >= rectangle.left &&
-				((-y <= rectangle.top && -y >= rectangle.bottom) || (-y >= rectangle.top && -y <= rectangle.bottom)));
+				(y <= rectangle.top && y >= rectangle.bottom));
 	}
 	
 	// helpful to see whats on screen
