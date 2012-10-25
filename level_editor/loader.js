@@ -212,5 +212,4 @@ function levelChanged(level)
 	 $('#top-limit').val($xml.find("top_limit").text());
 	 $('#bottom-limit').val($xml.find("bottom_limit").text());
 	 $('#left-limit').val($xml.find("left_limit").text());
-
 }

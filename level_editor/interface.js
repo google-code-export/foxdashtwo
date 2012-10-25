@@ -21,6 +21,7 @@ function interfaceload()
 	$('.control_scheme_button').mousedown(function() {
 		var e = new Object;
 		e.keyCode = $(this).attr('e');
+		e.override = true;
 		intervalId = setInterval(function(){keypressed(e);}, 20);
 	}).mouseup(function() {
 	  clearInterval(intervalId);

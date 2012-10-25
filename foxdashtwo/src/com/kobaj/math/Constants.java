@@ -39,8 +39,8 @@ public class Constants
 	public static double z_shader_translation;
 	
 	//camera zoom settings
-	public static double min_zoom = -.03f;
-	public static double max_zoom = .35f;
+	public static double min_zoom = -.15;
+	public static double max_zoom = .35;
 	
 	//and for when a level loads
 	public static final double z_modifier = 0.00001;

@@ -222,7 +222,7 @@
       <close_width>10</close_width>
       <degree>90</degree>
       <far_width>200</far_width>
-      <light_effect>flicker</light_effect>
+      <light_effect>none</light_effect>
       <is_bloom>false</is_bloom>
       <y_pos>355</y_pos>
       <radius>200</radius>
@@ -262,8 +262,8 @@
   		</affected_object_ids>
   	</levelEvent>
   </event_list>
-  <right_limit>1600</right_limit>
-  <bottom_limit>-750</bottom_limit>
+  <right_limit>1275</right_limit>
+  <bottom_limit>-50</bottom_limit>
   <top_limit>550</top_limit>
-  <left_limit>0</left_limit>
+  <left_limit>200</left_limit>
 </level>

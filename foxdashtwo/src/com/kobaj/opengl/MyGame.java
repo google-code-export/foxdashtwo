@@ -17,7 +17,7 @@ public class MyGame extends MyGLRender
 	private SinglePlayerScreen single_player_screen;
 	private BaseScreen currently_active_screen;
 	
-	//dont touch the stuff below this line
+	//dont touch the variables below this line
 	//final drawable.
 	private QuadRenderTo scene;
 
@@ -62,7 +62,7 @@ public class MyGame extends MyGLRender
 			onLoadingDraw();
 		
 		//fps
-		int color = Color.WHITE;
+		int color = Color.BLUE;
 		if(fps.fps < 60)
 			color = Color.GREEN;
 		if(fps.fps < 45)

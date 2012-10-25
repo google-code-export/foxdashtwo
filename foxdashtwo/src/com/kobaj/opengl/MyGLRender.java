@@ -25,9 +25,6 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 	
 	public void onSurfaceCreated(GL10 unused, EGLConfig config)
 	{
-		//gotta reset
-		com.kobaj.loader.GLBitmapReader.resetLoadedTextures();
-		
 		// Set the background frame color
 		GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		
@@ -59,6 +56,9 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 	
 	public void onSurfaceChanged(GL10 unused, int width, int height)
 	{
+		//gotta reset
+		com.kobaj.loader.GLBitmapReader.resetLoadedTextures();
+		
 		GLES20.glViewport(0, 0, width, height);
 		
 		Constants.width = width;

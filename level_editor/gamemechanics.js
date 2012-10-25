@@ -40,7 +40,7 @@ function keypressed(e)
 	
 	var change_vector;
 	
-	if($("input:focus").length == 0)
+	if($("input:focus").length == 0 || e.override)
 	{
 	if(e.keyCode == 37)
 		change_vector = left_vector;
