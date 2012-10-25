@@ -29,6 +29,12 @@ public class GLBitmapReader
 	// in case context is lost
 	public static void resetLoadedTextures()
 	{
+		//forced to use an iterator
+		int[] temp = new int[loaded_textures.size()];
+		for(int i = loaded_textures.size() - 1; i >= 0; i--) 
+			temp[i] = loaded_textures.valueAt(i).texture_id;
+		
+		GLES20.glDeleteTextures(loaded_textures.size(), temp, 0);
 		loaded_textures = new SparseArray<GLLoadedTexture>();
 	}
 	
@@ -56,6 +62,7 @@ public class GLBitmapReader
 		// (Thanks to Matthew Marshall for this bit)
 		BitmapFactory.Options opts = new BitmapFactory.Options();
 		opts.inScaled = false;
+		opts.inPurgeable = true;
 		
 		// Load up, and flip the texture:
 		Bitmap temp = BitmapFactory.decodeResource(com.kobaj.math.Constants.resources, resource, opts);

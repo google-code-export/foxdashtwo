@@ -42,8 +42,13 @@ public class QuadRenderTo extends Quad
 		int[] renderTex = new int[1];
 		
 		// generate
+		GLES20.glDeleteFramebuffers(1, new int[] {this.fb}, 0);
 		GLES20.glGenFramebuffers(1, fb, 0);
+		
+		GLES20.glDeleteRenderbuffers(1, new int[] {this.depthRb}, 0);
 		GLES20.glGenRenderbuffers(1, depthRb, 0);
+		
+		GLES20.glDeleteTextures(1, new int[] {this.my_texture_data_handle}, 0);
 		GLES20.glGenTextures(1, renderTex, 0);
 		
 		// generate color texture
@@ -57,7 +62,7 @@ public class QuadRenderTo extends Quad
 		
 		// create it 
 		int[] buf = new int[texW * texH];
-		texBuffer = ByteBuffer.allocateDirect(buf.length* 4).order(ByteOrder.nativeOrder()).asIntBuffer();
+		texBuffer = ByteBuffer.allocateDirect(buf.length * 4).order(ByteOrder.nativeOrder()).asIntBuffer();
 		GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGB, texW, texH, 0, GLES20.GL_RGB, GLES20.GL_UNSIGNED_SHORT_5_6_5, texBuffer);
 		
 		// create render buffer and bind 16-bit depth buffer
