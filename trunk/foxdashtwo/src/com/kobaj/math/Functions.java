@@ -151,7 +151,7 @@ public class Functions
 		return false;
 	}
 	
-	public static final boolean onShader(ArrayList<ExtendedRectF> objects)
+	public static final boolean onShader(ArrayList<RectFExtended> objects)
 	{
 		updateShaderRectFView();
 		

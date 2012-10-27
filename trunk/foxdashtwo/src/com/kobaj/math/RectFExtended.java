@@ -3,7 +3,7 @@ package com.kobaj.math;
 import com.kobaj.math.android.RectF;
 
 //you would think this would extend rectF, but it is too different to use that as a base.
-public class ExtendedRectF
+public class RectFExtended
 {
 	//truley this should not be public
 	//and should only be accessed by accessors
@@ -16,7 +16,7 @@ public class ExtendedRectF
 	private final double half_height;
 	
 	// these are in shader coordinates
-	public ExtendedRectF(double left, double top, double right, double bottom)
+	public RectFExtended(double left, double top, double right, double bottom)
 	{
 		x_offset = (left + right) / 2.0;
 		y_offset = (top + bottom) / 2.0;

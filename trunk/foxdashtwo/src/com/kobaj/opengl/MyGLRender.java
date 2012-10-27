@@ -17,6 +17,7 @@ import com.kobaj.math.Functions;
 import com.kobaj.math.Physics;
 import com.kobaj.opengldrawable.Text;
 import com.kobaj.openglgraphics.AmbientLightShader;
+import com.kobaj.openglgraphics.CompressedLightShader;
 
 public abstract class MyGLRender implements GLSurfaceView.Renderer
 {
@@ -40,6 +41,7 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		
 		// shaders
 		Constants.ambient_light = new AmbientLightShader();
+		Constants.compressed_light = new CompressedLightShader();
 		
 		//fps
 		fps = new FPSManager();

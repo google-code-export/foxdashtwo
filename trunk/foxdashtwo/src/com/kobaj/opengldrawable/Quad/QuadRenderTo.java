@@ -7,12 +7,19 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 
+import com.kobaj.foxdashtwo.R;
+import com.kobaj.loader.GLBitmapReader;
+import com.kobaj.math.Functions;
+import com.kobaj.openglgraphics.ETC1Extended;
+
+import android.graphics.Bitmap;
 import android.opengl.GLES20;
+import android.opengl.GLUtils;
 
 public class QuadRenderTo extends Quad
 {
 	// RENDER TO TEXTURE VARIABLES
-	private int fb, depthRb;
+	private int fb = -1, depthRb = - 1;
 	private int texW;
 	private int texH;
 	private IntBuffer texBuffer;
@@ -39,37 +46,49 @@ public class QuadRenderTo extends Quad
 	private void setupRenderToTexture() {
 		int[] fb = new int[1];
 		int[] depthRb = new int[1];
-		int[] renderTex = new int[1];
 		
 		// generate
-		GLES20.glDeleteFramebuffers(1, new int[] {this.fb}, 0);
+		if(this.fb != -1)
+			GLES20.glDeleteFramebuffers(1, new int[] {this.fb}, 0);
 		GLES20.glGenFramebuffers(1, fb, 0);
 		
-		GLES20.glDeleteRenderbuffers(1, new int[] {this.depthRb}, 0);
+		if(this.depthRb != -1)
+			GLES20.glDeleteRenderbuffers(1, new int[] {this.depthRb}, 0);
 		GLES20.glGenRenderbuffers(1, depthRb, 0);
 		
-		GLES20.glDeleteTextures(1, new int[] {this.my_texture_data_handle}, 0);
-		GLES20.glGenTextures(1, renderTex, 0);
+		if(this.my_texture_data_handle != -1)
+			GLES20.glDeleteTextures(1, new int[] {this.my_texture_data_handle}, 0);
 		
-		// generate color texture
-		GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, renderTex[0]);
-
+		
+		//load a compressed texture
+		//ETC1Extended my_etc1 = new ETC1Extended();
+		//my_alpha_data_handle = my_texture_data_handle = my_etc1.loadETC1(R.raw.overlay);
+		
+		
+		//load a regular texture
+		this.my_texture_data_handle = GLBitmapReader.newTextureID();
+		GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, this.my_texture_data_handle);
+		
 		// Set all of our texture parameters:
 		GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_REPEAT);
 		GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_REPEAT);
 		GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
 		GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
 		
-		// create it 
-		int[] buf = new int[texW * texH];
-		texBuffer = ByteBuffer.allocateDirect(buf.length * 4).order(ByteOrder.nativeOrder()).asIntBuffer();
-		GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGB, texW, texH, 0, GLES20.GL_RGB, GLES20.GL_UNSIGNED_SHORT_5_6_5, texBuffer);
+		// Push the bitmap onto the GPU
+		GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, Bitmap.createBitmap(texW, texH, Bitmap.Config.RGB_565), 0);
+
+		
+		//load a built compressed texture
+		Bitmap temp = Bitmap.createBitmap(texW, texH, Bitmap.Config.RGB_565);
+		ETC1Extended my_etc1 = new ETC1Extended();
+		my_etc1.loadETC1(temp, texW, texH, false);
+		
 		
 		// create render buffer and bind 16-bit depth buffer
 		GLES20.glBindRenderbuffer(GLES20.GL_RENDERBUFFER, depthRb[0]);
 		GLES20.glRenderbufferStorage(GLES20.GL_RENDERBUFFER, GLES20.GL_DEPTH_COMPONENT16, texW, texH);
 		
-		this.my_texture_data_handle = renderTex[0];
 		this.depthRb = depthRb[0];
 		this.fb = fb[0];
 	}

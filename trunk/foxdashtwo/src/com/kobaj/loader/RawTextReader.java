@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import android.content.Context;
+import android.util.Log;
 
 public class RawTextReader
 {
@@ -30,8 +31,9 @@ public class RawTextReader
 		}
 		catch (IOException e)
 		{
-			return null;
+			Log.e("Raw Text", "Unable to read raw text file: " + resId);
 		}
+		
 		return text.toString();
 	}
 }

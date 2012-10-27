@@ -8,7 +8,7 @@ import org.junit.runner.RunWith;
 
 import tests.runner.SampleTestRunner;
 
-import com.kobaj.math.ExtendedRectF;
+import com.kobaj.math.RectFExtended;
 
 @RunWith(SampleTestRunner.class)
 public class MoreTest
@@ -16,7 +16,7 @@ public class MoreTest
 	@Test
 	public void testExtendedRectFConstruct() throws Exception
 	{
-		ExtendedRectF test = new ExtendedRectF(1.0, 2.0, 3.0, .5);
+		RectFExtended test = new RectFExtended(1.0, 2.0, 3.0, .5);
 		assertThat(test.main_rect.left, equalTo(1.0f));
 		assertThat(test.main_rect.top, equalTo(2.0f));
 		assertThat(test.main_rect.right, equalTo(3.0f));
@@ -26,7 +26,7 @@ public class MoreTest
 	@Test
 	public void testExtendedRectFSet() throws Exception
 	{
-		ExtendedRectF test = new ExtendedRectF(1.0, 2.0, 3.0, .5);
+		RectFExtended test = new RectFExtended(1.0, 2.0, 3.0, .5);
 		test.setPositionWithOffset(0, 0);
 		assertThat(test.main_rect.left, equalTo(1.0f));
 		assertThat(test.main_rect.top, equalTo(2.0f));

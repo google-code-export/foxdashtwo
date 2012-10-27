@@ -17,9 +17,10 @@ import android.opengl.Matrix;
 import com.kobaj.loader.GLBitmapReader;
 import com.kobaj.loader.GLLoadedTexture;
 import com.kobaj.math.Constants;
-import com.kobaj.math.ExtendedRectF;
 import com.kobaj.math.Functions;
+import com.kobaj.math.RectFExtended;
 import com.kobaj.opengldrawable.EnumDrawFrom;
+import com.kobaj.openglgraphics.BaseLightShader;
 
 public class Quad
 {
@@ -48,7 +49,7 @@ public class Quad
 	// rectangles so it has better 'resolution' when interacting with other
 	// quads
 	// phys rect is stored in shader coordinates
-	public ArrayList<ExtendedRectF> phys_rect_list = new ArrayList<ExtendedRectF>();
+	public ArrayList<RectFExtended> phys_rect_list = new ArrayList<RectFExtended>();
 	
 	// begin by holding these
 	public int width;
@@ -68,7 +69,7 @@ public class Quad
 	
 	// handle to texture
 	protected int my_texture_data_handle = -1;
-	private int texture_resource = -1;
+	protected int texture_resource = -1;
 	
 	// constructores
 	protected Quad()
@@ -79,7 +80,7 @@ public class Quad
 	public Quad(int texture_resource, int width, int height)
 	{
 		// load dat texture.
-		com.kobaj.loader.GLBitmapReader.loadTextureFromResource(texture_resource);
+		com.kobaj.loader.GLBitmapReader.loadTextureFromResource(texture_resource, false);
 		onCreate(texture_resource, width, height);
 	}
 	
@@ -91,7 +92,7 @@ public class Quad
 	
 	// method that will go and get the texture handle after it has been loaded
 	// so that we can draw the texture!
-	private boolean setTextureDataHandle()
+	protected boolean setTextureDataHandle()
 	{
 		if (my_texture_data_handle != -1)
 			return true;
@@ -136,7 +137,7 @@ public class Quad
 		// up next setup phys rect list. Just a default. The user can
 		// set/add/remove more rectangles as needed.
 		if (phys_rect_list.isEmpty())
-			phys_rect_list.add(new ExtendedRectF(-tr_x, tr_y, tr_x, -tr_y));
+			phys_rect_list.add(new RectFExtended(-tr_x, tr_y, tr_x, -tr_y));
 	}
 	
 	// methods for calculating stuffs
@@ -192,7 +193,7 @@ public class Quad
 	// where the ratio is /not/ one.
 	// meaning a model * view * projection with rotation will end up skewed!
 	// By doing vertex multiplication with compensated coords, we eliminate the skew!
-	private void setRotationWidthHeight(int width, int height, double degree)
+	protected void setRotationWidthHeight(int width, int height, double degree)
 	{
 		// store these for our bounding rectangle
 		this.width = width;
@@ -292,8 +293,11 @@ public class Quad
 	
 	// methods for
 	// drawing stuffs
-	private void onSetupAmbient(float[] my_view_matrix, float[] my_proj_matrix, int color)
+	protected <T extends BaseLightShader> void onSetupAmbient(float[] my_view_matrix, float[] my_proj_matrix, int color, T ambient_light)
 	{
+		//setup the program
+		GLES20.glUseProgram(ambient_light.my_shader);
+		
 		// quick attempt at optimization
 		// this is white
 		float red = 1;
@@ -317,17 +321,12 @@ public class Quad
 		}
 		
 		// pass in color
-		GLES20.glUniform4f(Constants.ambient_light.my_color_handle, red, green, blue, alpha);
+		GLES20.glUniform4f(ambient_light.my_color_handle, red, green, blue, alpha);
 		
-		// Set the active texture unit to texture unit 0.
+		// Set the active texture unit to texture unit 0 and bind necissary handles
 		GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-		
-		// Bind the texture to this unit.
 		GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, my_texture_data_handle);
-		
-		// Tell the texture uniform sampler to use this texture in the shader by
-		// binding to texture unit 0.
-		GLES20.glUniform1i(Constants.ambient_light.my_texture_uniform_handle, 0);
+		GLES20.glUniform1i(ambient_light.my_texture_uniform_handle, 0);
 		
 		// set the quad up
 		// Functions.setIdentity(my_model_matrix);
@@ -335,12 +334,12 @@ public class Quad
 		Matrix.translateM(my_model_matrix, 0, (float) x_pos, (float) y_pos, (float) z_pos);
 		
 		// pass in position information
-		GLES20.glVertexAttribPointer(Constants.ambient_light.my_position_handle, 3, GLES20.GL_FLOAT, false, 0, my_position);
-		GLES20.glEnableVertexAttribArray(Constants.ambient_light.my_position_handle);
+		GLES20.glVertexAttribPointer(ambient_light.my_position_handle, 3, GLES20.GL_FLOAT, false, 0, my_position);
+		GLES20.glEnableVertexAttribArray(ambient_light.my_position_handle);
 		
 		// Pass in the texture coordinate information
-		GLES20.glVertexAttribPointer(Constants.ambient_light.my_tex_coord_handle, 2, GLES20.GL_FLOAT, false, 0, my_tex_coord);
-		GLES20.glEnableVertexAttribArray(Constants.ambient_light.my_tex_coord_handle);
+		GLES20.glVertexAttribPointer(ambient_light.my_tex_coord_handle, 2, GLES20.GL_FLOAT, false, 0, my_tex_coord);
+		GLES20.glEnableVertexAttribArray(ambient_light.my_tex_coord_handle);
 		
 		// This multiplies the view matrix by the model matrix, and stores the
 		// result in the MVP matrix
@@ -353,7 +352,7 @@ public class Quad
 		Matrix.multiplyMM(my_mvp_matrix, 0, my_proj_matrix, 0, my_mv_matrix, 0);
 		
 		// Pass in the combined matrix.
-		GLES20.glUniformMatrix4fv(Constants.ambient_light.my_mvp_matrix_handle, 1, false, my_mvp_matrix, 0);
+		GLES20.glUniformMatrix4fv(ambient_light.my_mvp_matrix_handle, 1, false, my_mvp_matrix, 0);
 		
 		// Clear the currently bound buffer (so future OpenGL calls do not use
 		// this buffer).
@@ -361,7 +360,7 @@ public class Quad
 	}
 	
 	// main stuffs
-	private void onDraw()
+	protected void onDraw()
 	{
 		GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 6);
 	}
@@ -381,7 +380,7 @@ public class Quad
 		// If on screen, draw.
 		if (skip_draw_check || com.kobaj.math.Functions.onShader(phys_rect_list))
 		{
-			onSetupAmbient(my_view_matrix, my_proj_matrix, color);
+			onSetupAmbient(my_view_matrix, my_proj_matrix, color, Constants.ambient_light);
 			
 			// Draw the cube.
 			onDraw();
