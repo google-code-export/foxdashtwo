@@ -54,8 +54,6 @@ public class MyGame extends MyGLRender
 	@Override
 	protected void onDraw()
 	{	
-		GLES20.glUseProgram(Constants.ambient_light.my_shader);
-		
 		if(currently_active_screen.current_state == EnumScreenState.running)
 			onRunningDraw();
 		else if(currently_active_screen.current_state == EnumScreenState.loading)

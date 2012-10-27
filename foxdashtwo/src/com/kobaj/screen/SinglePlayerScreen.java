@@ -6,6 +6,7 @@ import com.kobaj.foxdashtwo.R;
 import com.kobaj.input.GameInputModifier;
 import com.kobaj.loader.XMLHandler;
 import com.kobaj.math.Constants;
+import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.Quad.QuadColorShape;
 import com.kobaj.screen.screenaddons.BaseDebugScreen;
 import com.kobaj.screen.screenaddons.BaseInteractionScreen;
@@ -76,6 +77,8 @@ public class SinglePlayerScreen extends BaseScreen
 	@Override
 	public void onUpdate(double delta)
 	{
+		Functions.checkGlError();
+		
 		//just for now, this may be deleted later to replace a button
 		my_modifier.onUpdate();
 		
@@ -92,6 +95,8 @@ public class SinglePlayerScreen extends BaseScreen
 			test_level.player.quad_object.y_vel = 0;
 			test_level.player.quad_object.setPos(test_level.player.quad_object.getXPos(), 1, EnumDrawFrom.center);
 		}*/
+		
+		Functions.checkGlError();
 	}
 	
 	@Override

@@ -8,6 +8,7 @@ import com.kobaj.audio.Sound;
 import com.kobaj.input.InputManager;
 import com.kobaj.opengldrawable.Text;
 import com.kobaj.openglgraphics.AmbientLightShader;
+import com.kobaj.openglgraphics.CompressedLightShader;
 
 public class Constants
 {
@@ -113,4 +114,5 @@ public class Constants
 												   0, 0, 0, 1};
 	
 	public static AmbientLightShader ambient_light;
+	public static CompressedLightShader compressed_light;
 }

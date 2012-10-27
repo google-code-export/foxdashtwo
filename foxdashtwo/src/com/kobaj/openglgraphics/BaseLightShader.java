@@ -9,9 +9,9 @@ public abstract class BaseLightShader
 	final public int my_shader;
 	
 	// handles to everything in the shader
-	final public int my_position_handle; 
-	final public int my_color_handle; 
-	final public int my_tex_coord_handle; 
+	final public int my_position_handle;
+	final public int my_color_handle;
+	final public int my_tex_coord_handle;
 	final public int my_texture_uniform_handle;
 	final public int my_mvp_matrix_handle;
 	
@@ -26,8 +26,8 @@ public abstract class BaseLightShader
 		int fragment_shader = loadShader(GLES20.GL_FRAGMENT_SHADER, fragment_shader_code);
 		
 		my_shader = GLES20.glCreateProgram(); // create empty OpenGL Program
-		GLES20.glAttachShader(my_shader, vertex_shader); 
-		GLES20.glAttachShader(my_shader, fragment_shader); 
+		GLES20.glAttachShader(my_shader, vertex_shader);
+		GLES20.glAttachShader(my_shader, fragment_shader);
 		GLES20.glLinkProgram(my_shader); // creates OpenGL program executables
 		
 		// get handle to the vertex shader's vPosition member
@@ -57,15 +57,15 @@ public abstract class BaseLightShader
 			// If the compilation failed, delete the shader.
 			if (compileStatus[0] == 0)
 			{
-				//small bit of info
-			
+				// small bit of info
+				
 				String type_name = "Vertex Shader";
-				if(type == GLES20.GL_FRAGMENT_SHADER)
+				if (type == GLES20.GL_FRAGMENT_SHADER)
 					type_name = "Fragment Shader";
 				
-				//returns absolutely nothing :(.
-				String infoLog = GLES20.glGetShaderInfoLog( shader );
-					
+				// returns absolutely nothing :(.
+				String infoLog = GLES20.glGetShaderInfoLog(shader);
+				
 				Log.e("kobaj_shader_error", "Error compiling shader: " + type_name + " " + infoLog);
 				
 				GLES20.glDeleteShader(shader);

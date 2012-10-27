@@ -12,6 +12,7 @@ import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.EnumDrawFrom;
 import com.kobaj.opengldrawable.Quad.Quad;
+import com.kobaj.opengldrawable.Quad.QuadCompressed;
 
 public class LevelEvent
 {
@@ -63,7 +64,7 @@ public class LevelEvent
 		}
 		else if(this_event == EnumLevelEvent.right_arrow)
 		{
-			my_draw = new Quad(R.drawable.right_arrow, 112, 200);
+			my_draw = new QuadCompressed(R.raw.right_arrow, R.raw.right_arrow_alpha, 112, 200);
 			my_draw.setPos(Functions.screenXToShaderX(Constants.width - 100), 0, EnumDrawFrom.center);
 		}
 		else if(this_event == EnumLevelEvent.up_arrow)
