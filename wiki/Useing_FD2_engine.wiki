@@ -98,8 +98,7 @@ public MainActivity()
 ===Create your own screen file===
 
  # Right click your src package -> New -> class [http://i.imgur.com/iBxPt.png Image]
- # Make it extend com.kobaj.screen.BaseScreen [http://i.imgur.com/XOgie.png Image]
- # [http://i.imgur.com/5pwGk.png Image]
+ # Make it extend com.kobaj.screen.BaseScreen [http://i.imgur.com/XOgie.png Image] [http://i.imgur.com/5pwGk.png Image]
  # Go Back to your activity file and add your screen to the game
 {{{
 //setup my screen
