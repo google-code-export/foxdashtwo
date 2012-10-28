@@ -1,0 +1,115 @@
+#summary How to use FD2 engine.
+
+= So I want to make a game! =
+===And don't know what engine to go with?===
+
+Fox Dash Two features:
+ * Easy to use and setup
+ * Open Source under a easy to use license
+ * OpenGL ES 2.0
+ * No messing with low level code or shaders
+ * Simple Physics, lights, particles, and other features built in
+ * Textured quads, animated quads, generated compressed quads, and more
+
+= How Do I use it already?! =
+===Get Eclipse, SVN, and ADT===
+
+ # Download and install [http://www.eclipse.org/downloads/packages/release/indigo/sr2 Eclipse]
+ # Get the [https://developer.android.com/sdk/installing/installing-adt.html ADT plugin] for Eclipse
+ # Update your SDK...In Eclipse -> Window -> Android SDK Manager. Check at least version API 9, but if you're OCD and like buttons, click them all and install
+ # Download and install an SVN client (such as [http://tortoisesvn.net/downloads.html Tortoise] or [http://scplugin.tigris.org/ SCPlugin ])
+
+===Setup your device===
+
+ # On your Android device...Settings -> Developer Options -> Android debugging
+
+===Grab the library branch of FD2===
+
+Use your SVN client to checkout the library branch of Fox Dash 2.
+ * Command line: svn checkout https://foxdashtwo.googlecode.com/svn/branch/library/
+ * Tortoise: right click a folder -> SVN checkout with the url above
+
+===Open FD2 in Eclipse and Create a game project===
+
+ # Open up eclipse 
+ # File -> import...General -> Existing project into workspace
+ # Browse for where you checked out FD2 library and import
+ # Stare in amazement
+
+ # File -> New -> Other...Android -> Android Application Project
+ # Be sure to set minimum file version to API 9
+ # Set recommended file version to whatever your device is running
+ # Proceed through the rest of the wizard...next...next...next...
+
+===Link FD2 and your game project===
+
+ # Right click your project -> properties.
+ # Find Android on the left, and add Fox Dash 2 as a library on the right
+
+===Setup the manifest file===
+
+ # Find the manifest file in the root directory of your project, open it up, and head to text edit mode.
+ # Add the following 
+{{{
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	
+    <uses-feature android:name="android.hardware.screen.sensorLandscape"/>
+	<uses-feature android:glEsVersion="0x00020000" android:required="true" />
+}}}
+ # Also add 
+{{{
+android:theme="@android:style/Theme.NoTitleBar.Fullscreen" 
+            android:screenOrientation="sensorLandscape"
+}}}
+ # it should look similar
+
+===Setup the activity file===
+
+ # Open your Activity file
+ # Delete unnecessary code
+ # Make it extend GameActivity
+ # Set the prefs text to your own
+
+===Take a break===
+
+ # At this point you can run your application
+ # You'll know its working if on your device you see an FPS counter in the top left hand corner
+ # Have some tea
+
+===Create your own screen file===
+
+ # Right click your src package -> add new -> class
+ # Make it extend com.kobaj.screen.BaseScreen
+ # Go Back to your activity file and add your screen to the game
+
+===Drawing numbers to the screen===
+
+ # Go to your screen file 
+ # add the following lines of code in the method onDrawConstant
+{{{
+//convert screen coords to shader coords
+double x_pos = Functions.screenXToShaderX(200);
+double y_pos = Functions.screenYToShaderY(200);
+		
+//draw the number 198765432 at the position (200,200)
+Constants.text.drawNumber(198765432, x_pos, y_pos, EnumDrawFrom.bottom_left);
+}}}
+
+===Drawing Text to the screen===
+
+===Draw images to the screen ====
+
+===Touch Input===
+
+===Playing Sound===
+
+===Playing Music===
+
+===Other Specs===
+
+ * To turn off fps: 
+ * Make the screen orient in another direction: Change your manifest file however you like here 
+{{{
+android:screenOrientation="sensorLandscape"
+}}}
