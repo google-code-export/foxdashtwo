@@ -1,6 +1,6 @@
 #summary How to use FD2 engine.
 
-= So I want to make a game! =
+=I want to make a game!=
 ===And don't know what engine to go with?===
 
 Fox Dash Two features:
@@ -98,17 +98,59 @@ Constants.text.drawNumber(198765432, x_pos, y_pos, EnumDrawFrom.bottom_left);
 
 ===Drawing Text to the screen===
 
+ * Will come soon
+
 ===Draw images to the screen ====
+
+ # Add your desired graphic to the rest/drawable-hdpi folder
+ # Set, Initialize, and draw your graphic. But nothing shows up?!
+ # You need an ambient light, Set, Initialize, and draw your light
+ # Move your object around if needed
+
+===Draw compressed images to screen===
+
+ * Will come soon
+
+===Tackle the Update Loop===
+
+ * Will come soon
 
 ===Touch Input===
 
+ # Add an if statment to the update loop to see if finger zero has been touched
+
+===Advanced Touch Input===
+
+* Will come soon
+
 ===Playing Sound===
+
+ * Will come soon
 
 ===Playing Music===
 
+ * Will come soon
+
+===Exporting an APK for Google Play Market===
+
+ # Right click your project and click Android Tools -> Export signed application package
+ # Follow the wizard to reuse an old keystore or make a new one
+ # keep your keystore safe, don't lose it, and don't give it away.
+
+===Loading things with XML===
+
+ * Will come soon
+
+===Networking===
+ 
+ * Will come soon
+
 ===Other Specs===
 
- * To turn off fps: 
+ * To turn off fps: In your activity add this code to onCreate method
+{{{
+GameActivity.mGLView.my_game.draw_fps = false;
+}}}
  * Make the screen orient in another direction: Change your manifest file however you like here 
 {{{
 android:screenOrientation="sensorLandscape"
