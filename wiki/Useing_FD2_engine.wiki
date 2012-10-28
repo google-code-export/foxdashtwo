@@ -69,7 +69,16 @@ android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
  # Open your Activity file
  # Delete unnecessary code
  # Make it extend GameActivity
+{{{
+public class MainActivity extends com.kobaj.foxdashtwo.GameActivity {
+}}}
  # Set the prefs text to your own
+{{{
+public MainActivity()
+{
+    this.shared_prefs_name = "com.my_site.my_awesome_game_prefs";
+}
+}}}
 
 ===Take a break===
 
@@ -82,6 +91,10 @@ android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
  # Right click your src package -> add new -> class
  # Make it extend com.kobaj.screen.BaseScreen
  # Go Back to your activity file and add your screen to the game
+{{{
+//setup my screen
+GameActivity.mGLView.my_game.onChangeScreen(new com.my_site.myawesomegame.MyScreen());
+}}}
 
 ===Drawing numbers to the screen===
 
@@ -104,8 +117,37 @@ Constants.text.drawNumber(198765432, x_pos, y_pos, EnumDrawFrom.bottom_left);
 
  # Add your desired graphic to the rest/drawable-hdpi folder
  # Set, Initialize, and draw your graphic. But nothing shows up?!
+{{{
+//Set 
+Quad my_drawable;
+
+//Initialize
+//file name, file width, file height
+my_drawable = new Quad(R.drawable.untitled, 200, 100);
+
+//Draw
+my_drawable.onDrawAmbient();
+}}}
  # You need an ambient light, Set, Initialize, and draw your light
+{{{
+//Set
+QuadColorShape my_ambient_light;
+
+//Initialize
+//screen width, screen height, color, blur_amount
+my_ambient_light = new QuadColorShape(com.kobaj.math.Constants.height, com.kobaj.math.Constants.width, Color.WHITE, 0);
+
+//Draw
+my_ambient_light.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, touch_color, true);
+}}}
+ # But now your app crashes? Dont load in the constructor, load in the load method
  # Move your object around if needed
+{{{
+double x_pos = Functions.screenXToShaderX(100);
+double y_pos = Functions.screenYToShaderY(300);
+		
+my_drawable.setPos(x_pos, y_pos, EnumDrawFrom.center);
+}}}
 
 ===Draw compressed images to screen===
 
@@ -118,10 +160,15 @@ Constants.text.drawNumber(198765432, x_pos, y_pos, EnumDrawFrom.bottom_left);
 ===Touch Input===
 
  # Add an if statment to the update loop to see if finger zero has been touched
+{{{
+touch_color = Color.WHITE;
+if(Constants.input_manager.getTouched(0))
+    touch_color = Color.BLUE;
+}}}
 
 ===Advanced Touch Input===
 
-* Will come soon
+ * Will come soon
 
 ===Playing Sound===
 
