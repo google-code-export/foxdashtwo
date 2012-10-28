@@ -5,7 +5,7 @@
 
 Fox Dash Two features:
  * Easy to use and setup
- * Open Source under a easy to use license
+ * Open Source under an easy to use license
  * OpenGL ES 2.0
  * No messing with low level code or shaders
  * Simple Physics, lights, particles, and other features built in
