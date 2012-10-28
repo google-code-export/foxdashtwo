@@ -95,11 +95,11 @@ public MainActivity()
  # You'll know its working if on your device you see an FPS counter in the top left hand corner [http://i.imgur.com/wMLXV.png Image]
  # Have some tea
 
-===Create your own screen file===
+===Create a screen file===
 
- # Right click your src package -> New -> class [http://i.imgur.com/iBxPt.png Image]
+ # Right click src package -> New -> class [http://i.imgur.com/iBxPt.png Image]
  # Make it extend com.kobaj.screen.BaseScreen [http://i.imgur.com/XOgie.png Image] [http://i.imgur.com/5pwGk.png Image]
- # Go Back to your activity file and add your screen to the game
+ # Go Back to the activity file and add the screen to the game
 {{{
 //setup my screen
 GameActivity.mGLView.my_game.onChangeScreen(new com.my_site.myawesomegame.MyScreen());
@@ -108,7 +108,7 @@ GameActivity.mGLView.my_game.onChangeScreen(new com.my_site.myawesomegame.MyScre
 
 ===Drawing numbers to the screen===
 
- # Go to your screen file 
+ # Go to the screen file 
  # add the following lines of code in the method onDrawConstant
 {{{
 //convert screen coords to shader coords
@@ -127,8 +127,8 @@ Constants.text.drawNumber(198765432, x_pos, y_pos, EnumDrawFrom.bottom_left);
 
 ===Draw images to the screen ====
 
- # Add your desired graphic to the rest/drawable-hdpi folder [http://i.imgur.com/wak8L.png Image]
- # Set, Initialize, and draw your graphic. But nothing shows up?!
+ # Add desired graphic to the rest/drawable-hdpi folder [http://i.imgur.com/wak8L.png Image]
+ # Set, Initialize, and draw graphic. But nothing shows up?!
 {{{
 //Set 
 Quad my_drawable;
@@ -141,7 +141,7 @@ my_drawable = new Quad(R.drawable.untitled, 200, 100);
 my_drawable.onDrawAmbient();
 }}} 
 [http://i.imgur.com/pJbMB.png Image]
- # You need an ambient light, Set, Initialize, and draw your light
+ # Add an ambient light in a similar manner 
 {{{
 //Set
 QuadColorShape my_ambient_light;
@@ -153,8 +153,8 @@ my_ambient_light = new QuadColorShape(com.kobaj.math.Constants.height, com.kobaj
 //Draw
 my_ambient_light.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, touch_color, true);
 }}}
- # But now your app crashes? Dont load in the constructor, load in the load method [http://i.imgur.com/asc1r.png Image]
- # Move your object around if needed
+ # But now the app crashes? Don't load in the constructor, load in the load method [http://i.imgur.com/asc1r.png Image]
+ # Move the graphic around if needed
 {{{
 double x_pos = Functions.screenXToShaderX(100);
 double y_pos = Functions.screenYToShaderY(300);
@@ -196,9 +196,9 @@ if(Constants.input_manager.getTouched(0))
 
 ===Exporting an APK for Google Play Market===
 
- # Right click your project and click Android Tools -> Export signed application package [http://i.imgur.com/2akPh.png Image]
+ # Right click project and click Android Tools -> Export signed application package [http://i.imgur.com/2akPh.png Image]
  # Follow the wizard to reuse an old keystore or make a new one
- # keep your keystore safe, don't lose it, and don't give it away.
+ # keep the keystore safe, don't lose it, and don't give it away.
 
 ===Loading things with XML===
 
@@ -210,12 +210,12 @@ if(Constants.input_manager.getTouched(0))
 
 ===Other Specs===
 
- * To turn off fps: In your activity add this code to onCreate method
+ * To turn off fps: In the activity add this code to onCreate method
 {{{
 GameActivity.mGLView.my_game.draw_fps = false;
 }}} 
 [http://i.imgur.com/LxY0a.png Image]
- * Make the screen orient in another direction: Change your manifest file however you like here 
+ * Make the screen orient in another direction: Change the manifest file here 
 {{{
 android:screenOrientation="sensorLandscape"
 }}}
