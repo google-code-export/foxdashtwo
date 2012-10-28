@@ -34,7 +34,7 @@ Use your SVN client to checkout the library branch of Fox Dash 2.
  # Open up eclipse [http://i.imgur.com/pPud1.png Image]
  # File -> import...General -> Existing project into workspace [http://i.imgur.com/eOp2c.png Image]
  # Browse for where you checked out FD2 library and import
- # Stare in amazement
+ # Stare in amazement [http://i.imgur.com/IqU4b.png Image]
 
  # File -> New -> Other...Android -> Android Application Project
  # Be sure to set minimum file version to API 9
@@ -72,14 +72,16 @@ android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
  # Make it extend GameActivity
 {{{
 public class MainActivity extends com.kobaj.foxdashtwo.GameActivity {
-}}} [http://i.imgur.com/IZIw8.png Image] 
+}}} 
+[http://i.imgur.com/IZIw8.png Image] 
  # Set the prefs text to your own
 {{{
 public MainActivity()
 {
     this.shared_prefs_name = "com.my_site.my_awesome_game_prefs";
 }
-}}} [http://i.imgur.com/pXFeP.png Image]
+}}} 
+[http://i.imgur.com/pXFeP.png Image]
 
 ===Take a break===
 
@@ -96,7 +98,8 @@ public MainActivity()
 {{{
 //setup my screen
 GameActivity.mGLView.my_game.onChangeScreen(new com.my_site.myawesomegame.MyScreen());
-}}} [http://i.imgur.com/H3nqk.png Image]
+}}} 
+[http://i.imgur.com/H3nqk.png Image]
 
 ===Drawing numbers to the screen===
 
@@ -109,7 +112,9 @@ double y_pos = Functions.screenYToShaderY(200);
 		
 //draw the number 198765432 at the position (200,200)
 Constants.text.drawNumber(198765432, x_pos, y_pos, EnumDrawFrom.bottom_left);
-}}} [http://i.imgur.com/w6T3o.png Image] [http://i.imgur.com/VkIgp.png Image]
+}}} 
+[http://i.imgur.com/w6T3o.png Image] 
+[http://i.imgur.com/VkIgp.png Image]
 
 ===Drawing Text to the screen===
 
@@ -129,7 +134,8 @@ my_drawable = new Quad(R.drawable.untitled, 200, 100);
 
 //Draw
 my_drawable.onDrawAmbient();
-}}} [http://i.imgur.com/pJbMB.png Image]
+}}} 
+[http://i.imgur.com/pJbMB.png Image]
  # You need an ambient light, Set, Initialize, and draw your light
 {{{
 //Set
@@ -149,7 +155,9 @@ double x_pos = Functions.screenXToShaderX(100);
 double y_pos = Functions.screenYToShaderY(300);
 		
 my_drawable.setPos(x_pos, y_pos, EnumDrawFrom.center);
-}}} [http://i.imgur.com/WwNsX.png Image] [http://i.imgur.com/qUFhh.png Image]
+}}} 
+[http://i.imgur.com/WwNsX.png Image] 
+[http://i.imgur.com/qUFhh.png Image]
 
 ===Draw compressed images to screen===
 
@@ -166,7 +174,8 @@ my_drawable.setPos(x_pos, y_pos, EnumDrawFrom.center);
 touch_color = Color.WHITE;
 if(Constants.input_manager.getTouched(0))
     touch_color = Color.BLUE;
-}}} [http://i.imgur.com/eyr0z.png Image]
+}}} 
+[http://i.imgur.com/eyr0z.png Image]
 
 ===Advanced Touch Input===
 
@@ -199,7 +208,8 @@ if(Constants.input_manager.getTouched(0))
  * To turn off fps: In your activity add this code to onCreate method
 {{{
 GameActivity.mGLView.my_game.draw_fps = false;
-}}} [http://i.imgur.com/LxY0a.png Image]
+}}} 
+[http://i.imgur.com/LxY0a.png Image]
  * Make the screen orient in another direction: Change your manifest file however you like here 
 {{{
 android:screenOrientation="sensorLandscape"
