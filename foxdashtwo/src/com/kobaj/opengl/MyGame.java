@@ -9,13 +9,15 @@ import com.kobaj.opengldrawable.EnumDrawFrom;
 import com.kobaj.opengldrawable.Quad.QuadRenderTo;
 import com.kobaj.screen.BaseScreen;
 import com.kobaj.screen.EnumScreenState;
-import com.kobaj.screen.SinglePlayerScreen;
+import com.kobaj.screen.TitleScreen;
 
 public class MyGame extends MyGLRender
 {	
 	//test screen
-	private SinglePlayerScreen single_player_screen;
+	//private SinglePlayerScreen single_player_screen;
 	private BaseScreen currently_active_screen;
+	
+	public boolean draw_fps= true;
 	
 	//dont touch the variables below this line
 	//final drawable.
@@ -23,10 +25,20 @@ public class MyGame extends MyGLRender
 
     public MyGame()
     {
-    	single_player_screen = new SinglePlayerScreen();
-    	currently_active_screen = single_player_screen;
+    	//single_player_screen = new SinglePlayerScreen();
+    	currently_active_screen = new TitleScreen(); //single_player_screen;
     }
     
+    
+    public void onChangeScreen(BaseScreen next_active_screen)
+    {
+		if(next_active_screen != null)
+		{
+			currently_active_screen = next_active_screen;
+			next_active_screen = null;
+			currently_active_screen.onInitialize();
+		}
+    }
 	
 	//for the record this is called everytime the screen is reset/paused/resumed
 	//all graphics are destroyed (dunno about sounds >.>).
@@ -39,14 +51,15 @@ public class MyGame extends MyGLRender
 		currently_active_screen.onInitialize();
 		
 		//dont touch below this line.
-        scene = new QuadRenderTo();
+		if(scene == null)
+			scene = new QuadRenderTo();
         
         System.gc();
 	}
 	
 	@Override
 	protected void onUpdate(double delta)
-	{
+	{		
 		if(currently_active_screen.current_state == EnumScreenState.running)
 			currently_active_screen.onUpdate(delta);
 	}
@@ -59,16 +72,19 @@ public class MyGame extends MyGLRender
 		else if(currently_active_screen.current_state == EnumScreenState.loading)
 			onLoadingDraw();
 		
+		if(draw_fps)
+		{
 		//fps
-		int color = Color.BLUE;
-		if(fps.fps < 60)
-			color = Color.GREEN;
-		if(fps.fps < 45)
-			color = Color.YELLOW;
-		if(fps.fps < 30)
-			color = Color.RED;
+			int color = Color.BLUE;
+			if(fps.fps < 60)
+				color = Color.GREEN;
+			if(fps.fps < 45)
+				color = Color.YELLOW;
+			if(fps.fps < 30)
+				color = Color.RED;
 		
-		Constants.text.drawNumber(fps.fps, Functions.screenXToShaderX(25), Functions.screenYToShaderY((int)Functions.fix_y(25)), EnumDrawFrom.top_left, color);
+			Constants.text.drawNumber(fps.fps, Functions.screenXToShaderX(25), Functions.screenYToShaderY((int)Functions.fix_y(25)), EnumDrawFrom.top_left, color);
+		}
 	}
 	
 	private void onLoadingDraw()

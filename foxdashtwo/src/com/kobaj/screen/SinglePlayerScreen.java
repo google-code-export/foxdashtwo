@@ -1,7 +1,5 @@
 package com.kobaj.screen;
 
-import android.graphics.Color;
-
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.input.GameInputModifier;
 import com.kobaj.loader.XMLHandler;
@@ -102,7 +100,7 @@ public class SinglePlayerScreen extends BaseScreen
 	@Override
 	public void onDrawObject()
 	{	
-		my_backdrop.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, Color.WHITE, true);
+		//my_backdrop.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, Color.WHITE, true);
 		
 		test_level.onDrawObject();
 	}

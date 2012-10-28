@@ -3,18 +3,11 @@ package com.kobaj.opengldrawable.Quad;
 //thank you
 //http://blog.shayanjaved.com/2011/05/13/android-opengl-es-2-0-render-to-texture/
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.IntBuffer;
-
-import com.kobaj.foxdashtwo.R;
-import com.kobaj.loader.GLBitmapReader;
-import com.kobaj.math.Functions;
-import com.kobaj.openglgraphics.ETC1Extended;
-
 import android.graphics.Bitmap;
 import android.opengl.GLES20;
 import android.opengl.GLUtils;
+
+import com.kobaj.loader.GLBitmapReader;
 
 public class QuadRenderTo extends Quad
 {
@@ -22,7 +15,6 @@ public class QuadRenderTo extends Quad
 	private int fb = -1, depthRb = - 1;
 	private int texW;
 	private int texH;
-	private IntBuffer texBuffer;
 
 	public QuadRenderTo()
 	{
@@ -58,12 +50,7 @@ public class QuadRenderTo extends Quad
 		
 		if(this.my_texture_data_handle != -1)
 			GLES20.glDeleteTextures(1, new int[] {this.my_texture_data_handle}, 0);
-		
-		
-		//load a compressed texture
-		//ETC1Extended my_etc1 = new ETC1Extended();
-		//my_alpha_data_handle = my_texture_data_handle = my_etc1.loadETC1(R.raw.overlay);
-		
+	
 		
 		//load a regular texture
 		this.my_texture_data_handle = GLBitmapReader.newTextureID();
@@ -77,12 +64,6 @@ public class QuadRenderTo extends Quad
 		
 		// Push the bitmap onto the GPU
 		GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, Bitmap.createBitmap(texW, texH, Bitmap.Config.RGB_565), 0);
-
-		
-		//load a built compressed texture
-		Bitmap temp = Bitmap.createBitmap(texW, texH, Bitmap.Config.RGB_565);
-		ETC1Extended my_etc1 = new ETC1Extended();
-		my_etc1.loadETC1(temp, texW, texH, false);
 		
 		
 		// create render buffer and bind 16-bit depth buffer
