@@ -29,6 +29,12 @@ Use your SVN client to checkout the library branch of Fox Dash 2.
  * Command line: svn checkout https://foxdashtwo.googlecode.com/svn/branch/library/
  * Tortoise: right click a folder -> SVN checkout with the url above
 
+===Keep your library branch up to date===
+
+Every few days or so use the SVN client to update the library branch of Fox Dash 2.
+ * Command line: svn update
+ * Tortoise: right click folder -> SVN update
+
 ===Open FD2 in Eclipse and Create a game project===
 
  # Open up eclipse [http://i.imgur.com/pPud1.png Image]
