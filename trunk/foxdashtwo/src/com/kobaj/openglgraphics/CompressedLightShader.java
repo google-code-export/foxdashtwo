@@ -1,9 +1,8 @@
 package com.kobaj.openglgraphics;
 
-import com.kobaj.foxdashtwo.R;
-import com.kobaj.math.Functions;
-
 import android.opengl.GLES20;
+
+import com.kobaj.foxdashtwo.R;
 
 public class CompressedLightShader extends BaseLightShader
 {

@@ -5,7 +5,7 @@ import android.opengl.GLSurfaceView;
 
 public class MyGLSurfaceView extends GLSurfaceView {
 
-	com.kobaj.opengl.MyGame my_game;
+	public com.kobaj.opengl.MyGame my_game;
 	
     public MyGLSurfaceView(Context context){
         super(context);

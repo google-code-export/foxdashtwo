@@ -8,7 +8,6 @@ import android.opengl.GLES20;
 import com.kobaj.loader.GLBitmapReader;
 import com.kobaj.loader.GLLoadedTexture;
 import com.kobaj.math.Constants;
-import com.kobaj.math.Functions;
 
 public class QuadCompressed extends Quad
 {

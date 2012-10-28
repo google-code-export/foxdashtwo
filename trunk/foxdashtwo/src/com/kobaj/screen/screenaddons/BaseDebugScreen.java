@@ -122,6 +122,10 @@ public class BaseDebugScreen
 	
 	private QuadColorShape onMakeBoundingBox(RectF bounding_box)
 	{
+		//TODO figure out why this errors.
+		if(bounding_box == null)
+			return onMakeBoundingBox((int) 0, (int) 0, (int) 0, (int) 0);
+		
 		double left = Functions.shaderXToScreenX(bounding_box.left);
 		double top = Functions.shaderYToScreenY(bounding_box.top);
 		double right = Functions.shaderXToScreenX(bounding_box.right);

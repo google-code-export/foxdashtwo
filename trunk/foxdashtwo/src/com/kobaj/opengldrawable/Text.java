@@ -58,6 +58,7 @@ public class Text
 			if (count > 9)
 			{
 				key = Constants.context.getResources().getIdentifier(s, "string", "com.kobaj.foxdashtwo");
+				if(key != 0)
 				s = Constants.context.getResources().getString(key);
 			}
 			

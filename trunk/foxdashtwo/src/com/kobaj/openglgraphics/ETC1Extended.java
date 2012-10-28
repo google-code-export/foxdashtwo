@@ -11,7 +11,6 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 import android.graphics.Bitmap;
-import android.opengl.ETC1;
 import android.opengl.ETC1Util;
 import android.opengl.GLES20;
 import android.util.Log;
