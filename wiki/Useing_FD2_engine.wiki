@@ -25,11 +25,11 @@ Fox Dash Two features:
 
 ===Grab the library branch of FD2===
 
-Use your SVN client to checkout the library branch of Fox Dash 2.
+Use an SVN client to checkout the library branch of Fox Dash 2.
  * Command line: svn checkout https://foxdashtwo.googlecode.com/svn/branch/library/
  * Tortoise: right click a folder -> SVN checkout with the url above
 
-===Keep your library branch up to date===
+===Keep the library branch up to date===
 
 Every few days or so use the SVN client to update the library branch of Fox Dash 2.
  * Command line: svn update
@@ -39,7 +39,7 @@ Every few days or so use the SVN client to update the library branch of Fox Dash
 
  # Open up eclipse [http://i.imgur.com/pPud1.png Image]
  # File -> import...General -> Existing project into workspace [http://i.imgur.com/eOp2c.png Image]
- # Browse for where you checked out FD2 library and import
+ # Browse for the Fox Dash 2 branch checkout
  # Stare in amazement [http://i.imgur.com/IqU4b.png Image]
 
  # File -> New -> Other...Android -> Android Application Project
