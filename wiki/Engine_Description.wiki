@@ -1,4 +1,4 @@
-Description of what the engine can and can't do thus far.
+#summary Description of what the engine can and can't do thus far.
 
 ==Screen Size==
 Typical 'screen area' is 800x480 for phones, while tablets are 1280x800. The engine automatically accounts for screen size and adjusts things to fit.
