@@ -19,9 +19,9 @@ Fox Dash Two features:
  # Update your SDK...In Eclipse -> Window -> Android SDK Manager. Check at least version API 9, but if you're OCD and like buttons, click them all and install [http://i.imgur.com/Qur8D.png Image]
  # Download and install an SVN client (such as [http://tortoisesvn.net/downloads.html Tortoise] or [http://scplugin.tigris.org/ SCPlugin ])
 
-===Setup your device===
+===Setup a device===
 
- # On your Android device...Settings -> Developer Options -> Android debugging
+ # On an Android device...Settings -> Developer Options -> Android debugging
 
 ===Grab the library branch of FD2===
 
@@ -48,14 +48,14 @@ Every few days or so use the SVN client to update the library branch of Fox Dash
  # Proceed through the rest of the wizard...next...next...next...
  # End with this [http://i.imgur.com/WWL8h.png Image]
 
-===Link FD2 and your game project===
+===Link FD2 and game project===
 
- # Right click your project -> properties [http://i.imgur.com/Te2lP.png Image]
+ # Right click project -> properties [http://i.imgur.com/Te2lP.png Image]
  # Find Android on the left, and add Fox Dash 2 as a library on the right [http://i.imgur.com/UGtWT.png Image]
 
 ===Setup the manifest file===
 
- # Find the manifest file in the root directory of your project, open it up, and change text edit mode [http://i.imgur.com/1yMiw.png Image]
+ # Find the manifest file in the root directory of project, open it up, and change to text edit mode [http://i.imgur.com/1yMiw.png Image]
  # Add the following 
 {{{
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -73,14 +73,14 @@ android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
 
 ===Setup the activity file===
 
- # Open your Activity file [http://i.imgur.com/wdYuX.png Image]
+ # Open the Activity file [http://i.imgur.com/wdYuX.png Image]
  # Delete unnecessary code [http://i.imgur.com/yPZU1.png Image]
  # Make it extend GameActivity
 {{{
 public class MainActivity extends com.kobaj.foxdashtwo.GameActivity {
 }}} 
 [http://i.imgur.com/IZIw8.png Image] 
- # Set the prefs text to your own
+ # Set the prefs text to match the project
 {{{
 public MainActivity()
 {
@@ -91,8 +91,8 @@ public MainActivity()
 
 ===Take a break===
 
- # At this point you can run your application [http://i.imgur.com/99vNG.png Image]
- # You'll know its working if on your device you see an FPS counter in the top left hand corner [http://i.imgur.com/wMLXV.png Image]
+ # At this point the application can run [http://i.imgur.com/99vNG.png Image]
+ # Its working if there is an FPS counter in the top left corner of the android device [http://i.imgur.com/wMLXV.png Image]
  # Have some tea
 
 ===Create a screen file===
