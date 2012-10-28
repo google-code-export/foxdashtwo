@@ -16,7 +16,7 @@ Fox Dash Two features:
 
  # Download and install [http://www.eclipse.org/downloads/packages/release/indigo/sr2 Eclipse]
  # Get the [https://developer.android.com/sdk/installing/installing-adt.html ADT plugin] for Eclipse
- # Update your SDK...In Eclipse -> Window -> Android SDK Manager. Check at least version API 9, but if you're OCD and like buttons, click them all and install
+ # Update your SDK...In Eclipse -> Window -> Android SDK Manager. Check at least version API 9, but if you're OCD and like buttons, click them all and install [http://i.imgur.com/Qur8D.png Image]
  # Download and install an SVN client (such as [http://tortoisesvn.net/downloads.html Tortoise] or [http://scplugin.tigris.org/ SCPlugin ])
 
 ===Setup your device===
@@ -31,24 +31,25 @@ Use your SVN client to checkout the library branch of Fox Dash 2.
 
 ===Open FD2 in Eclipse and Create a game project===
 
- # Open up eclipse 
- # File -> import...General -> Existing project into workspace
+ # Open up eclipse [http://i.imgur.com/pPud1.png Image]
+ # File -> import...General -> Existing project into workspace [http://i.imgur.com/eOp2c.png Image]
  # Browse for where you checked out FD2 library and import
  # Stare in amazement
 
  # File -> New -> Other...Android -> Android Application Project
  # Be sure to set minimum file version to API 9
- # Set recommended file version to whatever your device is running
+ # Set recommended file version to whatever your device is running [http://i.imgur.com/Iz9Kv.png Image]
  # Proceed through the rest of the wizard...next...next...next...
+ # End with this [http://i.imgur.com/WWL8h.png Image]
 
 ===Link FD2 and your game project===
 
- # Right click your project -> properties.
- # Find Android on the left, and add Fox Dash 2 as a library on the right
+ # Right click your project -> properties [http://i.imgur.com/Te2lP.png Image]
+ # Find Android on the left, and add Fox Dash 2 as a library on the right [http://i.imgur.com/UGtWT.png Image]
 
 ===Setup the manifest file===
 
- # Find the manifest file in the root directory of your project, open it up, and head to text edit mode.
+ # Find the manifest file in the root directory of your project, open it up, and change text edit mode [http://i.imgur.com/1yMiw.png Image]
  # Add the following 
 {{{
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -62,39 +63,40 @@ Use your SVN client to checkout the library branch of Fox Dash 2.
 android:theme="@android:style/Theme.NoTitleBar.Fullscreen" 
             android:screenOrientation="sensorLandscape"
 }}}
- # it should look similar
+ # [http://i.imgur.com/x2GQg.png Image]
 
 ===Setup the activity file===
 
- # Open your Activity file
- # Delete unnecessary code
+ # Open your Activity file [http://i.imgur.com/wdYuX.png Image]
+ # Delete unnecessary code [http://i.imgur.com/yPZU1.png Image]
  # Make it extend GameActivity
 {{{
 public class MainActivity extends com.kobaj.foxdashtwo.GameActivity {
-}}}
+}}} [http://i.imgur.com/IZIw8.png Image] 
  # Set the prefs text to your own
 {{{
 public MainActivity()
 {
     this.shared_prefs_name = "com.my_site.my_awesome_game_prefs";
 }
-}}}
+}}} [http://i.imgur.com/pXFeP.png Image]
 
 ===Take a break===
 
- # At this point you can run your application
- # You'll know its working if on your device you see an FPS counter in the top left hand corner
+ # At this point you can run your application [http://i.imgur.com/99vNG.png Image]
+ # You'll know its working if on your device you see an FPS counter in the top left hand corner [http://i.imgur.com/wMLXV.png Image]
  # Have some tea
 
 ===Create your own screen file===
 
- # Right click your src package -> add new -> class
- # Make it extend com.kobaj.screen.BaseScreen
+ # Right click your src package -> New -> class [http://i.imgur.com/iBxPt.png Image]
+ # Make it extend com.kobaj.screen.BaseScreen [http://i.imgur.com/XOgie.png Image]
+ # [http://i.imgur.com/5pwGk.png Image]
  # Go Back to your activity file and add your screen to the game
 {{{
 //setup my screen
 GameActivity.mGLView.my_game.onChangeScreen(new com.my_site.myawesomegame.MyScreen());
-}}}
+}}} [http://i.imgur.com/H3nqk.png Image]
 
 ===Drawing numbers to the screen===
 
@@ -107,7 +109,7 @@ double y_pos = Functions.screenYToShaderY(200);
 		
 //draw the number 198765432 at the position (200,200)
 Constants.text.drawNumber(198765432, x_pos, y_pos, EnumDrawFrom.bottom_left);
-}}}
+}}} [http://i.imgur.com/w6T3o.png Image] [http://i.imgur.com/VkIgp.png Image]
 
 ===Drawing Text to the screen===
 
@@ -115,7 +117,7 @@ Constants.text.drawNumber(198765432, x_pos, y_pos, EnumDrawFrom.bottom_left);
 
 ===Draw images to the screen ====
 
- # Add your desired graphic to the rest/drawable-hdpi folder
+ # Add your desired graphic to the rest/drawable-hdpi folder [http://i.imgur.com/wak8L.png Image]
  # Set, Initialize, and draw your graphic. But nothing shows up?!
 {{{
 //Set 
@@ -127,7 +129,7 @@ my_drawable = new Quad(R.drawable.untitled, 200, 100);
 
 //Draw
 my_drawable.onDrawAmbient();
-}}}
+}}} [http://i.imgur.com/pJbMB.png Image]
  # You need an ambient light, Set, Initialize, and draw your light
 {{{
 //Set
@@ -140,14 +142,14 @@ my_ambient_light = new QuadColorShape(com.kobaj.math.Constants.height, com.kobaj
 //Draw
 my_ambient_light.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, touch_color, true);
 }}}
- # But now your app crashes? Dont load in the constructor, load in the load method
+ # But now your app crashes? Dont load in the constructor, load in the load method [http://i.imgur.com/asc1r.png Image]
  # Move your object around if needed
 {{{
 double x_pos = Functions.screenXToShaderX(100);
 double y_pos = Functions.screenYToShaderY(300);
 		
 my_drawable.setPos(x_pos, y_pos, EnumDrawFrom.center);
-}}}
+}}} [http://i.imgur.com/WwNsX.png Image] [http://i.imgur.com/qUFhh.png Image]
 
 ===Draw compressed images to screen===
 
@@ -164,7 +166,7 @@ my_drawable.setPos(x_pos, y_pos, EnumDrawFrom.center);
 touch_color = Color.WHITE;
 if(Constants.input_manager.getTouched(0))
     touch_color = Color.BLUE;
-}}}
+}}} [http://i.imgur.com/eyr0z.png Image]
 
 ===Advanced Touch Input===
 
@@ -180,7 +182,7 @@ if(Constants.input_manager.getTouched(0))
 
 ===Exporting an APK for Google Play Market===
 
- # Right click your project and click Android Tools -> Export signed application package
+ # Right click your project and click Android Tools -> Export signed application package [http://i.imgur.com/2akPh.png Image]
  # Follow the wizard to reuse an old keystore or make a new one
  # keep your keystore safe, don't lose it, and don't give it away.
 
@@ -197,7 +199,7 @@ if(Constants.input_manager.getTouched(0))
  * To turn off fps: In your activity add this code to onCreate method
 {{{
 GameActivity.mGLView.my_game.draw_fps = false;
-}}}
+}}} [http://i.imgur.com/LxY0a.png Image]
  * Make the screen orient in another direction: Change your manifest file however you like here 
 {{{
 android:screenOrientation="sensorLandscape"
