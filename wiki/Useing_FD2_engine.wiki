@@ -148,7 +148,7 @@ QuadColorShape my_ambient_light;
 
 //Initialize
 //screen width, screen height, color, blur_amount
-my_ambient_light = new QuadColorShape(com.kobaj.math.Constants.height, com.kobaj.math.Constants.width, Color.WHITE, 0);
+my_ambient_light = new QuadColorShape(com.kobaj.math.Constants.width, com.kobaj.math.Constants.height, Color.WHITE, 0);
 
 //Draw
 my_ambient_light.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, touch_color, true);
