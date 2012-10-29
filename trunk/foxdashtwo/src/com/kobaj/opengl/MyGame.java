@@ -16,6 +16,7 @@ public class MyGame extends MyGLRender
 	//test screen
 	//private SinglePlayerScreen single_player_screen;
 	private BaseScreen currently_active_screen;
+	private BaseScreen next_active_screen;
 	
 	public boolean draw_fps= true;
 	
@@ -33,11 +34,7 @@ public class MyGame extends MyGLRender
     public void onChangeScreen(BaseScreen next_active_screen)
     {
 		if(next_active_screen != null)
-		{
-			currently_active_screen = next_active_screen;
-			next_active_screen = null;
-			currently_active_screen.onInitialize();
-		}
+			this.next_active_screen = next_active_screen;
     }
 	
 	//for the record this is called everytime the screen is reset/paused/resumed
@@ -60,6 +57,15 @@ public class MyGame extends MyGLRender
 	@Override
 	protected void onUpdate(double delta)
 	{		
+		//screen swap
+		if(next_active_screen != null)
+		{
+			currently_active_screen = next_active_screen;
+			next_active_screen = null;
+			currently_active_screen.onInitialize();
+		}
+		
+		//update as usual
 		if(currently_active_screen.current_state == EnumScreenState.running)
 			currently_active_screen.onUpdate(delta);
 	}
