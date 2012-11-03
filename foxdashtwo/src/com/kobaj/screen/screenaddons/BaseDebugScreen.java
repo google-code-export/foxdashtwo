@@ -45,6 +45,7 @@ public class BaseDebugScreen
 			for (int e = test_level.object_list.size() - 1; e >= 0; e--)
 				outline_quads.add(onMakeBoundingBox(test_level.object_list.get(e).quad_object));
 			
+			if(test_level.player != null)
 			outline_quads.add(onMakeBoundingBox(test_level.player.quad_object));
 		}
 		else

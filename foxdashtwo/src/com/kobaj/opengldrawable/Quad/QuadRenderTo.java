@@ -51,6 +51,7 @@ public class QuadRenderTo extends Quad
 		if(this.my_texture_data_handle != -1)
 			GLES20.glDeleteTextures(1, new int[] {this.my_texture_data_handle}, 0);
 	
+		System.gc();
 		
 		//load a regular texture
 		this.my_texture_data_handle = GLBitmapReader.newTextureID();

@@ -34,6 +34,7 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		
 		// disable depth testing
 		GLES20.glDisable(GLES20.GL_DEPTH_TEST);
+		//GLES20.glEnable(GLES20.GL_DEPTH_TEST);
 		
 		//mmm blending
 		GLES20.glEnable(GLES20.GL_BLEND);

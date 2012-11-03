@@ -102,7 +102,8 @@ function getLevelDefinition()
     	def += '      <height>' + events_array[o].height + '</height>\n';
     	
     	def += '      <affected_object_strings>\n';
-    	var strings_array = events_array[o].affected_strings.split(','); 
+    	var strings_array = events_array[o].affected_strings.split(',');
+    	if(strings_array.length > 0)
     	for(n in strings_array)
     		def += '        <String>' + $.trim(n) + '</String>\n';
     	def += '      </affected_object_strings>\n';
@@ -153,11 +154,21 @@ function intToRgba(intstring)
 
 }
 
+function reset_item_list_dropdowns(val)
+{
+	$(val).html("<option value=''>None</option>");
+}
+
 /*build a level that is typed in*/
 function levelChanged(level)
 { 
 	objects_array.length = 0;
 	lights_array.length = 0;
+	events_array.length = 0;
+	
+	reset_item_list_dropdowns('#object_drop_down');
+	reset_item_list_dropdowns('#light_drop_down');
+	reset_item_list_dropdowns('#event_drop_down');
 	
 	 xmlDoc = $.parseXML( level );
 	 $xml = $( xmlDoc );
@@ -184,6 +195,9 @@ function levelChanged(level)
 		 temp.object_name_id = ($(this).find("id").text() ? $(this).find("id").text() : "000x0")
 		 
 		 objects_array.push(temp);
+			$('#object_drop_down').append($("<option></option>")
+			         .attr("value", temp.id)
+			         .text(temp.object_name_id + ': ' + temp.id));  
 	 });
 	 if(objects_array.length > 0)
 		 setup_objects_interface(objects_array[objects_array.length - 1]);
@@ -223,6 +237,9 @@ function levelChanged(level)
 		 temp.color = intToRgba($(this).find("color").text());
 		 
 		 lights_array.push(temp);
+			$('#light_drop_down').append($("<option></option>")
+			         .attr("value", temp.id)
+			         .text(temp.light_name_id + ': ' + temp.id)); 
 	 });
 	 if(lights_array.length > 0)
 		 setup_lights_interface(lights_array[lights_array.length - 1]);
@@ -236,17 +253,23 @@ function levelChanged(level)
 				 parseInt($(this).find("width").text()),
 				 parseInt($(this).find("height").text()),
 				 $(this).find("this_event").text(),
-				 objects_array.length); // remember, this is zero based indexing
+				 events_array.length); // remember, this is zero based indexing
 		 
-		 temp.object_name_id = ($(this).find("id").text() ? $(this).find("id").text() : "000x0")
+		 temp.event_name_id = ($(this).find("id").text() ? $(this).find("id").text() : "000x0")
 		 
 		 var strings_array = new Array();
-		 $xml.find("affected_object_strings").each(function(){
+		 $(this).find("affected_object_strings").each(function(){
 			 strings_array.push($(this).find("String").text());
 		 })
-		 temp.affected_strings = strings_array.join(', ');
+		 if(strings_array.length > 0)
+			 temp.affected_strings = strings_array.join(', ');
+		 else
+			 temp.affected_strings = "";
 		 
 		 events_array.push(temp);
+			$('#event_drop_down').append($("<option></option>")
+			         .attr("value", temp.id)
+			         .text(temp.event_name_id + ': ' + temp.id)); 
 	 });
 	 if(events_array.length > 0)
 		 setup_events_interface(events_array[events_array.length - 1]);

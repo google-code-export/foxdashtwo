@@ -10,10 +10,13 @@ function drawText(x, y, text, color, font)
 	x = parseInt(x);
 	y = parseInt(y);
 	
-	context.fillStyle = color;
-	context.font = typeof font == 'undefined' ? default_font : font;
-	context.textBaseline = 'top';
-	context.fillText(text, x, y);
+	if(pointOnScreen(x, y))
+	{
+		context.fillStyle = color;
+		context.font = typeof font == 'undefined' ? default_font : font;
+		context.textBaseline = 'top';
+		context.fillText(text, x, y);
+	}
 };
 
 function drawTextYFix(x, y, text, color, font)
@@ -36,16 +39,19 @@ function strokeText(x, y, text, color, font)
 	x = parseInt(x);
 	y = parseInt(y);
 	
-	context.strokeStyle = color;
-	context.font = typeof font == 'undefined' ? default_font : font;
-	context.lineWidth = 9;
-	context.textBaseline = 'bottom';
+	if(pointOnScreen(x, y))
+	{
+		context.strokeStyle = color;
+		context.font = typeof font == 'undefined' ? default_font : font;
+		context.lineWidth = 9;
+		context.textBaseline = 'bottom';
 
-	context.fillStyle = whiteFill;
-	context.lineWidth = 3;
-	context.fillText(text, x, y);
+		context.fillStyle = whiteFill;
+		context.lineWidth = 3;
+		context.fillText(text, x, y);
 	
-	context.strokeText(text, x, y);
+		context.strokeText(text, x, y);
+	}
 };
 
 /*nifty helpful functions in swapping canvases*/
@@ -175,11 +181,14 @@ function drawRectwh(x1,y1, width, height,color)
 	y1 = window.height - y1;
 	
 	//draw
-	context.beginPath();
-	context.fillStyle = color;
-	context.fillRect(x1,y1,width,-height);
-	context.fill();
-	context.closePath();
+	if(squareOnScreen(x1, y1, width, height))
+	{
+		context.beginPath();
+		context.fillStyle = color;
+		context.fillRect(x1,y1,width,-height);
+		context.fill();
+		context.closePath();
+	}
 	
 	if($('#outlines').is(":checked"))
 		drawBoxwh(origx,origy,width,height, darkgreyFill)
@@ -196,11 +205,14 @@ function drawBoxwh(x1,y1, width, height, color)
 	y1 = window.height - y1;
 	
 	//draw
-	context.beginPath();
-	context.strokeStyle = color;
-	context.strokeRect(x1,y1,width,-height);
-	context.stroke();
-	context.closePath();
+	if(squareOnScreen(x1, y1, width, height))
+	{
+		context.beginPath();
+		context.strokeStyle = color;
+		context.strokeRect(x1,y1,width,-height);
+		context.stroke();
+		context.closePath();
+	}
 };
 
 //only used for drawing the weapon type
@@ -269,4 +281,18 @@ function drawLamp(x, y, radius, degree, closewidth, farwidth, color)
 	context.restore();
 
 	context.lineWidth = 1;
+}
+
+function pointOnScreen(x, y)
+{
+	return (x <= width && x >= 0 &&
+			(y <= height && y >= 0));
+}
+
+function squareOnScreen(x, y, my_width, my_height)
+{
+	if(my_height < 0)
+		return (x <= width && 0 <= x + my_width && y - my_height >= 0 && height >= y);
+		
+	return (x <= width && 0 <= x + my_width && y >= 0 && height >= y - my_height);
 }

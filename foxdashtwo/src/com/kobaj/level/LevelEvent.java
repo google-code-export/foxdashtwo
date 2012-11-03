@@ -7,6 +7,7 @@ import org.simpleframework.xml.ElementList;
 
 import com.kobaj.level.LevelEventTypes.LevelEventArrows;
 import com.kobaj.level.LevelEventTypes.LevelEventBase;
+import com.kobaj.level.LevelEventTypes.LevelEventTransportPlayer;
 import com.kobaj.math.Functions;
 import com.kobaj.math.android.RectF;
 import com.kobaj.opengldrawable.Quad.Quad;
@@ -39,7 +40,7 @@ public class LevelEvent
 	// my elements
 	public RectF my_collision_rect;
 	
-	private LevelEventBase my_possible_event;
+	public LevelEventBase my_possible_event;
 	
 	public void onInitialize()
 	{
@@ -51,6 +52,10 @@ public class LevelEvent
 				this_event == EnumLevelEvent.right_arrow ||
 				this_event == EnumLevelEvent.up_arrow)
 			my_possible_event = new LevelEventArrows(this_event);
+		else if(this_event == EnumLevelEvent.send_to_start)
+		{
+			my_possible_event = new LevelEventTransportPlayer(this_event);
+		}
 		
 		if(my_possible_event != null)
 			my_possible_event.onInitialize();

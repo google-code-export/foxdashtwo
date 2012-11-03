@@ -20,7 +20,7 @@ public class LevelObject
 	@Element
 	public double y_pos; //screen coordinates
 	@Element
-	public double z_plane; //generally 0-10, with 0 being farthest from the 'front'
+	public double z_plane; //generally 1-9, with 1 being closest to the 'front' or 'camera'
 	@Element
 	public boolean active; // render or not?
 	@Element
