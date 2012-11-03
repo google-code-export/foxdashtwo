@@ -99,7 +99,7 @@ public class LevelEventArrows extends LevelEventBase
 			return;
 		
 		int first_color = Functions.makeColor(255, 255, 255, (int) (255 * brightness));
-		int secon_color = Functions.makeColor(255, 255, 255, (int) (255 * Math.abs(brightness)));
+		int secon_color = Functions.makeColor(255, 255, 255, (int) (255 * -brightness));
 		
 		if (brightness > 0)
 		{
