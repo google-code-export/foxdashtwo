@@ -35,7 +35,7 @@ public class InputTypeNintendo extends InputTypeBase
 	{
 		for(int i = 0; i < Constants.input_manager.fingerCount; i++)
 			if(Constants.input_manager.getTouched(i))
-				if(Functions.inRectF(my_quad_jump.phys_rect_list.get(0).main_rect, Functions.screenXToShaderX(Constants.input_manager.getX(i)), Functions.screenYToShaderY(Constants.input_manager.getY(i))))
+				if(Functions.inRectF(my_quad_jump.phys_rect_list.get(0).main_rect, Functions.screenXToShaderX(Constants.input_manager.getX(i)), Functions.screenYToShaderY(Functions.fix_y(Constants.input_manager.getY(i)))))
 					return true;
 				
 		return false;
@@ -46,7 +46,7 @@ public class InputTypeNintendo extends InputTypeBase
 	{
 		for(int i = 0; i < Constants.input_manager.fingerCount; i++)
 			if(Constants.input_manager.getPressed(i))
-				if(Functions.inRectF(my_quad_jump.phys_rect_list.get(0).main_rect, Functions.screenXToShaderX(Constants.input_manager.getX(i)), Functions.screenYToShaderY(Constants.input_manager.getY(i))))
+				if(Functions.inRectF(my_quad_jump.phys_rect_list.get(0).main_rect, Functions.screenXToShaderX(Constants.input_manager.getX(i)), Functions.screenYToShaderY(Functions.fix_y(Constants.input_manager.getY(i)))))
 					return true;
 				
 		return false;
@@ -57,7 +57,7 @@ public class InputTypeNintendo extends InputTypeBase
 	{
 		for(int i = 0; i < Constants.input_manager.fingerCount; i++)
 			if(Constants.input_manager.getReleased(i))
-				if(Functions.inRectF(my_quad_jump.phys_rect_list.get(0).main_rect, Functions.screenXToShaderX(Constants.input_manager.getX(i)), Functions.screenYToShaderY(Constants.input_manager.getY(i))))
+				if(Functions.inRectF(my_quad_jump.phys_rect_list.get(0).main_rect, Functions.screenXToShaderX(Constants.input_manager.getX(i)), Functions.screenYToShaderY(Functions.fix_y(Constants.input_manager.getY(i)))))
 					return true;
 				
 		return false;
@@ -68,7 +68,7 @@ public class InputTypeNintendo extends InputTypeBase
 	{
 		for(int i = 0; i < Constants.input_manager.fingerCount; i++)
 			if(Constants.input_manager.getTouched(i))
-				if(Functions.inRectF(my_quad_left.phys_rect_list.get(0).main_rect, Functions.screenXToShaderX(Constants.input_manager.getX(i)), Functions.screenYToShaderY(Constants.input_manager.getY(i))))
+				if(Functions.inRectF(my_quad_left.phys_rect_list.get(0).main_rect, Functions.screenXToShaderX(Constants.input_manager.getX(i)), Functions.screenYToShaderY(Functions.fix_y(Constants.input_manager.getY(i)))))
 					return true;
 				
 		return false;
@@ -79,7 +79,7 @@ public class InputTypeNintendo extends InputTypeBase
 	{
 		for(int i = 0; i < Constants.input_manager.fingerCount; i++)
 			if(Constants.input_manager.getTouched(i))
-				if(Functions.inRectF(my_quad_right.phys_rect_list.get(0).main_rect, Functions.screenXToShaderX(Constants.input_manager.getX(i)), Functions.screenYToShaderY(Constants.input_manager.getY(i))))
+				if(Functions.inRectF(my_quad_right.phys_rect_list.get(0).main_rect, Functions.screenXToShaderX(Constants.input_manager.getX(i)), Functions.screenYToShaderY(Functions.fix_y(Constants.input_manager.getY(i)))))
 					return true;
 				
 		return false;

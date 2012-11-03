@@ -152,10 +152,10 @@ public class InputManager
 				y[id] = event.getY(i);
 			}
 			
-			/*
+			
 			if (event.getPointerCount() == 1)
 				for (int i = 0; i < fingerCount; i++)
-					pressed[i] = false;*/
+					pressed[i] = false;
 		}
 	}
 	
