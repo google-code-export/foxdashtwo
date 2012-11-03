@@ -30,4 +30,5 @@ function interfaceload()
 	//setup objects interface
 	initialize_object_interface();
 	initialize_light_interface();
+	initialize_event_interface();
 }

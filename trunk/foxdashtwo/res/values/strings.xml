@@ -12,6 +12,9 @@
     <!-- spacer -->
     <string name="blank"></string>
     
+    <!-- level event arrows -->
+    <string name="touch_here">Touch Here</string>
+    
     <!-- annoying, but you have to put your string name here too -->
     <string-array name="my_sa">
         <item>hello</item>
@@ -20,6 +23,7 @@
         <item>left</item>
         <item>right</item>
         <item>jump</item>
+        <item>touch_here</item>
     </string-array>
     
 </resources>

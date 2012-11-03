@@ -37,7 +37,7 @@ function openLevelCode(refresh)
 function getLevelDefinition()
 {
 	var def = '<level>\n';
-	def +=		'  <player>\n    <this_object>player</this_object>\n    <draw_from>bottom_left</draw_from>\n    <id>0</id>\n    <z_plane>5.0</z_plane>\n';
+	def +=		'  <player>\n    <this_object>player</this_object>\n    <id>000</id>\n    <z_plane>5.0</z_plane>\n';
     def += 		'    <x_pos>' + $('#player_x').val() + '</x_pos>\n';
     def +=		'    <y_pos>' + $('#player_y').val() + '</y_pos>\n';
     def += 		'    <active>true</active>\n  </player>\n';
@@ -46,9 +46,8 @@ function getLevelDefinition()
     for(o in objects_array)
     {
     	def += '    <levelObject>\n';
-    	def += '      <this_object>' + objects_array[o].type + '</this_object>\n';
-    	def += '      <draw_from>bottom_left</draw_from>\n';
     	def += '      <id>' + objects_array[o].object_name_id + '</id>\n';
+    	def += '      <this_object>' + objects_array[o].type + '</this_object>\n';
     	def += '      <z_plane>' + objects_array[o].z_plane + '</z_plane>\n';
     	def += '      <x_pos>' + objects_array[o].x + '</x_pos>\n';
     	def += '      <y_pos>' + objects_array[o].y + '</y_pos>\n';
@@ -90,7 +89,28 @@ function getLevelDefinition()
        def += '    </levelLight>\n';
     }
     
-    def += '  </light_list>\n';
+    def += '  </light_list>\n  <event_list>\n';
+    
+    for(o in events_array)
+    {
+    	def += '    <levelEvent>\n';
+    	def += '      <this_event>' + events_array[o].type + '</this_event>\n';
+    	def += '      <id>' + events_array[o].event_name_id + '</id>\n';
+    	def += '      <x_pos>' + events_array[o].x + '</x_pos>\n';
+    	def += '      <y_pos>' + events_array[o].y + '</y_pos>\n';
+    	def += '      <width>' + events_array[o].width + '</width>\n';
+    	def += '      <height>' + events_array[o].height + '</height>\n';
+    	
+    	def += '      <affected_object_strings>\n';
+    	var strings_array = events_array[o].affected_strings.split(','); 
+    	for(n in strings_array)
+    		def += '        <String>' + $.trim(n) + '</String>\n';
+    	def += '      </affected_object_strings>\n';
+    	
+    	def += '    </levelEvent>\n';
+    }
+    
+    def += '  </event_list>\n';
     def += '  <right_limit>' + $('#right-limit').val() + '</right_limit>\n';
     def += '  <bottom_limit>' + $('#bottom-limit').val() + '</bottom_limit>\n';
     def += '  <top_limit>' + $('#top-limit').val() + '</top_limit>\n';
@@ -206,6 +226,30 @@ function levelChanged(level)
 	 });
 	 if(lights_array.length > 0)
 		 setup_lights_interface(lights_array[lights_array.length - 1]);
+	 
+	 //then events
+	 $xml.find( "levelEvent" ).each(function()
+     {
+		 var temp = new my_events(
+				 parseInt($(this).find("x_pos").text()),
+				 parseInt($(this).find("y_pos").text()),
+				 parseInt($(this).find("width").text()),
+				 parseInt($(this).find("height").text()),
+				 $(this).find("this_event").text(),
+				 objects_array.length); // remember, this is zero based indexing
+		 
+		 temp.object_name_id = ($(this).find("id").text() ? $(this).find("id").text() : "000x0")
+		 
+		 var strings_array = new Array();
+		 $xml.find("affected_object_strings").each(function(){
+			 strings_array.push($(this).find("String").text());
+		 })
+		 temp.affected_strings = strings_array.join(', ');
+		 
+		 events_array.push(temp);
+	 });
+	 if(events_array.length > 0)
+		 setup_events_interface(events_array[events_array.length - 1]);
 	 
 	 //finally four position limits
 	 $('#right-limit').val($xml.find("right_limit").text());

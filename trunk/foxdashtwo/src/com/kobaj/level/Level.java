@@ -79,7 +79,7 @@ public class Level
 			light_list.get(i).onUpdate(delta);
 		
 		for(int i = event_list.size() - 1; i >= 0; i--)
-			event_list.get(i).checkActivity(delta, player.quad_object);
+			event_list.get(i).onUpdate(delta, player.quad_object);
 	}
 	
 	public void onDrawObject()
@@ -112,7 +112,6 @@ public class Level
 	public void writeOut()
 	{
 		player = new LevelObject();
-		player.draw_from = com.kobaj.opengldrawable.EnumDrawFrom.top_left;
 		player.this_object = EnumLevelObject.test;
 		player.x_pos = 0;
 		player.y_pos = 100;
@@ -126,7 +125,6 @@ public class Level
 		
 		//make everything
 		LevelObject temp = new LevelObject();
-		temp.draw_from = com.kobaj.opengldrawable.EnumDrawFrom.top_left;
 		temp.this_object = EnumLevelObject.test;
 		temp.x_pos = 200;
 		temp.y_pos = 200;
@@ -161,8 +159,8 @@ public class Level
 		LevelEvent tempe = new LevelEvent();
 		tempe.height = 200;
 		tempe.width = 600;
-		tempe.affected_object_ids = new ArrayList<String>();
-		tempe.affected_object_ids.add("empty");
+		tempe.affected_object_strings = new ArrayList<String>();
+		tempe.affected_object_strings.add("empty");
 		tempe.x_pos = 0;
 		tempe.y_pos = 0;
 		

@@ -53,7 +53,7 @@ my_lights.prototype.draw = function()
 	drawTextYFix(this.x + (this_height_thing / 2.0) - (text_width / 2.0), this.y + (this_height_thing / 2.0) - 7.5, statement, blackFill);
 	
 	if($('#labelcheck').is(':checked'))
-		drawTextYFix(this.x, 5 + this.y + this_height_thing, "my_lights(" + this.type + "): " + this.light_name_id, lightblueFill);
+		drawTextYFix(this.x, 5 + this.y + this_height_thing, "my_lights(" + this.type + "): " + this.light_name_id, whiteFill);
 }
 
 my_lights.prototype.contains = function(v2)

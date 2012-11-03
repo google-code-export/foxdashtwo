@@ -8,8 +8,8 @@ import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.EnumDrawFrom;
 import com.kobaj.opengldrawable.Quad.QuadRenderTo;
 import com.kobaj.screen.BaseScreen;
+import com.kobaj.screen.BlankScreen;
 import com.kobaj.screen.EnumScreenState;
-import com.kobaj.screen.TitleScreen;
 
 public class MyGame extends MyGLRender
 {	
@@ -27,7 +27,7 @@ public class MyGame extends MyGLRender
     public MyGame()
     {
     	//single_player_screen = new SinglePlayerScreen();
-    	currently_active_screen = new TitleScreen(); //single_player_screen;
+    	currently_active_screen = new BlankScreen(); //single_player_screen;
     }
     
     
