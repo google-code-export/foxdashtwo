@@ -19,23 +19,29 @@ public class BaseDebugScreen
 	private boolean show_lights; //show lights or not
 	
 	public BaseDebugScreen(Level test_level, boolean only_outlines, boolean show_lights)
-	{
+	{	
 		outline_quads = new ArrayList<QuadColorShape>();
 		this.only_outlines = only_outlines;
 		this.show_lights = show_lights;
+	
+		if(test_level == null)
+			return;
 		
 		// lights
 		if(show_lights)
+			if(test_level.event_list != null)
 		for (int i = test_level.light_list.size() - 1; i >= 0; i--)
 			outline_quads.add(onMakeBoundingBox(test_level.light_list.get(i).quad_light));
 		
 		//events
+		if(test_level.event_list != null)
 		for (int i = test_level.event_list.size() - 1; i >= 0; i--)
 			outline_quads.add(onMakeBoundingBox(test_level.event_list.get(i).my_collision_rect));
 		
 		// object
 		if (only_outlines)
 		{
+			if(test_level.object_list != null)
 			for (int e = test_level.object_list.size() - 1; e >= 0; e--)
 				outline_quads.add(onMakeBoundingBox(test_level.object_list.get(e).quad_object));
 			

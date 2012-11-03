@@ -17,14 +17,14 @@ my_objects.prototype.draw = function()
 {
 	//draw bounding box
 	if(this.selected)
-		drawBoxwh(this.x - 5, this.y - 5, this.width + 10, this.width + 10, purpleFill);
+		drawBoxwh(this.x - 5, this.y - 5, this.width + 10, this.height + 10, purpleFill);
 	
 	drawRectwh(this.x, this.y, this.width, this.height, lightblueFill);
 	
 	if($('#labelcheck').is(':checked'))
 	{
-		drawTextYFix(this.x, 5 + this.y + this.height, "my_objects(" + this.type + "): " + this.object_name_id, lightblueFill);
-		drawTextYFix(this.x, this.y + this.height - 20, "z" + this.z_plane, blackFill);
+		drawTextYFix(this.x, 5 + this.y + this.height, "my_objects(" + this.type + "): " + this.object_name_id, whiteFill);
+		drawTextYFix(this.x, this.y + this.height - 20, "z: " + this.z_plane, blackFill);
 	}
 }
 

@@ -5,10 +5,13 @@
  	* http://cwynn.com/gravity -->
 <html>
 <head>
+<meta charset="UTF-8">
+<title>Fox Dash Two Level Editor</title>
 <script type="text/javascript" src="vector.js"></script>
 <script type="text/javascript" src="Player.js"></script>
 <script type="text/javascript" src="my_objects.js"></script>
 <script type="text/javascript" src="my_lights.js"></script>
+<script type="text/javascript" src="my_events.js"></script>
 <script type="text/javascript" src="globals.js"></script>
 <script type="text/javascript" src="drawing.js"></script>
 <script type="text/javascript" src="loader.js"></script>
@@ -197,7 +200,29 @@ label{
 		
 	</div>
 
-	<div class="tab_hideable" style="display: none;" id="tab_events">events</div>
+	<div class="tab_hideable" style="display: none;" id="tab_events">
+		<h4>Selected Event:</h4>
+		<div style="overflow: auto;">
+		<select style="float: right;" id="event_drop_down"><option value="">None</option></select><br/>
+		<label>Name/ID:</label><input type="text" id="event_name_id" value="000x0" /><br />
+		</div>
+		<hr />
+		<h4>Event Type:</h4>
+		<div style="overflow: auto;">
+		<select style="float: right;" id="event_type_drop_down">
+		<option value="right_arrow">Right Arrow</option>
+		<option value="left_arrow">Left Arrow</option>
+		</select>
+		</div>
+		<hr />
+		<h4>Event Position: </h4>
+		<label>X:</label><input type="text" id="event_x" value="0" /><br />
+		<label>Y:</label><input type="text" id="event_y" value="0" /><br />
+		<label>Width:</label><input type="text" id="event_width" value="200" /><br />
+		<label>Length:</label><input type="text" id="event_length" value="200" /><br />
+		<label>Affects (,):</label><input type="text" id="event_affects" value="" /><br />
+		<hr />
+	</div>
 					
 			</div>
 		</div>
@@ -223,6 +248,12 @@ label{
 	<div style="float: left; margin-left: 10px;">
 		<label>MouseCoords:</label><input checked="checked" type="checkbox" id="mousecheck" /><br />
 		<label>Outlines:</label><input checked="checked" type="checkbox" id="outlines" /><br />
+	</div>
+	<div class="vertical_divider" style="border: none;"></div>
+	<div style="float: left; margin-left: 10px;">
+		<label>Draw Lights:</label><input checked="checked" type="checkbox" id="light_check" /><br />
+		<label>Draw Objects:</label><input checked="checked" type="checkbox" id="object_check" /><br />
+		<label>Draw Events:</label><input checked="checked" type="checkbox" id="event_check" /><br />
 	</div>
 		<div class="vertical_divider"></div>
 	<div style="float:right;">To play your level, save the data into the file /foxdashtwo/external_level.xml on your device.</div>	

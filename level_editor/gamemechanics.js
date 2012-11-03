@@ -66,6 +66,8 @@ function keypressed(e)
 			move_object(change_vector);
 		else if(current_tab == 'lights')
 			move_light(change_vector);
+		else if(current_tab == 'events')
+			move_event(change_vector);
 	}
 	else if(e.keyCode == 46)
 	{
@@ -73,6 +75,8 @@ function keypressed(e)
 			delete_object();
 		else if(current_tab == 'lights')
 			delete_light();
+		else if(current_tab == 'events')
+			delete_event();
 	}
 	
 	setLevelDefinition();
@@ -91,27 +95,14 @@ function mouseDown(e) {
 	mouse_down = true;
 
 	//unselect everything
-	var selected_object;
-	for(var i = 0; i < objects_array.length; i++)
-	{
-		if(objects_array[i].selected)
-			selected_object = objects_array[i];
-		
-		objects_array[i].draggable = false;
-		objects_array[i].selected = false;
-	}
+	var selected_object = unselect_everything(objects_array);
 	$('#object_drop_down').val('');
 	
-	var selected_light;
-	for(var i = 0; i < lights_array.length; i++)
-	{
-		if(lights_array[i].selected)
-			selected_light = lights_array[i];
-		
-		lights_array[i].draggable = false;
-		lights_array[i].selected = false;
-	}
+	var selected_light = unselect_everything(lights_array);
 	$('#light_drop_down').val('');
+	
+	var selected_event = unselect_everything(events_array);
+	$('#event_drop_down').val('');
 	
 	//select one object
 	if(current_tab == "player")
@@ -120,8 +111,24 @@ function mouseDown(e) {
 		mouse_move_object(click_point, selected_object);
 	else if(current_tab == 'lights')
 		mouse_move_light(click_point, selected_light);
+	else if(current_tab == 'events')
+		mouse_move_event(click_point, selected_event);
 	
 	setLevelDefinition();
+}
+
+function unselect_everything(something_array)
+{
+	var selected_something;
+	for(var i = 0; i < something_array.length; i++)
+	{
+		if(something_array[i].selected)
+			selected_something = something_array[i];
+		
+		something_array[i].draggable = false;
+		something_array[i].selected = false;
+	}
+	return selected_something
 }
 
 function mouseMove(e) {
@@ -247,6 +254,8 @@ function mainUpdateGame()
 			more_object_stuff();
 		else if(current_tab == 'lights')
 			more_light_stuff();
+		else if(current_tab == 'events')
+			more_event_stuff();
 	}
 }
 

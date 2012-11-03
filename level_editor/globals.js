@@ -6,6 +6,7 @@ var context;
 var player = new Player(64,64);
 var objects_array = new Array();
 var lights_array = new Array();
+var events_array = new Array();
 
 //manage screen size
 var width  = 1280;
@@ -62,5 +63,6 @@ var lightgreyFill 	= "rgba(200,200,200,1)";
 var darkgreyFill 	= "rgba(169,169,169,1)";
 var brownFill 		= "rgba(139,69,19,1)";
 var purpleFill 		= "rgba(170,0,255,1)";
+var transparentGreenFill = "rgba(0,255,0,.25)";
 	
 var default_font = '15px sans-serif';

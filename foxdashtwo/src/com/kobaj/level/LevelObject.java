@@ -5,6 +5,7 @@ import org.simpleframework.xml.Element;
 import android.graphics.Color;
 
 import com.kobaj.math.Constants;
+import com.kobaj.opengldrawable.EnumDrawFrom;
 import com.kobaj.opengldrawable.Quad.Quad;
 import com.kobaj.opengldrawable.Quad.QuadColorShape;
 
@@ -12,8 +13,8 @@ public class LevelObject
 {
 	@Element
 	public EnumLevelObject this_object;
-	@Element
-	public com.kobaj.opengldrawable.EnumDrawFrom draw_from;
+
+	public final EnumDrawFrom draw_from = EnumDrawFrom.bottom_left;
 	@Element
 	public double x_pos; //screen coordinates
 	@Element

@@ -78,12 +78,19 @@ function redraw()
 	context.fill();
 	
 	//draw objects
+	if($('#object_check').is(':checked'))
 	for(var i = 0; i < objects_array.length; i++)
 		objects_array[i].draw();
 	
 	//draw lights
+	if($('#light_check').is(':checked'))
 	for(var i = 0; i < lights_array.length; i++)
 		lights_array[i].draw();
+	
+	//draw events
+	if($('#event_check').is(':checked'))
+	for(var i = 0; i < events_array.length; i++)
+		events_array[i].draw();
 	
 	//draw the player
 	player.draw();
@@ -122,8 +129,6 @@ function redraw()
 		drawText(drag_point.x, drag_point.y - 30, 'World (' + world_drag_point.x + ', ' + world_drag_point.y + ')', blueFill);
 		drawText(drag_point.x, drag_point.y - 15, 'Screen (' + drag_point.x + ', ' + drag_point.y + ')', whiteFill);
 	}
-	
-	//context.drawImage(breadCrumbsImg,0,0);
 };
 
 function drawArrow(fromx, fromy, tox, toy, fill){
