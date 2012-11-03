@@ -7,6 +7,7 @@ import org.simpleframework.xml.ElementList;
 
 import android.graphics.Color;
 
+import com.kobaj.level.LevelEventTypes.LevelEventTransportPlayer;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 
@@ -44,6 +45,9 @@ public class Level
 	
 	public void onInitialize()
 	{
+		double x_player = Functions.screenXToShaderX(player.x_pos);
+		double y_player = Functions.screenYToShaderY(player.y_pos);
+		
 		//setup general objects
 		for(int i = object_list.size() - 1; i >= 0; i--)
 			object_list.get(i).onInitialize();
@@ -58,12 +62,16 @@ public class Level
 			}
 		}
 		for(int i = event_list.size() - 1; i >= 0; i--)
+		{
 			event_list.get(i).onInitialize();
+			if(event_list.get(i).this_event == EnumLevelEvent.send_to_start)
+				LevelEventTransportPlayer.class.cast(event_list.get(i).my_possible_event).setTransportTo(x_player, y_player);
+		}
 		
 		//setup player
 		player.quad_object = new com.kobaj.opengldrawable.Quad.QuadColorShape(0, 64, 64, 0, Color.GRAY, 0);
-		player.quad_object.z_pos -= (player.z_plane * Constants.z_modifier);
-		player.quad_object.setPos(Functions.screenXToShaderX(player.x_pos), Functions.screenYToShaderY(player.y_pos), player.draw_from);
+		player.quad_object.z_pos -= (5 /*player.z_plane*/ * Constants.z_modifier);
+		player.quad_object.setPos(x_player, y_player, player.draw_from);
 	
 		//set widths and heights for the camera
 		left_shader_limit = (Functions.screenXToShaderX(left_limit) + Constants.ratio);

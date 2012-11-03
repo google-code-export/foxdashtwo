@@ -212,13 +212,15 @@ public class Quad
 		float neg_tr_x = -pos_tr_x;
 		float neg_tr_y = -pos_tr_y;
 		
+		final float z_buffer = 0.0f;
+		
 		// X, Y, Z
-		my_position_matrix[0] = neg_tr_x; 	my_position_matrix[1] = pos_tr_y; 	my_position_matrix[2] = 0;
-		my_position_matrix[3] = neg_tr_x; 	my_position_matrix[4] = neg_tr_y; 	my_position_matrix[5] = 0;
-		my_position_matrix[6] = pos_tr_x; 	my_position_matrix[7] = pos_tr_y; 	my_position_matrix[8] = 0;
-		my_position_matrix[9] = neg_tr_x; 	my_position_matrix[10] = neg_tr_y; 	my_position_matrix[11] = 0;
-		my_position_matrix[12] = pos_tr_x; 	my_position_matrix[13] = neg_tr_y; 	my_position_matrix[14] = 0;
-		my_position_matrix[15] = pos_tr_x; 	my_position_matrix[16] = pos_tr_y; 	my_position_matrix[17] = 0;
+		my_position_matrix[0] = neg_tr_x; 	my_position_matrix[1] = pos_tr_y; 	my_position_matrix[2] = z_buffer;
+		my_position_matrix[3] = neg_tr_x; 	my_position_matrix[4] = neg_tr_y; 	my_position_matrix[5] = z_buffer;
+		my_position_matrix[6] = pos_tr_x; 	my_position_matrix[7] = pos_tr_y; 	my_position_matrix[8] = z_buffer;
+		my_position_matrix[9] = neg_tr_x; 	my_position_matrix[10] = neg_tr_y; 	my_position_matrix[11] = z_buffer;
+		my_position_matrix[12] = pos_tr_x; 	my_position_matrix[13] = neg_tr_y; 	my_position_matrix[14] = z_buffer;
+		my_position_matrix[15] = pos_tr_x; 	my_position_matrix[16] = pos_tr_y; 	my_position_matrix[17] = z_buffer;
 		
 		// rotate and convert
 		for (int i = 0; i < 18; i = i + 3)

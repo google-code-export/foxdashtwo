@@ -196,8 +196,144 @@
       <id>000x0</id>
       <this_object>test</this_object>
       <z_plane>5</z_plane>
-      <x_pos>200</x_pos>
+      <x_pos>0</x_pos>
       <y_pos>-450</y_pos>
+      <active>true</active>
+    </levelObject>
+    <levelObject>
+      <id>000x0</id>
+      <this_object>test</this_object>
+      <z_plane>5</z_plane>
+      <x_pos>0</x_pos>
+      <y_pos>-650</y_pos>
+      <active>true</active>
+    </levelObject>
+    <levelObject>
+      <id>000x0</id>
+      <this_object>test</this_object>
+      <z_plane>5</z_plane>
+      <x_pos>200</x_pos>
+      <y_pos>-650</y_pos>
+      <active>true</active>
+    </levelObject>
+    <levelObject>
+      <id>000x0</id>
+      <this_object>test</this_object>
+      <z_plane>5</z_plane>
+      <x_pos>400</x_pos>
+      <y_pos>-650</y_pos>
+      <active>true</active>
+    </levelObject>
+    <levelObject>
+      <id>000x0</id>
+      <this_object>test</this_object>
+      <z_plane>5</z_plane>
+      <x_pos>600</x_pos>
+      <y_pos>-630</y_pos>
+      <active>true</active>
+    </levelObject>
+    <levelObject>
+      <id>000x0</id>
+      <this_object>test</this_object>
+      <z_plane>5</z_plane>
+      <x_pos>800</x_pos>
+      <y_pos>-650</y_pos>
+      <active>true</active>
+    </levelObject>
+    <levelObject>
+      <id>000x0</id>
+      <this_object>test</this_object>
+      <z_plane>5</z_plane>
+      <x_pos>1000</x_pos>
+      <y_pos>-650</y_pos>
+      <active>true</active>
+    </levelObject>
+    <levelObject>
+      <id>000x0</id>
+      <this_object>test</this_object>
+      <z_plane>5</z_plane>
+      <x_pos>1200</x_pos>
+      <y_pos>-650</y_pos>
+      <active>true</active>
+    </levelObject>
+    <levelObject>
+      <id>000x0</id>
+      <this_object>test</this_object>
+      <z_plane>5</z_plane>
+      <x_pos>1400</x_pos>
+      <y_pos>-680</y_pos>
+      <active>true</active>
+    </levelObject>
+    <levelObject>
+      <id>000x0</id>
+      <this_object>test</this_object>
+      <z_plane>5</z_plane>
+      <x_pos>1600</x_pos>
+      <y_pos>-650</y_pos>
+      <active>true</active>
+    </levelObject>
+    <levelObject>
+      <id>000x0</id>
+      <this_object>test</this_object>
+      <z_plane>5</z_plane>
+      <x_pos>1800</x_pos>
+      <y_pos>-650</y_pos>
+      <active>true</active>
+    </levelObject>
+    <levelObject>
+      <id>000x0</id>
+      <this_object>test</this_object>
+      <z_plane>5</z_plane>
+      <x_pos>2000</x_pos>
+      <y_pos>-600</y_pos>
+      <active>true</active>
+    </levelObject>
+    <levelObject>
+      <id>000x0</id>
+      <this_object>test</this_object>
+      <z_plane>5</z_plane>
+      <x_pos>2200</x_pos>
+      <y_pos>-540</y_pos>
+      <active>true</active>
+    </levelObject>
+    <levelObject>
+      <id>000x0</id>
+      <this_object>test</this_object>
+      <z_plane>5</z_plane>
+      <x_pos>2400</x_pos>
+      <y_pos>-340</y_pos>
+      <active>true</active>
+    </levelObject>
+    <levelObject>
+      <id>000x0</id>
+      <this_object>test</this_object>
+      <z_plane>5</z_plane>
+      <x_pos>2400</x_pos>
+      <y_pos>-140</y_pos>
+      <active>true</active>
+    </levelObject>
+    <levelObject>
+      <id>000x0</id>
+      <this_object>test</this_object>
+      <z_plane>5</z_plane>
+      <x_pos>2200</x_pos>
+      <y_pos>60</y_pos>
+      <active>true</active>
+    </levelObject>
+    <levelObject>
+      <id>000x0</id>
+      <this_object>A2</this_object>
+      <z_plane>9</z_plane>
+      <x_pos>2050</x_pos>
+      <y_pos>-14</y_pos>
+      <active>true</active>
+    </levelObject>
+    <levelObject>
+      <id>000x0</id>
+      <this_object>A2</this_object>
+      <z_plane>1</z_plane>
+      <x_pos>1342</x_pos>
+      <y_pos>-261</y_pos>
       <active>true</active>
     </levelObject>
   </object_list>
@@ -221,6 +357,17 @@
       <id>2</id>
       <color>-10197916</color>
     </levelLight>
+    <levelLight class="com.kobaj.level.LevelPointLight">
+      <light_effect>pulse</light_effect>
+      <is_bloom>true</is_bloom>
+      <y_pos>-428</y_pos>
+      <radius>200</radius>
+      <x_pos>2103</x_pos>
+      <blur_amount>0</blur_amount>
+      <active>true</active>
+      <id>000x0</id>
+      <color>-10158236</color>
+    </levelLight>
   </light_list>
   <event_list>
     <levelEvent>
@@ -232,7 +379,6 @@
       <height>200</height>
       <affected_object_strings>
         <String>0</String>
-        <String>1</String>
       </affected_object_strings>
     </levelEvent>
     <levelEvent>
@@ -244,12 +390,44 @@
       <height>200</height>
       <affected_object_strings>
         <String>0</String>
-        <String>1</String>
+      </affected_object_strings>
+    </levelEvent>
+    <levelEvent>
+      <this_event>up_arrow</this_event>
+      <id>000x0</id>
+      <x_pos>400</x_pos>
+      <y_pos>-450</y_pos>
+      <width>400</width>
+      <height>200</height>
+      <affected_object_strings>
+        <String>0</String>
+      </affected_object_strings>
+    </levelEvent>
+    <levelEvent>
+      <this_event>send_to_start</this_event>
+      <id>000x0</id>
+      <x_pos>2200</x_pos>
+      <y_pos>-340</y_pos>
+      <width>200</width>
+      <height>200</height>
+      <affected_object_strings>
+        <String>0</String>
+      </affected_object_strings>
+    </levelEvent>
+    <levelEvent>
+      <this_event>up_arrow</this_event>
+      <id>000x0</id>
+      <x_pos>1400</x_pos>
+      <y_pos>-480</y_pos>
+      <width>200</width>
+      <height>200</height>
+      <affected_object_strings>
+        <String>0</String>
       </affected_object_strings>
     </levelEvent>
   </event_list>
-  <right_limit>1400</right_limit>
-  <bottom_limit>-250</bottom_limit>
+  <right_limit>2600</right_limit>
+  <bottom_limit>-650</bottom_limit>
   <top_limit>750</top_limit>
   <left_limit>0</left_limit>
 </level>
