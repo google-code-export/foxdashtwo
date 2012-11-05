@@ -68,10 +68,8 @@ public class Physics
 		second_x = second_x - second_quad.shader_width / 2.0;
 		second_y = second_y - second_quad.shader_height / 2.0;
 		
-		if(first_x + first_quad.shader_width < second_x || first_x > second_x + second_quad.shader_width)
-			return false; //no possibility of collision
-		
-		if(first_y + first_quad.shader_height < second_y || first_y > second_y + second_quad.shader_height)
+		if(first_x + first_quad.shader_width < second_x || first_x > second_x + second_quad.shader_width || 
+				first_y + first_quad.shader_height < second_y || first_y > second_y + second_quad.shader_height)
 			return false; //no possibility of collision
 		
 		//if its possible, get a detailed picture of the collision

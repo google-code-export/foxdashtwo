@@ -69,7 +69,8 @@ public class SinglePlayerScreen extends BaseScreen
 		
 		debug_addon = new BaseDebugScreen(test_level, true, false);
 		
-		my_backdrop = new QuadColorShape(Constants.width, Constants.height, 0xFF333333, 0);
+		my_backdrop = new QuadColorShape(1,1, 0xFF333333, 0);
+		my_backdrop.setWidthHeight(Constants.width, Constants.height);
 	}
 	
 	@Override
@@ -80,19 +81,11 @@ public class SinglePlayerScreen extends BaseScreen
 		//just for now, this may be deleted later to replace a button
 		my_modifier.onUpdate();
 		
-		//interaction
-		interaction_addon.onUpdate(delta, my_modifier, test_level);
-		
 		//update all our objects and lights and things
 		test_level.onUpdate(delta);
 		
-		// make sure we dont go through the level (should be deleted later)
-		/*if (test_level.player.quad_object.getYPos() < -1)
-		{
-			test_level.player.quad_object.y_acc = 0;
-			test_level.player.quad_object.y_vel = 0;
-			test_level.player.quad_object.setPos(test_level.player.quad_object.getXPos(), 1, EnumDrawFrom.center);
-		}*/
+		//interaction
+		interaction_addon.onUpdate(delta, my_modifier, test_level);
 		
 		Functions.checkGlError();
 	}

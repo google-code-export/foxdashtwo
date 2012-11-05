@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import com.kobaj.screen.SinglePlayerScreen;
 
-public class FoxdashtwoActivity extends GameActivity {
+public final class FoxdashtwoActivity extends GameActivity {
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState)

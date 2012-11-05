@@ -14,14 +14,15 @@ import android.view.MotionEvent;
 
 import com.kobaj.math.Constants;
 
-public class GameActivity extends Activity {
-    /** Called when the activity is first created. */
+public class GameActivity extends Activity
+{
+	/** Called when the activity is first created. */
 	
 	private PowerManager.WakeLock wl;
 	
 	public static com.kobaj.opengl.MyGLSurfaceView mGLView;
 	
-	//saving state
+	// saving state
 	protected String shared_prefs_name = "com.kobaj.foxdashtwo_prefs";
 	public static SharedPreferences mPrefs;
 	public static SharedPreferences.Editor ed;
@@ -33,38 +34,38 @@ public class GameActivity extends Activity {
 	{
 		super.onCreate(savedInstanceState);
 		
-		//do context first, a lot of stuff relies on it.
+		// do context first, a lot of stuff relies on it.
 		Constants.context = getApplicationContext();
 		
 		Constants.resources = this.getResources();
 		
-		//grabbing save states
+		// grabbing save states
 		mPrefs = getSharedPreferences(shared_prefs_name, 0);
 		ed = mPrefs.edit();
 		
-		//keeping the screen on
+		// keeping the screen on
 		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK, "DoNotDimScreen");
 		
-		//volume controls
+		// volume controls
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
 		
-		//findout out the dpi
+		// findout out the dpi
 		DisplayMetrics metrics = new DisplayMetrics();
 		Display display = getWindowManager().getDefaultDisplay();
 		display.getMetrics(metrics);
 		Constants.dip_scale = ((double) metrics.densityDpi) / DisplayMetrics.DENSITY_HIGH;
-
-		//fonts and text scale
+		
+		// fonts and text scale
 		Constants.sd_scale = metrics.scaledDensity;
 		
-		//touchy
+		// touchy
 		com.kobaj.math.Constants.input_manager = new com.kobaj.input.InputManager();
 		
 		// Create a GLSurfaceView instance and set it
-        // as the ContentView for this Activity
-        mGLView = new com.kobaj.opengl.MyGLSurfaceView(this);
-        setContentView(mGLView);
+		// as the ContentView for this Activity
+		mGLView = new com.kobaj.opengl.MyGLSurfaceView(this);
+		setContentView(mGLView);
 	}
 	
 	@Override
@@ -72,6 +73,10 @@ public class GameActivity extends Activity {
 	{
 		super.onPause();
 		wl.release();
+		
+		// save user settings
+		UserSettings.saveUserSettings();
+		
 		ed.commit();
 		
 		mGLView.onScreenPause();
@@ -83,10 +88,13 @@ public class GameActivity extends Activity {
 		super.onResume();
 		wl.acquire();
 		
+		// load user settings
+		UserSettings.loadUserSettings();
+		
 		mGLView.onResume();
 	}
 	
-	//input
+	// input
 	
 	@Override
 	public boolean onKeyDown(int i, KeyEvent event)
@@ -94,7 +102,7 @@ public class GameActivity extends Activity {
 		if (i == KeyEvent.KEYCODE_VOLUME_DOWN || i == KeyEvent.KEYCODE_VOLUME_UP)
 			return false;
 		
-		//game.input_manager.eventUpdateDown(i, event);
+		// game.input_manager.eventUpdateDown(i, event);
 		com.kobaj.math.Constants.input_manager.eventUpdateDown(i, event);
 		return true;
 	}
@@ -102,7 +110,7 @@ public class GameActivity extends Activity {
 	@Override
 	public boolean onKeyUp(int i, KeyEvent event)
 	{
-		//game.input_manager.eventUpdateUp(i, event);
+		// game.input_manager.eventUpdateUp(i, event);
 		com.kobaj.math.Constants.input_manager.eventUpdateUp(i, event);
 		return true;
 	}
@@ -110,7 +118,7 @@ public class GameActivity extends Activity {
 	@Override
 	public boolean onTouchEvent(MotionEvent e)
 	{
-		//game.input_manager.eventUpdate(e);
+		// game.input_manager.eventUpdate(e);
 		com.kobaj.math.Constants.input_manager.eventUpdate(e);
 		return true;
 	}

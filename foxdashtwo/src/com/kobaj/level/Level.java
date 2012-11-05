@@ -48,6 +48,8 @@ public class Level
 		double x_player = Functions.screenXToShaderX(player.x_pos);
 		double y_player = Functions.screenYToShaderY(player.y_pos);
 		
+		bloom_light_list.clear();
+		
 		//setup general objects
 		for(int i = object_list.size() - 1; i >= 0; i--)
 			object_list.get(i).onInitialize();
@@ -82,7 +84,7 @@ public class Level
 	}
 	
 	public void onUpdate(double delta)
-	{
+	{	
 		for(int i = light_list.size() - 1; i >= 0; i--)
 			light_list.get(i).onUpdate(delta);
 		
@@ -95,7 +97,6 @@ public class Level
 		// player
 		player.quad_object.onDrawAmbient();
 		
-		// objects
 		for(int i = object_list.size() - 1; i >= 0; i--)
 			object_list.get(i).onDrawObject();
 

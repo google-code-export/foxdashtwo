@@ -84,8 +84,11 @@ public class Quad
 		onCreate(texture_resource, width, height);
 	}
 	
+	private Bitmap nullify_me;
+	
 	public Quad(int texture_resource, Bitmap bmp, int width, int height)
 	{
+		nullify_me = bmp;
 		com.kobaj.loader.GLBitmapReader.loadTextureFromBitmap(texture_resource, bmp);
 		onCreate(texture_resource, width, height);
 	}
@@ -102,6 +105,9 @@ public class Quad
 			GLLoadedTexture proposed_handle = GLBitmapReader.loaded_textures.get(texture_resource);
 			if (proposed_handle != null)
 			{
+				if(nullify_me != null)
+					nullify_me = null;
+				
 				my_texture_data_handle = proposed_handle.texture_id;
 				return true;
 			}

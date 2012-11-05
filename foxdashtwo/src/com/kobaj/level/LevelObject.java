@@ -46,6 +46,6 @@ public class LevelObject
 	
 	public void onDrawObject()
 	{
-		quad_object.onDrawAmbient();
+		quad_object.onDrawAmbient(Constants.my_view_matrix, Constants.my_proj_matrix, Color.WHITE, true);
 	}
 }

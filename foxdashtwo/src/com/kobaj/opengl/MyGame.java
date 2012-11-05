@@ -50,6 +50,7 @@ public class MyGame extends MyGLRender
 		//dont touch below this line.
 		if(scene == null)
 			scene = new QuadRenderTo();
+		scene.onInitialize();
         
         System.gc();
 	}
