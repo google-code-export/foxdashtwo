@@ -1,7 +1,9 @@
 package com.kobaj.opengldrawable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -10,16 +12,16 @@ import android.graphics.Paint.Style;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.Typeface;
-import android.util.SparseArray;
 
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Constants;
 import com.kobaj.opengldrawable.Quad.Quad;
 
+@SuppressLint("UseSparseArrays") // funfact, HashMap.get is O(1) when there is no collision, and SparseArray.get is O(log n).
 public class Text
 {
 	// has set of quads
-	private SparseArray<Quad> bitmap_buffer;
+	private HashMap<Integer, Quad> bitmap_buffer;
 	
 	// nice constants
 	private final int line_height = 4;
@@ -31,7 +33,8 @@ public class Text
 		double size = Constants.text_size * Constants.sd_scale;
 		
 		// new bitmap_buffer!
-		bitmap_buffer = new SparseArray<Quad>();
+		//bitmap_buffer = new SparseArray<Quad>();
+		bitmap_buffer = new HashMap<Integer, Quad>();
 		
 		// begin by getting all our strings
 		String m_test_array[];
@@ -118,7 +121,7 @@ public class Text
 				height += padding;
 				
 				// fullscale measurements
-				Bitmap bitmap_temp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+				Bitmap bitmap_temp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444);
 				Canvas canvas_temp = new Canvas(bitmap_temp);
 				
 				// finaly after all that, draw it
@@ -199,7 +202,7 @@ public class Text
 	
 	public void drawText(int resource_value, double x, double y, EnumDrawFrom where, int color)
 	{
-		if (bitmap_buffer.indexOfKey(resource_value) >= 0)
+		if (/*bitmap_buffer.indexOfKey(resource_value) >= 0*/ bitmap_buffer.containsKey(resource_value))
 		{
 			// optimize the gets
 			Quad temp = bitmap_buffer.get(resource_value);

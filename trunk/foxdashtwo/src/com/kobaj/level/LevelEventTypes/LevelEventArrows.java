@@ -3,6 +3,8 @@ package com.kobaj.level.LevelEventTypes;
 import java.util.ArrayList;
 
 import com.kobaj.foxdashtwo.R;
+import com.kobaj.foxdashtwo.UserSettings;
+import com.kobaj.input.InputType.EnumInputType;
 import com.kobaj.level.EnumLevelEvent;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
@@ -108,7 +110,7 @@ public class LevelEventArrows extends LevelEventBase
 			if (secondary_draw != null)
 				secondary_draw.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, first_color, true);
 		}
-		else if (brightness < 0)
+		else if (brightness < 0 && UserSettings.active_input_type == EnumInputType.halfhalf)
 			for (int i = x_poss.size() - 1; i >= 0; i--)
 			{
 				double x_pos = x_poss.get(i);
