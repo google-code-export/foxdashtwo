@@ -56,6 +56,7 @@ Lights are semi-transparent entities without collision that illuminate a scene. 
  * Name allows interaction with events
  * Define a light type (ambient, spot, point, and soon pre-defined)
  * Define its position
+ * Define a lights rotation/angle by degrees
  * Reach or Throw distance
  * Activity (on or off)
  * Bloom (visible to the naked eye or not)
