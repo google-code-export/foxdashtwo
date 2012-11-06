@@ -426,6 +426,7 @@
       </affected_object_strings>
     </levelEvent>
   </event_list>
+  <backdrop_color>0</backdrop_color>
   <right_limit>2600</right_limit>
   <bottom_limit>-650</bottom_limit>
   <top_limit>750</top_limit>

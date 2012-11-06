@@ -38,9 +38,7 @@ public class XMLHandler
 			String[] temp = new String[sdDirList.length];
 			
 			for(int i = sdDirList.length - 1; i >=0; i--)
-			{
 				temp[i] = sdDirList[i].getName().toString();
-			}
 			
 			return temp;
 		}

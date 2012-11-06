@@ -112,6 +112,7 @@ function getLevelDefinition()
     }
     
     def += '  </event_list>\n';
+    def += '  <backdrop_color>' + $('#backdrop_color').val() + '</backdrop_color>\n';
     def += '  <right_limit>' + $('#right-limit').val() + '</right_limit>\n';
     def += '  <bottom_limit>' + $('#bottom-limit').val() + '</bottom_limit>\n';
     def += '  <top_limit>' + $('#top-limit').val() + '</top_limit>\n';
@@ -275,6 +276,7 @@ function levelChanged(level)
 		 setup_events_interface(events_array[events_array.length - 1]);
 	 
 	 //finally four position limits
+	 $('#backdrop_color').val($xml.find("backdrop_color").text());
 	 $('#right-limit').val($xml.find("right_limit").text());
 	 $('#top-limit').val($xml.find("top_limit").text());
 	 $('#bottom-limit').val($xml.find("bottom_limit").text());
