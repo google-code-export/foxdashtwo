@@ -33,7 +33,6 @@ public class MyGame extends MyGLRender
     
     public void onChangeScreen(BaseScreen next_active_screen)
     {
-		if(next_active_screen != null)
 			this.next_active_screen = next_active_screen;
     }
 	
