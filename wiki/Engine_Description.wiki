@@ -27,3 +27,10 @@ https://lh3.googleusercontent.com/-AFpB2DtBJhQ/UHTNzuRulpI/AAAAAAAAAa4/fml3llzHw
 
 ==Cut Scenes==
 Handled by moving the animations along a vector in engine, making things easy and there no need for rendering outside of the game.
+
+==Lights==
+ * Regular Lights act like a Multiply Layer in Photoshop or Gimp.
+ * Bloom Lights act like an Overlay Layer in Photoshop or Gimp.
+
+(Image is best examined in an editor to understand alpha.)
+http://i.imgur.com/0k2qu.png
