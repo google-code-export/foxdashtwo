@@ -30,7 +30,9 @@ Handled by moving the animations along a vector in engine, making things easy an
 
 ==Lights==
  * Regular Lights act like a Multiply Layer in Photoshop or Gimp.
- * Bloom Lights act like an Overlay Layer in Photoshop or Gimp.
+  * Alpha acts like brightness of light.
+ * Bloom Lights act like an Overlay + Mulitply Layer in Photoshop or Gimp.
+  * Alpha acts like regular image alpha.
 
 (Image is best examined in an editor to understand alpha.)
 http://i.imgur.com/0k2qu.png
