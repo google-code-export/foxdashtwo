@@ -1,10 +1,10 @@
-#summary The Plan for Fox Dash 2.
+#summary The Plan for Fox Dash Two.
 
 = Introduction =
-Below should summarize the plan of attack for Fox Dash 2. Including important dates, goals, and any other details.
+Below should summarize the plan of attack for Fox Dash Two. Including important dates, goals, and any other details.
 
 = Description =
-Fox Dash 2 is much like Fox Dash which is much like Canabalt. A continuous running game where the player must jump to avoid hitting obstacles and thus starting over.
+Fox Dash Two is much like Fox Dash which is much like Canabalt. A continuous running game where the player must jump to avoid hitting obstacles and thus starting over.
 
 == Mechanics ==
 The screen will scroll from ~left to right~ right to left depending on the orientation of the device. The fox will run continuously and jump when a finger touches the screen.
@@ -20,13 +20,15 @@ Level ups
 
 = Details =
 
-Specific details about Fox Dash 2.
+Specific details about Fox Dash Two.
 
 == New ==
-Fox Dash 2 is running on OpenGL 2.0ES rather than canvas as the first Fox Dash did.
+Fox Dash Two is running on OpenGL 2.0ES rather than canvas as the first Fox Dash did.
+
+Input and control will be more flexible using an innovative interface.
 
 == Goals ==
-Personal goals for Fox Dash 2 include
+Personal goals for Fox Dash Two include
   * Updated Graphics
   * New Music and More Sounds
   * In-Depth Story
@@ -34,7 +36,7 @@ Personal goals for Fox Dash 2 include
   * Tablet support
   
 == Ideas ==
-Some neat ideas that Fox Dash 2 could have
+Some neat ideas that Fox Dash Two could have
   * Multiplayer
   * Visual Effects (Think lights/particles/etc)
   * Constructive/destructive environments
