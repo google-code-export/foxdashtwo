@@ -54,6 +54,14 @@ Sept 24 2012
   * Story completed 
   * Created Trello for the rest of development cycle.
 
+Nov 10 2012
+  * Hired all team members
+   * Artist (Patrick)
+   * Levels (Brady)
+   * Music (Fredrik)
+   * Sound (Lonzo)
+   * Story (Kevin)
+
 == Engine ==
 The Engine will be broken down into X number of Parts.
 
@@ -61,6 +69,9 @@ The Engine will be broken down into X number of Parts.
 *Audio*
   * Holds audio properties (length/speed/volume)
   * Contains state (playing/paused/etc)
+  * Split into two containers
+   * Music
+   * Sound
 
 *Setup/Activity*
   * Handles loading of the game from cold boot
@@ -75,7 +86,7 @@ The Engine will be broken down into X number of Parts.
 
 *Level*
   * Manages levels
-  * Manages level objects and lights and sounds
+  * Manages level objects and lights and sounds and music
 
 *Loader*
   * Loads in all assets
@@ -106,7 +117,10 @@ The Engine will be broken down into X number of Parts.
   * Contains classes that visually effect Drawables
   * Lights
 
-*Networking(optional?)*
+*Screens*
+  * Each screen will handle a set of levels
+
+*Networking (Not Implemented/Optional)*
   * Manages connection to network/servers
   * Handles sending and receiving of data
 
@@ -129,6 +143,3 @@ MyFile.png
 }}}
   * Everything else is fairgame. 
   * It is a wacky system, but it is better than nothing.
-
-== Credits ==
-List of people who directly contributed to Fox Dash 2.
