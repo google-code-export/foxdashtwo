@@ -14,7 +14,7 @@ The screen will scroll from ~left to right~ right to left depending on the orien
   * Bad pickups that slow you down
   * Pits/jumps
 == Good Guys ==
-Level ups
+  * Level ups
   * stars much like the first game
   * additional pickups that make you go faster
 
