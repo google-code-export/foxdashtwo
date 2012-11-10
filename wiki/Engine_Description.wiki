@@ -36,3 +36,7 @@ Handled by moving the animations along a vector in engine, making things easy an
 
 (Image is best examined in an editor to understand alpha.)
 http://i.imgur.com/0k2qu.png
+
+ * Lights can overlap and blend correctly.
+
+http://i.imgur.com/a56TH.png
