@@ -338,7 +338,16 @@
     </levelObject>
   </object_list>
   <light_list>
-    <levelLight class="com.kobaj.level.LevelSpotLight">
+    <levelLight class="com.kobaj.level.LevelTypeLight.LevelCustomLight">
+      <is_bloom>false</is_bloom>
+      <y_pos>355</y_pos>
+      <x_pos>200</x_pos>
+      <light_object>test</light_object>
+      <active>true</active>
+      <id>0</id>
+      <color>-1</color>
+    </levelLight>
+    <levelLight class="com.kobaj.level.LevelTypeLight.LevelSpotLight">
       <close_width>10</close_width>
       <degree>90</degree>
       <far_width>200</far_width>
@@ -346,18 +355,18 @@
       <is_bloom>false</is_bloom>
       <y_pos>355</y_pos>
       <radius>200</radius>
-      <x_pos>98</x_pos>
+      <x_pos>100</x_pos>
       <blur_amount>0</blur_amount>
-      <active>true</active>
+      <active>false</active>
       <id>0</id>
       <color>-1</color>
     </levelLight>
-    <levelLight class="com.kobaj.level.LevelAmbientLight">
+    <levelLight class="com.kobaj.level.LevelTypeLight.LevelAmbientLight">
       <active>true</active>
       <id>2</id>
       <color>-10197916</color>
     </levelLight>
-    <levelLight class="com.kobaj.level.LevelPointLight">
+    <levelLight class="com.kobaj.level.LevelTypeLight.LevelPointLight">
       <light_effect>pulse</light_effect>
       <is_bloom>true</is_bloom>
       <y_pos>-428</y_pos>

@@ -1,9 +1,10 @@
-package com.kobaj.level;
+package com.kobaj.level.LevelTypeLight;
 
 import org.simpleframework.xml.Element;
 
 import android.graphics.Color;
 
+import com.kobaj.level.EnumLevelObject;
 import com.kobaj.math.Constants;
 import com.kobaj.opengldrawable.EnumDrawFrom;
 import com.kobaj.opengldrawable.Quad.Quad;

@@ -1,10 +1,11 @@
-package com.kobaj.level;
+package com.kobaj.level.LevelTypeLight;
 
 import org.simpleframework.xml.Element;
 
 import android.graphics.Color;
 
 import com.kobaj.math.Constants;
+import com.kobaj.opengldrawable.Quad.Quad;
 import com.kobaj.opengldrawable.Quad.QuadColorShape;
 
 public class LevelAmbientLight
@@ -22,7 +23,7 @@ public class LevelAmbientLight
 	@Element
 	public int color;
 	
-	public QuadColorShape quad_light;
+	public Quad quad_light;
 
 	public void onInitialize()
 	{
