@@ -8,6 +8,12 @@ import org.simpleframework.xml.ElementList;
 import android.graphics.Color;
 
 import com.kobaj.level.LevelEventTypes.LevelEventTransportPlayer;
+import com.kobaj.level.LevelTypeLight.LevelAmbientLight;
+import com.kobaj.level.LevelTypeLight.LevelBloomLight;
+import com.kobaj.level.LevelTypeLight.LevelCustomLight;
+import com.kobaj.level.LevelTypeLight.LevelObject;
+import com.kobaj.level.LevelTypeLight.LevelPointLight;
+import com.kobaj.level.LevelTypeLight.LevelSpotLight;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.Quad.QuadColorShape;
@@ -38,7 +44,7 @@ public class Level
 	@ElementList
 	public ArrayList<LevelAmbientLight> light_list; // all lights including blooms
 	
-	ArrayList<LevelPointLight> bloom_light_list = new ArrayList<LevelPointLight>(); // only blooms
+	ArrayList<LevelBloomLight> bloom_light_list = new ArrayList<LevelBloomLight>(); // only blooms
 	
 	@Element
 	public LevelObject player;
@@ -77,6 +83,12 @@ public class Level
 			{
 				LevelPointLight temp = LevelPointLight.class.cast(light_list.get(i));
 				if (temp.is_bloom)
+					bloom_light_list.add(temp);
+			}
+			else if(LevelCustomLight.class.isAssignableFrom(light_list.get(i).getClass()))
+			{
+				LevelCustomLight temp = LevelCustomLight.class.cast(light_list.get(i));
+				if(temp.is_bloom)
 					bloom_light_list.add(temp);
 			}
 		}

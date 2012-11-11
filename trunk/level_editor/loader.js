@@ -61,14 +61,14 @@ function getLevelDefinition()
     {
     	if(lights_array[l].type == 'spot')
     	{
-    		def += '    <levelLight class="com.kobaj.level.LevelSpotLight">\n';
+    		def += '    <levelLight class="com.kobaj.level.LevelTypeLight.LevelSpotLight">\n';
     		def += '      <close_width>' + lights_array[l].closewidth + '</close_width>\n';
     		def += '      <degree>' + lights_array[l].degree + '</degree>\n';
     		def += '      <far_width>' + lights_array[l].farwidth + '</far_width>\n';
     	}
        
     	if(lights_array[l].type == 'point')
-    		def += '    <levelLight class="com.kobaj.level.LevelPointLight">\n';
+    		def += '    <levelLight class="com.kobaj.level.LevelTypeLight.LevelPointLight">\n';
     	
     	if(lights_array[l].type == 'point' || lights_array[l].type == 'spot')
     	{
@@ -81,7 +81,7 @@ function getLevelDefinition()
     	}
     	
        if(lights_array[l].type == 'ambient')
-    	   def += '    <levelLight class="com.kobaj.level.LevelAmbientLight">\n';
+    	   def += '    <levelLight class="com.kobaj.level.LevelTypeLight.LevelAmbientLight">\n';
        
        def += '      <active>' + lights_array[l].active + '</active>\n';
        def += '      <id>' + lights_array[l].light_name_id + '</id>\n';

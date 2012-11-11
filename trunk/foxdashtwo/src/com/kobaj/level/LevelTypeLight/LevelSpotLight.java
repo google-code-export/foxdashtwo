@@ -1,4 +1,4 @@
-package com.kobaj.level;
+package com.kobaj.level.LevelTypeLight;
 
 import org.simpleframework.xml.Element;
 
@@ -16,8 +16,8 @@ public class LevelSpotLight extends LevelPointLight
 	public void onInitialize()
 	{
 		quad_light = new QuadColorShape(radius, color, close_width, far_width, degree, false, blur_amount);
-		if(is_bloom)
-			quad_bloom = new QuadColorShape(radius, color, close_width, far_width, degree, true, blur_amount);	
+		if (is_bloom)
+			quad_bloom = new QuadColorShape(radius, color, close_width, far_width, degree, true, blur_amount);
 		
 		setupPositions();
 	}

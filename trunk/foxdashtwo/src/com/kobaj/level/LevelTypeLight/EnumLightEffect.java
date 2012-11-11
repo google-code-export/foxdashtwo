@@ -1,4 +1,4 @@
-package com.kobaj.level;
+package com.kobaj.level.LevelTypeLight;
 
 public enum EnumLightEffect
 {
