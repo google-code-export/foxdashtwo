@@ -215,6 +215,20 @@ function drawBoxwh(x1,y1, width, height, color)
 	}
 };
 
+//draw an image
+function drawMyImage(img, x1, y1, width, height)
+{
+	//set position to be relative
+	x1 = x1 - world_coords.x;
+	y1 = y1 - world_coords.y;
+	
+	//fix y
+	y1 = window.height - y1;
+	
+	if(squareOnScreen(x1, y1, width, height))
+		context.drawImage(img,x1,y1 - height);
+}
+
 //only used for drawing the weapon type
 function drawCircle(x,y,radius,color)
 {
