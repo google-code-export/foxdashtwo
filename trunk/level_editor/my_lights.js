@@ -5,7 +5,8 @@ function my_lights(x, y, type, i)
 	this.y = y;
 	this.type = type;
 	
-	this.height = 100; //equal to this.width in all cases
+	this.width = 100;
+	this.height = 100; //equal to this.width in most cases
 	this.color = 'rgba(100,100,100,1)';
 	this.throw_length = 100;
 	this.closewidth = 10;
@@ -14,6 +15,16 @@ function my_lights(x, y, type, i)
 	this.bloom = false;
 	this.active = true;
 	this.light_effect = 'none';
+	this.custom = 'test';
+	
+	//bit additional if it is a custom
+	if(type == 'custom')
+	{
+		selected_type = $('#light_custom_object_drop_down').val();
+		this.custom = selected_type;
+		this.width = parseInt($('#light_custom_object_drop_down option[value="' + selected_type + '"]').attr('my_width'));
+		this.height = parseInt($('#light_custom_object_drop_down option[value="' + selected_type + '"]').attr('my_height'));
+	}
 	
 	this.light_name_id = '000x0';
 	
@@ -24,13 +35,24 @@ function my_lights(x, y, type, i)
 my_lights.prototype.draw = function()
 {
 	if(this.type == 'ambient')
+	{
 		var this_height_thing = this.height;
+		var this_width_thing = this_height_thing;
+	}
+	else if(this.type == 'custom')
+	{
+		var this_height_thing = this.height;
+		var this_width_thing = this.width;
+	}
 	else
+	{
 		var this_height_thing = this.throw_length * 2;
+		var this_width_thing = this_height_thing;
+	}
 	
 	//draw bounding box
 	if(this.selected)
-		drawBoxwh(this.x - 5, this.y - 5, this_height_thing + 10, this_height_thing + 10, purpleFill);
+		drawBoxwh(this.x - 5, this.y - 5, this_width_thing + 10, this_height_thing + 10, purpleFill);
 	
 	var statement = "A";
 	if(this.type == 'ambient')
@@ -48,9 +70,14 @@ my_lights.prototype.draw = function()
 		statement = "S";
 		drawLamp(this.x, this.y, this.throw_length, this.degree, this.closewidth, this.farwidth, this.color);
 	}
+	else if(this.type == 'custom')
+	{
+		statement = "C"
+		drawMyImage(document.getElementById($('#light_custom_object_drop_down option[value="' + this.custom + '"]').attr('my_image')), this.x, this.y, this.width, this.height);
+	}
 	
 	var text_width = getTextWidth(statement);
-	drawTextYFix(this.x + (this_height_thing / 2.0) - (text_width / 2.0), this.y + (this_height_thing / 2.0) - 7.5, statement, blackFill);
+	drawTextYFix(this.x + (this_width_thing / 2.0) - (text_width / 2.0), this.y + (this_height_thing / 2.0) - 7.5, statement, blackFill);
 	
 	if($('#labelcheck').is(':checked'))
 		drawTextYFix(this.x, 5 + this.y + this_height_thing, "my_lights(" + this.type + "): " + this.light_name_id, whiteFill);
@@ -65,6 +92,11 @@ my_lights.prototype.contains = function(v2)
 	{
 		var x2 = x + this.height;
 		var y2 = y + this.height;
+	}
+	else if(this.type == 'custom')
+	{
+		var x2 = x + this.width;
+		var y2 = y + this.height
 	}
 	else
 	{
@@ -226,6 +258,8 @@ function setup_lights_interface(selected_light)
 	$('#light_farwidth').val(selected_light.farwidth);
 	$('#light_degree').val(selected_light.degree);
 	
+	$('#light_custom_object_drop_down').val(selected_light.custom);
+	
 	if(selected_light.bloom)
 		$('#light_bloom').attr('checked', true);
 	else
@@ -255,6 +289,10 @@ function initialize_light_interface()
 		}
 	});
 	//changing type
+	
+	$('.light_custom_wrap').css('display', 'none');
+	$('.light_spot_show_wrap').css('display', 'none');
+	$('.light_throw_wrap').css('display', 'none');
 	$('#light_type_drop_down').change(function(){
 		
 		var selected_type = $(this).val();
@@ -262,18 +300,27 @@ function initialize_light_interface()
 		// show the right info
 		if(selected_type == 'ambient')
 		{
+			$('.light_custom_wrap').css('display', 'none');
 			$('.light_spot_show_wrap').css('display', 'none');
 			$('.light_throw_wrap').css('display', 'none');
 		}
 		else if(selected_type == 'point')
 		{
+			$('.light_custom_wrap').css('display', 'none');
 			$('.light_spot_show_wrap').css('display', 'none');
 			$('.light_throw_wrap').css('display', 'inline-block');
 		}
 		else if(selected_type == 'spot')
 		{
+			$('.light_custom_wrap').css('display', 'none');
 			$('.light_spot_show_wrap').css('display', 'inline-block');
 			$('.light_throw_wrap').css('display', 'inline-block');
+		}
+		else if(selected_type == 'custom')
+		{
+			$('.light_custom_wrap').css('display', 'inline-block');
+			$('.light_spot_show_wrap').css('display', 'none');
+			$('.light_throw_wrap').css('display', 'none');
 		}
 		
 		for(var i = 0; i < lights_array.length; i++)
@@ -391,6 +438,18 @@ function initialize_light_interface()
 			else
 				lights_array[i].active = false;
 			
+			break;
+		}
+	});
+	//custom object
+	$('#light_custom_object_drop_down').change(function(){
+		for(var i = 0; i < lights_array.length; i++)
+		if(lights_array[i].selected)
+		{
+			var selected_type = $(this).val();
+			lights_array[i].custom = selected_type;
+			lights_array[i].width = parseInt($('#light_custom_object_drop_down option[value="' + selected_type + '"]').attr('my_width'));
+			lights_array[i].height = parseInt($('#light_custom_object_drop_down option[value="' + selected_type + '"]').attr('my_height'));
 			break;
 		}
 	});

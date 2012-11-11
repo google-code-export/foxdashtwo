@@ -112,8 +112,8 @@ function mouse_move_object(click_point, previously_selected)
 		var selected_type = $('#type_drop_down').val();
 		objects_array.push(new my_objects(world_drag_point.x,
 			world_drag_point.y,
-			$('option[value="' + selected_type + '"]').attr('my_width'),
-			$('option[value="' + selected_type + '"]').attr('my_height'),
+			$('#type_drop_down option[value="' + selected_type + '"]').attr('my_width'),
+			$('#type_drop_down option[value="' + selected_type + '"]').attr('my_height'),
 			selected_type,
 			objects_array.length));
 		

@@ -179,9 +179,10 @@ label{
 		<h4>Light Type:</h4>
 		<div style="overflow: auto;">
 		<select style="float: right;" id="light_type_drop_down">
-			<option value="ambient">Ambient</option>
+			<option selected="selected" value="ambient">Ambient</option>
 			<option value="point">Point</option>
-			<option selected="selected" value="spot">Spot</option>
+			<option value="spot">Spot</option>
+			<option value="custom">Custom</option>
 		</select>
 		</div>
 		<hr />
@@ -191,18 +192,26 @@ label{
 		<hr />
 		<h4>Attributes</h4>
 		<label>Color:</label><input type="text" id="light_color" value="rgba(100,100,100,1)" /><br />
+		<label>Active:</label><input type="checkbox" id="light_active" /><br />
 		
-		<span class="light_throw_wrap">
-		<label>Throw:</label><input type="text" id="light_throw" value="100" /><br />
+		<span class="light_custom_wrap">
+		<label>LightObject</label>
+		<select id="light_custom_object_drop_down">
+		<option my_width="413" my_height="125" my_image="test_light" value="test">Test</option>
+		</select><br />
+		</span>
+		
+		<span id="images">
+		<img id="test_light" src="lights/test_light.png" />
 		</span>
 		
 		<span class="light_spot_show_wrap"><label>closewidth:</label><input type="text" id="light_closewidth" value="10" /><br />
 		<label>farwidth:</label><input type="text" id="light_farwidth" value="100" /><br />
 		<label>Degree:</label><input type="text" id="light_degree" value="90" /><br /></span>
 		
-		<span class="light_throw_wrap"><label>Bloom:</label><input type="checkbox" id="light_bloom" /></span><br />
-		<label>Active:</label><input type="checkbox" id="light_active" /><br />
 		<span class="light_throw_wrap">
+		<label>Throw:</label><input type="text" id="light_throw" value="100" /><br />
+		<label>Bloom:</label><input type="checkbox" id="light_bloom" /><br />
 		<label>Effect:</label><select id="light_effect_drop_down">
 			<option selected="selected" value="none">none</option>
 			<option value="rotate">Rotate</option>
