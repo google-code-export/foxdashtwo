@@ -1,12 +1,12 @@
 package com.kobaj.foxdashtwo;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
+import android.support.v4.app.FragmentActivity;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.KeyEvent;
@@ -14,7 +14,7 @@ import android.view.MotionEvent;
 
 import com.kobaj.math.Constants;
 
-public class GameActivity extends Activity
+public class GameActivity extends FragmentActivity
 {
 	/** Called when the activity is first created. */
 	
@@ -36,6 +36,7 @@ public class GameActivity extends Activity
 		
 		// do context first, a lot of stuff relies on it.
 		Constants.context = getApplicationContext();
+		Constants.fragment_manager = getSupportFragmentManager();
 		
 		Constants.resources = this.getResources();
 		
@@ -102,7 +103,6 @@ public class GameActivity extends Activity
 		if (i == KeyEvent.KEYCODE_VOLUME_DOWN || i == KeyEvent.KEYCODE_VOLUME_UP)
 			return false;
 		
-		// game.input_manager.eventUpdateDown(i, event);
 		com.kobaj.math.Constants.input_manager.eventUpdateDown(i, event);
 		return true;
 	}
@@ -110,7 +110,6 @@ public class GameActivity extends Activity
 	@Override
 	public boolean onKeyUp(int i, KeyEvent event)
 	{
-		// game.input_manager.eventUpdateUp(i, event);
 		com.kobaj.math.Constants.input_manager.eventUpdateUp(i, event);
 		return true;
 	}
@@ -118,7 +117,6 @@ public class GameActivity extends Activity
 	@Override
 	public boolean onTouchEvent(MotionEvent e)
 	{
-		// game.input_manager.eventUpdate(e);
 		com.kobaj.math.Constants.input_manager.eventUpdate(e);
 		return true;
 	}

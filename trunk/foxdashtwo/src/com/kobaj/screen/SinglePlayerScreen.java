@@ -1,10 +1,15 @@
 package com.kobaj.screen;
 
+import android.support.v4.app.DialogFragment;
+
+import com.kobaj.foxdashtwo.FoxdashtwoActivity;
 import com.kobaj.foxdashtwo.R;
+import com.kobaj.input.EnumKeyCodes;
 import com.kobaj.input.GameInputModifier;
-import com.kobaj.loader.XMLHandler;
+import com.kobaj.loader.FileHandler;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
+import com.kobaj.message.PopupManager;
 import com.kobaj.screen.screenaddons.BaseDebugScreen;
 import com.kobaj.screen.screenaddons.BaseInteractionScreen;
 import com.kobaj.screen.screenaddons.BaseLoadingScreen;
@@ -21,6 +26,10 @@ public class SinglePlayerScreen extends BaseScreen
 	BaseDebugScreen debug_addon;
 	BaseLoadingScreen loading_addon;
 	BaseInteractionScreen interaction_addon;
+	
+	//may be deleted later
+	public static final String save_file_name = "external_level";
+	private static final String format = ".xml";
 	
 	public SinglePlayerScreen()
 	{
@@ -42,17 +51,31 @@ public class SinglePlayerScreen extends BaseScreen
 		
 		// grab from disk
 		boolean loaded = false;
-		String[] levels = XMLHandler.getFileList();
+		String[] levels = FileHandler.getFileList();
 		for (String p : levels)
-			if (p.equalsIgnoreCase("external_level.xml"))
+			if (p.equalsIgnoreCase(save_file_name + format))
 			{
 				loaded = true;
-				test_level = XMLHandler.readSerialFile("external_level", com.kobaj.level.Level.class);
+				try
+				{
+					test_level = FileHandler.readSerialFile("external_level", com.kobaj.level.Level.class);
+				}
+				catch(Exception e)
+				{
+					loaded = false;
+					// do nothing
+				}
+				catch(Error e)
+				{
+					loaded = false;
+					// do nothing
+				}
+					
 				break;
 			}
 		
 		if (!loaded)
-			test_level = XMLHandler.readSerialFile(Constants.resources, R.raw.test_level, com.kobaj.level.Level.class);
+			test_level = FileHandler.readSerialResource(Constants.resources, R.raw.test_level, com.kobaj.level.Level.class);
 		
 		// level
 		if (test_level != null)
@@ -77,6 +100,16 @@ public class SinglePlayerScreen extends BaseScreen
 		
 		// interaction
 		interaction_addon.onUpdate(delta, my_modifier, test_level);
+		
+		// let the user load a map
+		if(Constants.input_manager.getKeyPressed(EnumKeyCodes.back))
+		{
+			DialogFragment newFragment = new PopupManager();
+		    newFragment.show(Constants.fragment_manager, "missiles");
+			
+			//Constants.context.start(
+			//PopupManager.showSimplePopUp(EnumPopupType.save_map);
+		}
 		
 		Functions.checkGlError();
 	}

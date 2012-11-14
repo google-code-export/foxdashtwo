@@ -21,7 +21,7 @@ public class QuadAnimated extends QuadCompressed
 		super(texture_resource, alpha_resource, width, height);
 		
 		// load in the animation
-		frame_animation = com.kobaj.loader.XMLHandler.readSerialFile(com.kobaj.math.Constants.resources, animation_resource, frame_animation.getClass());
+		frame_animation = com.kobaj.loader.FileHandler.readSerialResource(com.kobaj.math.Constants.resources, animation_resource, frame_animation.getClass());
 		
 		// every animation must have stop
 		this.setAnimation(EnumGlobalAnimationList.stop, 0);
