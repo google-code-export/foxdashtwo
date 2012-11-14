@@ -36,6 +36,7 @@ public class InputManager
 		old_pressed = new boolean[fingerCount];
 		pressed = new boolean[fingerCount];
 		
+		// this needs some work
 		dpads = new boolean[EnumKeyCodes.values().length];
 		old_dpads = new boolean[EnumKeyCodes.values().length];
 	}
@@ -67,6 +68,21 @@ public class InputManager
 			old_dpads[EnumKeyCodes.down.ordinal()] = true;
 			dpads[EnumKeyCodes.down.ordinal()] = false;
 		}
+		else if (i == KeyEvent.KEYCODE_BACK)
+		{
+			old_dpads[EnumKeyCodes.back.ordinal()] = true;
+			dpads[EnumKeyCodes.back.ordinal()] = false;
+		}
+		else if (i == KeyEvent.KEYCODE_MENU)
+		{
+			old_dpads[EnumKeyCodes.menu.ordinal()] = true;
+			dpads[EnumKeyCodes.menu.ordinal()] = false;
+		}
+		else if (i == KeyEvent.KEYCODE_SEARCH)
+		{
+			old_dpads[EnumKeyCodes.search.ordinal()] = true;
+			dpads[EnumKeyCodes.search.ordinal()] = false;
+		}
 	}
 	
 	public void eventUpdateDown(int i, KeyEvent event)
@@ -95,6 +111,21 @@ public class InputManager
 		{
 			old_dpads[EnumKeyCodes.down.ordinal()] = false;
 			dpads[EnumKeyCodes.down.ordinal()] = true;
+		}
+		else if (i == KeyEvent.KEYCODE_BACK)
+		{
+			old_dpads[EnumKeyCodes.back.ordinal()] = false;
+			dpads[EnumKeyCodes.back.ordinal()] = true;
+		}
+		else if (i == KeyEvent.KEYCODE_MENU)
+		{
+			old_dpads[EnumKeyCodes.menu.ordinal()] = false;
+			dpads[EnumKeyCodes.menu.ordinal()] = true;
+		}
+		else if (i == KeyEvent.KEYCODE_SEARCH)
+		{
+			old_dpads[EnumKeyCodes.search.ordinal()] = false;
+			dpads[EnumKeyCodes.search.ordinal()] = true;
 		}
 	}
 	
@@ -152,7 +183,6 @@ public class InputManager
 				y[id] = event.getY(i);
 			}
 			
-			
 			if (event.getPointerCount() == 1)
 				for (int i = 0; i < fingerCount; i++)
 					pressed[i] = false;
@@ -194,8 +224,10 @@ public class InputManager
 		return pressed[index];
 	}
 	
-	public boolean getKeyPressed(int index)
+	public boolean getKeyPressed(EnumKeyCodes key)
 	{
+		int index = key.ordinal();
+		
 		if (dpads[index] && !old_dpads[index])
 		{
 			old_dpads[index] = true;
@@ -205,8 +237,10 @@ public class InputManager
 		return false;
 	}
 	
-	public boolean getKeyReleased(int index)
+	public boolean getKeyReleased(EnumKeyCodes key)
 	{
+		int index = key.ordinal();
+		
 		if (!dpads[index] && old_dpads[index])
 		{
 			old_dpads[index] = false;

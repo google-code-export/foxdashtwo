@@ -1,0 +1,42 @@
+<level>
+  <player>
+    <this_object>player</this_object>
+    <id>000</id>
+    <z_plane>5.0</z_plane>
+    <x_pos>615</x_pos>
+    <y_pos>555</y_pos>
+    <active>true</active>
+  </player>
+  <object_list>
+    <levelObject>
+      <id>000x0</id>
+      <this_object>test</this_object>
+      <z_plane>5</z_plane>
+      <x_pos>445</x_pos>
+      <y_pos>337</y_pos>
+      <active>true</active>
+    </levelObject>
+    <levelObject>
+      <id>000x0</id>
+      <this_object>test</this_object>
+      <z_plane>5</z_plane>
+      <x_pos>640</x_pos>
+      <y_pos>337</y_pos>
+      <active>true</active>
+    </levelObject>
+  </object_list>
+  <light_list>
+    <levelLight class="com.kobaj.level.LevelTypeLight.LevelAmbientLight">
+      <active>true</active>
+      <id>000x0</id>
+      <color>-10197916</color>
+    </levelLight>
+  </light_list>
+  <event_list>
+  </event_list>
+  <backdrop_color>0</backdrop_color>
+  <right_limit>1600</right_limit>
+  <bottom_limit>0</bottom_limit>
+  <top_limit>750</top_limit>
+  <left_limit>0</left_limit>
+</level>
