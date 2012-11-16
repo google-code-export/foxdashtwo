@@ -33,8 +33,9 @@ public class Quad
 	// these are in shader coordinates 0 to 1
 	// I would much rather extend a physics object
 	// but that wouldn't really fit in with this model.
-	private double x_pos = 0.0;
-	private double y_pos = 0.0;
+	// anyway, dont be fooled, these are public to READ but not public to SET
+	public double x_pos = 0.0;
+	public double y_pos = 0.0;
 	public double x_acc = 0.0;
 	public double y_acc = 0.0;
 	public double x_vel = 0.0;
@@ -237,6 +238,8 @@ public class Quad
 		
 		// begin rotation data
 		final double rads = (float) Math.toRadians(degree);
+		final double cos_rads = Math.cos(rads);
+		final double sin_rads = Math.sin(rads);
 		
 		float pos_tr_x = width / 2.0f;
 		float pos_tr_y = height / 2.0f;
@@ -260,8 +263,8 @@ public class Quad
 			double tr_x1 = my_position_matrix[i];
 			double tr_y1 = my_position_matrix[i + 1];
 			
-			double tr_x2 = tr_x1 * Math.cos(rads) - tr_y1 * Math.sin(rads);
-			double tr_y2 = tr_y1 * Math.cos(rads) + tr_x1 * Math.sin(rads);
+			double tr_x2 = tr_x1 * cos_rads - tr_y1 * sin_rads;
+			double tr_y2 = tr_y1 * cos_rads + tr_x1 * sin_rads;
 		
 			my_position_matrix[i] = (float) Functions.screenWidthToShaderWidth(tr_x2);
 			my_position_matrix[i + 1] = (float) Functions.screenHeightToShaderHeight(tr_y2);
@@ -312,17 +315,6 @@ public class Quad
 		// set the rectangle
 		for (int i = phys_rect_list.size() - 1; i >= 0; i--)
 			phys_rect_list.get(i).setPositionWithOffset(x_pos, y_pos);
-	}
-	
-	// getters are slower than public, but more secure
-	public double getXPos()
-	{
-		return x_pos;
-	}
-	
-	public double getYPos()
-	{
-		return y_pos;
 	}
 	
 	// methods for

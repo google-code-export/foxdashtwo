@@ -83,8 +83,8 @@ public class BaseInteractionScreen
 	private void setCameraXY(final Level test_level)
 	{
 		// prepare camera
-		double x_camera = test_level.player.quad_object.getXPos();
-		double y_camera = test_level.player.quad_object.getYPos();
+		double x_camera = test_level.player.quad_object.x_pos;
+		double y_camera = test_level.player.quad_object.y_pos;
 		
 		// restrict camera movement
 		double x_buffer = Constants.ratio * Constants.z_shader_translation;

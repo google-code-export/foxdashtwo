@@ -80,17 +80,22 @@ public class QuadRenderTo extends Quad
 		
 		this.depthRb = depthRb[0];
 		this.fb = fb[0];
-	}
 	
-	public boolean beginRenderToTexture()
-	{
-		GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, fb);
+		//bind our attachments really quick
+		GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, fb[0]);
 		
 		// specify texture as color attachment
 		GLES20.glFramebufferTexture2D(GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0, GLES20.GL_TEXTURE_2D, my_texture_data_handle, 0);
 		
 		// attach render buffer as depth buffer
-		GLES20.glFramebufferRenderbuffer(GLES20.GL_FRAMEBUFFER, GLES20.GL_DEPTH_ATTACHMENT, GLES20.GL_RENDERBUFFER, depthRb);
+		GLES20.glFramebufferRenderbuffer(GLES20.GL_FRAMEBUFFER, GLES20.GL_DEPTH_ATTACHMENT, GLES20.GL_RENDERBUFFER, depthRb[0]);
+	
+		GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
+	}
+	
+	public boolean beginRenderToTexture()
+	{
+		GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, fb);
 		
 		// clear
 		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);

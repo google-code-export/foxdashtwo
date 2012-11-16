@@ -33,6 +33,8 @@ public class LevelPointLight extends LevelBloomLight
 	{
 		if (light_effect == EnumLightEffect.none)
 			return;
+		else if (!com.kobaj.math.Functions.onShader(quad_light.phys_rect_list))
+			return;
 		else if (light_effect == EnumLightEffect.pulse)
 		{
 			light_effect_timer += delta / 300.0;
