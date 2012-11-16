@@ -11,7 +11,6 @@ import com.kobaj.level.LevelEventTypes.LevelEventTransportPlayer;
 import com.kobaj.level.LevelTypeLight.LevelAmbientLight;
 import com.kobaj.level.LevelTypeLight.LevelBloomLight;
 import com.kobaj.level.LevelTypeLight.LevelCustomLight;
-import com.kobaj.level.LevelTypeLight.LevelObject;
 import com.kobaj.level.LevelTypeLight.LevelPointLight;
 import com.kobaj.level.LevelTypeLight.LevelSpotLight;
 import com.kobaj.math.Constants;

@@ -21,7 +21,7 @@ function openLevelCode(refresh)
 		if (!loadLevelWindow || loadLevelWindow.closed)
 		{
 			loadLevelWindow = window.open('', '', 'width=600,height=600,location=no');
-			loadLevelWindow.document.write('<head><title>Load Level</title></head><textarea id="leveldef" onchange="levelChanged()" cols="70" rows="30">' + getLevelDefinition() + '</textarea><br>');
+			loadLevelWindow.document.write('<head><title>Load Level</title></head><textarea style="width: 100%; height: 80%;" id="leveldef" onchange="levelChanged()" cols="70" rows="30">' + getLevelDefinition() + '</textarea><br>');
 			loadLevelWindow.document.write('<center><button onClick="window.opener.levelChanged(document.getElementById(\'leveldef\').value);">Load Level</button></center>');
 		} else
 		{
@@ -38,6 +38,8 @@ function getLevelDefinition()
 	def += '  <player>\n    <this_object>player</this_object>\n    <id>000</id>\n    <z_plane>5.0</z_plane>\n';
 	def += '    <x_pos>' + $('#player_x').val() + '</x_pos>\n';
 	def += '    <y_pos>' + $('#player_y').val() + '</y_pos>\n';
+	def += '      <degree>0</degree>\n';
+	def += '      <scale>1</scale>\n';
 	def += '    <active>true</active>\n  </player>\n';
 	def += '  <object_list>\n';
 
@@ -49,6 +51,8 @@ function getLevelDefinition()
 		def += '      <z_plane>' + objects_array[o].z_plane + '</z_plane>\n';
 		def += '      <x_pos>' + objects_array[o].x + '</x_pos>\n';
 		def += '      <y_pos>' + objects_array[o].y + '</y_pos>\n';
+		def += '      <degree>' + objects_array[o].degree + '</degree>\n';
+		def += '      <scale>' + objects_array[o].scale + '</scale>\n';
 		def += '      <active>true</active>\n';
 		def += '    </levelObject>\n';
 	}
@@ -87,7 +91,7 @@ function getLevelDefinition()
 			def += '      <is_bloom>' + lights_array[l].bloom + '</is_bloom>\n';
 			def += '      <y_pos>' + lights_array[l].y + '</y_pos>\n';
 			def += '      <x_pos>' + lights_array[l].x + '</x_pos>\n';
-			def += '      <light_object>' + lights_array[l].custom + '</light_object>';
+			def += '      <light_object>' + lights_array[l].custom + '</light_object>\n';
 		}
 
 		def += '      <active>' + lights_array[l].active + '</active>\n';
@@ -190,14 +194,12 @@ function levelChanged(level)
 			function()
 			{
 				var temp = new my_objects(parseInt($(this).find("x_pos").text()), parseInt($(this).find("y_pos").text()), parseInt($('option[value="' + $(this).find("this_object").text() + '"]')
-						.attr('my_width')), parseInt($('option[value="' + $(this).find("this_object").text() + '"]').attr('my_height')), $(this).find("this_object").text(), objects_array.length); // remember,
-																																																	// this
-																																																	// is
-																																																	// zero
-																																																	// based
-				// indexing
+						.attr('my_width')), parseInt($('option[value="' + $(this).find("this_object").text() + '"]').attr('my_height')), $(this).find("this_object").text(), objects_array.length); 
+				// zero based indexing indexing
 
-				temp.z_plane = parseInt($(this).find("z_plane").text());
+				temp.degree = ($(this).find("degree").text() ? parseInt($(this).find("degree").text()) : "0");
+				temp.scale = ($(this).find("scale").text() ? parseFloat($(this).find("scale").text()) : "1");
+				temp.z_plane = ($(this).find("z_plane").text() ? parseInt($(this).find("z_plane").text()) : "5");
 				temp.object_name_id = ($(this).find("id").text() ? $(this).find("id").text() : "000x0")
 
 				objects_array.push(temp);
@@ -211,7 +213,6 @@ function levelChanged(level)
 	$xml.find("levelLight").each(
 			function()
 			{
-
 				if ($(this).attr('class') == 'com.kobaj.level.LevelAmbientLight' || /* old */
 				$(this).attr('class') == 'com.kobaj.level.LevelTypeLight.LevelAmbientLight' /* new */)
 				{
@@ -219,15 +220,19 @@ function levelChanged(level)
 					ambient_light_count += 1;
 				}
 
-				if ($(this).attr('class') == 'com.kobaj.level.LevelPointLight' || $(this).attr('class') == 'com.kobaj.LevelTypeLight.level.LevelPointLight')
+				if ($(this).attr('class') == 'com.kobaj.level.LevelPointLight' || $(this).attr('class') == 'com.kobaj.level.LevelTypeLight.LevelPointLight')
 					var the_type = 'point';
 
 				if ($(this).attr('class') == 'com.kobaj.level.LevelSpotLight' || $(this).attr('class') == 'com.kobaj.level.LevelTypeLight.LevelSpotLight')
 					var the_type = 'spot';
+				
+				if ($(this).attr('class') == 'com.kobaj.level.LevelCustomLight' || $(this).attr('class') == 'com.kobaj.level.LevelTypeLight.LevelCustomLight')
+					var the_type = 'custom';
 
 				var temp = new my_lights(parseInt(($(this).find("x_pos").text() ? $(this).find("x_pos").text() : 100 * ambient_light_count)), parseInt(($(this).find("y_pos").text() ? $(this).find(
 						"y_pos").text() : 0)), the_type, lights_array.length);
 
+				temp.custom = ($(this).find("light_object").text() ? $(this).find("light_object").text() : 'test');
 				temp.light_name_id = ($(this).find("id").text() ? $(this).find("id").text() : '000x0');
 				temp.closewidth = parseInt(($(this).find("close_width").text() ? $(this).find("close_width").text() : 10));
 				temp.farwidth = parseInt(($(this).find("far_width").text() ? $(this).find("far_width").text() : 100));
@@ -252,11 +257,6 @@ function levelChanged(level)
 			{
 				var temp = new my_events(parseInt($(this).find("x_pos").text()), parseInt($(this).find("y_pos").text()), parseInt($(this).find("width").text()),
 						parseInt($(this).find("height").text()), $(this).find("this_event").text(), events_array.length); // remember,
-				// this
-				// is
-				// zero
-				// based
-				// indexing
 
 				temp.event_name_id = ($(this).find("id").text() ? $(this).find("id").text() : "000x0")
 

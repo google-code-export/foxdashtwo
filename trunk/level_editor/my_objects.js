@@ -9,6 +9,8 @@ function my_objects(x, y, width, height, type, i)
 	this.type = type;
 	this.selected = true;
 	this.draggable = false;
+	this.degree = 0;
+	this.scale = 1;
 	
 	this.object_name_id = '000x0';
 }
@@ -19,7 +21,7 @@ my_objects.prototype.draw = function()
 	if(this.selected)
 		drawBoxwh(this.x - 5, this.y - 5, this.width + 10, this.height + 10, purpleFill);
 	
-	drawRectwh(this.x, this.y, this.width, this.height, lightblueFill);
+	drawRectwh(this.x, this.y, this.width, this.height, lightblueFill, this.degree, this.scale);
 	
 	if($('#labelcheck').is(':checked'))
 	{
@@ -150,6 +152,8 @@ function setup_objects_interface(selected_object)
 	$('#object_x').val(selected_object.x);
 	$('#object_y').val(selected_object.y);
 	$('#object_z').val(selected_object.z_plane);
+	$('#object_degree').val(selected_object.degree);
+	$('#object_scale').val(selected_object.scale);
 }
 
 function remove_from_objects_array(selected_object)
@@ -242,6 +246,22 @@ function initialize_object_interface()
 			if(objects_array[i].selected)
 			{
 				objects_array[i].z_plane = parseInt($(this).val());
+				break;
+			}
+	});	
+	$('#object_degree').change(function(){
+		for(var i = 0; i < objects_array.length; i++)
+			if(objects_array[i].selected)
+			{
+				objects_array[i].degree = parseInt($(this).val());
+				break;
+			}
+	});	
+	$('#object_scale').change(function(){
+		for(var i = 0; i < objects_array.length; i++)
+			if(objects_array[i].selected)
+			{
+				objects_array[i].scale = parseFloat($(this).val());
 				break;
 			}
 	});	
