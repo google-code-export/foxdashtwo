@@ -168,8 +168,16 @@ function drawBox(x1, y1, x2, y2, color)
 	drawBoxwh(x1, y1, width, height, color);
 }
 
-function drawRectwh(x1,y1, width, height,color)
+function drawRectwh(x1, y1, width, height, color, degree, scale)
 {	
+	if(degree == undefined)
+		degree = 0;
+	if(scale == undefined)
+		scale = 1;
+	
+	width = width * scale;
+	height = height * scale;
+	
 	var origx = x1;
 	var origy = y1;
 	
@@ -180,18 +188,31 @@ function drawRectwh(x1,y1, width, height,color)
 	//fix y
 	y1 = window.height - y1;
 	
+	//begin rotation
+	context.save();
+	context.translate(x1 + width / 2.0 + width * (1 - scale), y1 - height / 2.0 - height * (1 - scale));
+	context.rotate(degree * Math.PI / 180);
+	
+	// draw your object
+	
 	//draw
 	if(squareOnScreen(x1, y1, width, height))
 	{
 		context.beginPath();
 		context.fillStyle = color;
-		context.fillRect(x1,y1,width,-height);
+		context.fillRect(- width / 2.0, height / 2.0 ,width,-height);
 		context.fill();
 		context.closePath();
 	}
 	
 	if($('#outlines').is(":checked"))
-		drawBoxwh(origx,origy,width,height, darkgreyFill)
+	{
+		var send_y = window.height -  (height / 2.0) + world_coords.y;
+		drawBoxwh( - width / 2.0  + world_coords.x, send_y, width,height, darkgreyFill)
+	}
+		
+	//restore
+	context.restore();
 };
 
 //only used for boss health outline
