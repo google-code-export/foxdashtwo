@@ -2,7 +2,6 @@ package com.kobaj.screen;
 
 import android.support.v4.app.DialogFragment;
 
-import com.kobaj.foxdashtwo.FoxdashtwoActivity;
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.input.EnumKeyCodes;
 import com.kobaj.input.GameInputModifier;
@@ -27,7 +26,7 @@ public class SinglePlayerScreen extends BaseScreen
 	BaseLoadingScreen loading_addon;
 	BaseInteractionScreen interaction_addon;
 	
-	//may be deleted later
+	// may be deleted later
 	public static final String save_file_name = "external_level";
 	private static final String format = ".xml";
 	
@@ -37,8 +36,7 @@ public class SinglePlayerScreen extends BaseScreen
 		my_modifier = new GameInputModifier();
 		
 		/*
-		 * helpful while I build the level class
-		 * com.kobaj.level.Level test = new com.kobaj.level.Level(); test.writeOut(); com.kobaj.loader.XMLHandler.writeSerialFile(test, "test_level");
+		 * helpful while I build the level class com.kobaj.level.Level test = new com.kobaj.level.Level(); test.writeOut(); com.kobaj.loader.XMLHandler.writeSerialFile(test, "test_level");
 		 */
 	}
 	
@@ -56,21 +54,11 @@ public class SinglePlayerScreen extends BaseScreen
 			if (p.equalsIgnoreCase(save_file_name + format))
 			{
 				loaded = true;
-				try
-				{
-					test_level = FileHandler.readSerialFile("external_level", com.kobaj.level.Level.class);
-				}
-				catch(Exception e)
-				{
+				test_level = FileHandler.readSerialFile("external_level", com.kobaj.level.Level.class);
+				
+				if(test_level == null)
 					loaded = false;
-					// do nothing
-				}
-				catch(Error e)
-				{
-					loaded = false;
-					// do nothing
-				}
-					
+				
 				break;
 			}
 		
@@ -84,7 +72,7 @@ public class SinglePlayerScreen extends BaseScreen
 		// control input
 		my_modifier.onInitialize();
 		
-		//debug_addon = new BaseDebugScreen(test_level, true, false);
+		// debug_addon = new BaseDebugScreen(test_level, true, false);
 	}
 	
 	@Override
@@ -102,13 +90,10 @@ public class SinglePlayerScreen extends BaseScreen
 		interaction_addon.onUpdate(delta, my_modifier, test_level);
 		
 		// let the user load a map
-		if(Constants.input_manager.getKeyPressed(EnumKeyCodes.back))
+		if (Constants.input_manager.getKeyPressed(EnumKeyCodes.back))
 		{
 			DialogFragment newFragment = new PopupManager();
-		    newFragment.show(Constants.fragment_manager, "missiles");
-			
-			//Constants.context.start(
-			//PopupManager.showSimplePopUp(EnumPopupType.save_map);
+			newFragment.show(Constants.fragment_manager, "missiles");
 		}
 		
 		Functions.checkGlError();
