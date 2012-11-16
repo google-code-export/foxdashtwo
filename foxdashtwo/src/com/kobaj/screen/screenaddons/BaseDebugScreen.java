@@ -98,8 +98,8 @@ public class BaseDebugScreen
 	
 	private void onUpdateBoundingBox(Quad my_quad, int j)
 	{
-		onUpdateBoundingBox(my_quad.getXPos(), my_quad.getYPos() + my_quad.shader_height,
-				my_quad.getXPos() + my_quad.shader_width, my_quad.getYPos(), j);
+		onUpdateBoundingBox(my_quad.x_pos, my_quad.y_pos + my_quad.shader_height,
+				my_quad.x_pos + my_quad.shader_width, my_quad.y_pos, j);
 	}
 	
 	private void onUpdateBoundingBox(RectF bounding_box, int j)
@@ -123,8 +123,8 @@ public class BaseDebugScreen
 	
 	private QuadColorShape onMakeBoundingBox(Quad my_quad)
 	{
-		return onMakeBoundingBox((int) Functions.shaderXToScreenX(my_quad.getXPos()), (int) Functions.shaderYToScreenY(my_quad.getYPos() + my_quad.shader_height),
-				(int) Functions.shaderXToScreenX(my_quad.getXPos() + my_quad.shader_width), (int) Functions.shaderYToScreenY(my_quad.getYPos()));
+		return onMakeBoundingBox((int) Functions.shaderXToScreenX(my_quad.x_pos), (int) Functions.shaderYToScreenY(my_quad.y_pos + my_quad.shader_height),
+				(int) Functions.shaderXToScreenX(my_quad.x_pos + my_quad.shader_width), (int) Functions.shaderYToScreenY(my_quad.y_pos));
 	}
 	
 	private QuadColorShape onMakeBoundingBox(RectF bounding_box)

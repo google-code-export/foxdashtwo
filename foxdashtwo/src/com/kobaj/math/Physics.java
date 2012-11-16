@@ -42,7 +42,7 @@ public class Physics
 			the_quad.x_vel = -Constants.max_x_velocity;
 		
 		//add position
-		the_quad.setPos(the_quad.getXPos() + the_quad.x_vel * delta, the_quad.getYPos() + the_quad.y_vel * delta, com.kobaj.opengldrawable.EnumDrawFrom.center);
+		the_quad.setPos(the_quad.x_pos + the_quad.x_vel * delta, the_quad.y_pos + the_quad.y_vel * delta, com.kobaj.opengldrawable.EnumDrawFrom.center);
 	}
 	
 	//check for a collision and return true if the collision is up and down (the player can jump)
@@ -55,11 +55,11 @@ public class Physics
 			return false;
 		
 		//quick check to even see if its possible for two quads to touch
-		double first_x = first_quad.getXPos();
-		double first_y = first_quad.getYPos();
+		double first_x = first_quad.x_pos;
+		double first_y = first_quad.y_pos;
 		
-		double second_x = second_quad.getXPos();
-		double second_y = second_quad.getYPos();
+		double second_x = second_quad.x_pos;
+		double second_y = second_quad.y_pos;
 		
 		//reposition
 		first_x = first_x - first_quad.shader_width / 2.0;
@@ -133,16 +133,16 @@ public class Physics
 		
 		if(my_collision.width() != 0)
 		{
-			if(my_collision.centerX() > the_quad.getXPos()) // push object to the right
+			if(my_collision.centerX() > the_quad.x_pos) // push object to the right
 				width = -width;
-			the_quad.setPos(the_quad.getXPos() + width, the_quad.getYPos(), com.kobaj.opengldrawable.EnumDrawFrom.center);
+			the_quad.setPos(the_quad.x_pos + width, the_quad.y_pos, com.kobaj.opengldrawable.EnumDrawFrom.center);
 			the_quad.x_vel = 0;
 		}
 		else
 		{
-			if(my_collision.centerY() > the_quad.getYPos())
+			if(my_collision.centerY() > the_quad.y_pos)
 				height = -height;
-			the_quad.setPos(the_quad.getXPos(), the_quad.getYPos() + height, com.kobaj.opengldrawable.EnumDrawFrom.center);
+			the_quad.setPos(the_quad.x_pos, the_quad.y_pos + height, com.kobaj.opengldrawable.EnumDrawFrom.center);
 			
 			if(the_quad.y_vel != 0)
 				the_quad.y_vel = 0;

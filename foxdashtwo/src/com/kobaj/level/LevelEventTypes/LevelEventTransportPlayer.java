@@ -42,8 +42,8 @@ public class LevelEventTransportPlayer extends LevelEventBase
 		if(active && !teleporting)
 		{
 			teleporting = true;
-			x_start = player.getXPos();
-			y_start = player.getYPos();
+			x_start = player.x_pos;
+			y_start = player.y_pos;
 		}
 		
 		if(teleporting)
