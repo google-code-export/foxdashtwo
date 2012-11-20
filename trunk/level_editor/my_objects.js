@@ -21,7 +21,10 @@ my_objects.prototype.draw = function()
 	if(this.selected)
 		drawBoxwh(this.x - 5, this.y - 5, this.width + 10, this.height + 10, purpleFill);
 	
-	drawRectwh(this.x, this.y, this.width, this.height, lightblueFill, this.degree, this.scale);
+	if(this.type == "test")
+		drawRectwh(this.x, this.y, this.width, this.height, lightblueFill, this.degree, this.scale);
+	else
+		drawMyImageRotation(document.getElementById(this.type), this.x, this.y, this.width, this.height, this.degree, this.scale);
 	
 	if($('#labelcheck').is(':checked'))
 	{

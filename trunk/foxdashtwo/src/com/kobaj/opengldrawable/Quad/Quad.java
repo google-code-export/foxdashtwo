@@ -276,6 +276,10 @@ public class Quad
 		else
 			my_position.clear();
 		my_position.put(my_position_matrix).position(0);
+		
+		//haha, I'm mad!! rotating an AABB
+		for(int i = phys_rect_list.size() - 1; i >= 0; i--)
+			phys_rect_list.get(i).rotate(degree);
 	}
 	
 	// these x and y are in shader space 0 to 1

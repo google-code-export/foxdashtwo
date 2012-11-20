@@ -1,6 +1,7 @@
 package com.kobaj.level;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
@@ -73,6 +74,9 @@ public class Level
 		for (int i = object_list.size() - 1; i >= 0; i--)
 			object_list.get(i).onInitialize();
 		
+		//sort the objects
+		 Collections.sort(object_list, new ObjectDrawSort());
+		
 		// setup lights
 		for (int i = light_list.size() - 1; i >= 0; i--)
 		{
@@ -128,11 +132,12 @@ public class Level
 		if(backdrop_color != Color.TRANSPARENT)
 			my_backdrop.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, Color.WHITE, true);
 		
-		// player
-		player.quad_object.onDrawAmbient();
-		
+		//draw sorted
 		for (int i = object_list.size() - 1; i >= 0; i--)
 			object_list.get(i).onDrawObject();
+		
+		// player
+		player.quad_object.onDrawAmbient();
 		
 		// bloom lights
 		for (int i = bloom_light_list.size() - 1; i >= 0; i--)

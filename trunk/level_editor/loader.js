@@ -13,7 +13,7 @@ function openLevelCode(refresh)
 		{
 			if (!loadLevelWindow.closed)
 			{
-				loadLevelWindow.document.getElementById("leveldef").value = getLevelDefinition();
+				loadLevelWindow.document.getElementById("leveldef").value = getLevelDefinition(loadLevelWindow.document.getElementById("leveldef"));
 			}
 		}
 	} else
@@ -25,14 +25,14 @@ function openLevelCode(refresh)
 			loadLevelWindow.document.write('<center><button onClick="window.opener.levelChanged(document.getElementById(\'leveldef\').value);">Load Level</button></center>');
 		} else
 		{
-			loadLevelWindow.document.getElementById("leveldef").value = getLevelDefinition();
+			loadLevelWindow.document.getElementById("leveldef").value = getLevelDefinition(loadLevelWindow.document.getElementById("leveldef"));
 			loadLevelWindow.focus();
 		}
 	}
 }
 
 /* get the level definition that will be placed in window */
-function getLevelDefinition()
+function getLevelDefinition(thisthis)
 {
 	var def = '<level>\n';
 	def += '  <player>\n    <this_object>player</this_object>\n    <id>000</id>\n    <z_plane>5.0</z_plane>\n';
@@ -59,6 +59,14 @@ function getLevelDefinition()
 
 	def += '  </object_list>\n  <light_list>\n';
 
+	if(thisthis != undefined)
+	{
+	if(lights_array.length == 0)
+		thisthis.style.backgroundColor = '#FF9B82';
+	else
+		thisthis.style.backgroundColor = '#BAFFBA';
+	}
+	
 	for (l in lights_array)
 	{
 		if (lights_array[l].type == 'spot')

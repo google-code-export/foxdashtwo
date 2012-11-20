@@ -237,8 +237,46 @@ function drawBoxwh(x1,y1, width, height, color)
 };
 
 //draw an image
+function drawMyImageRotation(img, x1, y1, width, height, degree, scale)
+{
+	if(img == null)
+		return;
+	
+	if(degree == undefined)
+		degree = 0;
+	if(scale == undefined)
+		scale = 1;
+	
+	width = width * scale;
+	height = height * scale;
+	
+	var origx = x1;
+	var origy = y1;
+	
+	//set position to be relative
+	x1 = x1 - world_coords.x;
+	y1 = y1 - world_coords.y;
+	
+	//fix y
+	y1 = window.height - y1;
+	
+	//begin rotation
+	context.save();
+	context.translate(x1 + width / 2.0 + width * (1 - scale), y1 - height / 2.0 - height * (1 - scale));
+	context.rotate(degree * Math.PI / 180);
+	
+	if(squareOnScreen(x1, y1, width, height))
+		context.drawImage(img, - width / 2.0 , (height / 2.0) - height, width, height);
+	
+	//restore
+	context.restore();
+}
+
 function drawMyImage(img, x1, y1, width, height)
 {
+	if(img == null)
+		return;
+	
 	//set position to be relative
 	x1 = x1 - world_coords.x;
 	y1 = y1 - world_coords.y;
