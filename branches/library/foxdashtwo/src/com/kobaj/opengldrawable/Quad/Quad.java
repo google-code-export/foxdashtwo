@@ -27,14 +27,15 @@ public class Quad
 	// transformation matrix to convert from object to world space
 	private float[] my_model_matrix = new float[16];
 	
-	// these are in shader coordinates 0 to 1
 	// and placed in the exact center of the quad
-	private double x_pos = 0.0;
-	private double y_pos = 0.0;
 	public EnumDrawFrom currently_drawn = EnumDrawFrom.center;
 	
+	// these are in shader coordinates 0 to 1
 	// I would much rather extend a physics object
 	// but that wouldn't really fit in with this model.
+	// anyway, dont be fooled, these are public to READ but not public to SET
+	public double x_pos = 0.0;
+	public double y_pos = 0.0;
 	public double x_acc = 0.0;
 	public double y_acc = 0.0;
 	public double x_vel = 0.0;
@@ -57,6 +58,7 @@ public class Quad
 	public double shader_width;
 	public double shader_height;
 	public int square;
+	private double scale_value = 1.0;
 	
 	// data about the quad
 	private float[] my_position_matrix = new float[18];
@@ -84,8 +86,11 @@ public class Quad
 		onCreate(texture_resource, width, height);
 	}
 	
+	private Bitmap nullify_me;
+	
 	public Quad(int texture_resource, Bitmap bmp, int width, int height)
 	{
+		nullify_me = bmp;
 		com.kobaj.loader.GLBitmapReader.loadTextureFromBitmap(texture_resource, bmp);
 		onCreate(texture_resource, width, height);
 	}
@@ -102,6 +107,9 @@ public class Quad
 			GLLoadedTexture proposed_handle = GLBitmapReader.loaded_textures.get(texture_resource);
 			if (proposed_handle != null)
 			{
+				if(nullify_me != null)
+					nullify_me = null;
+				
 				my_texture_data_handle = proposed_handle.texture_id;
 				return true;
 			}
@@ -175,16 +183,22 @@ public class Quad
 		my_tex_coord.put(cubeTextureCoordinateData).position(0);
 	}
 	
+	// this is a value between 1.0 and 
+	public void setScale(double scale_value)
+	{
+		setWidthHeightRotationScale(width, height, 0, scale_value);
+	}
+	
 	// do note: this doesn't change the physics bounding box.
 	// this is in screen size
 	public void setWidthHeight(int width, int height)
 	{
-		setRotationWidthHeight(width, height, 0);
+		setWidthHeightRotationScale(width, height, 0, 1);
 	}
 	
 	public void setRotationZ(double degrees)
 	{
-		setRotationWidthHeight(width, height, degrees);
+		setWidthHeightRotationScale(width, height, degrees, 1);
 	}
 	
 	// Why oh why are you doing this instead of a very simple matrix rotation Jakob?
@@ -193,8 +207,27 @@ public class Quad
 	// where the ratio is /not/ one.
 	// meaning a model * view * projection with rotation will end up skewed!
 	// By doing vertex multiplication with compensated coords, we eliminate the skew!
-	protected void setRotationWidthHeight(int width, int height, double degree)
+	
+	// width and height are in screen values 0 - 800
+	// scale will override width and height if it is not 1.
+	public void setWidthHeightRotationScale(int width, int height, double degree, double scale_value)
 	{
+		//double check all values
+		if(scale_value < 0 || scale_value > 1)
+			scale_value = 1;
+		
+		final double old_scale_value = this.scale_value;
+		final double scale_factor = (scale_value / old_scale_value);
+		this.scale_value = scale_value;
+		
+		// width and height
+		width = (int)(width * scale_factor);
+		height = (int)(height * scale_factor);
+		
+		// then the physics
+		for(int i = phys_rect_list.size() - 1; i >= 0; i--)
+			phys_rect_list.get(i).setScale(scale_value);
+		
 		// store these for our bounding rectangle
 		this.width = width;
 		this.height = height;
@@ -205,6 +238,8 @@ public class Quad
 		
 		// begin rotation data
 		final double rads = (float) Math.toRadians(degree);
+		final double cos_rads = Math.cos(rads);
+		final double sin_rads = Math.sin(rads);
 		
 		float pos_tr_x = width / 2.0f;
 		float pos_tr_y = height / 2.0f;
@@ -212,13 +247,15 @@ public class Quad
 		float neg_tr_x = -pos_tr_x;
 		float neg_tr_y = -pos_tr_y;
 		
+		final float z_buffer = 0.0f;
+		
 		// X, Y, Z
-		my_position_matrix[0] = neg_tr_x; 	my_position_matrix[1] = pos_tr_y; 	my_position_matrix[2] = 0;
-		my_position_matrix[3] = neg_tr_x; 	my_position_matrix[4] = neg_tr_y; 	my_position_matrix[5] = 0;
-		my_position_matrix[6] = pos_tr_x; 	my_position_matrix[7] = pos_tr_y; 	my_position_matrix[8] = 0;
-		my_position_matrix[9] = neg_tr_x; 	my_position_matrix[10] = neg_tr_y; 	my_position_matrix[11] = 0;
-		my_position_matrix[12] = pos_tr_x; 	my_position_matrix[13] = neg_tr_y; 	my_position_matrix[14] = 0;
-		my_position_matrix[15] = pos_tr_x; 	my_position_matrix[16] = pos_tr_y; 	my_position_matrix[17] = 0;
+		my_position_matrix[0] = neg_tr_x; 	my_position_matrix[1] = pos_tr_y; 	my_position_matrix[2] = z_buffer;
+		my_position_matrix[3] = neg_tr_x; 	my_position_matrix[4] = neg_tr_y; 	my_position_matrix[5] = z_buffer;
+		my_position_matrix[6] = pos_tr_x; 	my_position_matrix[7] = pos_tr_y; 	my_position_matrix[8] = z_buffer;
+		my_position_matrix[9] = neg_tr_x; 	my_position_matrix[10] = neg_tr_y; 	my_position_matrix[11] = z_buffer;
+		my_position_matrix[12] = pos_tr_x; 	my_position_matrix[13] = neg_tr_y; 	my_position_matrix[14] = z_buffer;
+		my_position_matrix[15] = pos_tr_x; 	my_position_matrix[16] = pos_tr_y; 	my_position_matrix[17] = z_buffer;
 		
 		// rotate and convert
 		for (int i = 0; i < 18; i = i + 3)
@@ -226,8 +263,8 @@ public class Quad
 			double tr_x1 = my_position_matrix[i];
 			double tr_y1 = my_position_matrix[i + 1];
 			
-			double tr_x2 = tr_x1 * Math.cos(rads) - tr_y1 * Math.sin(rads);
-			double tr_y2 = tr_y1 * Math.cos(rads) + tr_x1 * Math.sin(rads);
+			double tr_x2 = tr_x1 * cos_rads - tr_y1 * sin_rads;
+			double tr_y2 = tr_y1 * cos_rads + tr_x1 * sin_rads;
 		
 			my_position_matrix[i] = (float) Functions.screenWidthToShaderWidth(tr_x2);
 			my_position_matrix[i + 1] = (float) Functions.screenHeightToShaderHeight(tr_y2);
@@ -239,6 +276,10 @@ public class Quad
 		else
 			my_position.clear();
 		my_position.put(my_position_matrix).position(0);
+		
+		//haha, I'm mad!! rotating an AABB
+		for(int i = phys_rect_list.size() - 1; i >= 0; i--)
+			phys_rect_list.get(i).rotate(degree);
 	}
 	
 	// these x and y are in shader space 0 to 1
@@ -278,17 +319,6 @@ public class Quad
 		// set the rectangle
 		for (int i = phys_rect_list.size() - 1; i >= 0; i--)
 			phys_rect_list.get(i).setPositionWithOffset(x_pos, y_pos);
-	}
-	
-	// getters are slower than public, but more secure
-	public double getXPos()
-	{
-		return x_pos;
-	}
-	
-	public double getYPos()
-	{
-		return y_pos;
 	}
 	
 	// methods for

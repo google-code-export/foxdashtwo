@@ -1,269 +1,189 @@
 <level>
   <player>
     <this_object>player</this_object>
-    <draw_from>bottom_left</draw_from>
-    <id>0</id>
+    <id>000</id>
     <z_plane>5.0</z_plane>
-    <x_pos>268</x_pos>
-    <y_pos>374</y_pos>
+    <x_pos>162</x_pos>
+    <y_pos>289</y_pos>
+      <degree>0</degree>
+      <scale>1</scale>
     <active>true</active>
   </player>
   <object_list>
     <levelObject>
-      <this_object>test</this_object>
-      <draw_from>bottom_left</draw_from>
-      <id>0</id>
-      <z_plane>5</z_plane>
-      <x_pos>0</x_pos>
-      <y_pos>550</y_pos>
-      <active>true</active>
-    </levelObject>
-    <levelObject>
-      <this_object>test</this_object>
-      <draw_from>bottom_left</draw_from>
-      <id>1</id>
-      <z_plane>5</z_plane>
-      <x_pos>200</x_pos>
-      <y_pos>550</y_pos>
-      <active>true</active>
-    </levelObject>
-    <levelObject>
-      <this_object>test</this_object>
-      <draw_from>bottom_left</draw_from>
-      <id>2</id>
-      <z_plane>5</z_plane>
-      <x_pos>0</x_pos>
-      <y_pos>350</y_pos>
-      <active>true</active>
-    </levelObject>
-    <levelObject>
-      <this_object>test</this_object>
-      <draw_from>bottom_left</draw_from>
-      <id>3</id>
-      <z_plane>5</z_plane>
-      <x_pos>0</x_pos>
-      <y_pos>150</y_pos>
-      <active>true</active>
-    </levelObject>
-    <levelObject>
-      <this_object>test</this_object>
-      <draw_from>bottom_left</draw_from>
-      <id>4</id>
-      <z_plane>5</z_plane>
-      <x_pos>200</x_pos>
-      <y_pos>150</y_pos>
-      <active>true</active>
-    </levelObject>
-    <levelObject>
-      <this_object>test</this_object>
-      <draw_from>bottom_left</draw_from>
-      <id>5</id>
-      <z_plane>5</z_plane>
-      <x_pos>400</x_pos>
-      <y_pos>150</y_pos>
-      <active>true</active>
-    </levelObject>
-    <levelObject>
-      <this_object>test</this_object>
-      <draw_from>bottom_left</draw_from>
-      <id>6</id>
-      <z_plane>5</z_plane>
-      <x_pos>600</x_pos>
-      <y_pos>150</y_pos>
-      <active>true</active>
-    </levelObject>
-    <levelObject>
-      <this_object>test</this_object>
-      <draw_from>bottom_left</draw_from>
-      <id>7</id>
-      <z_plane>5</z_plane>
-      <x_pos>800</x_pos>
-      <y_pos>150</y_pos>
-      <active>true</active>
-    </levelObject>
-    <levelObject>
-      <this_object>test</this_object>
-      <draw_from>bottom_left</draw_from>
-      <id>8</id>
-      <z_plane>5</z_plane>
-      <x_pos>400</x_pos>
-      <y_pos>550</y_pos>
-      <active>true</active>
-    </levelObject>
-    <levelObject>
-      <this_object>test</this_object>
-      <draw_from>bottom_left</draw_from>
-      <id>9</id>
-      <z_plane>5</z_plane>
-      <x_pos>800</x_pos>
-      <y_pos>550</y_pos>
-      <active>true</active>
-    </levelObject>
-    <levelObject>
-      <this_object>test</this_object>
-      <draw_from>bottom_left</draw_from>
-      <id>10</id>
-      <z_plane>5</z_plane>
-      <x_pos>1000</x_pos>
-      <y_pos>550</y_pos>
-      <active>true</active>
-    </levelObject>
-    <levelObject>
-      <this_object>test</this_object>
-      <draw_from>bottom_left</draw_from>
-      <id>11</id>
-      <z_plane>5</z_plane>
-      <x_pos>600</x_pos>
-      <y_pos>550</y_pos>
-      <active>true</active>
-    </levelObject>
-    <levelObject>
-      <this_object>test</this_object>
-      <draw_from>bottom_left</draw_from>
       <id>000x0</id>
-      <z_plane>5</z_plane>
-      <x_pos>1200</x_pos>
-      <y_pos>350</y_pos>
+      <this_object>bg1</this_object>
+      <z_plane>9</z_plane>
+      <x_pos>-93</x_pos>
+      <y_pos>-511</y_pos>
+      <degree>0</degree>
+      <scale>1</scale>
       <active>true</active>
     </levelObject>
     <levelObject>
-      <this_object>test</this_object>
-      <draw_from>bottom_left</draw_from>
       <id>000x0</id>
+      <this_object>floor1</this_object>
       <z_plane>5</z_plane>
-      <x_pos>1275</x_pos>
-      <y_pos>150</y_pos>
+      <x_pos>5</x_pos>
+      <y_pos>5</y_pos>
+      <degree>0</degree>
+      <scale>1</scale>
       <active>true</active>
     </levelObject>
     <levelObject>
-      <this_object>test</this_object>
-      <draw_from>bottom_left</draw_from>
       <id>000x0</id>
+      <this_object>floor3</this_object>
       <z_plane>5</z_plane>
-      <x_pos>1200</x_pos>
-      <y_pos>-50</y_pos>
+      <x_pos>648</x_pos>
+      <y_pos>-5</y_pos>
+      <degree>0</degree>
+      <scale>1</scale>
       <active>true</active>
     </levelObject>
     <levelObject>
-      <this_object>test</this_object>
-      <draw_from>bottom_left</draw_from>
       <id>000x0</id>
+      <this_object>layer17</this_object>
       <z_plane>5</z_plane>
-      <x_pos>1200</x_pos>
-      <y_pos>-250</y_pos>
+      <x_pos>-99</x_pos>
+      <y_pos>407</y_pos>
+      <degree>0</degree>
+      <scale>1</scale>
       <active>true</active>
     </levelObject>
     <levelObject>
-      <this_object>test</this_object>
-      <draw_from>bottom_left</draw_from>
       <id>000x0</id>
+      <this_object>layer18</this_object>
       <z_plane>5</z_plane>
-      <x_pos>1000</x_pos>
-      <y_pos>-250</y_pos>
+      <x_pos>437</x_pos>
+      <y_pos>408</y_pos>
+      <degree>0</degree>
+      <scale>1</scale>
       <active>true</active>
     </levelObject>
     <levelObject>
-      <this_object>test</this_object>
-      <draw_from>bottom_left</draw_from>
       <id>000x0</id>
+      <this_object>layer18</this_object>
       <z_plane>5</z_plane>
-      <x_pos>800</x_pos>
-      <y_pos>-250</y_pos>
+      <x_pos>-371</x_pos>
+      <y_pos>86</y_pos>
+      <degree>270</degree>
+      <scale>1</scale>
       <active>true</active>
     </levelObject>
     <levelObject>
-      <this_object>test</this_object>
-      <draw_from>bottom_left</draw_from>
       <id>000x0</id>
+      <this_object>layer14</this_object>
       <z_plane>5</z_plane>
-      <x_pos>1200</x_pos>
-      <y_pos>550</y_pos>
+      <x_pos>1057</x_pos>
+      <y_pos>425</y_pos>
+      <degree>0</degree>
+      <scale>1</scale>
       <active>true</active>
     </levelObject>
     <levelObject>
-      <this_object>test</this_object>
-      <draw_from>bottom_left</draw_from>
       <id>000x0</id>
+      <this_object>layer17</this_object>
       <z_plane>5</z_plane>
-      <x_pos>600</x_pos>
-      <y_pos>-200</y_pos>
+      <x_pos>1058</x_pos>
+      <y_pos>55</y_pos>
+      <degree>90</degree>
+      <scale>1</scale>
       <active>true</active>
     </levelObject>
     <levelObject>
-      <this_object>test</this_object>
-      <draw_from>bottom_left</draw_from>
       <id>000x0</id>
+      <this_object>floor3</this_object>
       <z_plane>5</z_plane>
-      <x_pos>400</x_pos>
-      <y_pos>-250</y_pos>
+      <x_pos>903</x_pos>
+      <y_pos>-484</y_pos>
+      <degree>0</degree>
+      <scale>1</scale>
       <active>true</active>
     </levelObject>
     <levelObject>
-      <this_object>test</this_object>
-      <draw_from>bottom_left</draw_from>
       <id>000x0</id>
+      <this_object>layer14</this_object>
       <z_plane>5</z_plane>
-      <x_pos>200</x_pos>
-      <y_pos>-50</y_pos>
+      <x_pos>1282</x_pos>
+      <y_pos>-314</y_pos>
+      <degree>90</degree>
+      <scale>1</scale>
       <active>true</active>
     </levelObject>
     <levelObject>
-      <this_object>test</this_object>
-      <draw_from>bottom_left</draw_from>
       <id>000x0</id>
+      <this_object>floor2</this_object>
       <z_plane>5</z_plane>
-      <x_pos>200</x_pos>
-      <y_pos>-250</y_pos>
+      <x_pos>692</x_pos>
+      <y_pos>-441</y_pos>
+      <degree>0</degree>
+      <scale>1</scale>
+      <active>true</active>
+    </levelObject>
+    <levelObject>
+      <id>000x0</id>
+      <this_object>layer18</this_object>
+      <z_plane>5</z_plane>
+      <x_pos>-10</x_pos>
+      <y_pos>-377</y_pos>
+      <degree>270</degree>
+      <scale>1</scale>
+      <active>true</active>
+    </levelObject>
+    <levelObject>
+      <id>000x0</id>
+      <this_object>floor1</this_object>
+      <z_plane>5</z_plane>
+      <x_pos>367</x_pos>
+      <y_pos>-473</y_pos>
+      <degree>0</degree>
+      <scale>1</scale>
+      <active>true</active>
+    </levelObject>
+    <levelObject>
+      <id>000x0</id>
+      <this_object>shroom1</this_object>
+      <z_plane>8</z_plane>
+      <x_pos>1026</x_pos>
+      <y_pos>-361</y_pos>
+      <degree>0</degree>
+      <scale>0.6</scale>
+      <active>true</active>
+    </levelObject>
+    <levelObject>
+      <id>000x0</id>
+      <this_object>fungus3</this_object>
+      <z_plane>8</z_plane>
+      <x_pos>369</x_pos>
+      <y_pos>183</y_pos>
+      <degree>0</degree>
+      <scale>1</scale>
       <active>true</active>
     </levelObject>
   </object_list>
   <light_list>
-    <levelLight class="com.kobaj.level.LevelSpotLight">
-      <close_width>10</close_width>
-      <degree>90</degree>
-      <far_width>200</far_width>
-      <light_effect>none</light_effect>
-      <is_bloom>false</is_bloom>
-      <y_pos>355</y_pos>
-      <radius>200</radius>
-      <x_pos>98</x_pos>
-      <blur_amount>0</blur_amount>
+    <levelLight class="com.kobaj.level.LevelTypeLight.LevelAmbientLight">
       <active>true</active>
-      <id>0</id>
-      <color>-1</color>
-    </levelLight>
-    <levelLight class="com.kobaj.level.LevelAmbientLight">
-      <active>true</active>
-      <id>2</id>
+      <id>000x0</id>
       <color>-10197916</color>
     </levelLight>
-    <levelLight class="com.kobaj.level.LevelPointLight">
+    <levelLight class="com.kobaj.level.LevelTypeLight.LevelPointLight">
       <light_effect>pulse</light_effect>
       <is_bloom>false</is_bloom>
-      <y_pos>-52</y_pos>
-      <radius>100</radius>
-      <x_pos>399</x_pos>
+      <y_pos>-400</y_pos>
+      <x_pos>820</x_pos>
+      <radius>300</radius>
       <blur_amount>0</blur_amount>
       <active>true</active>
       <id>000x0</id>
-      <color>-39836</color>
+      <color>-13451521</color>
     </levelLight>
   </light_list>
   <event_list>
-  	<levelEvent>
-  		<this_event>right_arrow</this_event>
-  		<x_pos>200</x_pos>
-  		<y_pos>350</y_pos>
-  		<width>800</width>
-  		<height>200</height>
-  		<id>nope</id>
- 		<affected_object_ids>
-  			<String>none</String>
-  		</affected_object_ids>
-  	</levelEvent>
   </event_list>
-  <right_limit>1275</right_limit>
-  <bottom_limit>-50</bottom_limit>
-  <top_limit>550</top_limit>
-  <left_limit>200</left_limit>
+  <backdrop_color>0</backdrop_color>
+  <right_limit>1600</right_limit>
+  <bottom_limit>-700</bottom_limit>
+  <top_limit>750</top_limit>
+  <left_limit>-200</left_limit>
 </level>

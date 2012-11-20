@@ -16,6 +16,8 @@ import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Constants;
 import com.kobaj.opengldrawable.Quad.Quad;
 
+// funfact, HashMap.get is O(1) when there is no collision, and SparseArray.get is O(log n).
+// BUT HashMap makes a but load of garbage >.<
 public class Text
 {
 	// has set of quads
@@ -31,6 +33,7 @@ public class Text
 		double size = Constants.text_size * Constants.sd_scale;
 		
 		// new bitmap_buffer!
+		//bitmap_buffer = new SparseArray<Quad>();
 		bitmap_buffer = new SparseArray<Quad>();
 		
 		// begin by getting all our strings
@@ -118,7 +121,7 @@ public class Text
 				height += padding;
 				
 				// fullscale measurements
-				Bitmap bitmap_temp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+				Bitmap bitmap_temp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444);
 				Canvas canvas_temp = new Canvas(bitmap_temp);
 				
 				// finaly after all that, draw it

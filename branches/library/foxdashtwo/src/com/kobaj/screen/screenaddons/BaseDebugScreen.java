@@ -19,26 +19,33 @@ public class BaseDebugScreen
 	private boolean show_lights; //show lights or not
 	
 	public BaseDebugScreen(Level test_level, boolean only_outlines, boolean show_lights)
-	{
+	{	
 		outline_quads = new ArrayList<QuadColorShape>();
 		this.only_outlines = only_outlines;
 		this.show_lights = show_lights;
+	
+		if(test_level == null)
+			return;
 		
 		// lights
 		if(show_lights)
+			if(test_level.event_list != null)
 		for (int i = test_level.light_list.size() - 1; i >= 0; i--)
 			outline_quads.add(onMakeBoundingBox(test_level.light_list.get(i).quad_light));
 		
 		//events
+		if(test_level.event_list != null)
 		for (int i = test_level.event_list.size() - 1; i >= 0; i--)
 			outline_quads.add(onMakeBoundingBox(test_level.event_list.get(i).my_collision_rect));
 		
 		// object
 		if (only_outlines)
 		{
+			if(test_level.object_list != null)
 			for (int e = test_level.object_list.size() - 1; e >= 0; e--)
 				outline_quads.add(onMakeBoundingBox(test_level.object_list.get(e).quad_object));
 			
+			if(test_level.player != null)
 			outline_quads.add(onMakeBoundingBox(test_level.player.quad_object));
 		}
 		else
@@ -91,8 +98,8 @@ public class BaseDebugScreen
 	
 	private void onUpdateBoundingBox(Quad my_quad, int j)
 	{
-		onUpdateBoundingBox(my_quad.getXPos(), my_quad.getYPos() + my_quad.shader_height,
-				my_quad.getXPos() + my_quad.shader_width, my_quad.getYPos(), j);
+		onUpdateBoundingBox(my_quad.x_pos, my_quad.y_pos + my_quad.shader_height,
+				my_quad.x_pos + my_quad.shader_width, my_quad.y_pos, j);
 	}
 	
 	private void onUpdateBoundingBox(RectF bounding_box, int j)
@@ -116,8 +123,8 @@ public class BaseDebugScreen
 	
 	private QuadColorShape onMakeBoundingBox(Quad my_quad)
 	{
-		return onMakeBoundingBox((int) Functions.shaderXToScreenX(my_quad.getXPos()), (int) Functions.shaderYToScreenY(my_quad.getYPos() + my_quad.shader_height),
-				(int) Functions.shaderXToScreenX(my_quad.getXPos() + my_quad.shader_width), (int) Functions.shaderYToScreenY(my_quad.getYPos()));
+		return onMakeBoundingBox((int) Functions.shaderXToScreenX(my_quad.x_pos), (int) Functions.shaderYToScreenY(my_quad.y_pos + my_quad.shader_height),
+				(int) Functions.shaderXToScreenX(my_quad.x_pos + my_quad.shader_width), (int) Functions.shaderYToScreenY(my_quad.y_pos));
 	}
 	
 	private QuadColorShape onMakeBoundingBox(RectF bounding_box)
