@@ -16,12 +16,10 @@ public class BaseInteractionScreen
 		boolean can_jump = false;
 		
 		Constants.physics.integrate_physics(delta, test_level.player.quad_object);
+		
 		for (int i = test_level.object_list.size() - 1; i >= 0; i--)
-		{
-			boolean temp = Constants.physics.check_collision(test_level.player.quad_object, test_level.object_list.get(i).quad_object, 0);
-			if (temp)
+			if(Constants.physics.check_collision(test_level.player.quad_object, test_level.object_list.get(i).quad_object, 0))
 				can_jump = true;
-		}
 		
 		return can_jump;
 	}
@@ -85,8 +83,8 @@ public class BaseInteractionScreen
 	private void setCameraXY(final Level test_level)
 	{
 		// prepare camera
-		double x_camera = test_level.player.quad_object.getXPos();
-		double y_camera = test_level.player.quad_object.getYPos();
+		double x_camera = test_level.player.quad_object.x_pos;
+		double y_camera = test_level.player.quad_object.y_pos;
 		
 		// restrict camera movement
 		double x_buffer = Constants.ratio * Constants.z_shader_translation;

@@ -30,7 +30,6 @@ public class GLBitmapReader
 	// in case context is lost
 	public static void resetLoadedTextures()
 	{
-		// forced to use an iterator
 		int[] temp = new int[loaded_textures.size()];
 		for (int i = loaded_textures.size() - 1; i >= 0; i--)
 			temp[i] = loaded_textures.valueAt(i).texture_id;
@@ -71,7 +70,7 @@ public class GLBitmapReader
 			opts.inPurgeable = true;
 			
 			// Load up, and flip the texture:
-			final Bitmap temp = BitmapFactory.decodeResource(com.kobaj.math.Constants.resources, resource, opts);
+			Bitmap temp = BitmapFactory.decodeResource(com.kobaj.math.Constants.resources, resource, opts);
 			
 			loadTextureFromBitmap(resource, temp);
 		}
@@ -93,7 +92,7 @@ public class GLBitmapReader
 					// see if its a duplicate
 					if (loaded_item.bitmap_hash != my_etc1.getETC1Hash(resource))
 						Log.e("loading_collision",
-								": loadTextureFromBitmap There was a collision with texture. Resource ID: " + resource + " ... " + loaded_item.bitmap_hash + ": " + my_etc1.getETC1Hash(resource));
+								": loadTextureFromBitmap There was a collision with compressed texture. Resource ID: " + resource + " ... " + loaded_item.bitmap_hash + ": " + my_etc1.getETC1Hash(resource));
 					
 					// don't overwrite
 					return;
@@ -102,8 +101,6 @@ public class GLBitmapReader
 				// prepair our entry
 				GLLoadedTexture load = new GLLoadedTexture();
 				load.resource_id = resource;
-				load.height = -1;
-				load.width = -1;
 				load.bitmap_hash = my_etc1.getETC1Hash(resource);
 				
 				load.texture_id = my_etc1.loadETC1(resource);
@@ -114,54 +111,54 @@ public class GLBitmapReader
 		});
 	}
 	
-	public static void loadTextureFromBitmap(final int resource, final Bitmap temp)
+	public static void loadTextureFromBitmap(final int resource, Bitmap temp)
 	{
+		final int hash = temp.hashCode();
+		
+		// flip it the right way around.
+		Matrix flip = new Matrix();
+		flip.postScale(1f, -1f);
+		
+		final int original_width = temp.getWidth();
+		final int original_height = temp.getHeight();
+		
+		Bitmap bmp1 = Bitmap.createBitmap(temp, 0, 0, original_width, original_height, flip, true);
+		temp.recycle();
+		temp = null;
+		
+		int square_width = com.kobaj.math.Functions.nearestPowerOf2(bmp1.getWidth());
+		int square_height = com.kobaj.math.Functions.nearestPowerOf2(bmp1.getHeight());
+		
+		int new_size = Math.max(square_width, square_height);
+		
+		final Bitmap bmp = Bitmap.createBitmap(new_size, new_size, Bitmap.Config.ARGB_8888);
+		Canvas temp_canvas = new Canvas(bmp);
+		temp_canvas.drawBitmap(bmp1, 0, new_size - original_height, new Paint());
+		
+		bmp1.recycle();
+		bmp1 = null;
+		
 		FoxdashtwoActivity.mGLView.queueEvent(new Runnable()
 		{
 			public void run()
 			{
 				// get an item from our loaded resources (to see if this is a duplicate entry and thus can be skipped).
 				GLLoadedTexture loaded_item = loaded_textures.get(resource);
-				int hash = temp.hashCode();
 				if (loaded_item != null)
 				{
 					// see if its a duplicate
-					if (loaded_item.width != temp.getWidth() || loaded_item.height != temp.getHeight() || loaded_item.bitmap_hash != hash)
+					if (loaded_item.bitmap_hash != hash)
 						Log.e("loading_collision", ": loadTextureFromBitmap There was a collision with texture. Resource ID: " + resource + " ... " + loaded_item.bitmap_hash + ": " + hash);
 					
 					// don't overwrite
 					return;
 				}
 				
-				// flip it the right way around.
-				Matrix flip = new Matrix();
-				flip.postScale(1f, -1f);
-				
-				int original_width = temp.getWidth();
-				int original_height = temp.getHeight();
-				int original_hash = hash;
-				
-				Bitmap bmp1 = Bitmap.createBitmap(temp, 0, 0, original_width, original_height, flip, true);
-				temp.recycle();
-				
-				int square_width = com.kobaj.math.Functions.nearestPowerOf2(bmp1.getWidth());
-				int square_height = com.kobaj.math.Functions.nearestPowerOf2(bmp1.getHeight());
-				
-				int new_size = Math.max(square_width, square_height);
-				
-				Bitmap bmp = Bitmap.createBitmap(new_size, new_size, Bitmap.Config.ARGB_8888);
-				Canvas temp_canvas = new Canvas(bmp);
-				temp_canvas.drawBitmap(bmp1, 0, new_size - original_height, new Paint());
-				
-				bmp1.recycle();
-				
 				// make a loader
 				// put out info into someplace safe.
 				GLLoadedTexture load = new GLLoadedTexture();
 				load.resource_id = resource;
-				load.height = original_height;
-				load.width = original_width;
-				load.bitmap_hash = original_hash;
+				load.bitmap_hash = hash;
 				
 				// In which ID will we be storing this texture?
 				int id = newTextureID();
