@@ -72,7 +72,7 @@ public class SinglePlayerScreen extends BaseScreen
 		// control input
 		my_modifier.onInitialize();
 		
-		// debug_addon = new BaseDebugScreen(test_level, true, false);
+		//debug_addon = new BaseDebugScreen(test_level, false, false);
 	}
 	
 	@Override
@@ -117,7 +117,7 @@ public class SinglePlayerScreen extends BaseScreen
 		test_level.onDrawConstant();
 		
 		// draw some helpful bounding boxes
-		// debug_addon.onDrawObject(test_level);
+		//debug_addon.onDrawObject(test_level);
 		
 		// draw the controls
 		my_modifier.onDraw();

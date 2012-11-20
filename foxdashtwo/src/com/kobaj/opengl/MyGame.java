@@ -104,12 +104,8 @@ public class MyGame extends MyGLRender
 		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA); // no see thru
 		if(scene.beginRenderToTexture())
 		{	
-			GLES20.glEnable(GLES20.GL_DEPTH_TEST);
-			
 			//put opaque items here
 			currently_active_screen.onDrawObject();
-			
-			GLES20.glDisable(GLES20.GL_DEPTH_TEST);
 		}
 		scene.endRenderToTexture();
 	

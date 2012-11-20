@@ -63,11 +63,11 @@ public class QuadRenderTo extends Quad
 		// Set all of our texture parameters:
 		GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_REPEAT);
 		GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_REPEAT);
-		GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
-		GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
+		GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_NEAREST);
+		GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_NEAREST);
 		
 		// Push the bitmap onto the GPU
-		Bitmap my_temp = Bitmap.createBitmap(texW, texH, Bitmap.Config.RGB_565);
+		Bitmap my_temp = Bitmap.createBitmap(texW, texH, Bitmap.Config.ARGB_8888);
 		GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, my_temp, 0);
 		my_temp.recycle();
 		my_temp = null;

@@ -69,4 +69,37 @@ public class RectFExtended
 		half_height = new_half_height;
 		setPositionWithOffset(x_pos, y_pos);
 	}
+	
+	//rotates by 90 degrees only.
+	public void rotate(double degree)
+	{
+		if(degree < 0)
+			return;
+		if(degree > 360)
+			return;
+		
+		final double orig_half_width = half_width;
+		final double orig_half_height = half_height;
+		
+		if(degree >= 45 && degree <= 135)
+		{
+			half_width = orig_half_height;
+			half_height = orig_half_width;
+			
+			x_offset = -x_offset;
+		}
+		else if(degree > 135 && degree < 225)
+		{
+			x_offset = -x_offset;
+			y_offset = -y_offset;
+		}
+		else if(degree >= 225 && degree < 315)
+		{
+			half_width = orig_half_height;
+			half_height = orig_half_width;
+			y_offset = -y_offset;
+		}
+		
+		setPositionWithOffset(x_pos, y_pos);
+	}
 }
