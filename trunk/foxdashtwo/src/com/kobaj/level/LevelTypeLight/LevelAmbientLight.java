@@ -14,11 +14,7 @@ public class LevelAmbientLight
 	public boolean active;
 	
 	@Element
-	private String id = "unset"; //identifier. 
-	public final String getID()
-	{
-		return id;
-	}
+	public String id = "unset"; //identifier. 
 	
 	@Element
 	public int color;

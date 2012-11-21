@@ -83,10 +83,12 @@ function redraw()
 	context.fillRect(0,0,width,height);
 	context.fill();
 	
-	//draw objects
+	// draw objects
+	// as innefficiently as possible yay!
 	if($('#object_check').is(':checked'))
+	for(var e = 9; e >= 0; e--)
 	for(var i = 0; i < objects_array.length; i++)
-		objects_array[i].draw();
+		objects_array[i].draw(e);
 	
 	//draw lights
 	if($('#light_check').is(':checked'))
@@ -175,6 +177,11 @@ function drawRectwh(x1, y1, width, height, color, degree, scale)
 	if(scale == undefined)
 		scale = 1;
 	
+	degree = -degree;
+	
+	var before_width = width;
+	var before_height = height;
+	
 	width = width * scale;
 	height = height * scale;
 	
@@ -190,7 +197,7 @@ function drawRectwh(x1, y1, width, height, color, degree, scale)
 	
 	//begin rotation
 	context.save();
-	context.translate(x1 + width / 2.0 + width * (1 - scale), y1 - height / 2.0 - height * (1 - scale));
+	context.translate(x1 + (before_width / 2.0), y1 - before_height / 2.0);
 	context.rotate(degree * Math.PI / 180);
 	
 	// draw your object
@@ -247,6 +254,8 @@ function drawMyImageRotation(img, x1, y1, width, height, degree, scale)
 	if(scale == undefined)
 		scale = 1;
 	
+	degree = -degree;
+	
 	width = width * scale;
 	height = height * scale;
 	
@@ -262,7 +271,7 @@ function drawMyImageRotation(img, x1, y1, width, height, degree, scale)
 	
 	//begin rotation
 	context.save();
-	context.translate(x1 + width / 2.0 + width * (1 - scale), y1 - height / 2.0 - height * (1 - scale));
+	context.translate(x1 + width / 2.0, y1 - height / 2.0);
 	context.rotate(degree * Math.PI / 180);
 	
 	if(squareOnScreen(x1, y1, width, height))

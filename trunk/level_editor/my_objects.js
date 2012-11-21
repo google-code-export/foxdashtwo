@@ -15,8 +15,11 @@ function my_objects(x, y, width, height, type, i)
 	this.object_name_id = '000x0';
 }
 
-my_objects.prototype.draw = function()
+my_objects.prototype.draw = function(e)
 {
+	if(this.z_plane != e)
+		return;
+	
 	//draw bounding box
 	if(this.selected)
 		drawBoxwh(this.x - 5, this.y - 5, this.width + 10, this.height + 10, purpleFill);
