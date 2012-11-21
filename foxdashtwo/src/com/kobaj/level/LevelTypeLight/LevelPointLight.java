@@ -33,7 +33,7 @@ public class LevelPointLight extends LevelBloomLight
 	{
 		if (light_effect == EnumLightEffect.none)
 			return;
-		else if (!com.kobaj.math.Functions.onShader(quad_light.phys_rect_list))
+		else if (!com.kobaj.math.Functions.onShader(quad_light.best_fit_aabb))
 			return;
 		else if (light_effect == EnumLightEffect.pulse)
 		{

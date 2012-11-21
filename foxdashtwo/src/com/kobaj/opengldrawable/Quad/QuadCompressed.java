@@ -88,7 +88,7 @@ public class QuadCompressed extends Quad
 			return;
 		
 		// If on screen, draw.
-		if (skip_draw_check || com.kobaj.math.Functions.onShader(phys_rect_list))
+		if (skip_draw_check || com.kobaj.math.Functions.onShader(best_fit_aabb))
 		{
 			onSetupAmbient(my_view_matrix, my_proj_matrix, color, Constants.compressed_light);
 			

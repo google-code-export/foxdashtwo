@@ -27,12 +27,7 @@ public class LevelEvent
 	@Element
 	public double height; // screen
 	@Element
-	private String id = "unset"; // identifier.
-	
-	public final String getID()
-	{
-		return id;
-	}
+	public String id = "unset"; // identifier.
 	
 	@ElementList
 	public ArrayList<String> affected_object_strings;

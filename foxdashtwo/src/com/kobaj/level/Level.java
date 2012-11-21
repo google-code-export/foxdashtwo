@@ -102,6 +102,27 @@ public class Level
 			event_list.get(i).onInitialize();
 			if (event_list.get(i).this_event == EnumLevelEvent.send_to_start)
 				LevelEventTransportPlayer.class.cast(event_list.get(i).my_possible_event).setTransportTo(x_player, y_player);
+			else if(event_list.get(i).this_event == EnumLevelEvent.invisible_wall)
+			{
+				LevelEvent original = event_list.get(i);
+				
+				LevelObject temp = new LevelObject();
+				temp.active = false;
+				temp.degree = 0;
+				temp.scale = 1;
+				temp.this_object = EnumLevelObject.transparent;
+				temp.id = original.id;
+				temp.x_pos = original.x_pos;
+				temp.y_pos = original.y_pos;
+				temp.width = original.width;
+				temp.height = original.height;
+				temp.z_plane = 5;
+				
+				temp.onInitialize();
+				
+				object_list.add(temp);
+				event_list.remove(i);
+			}
 		}
 		
 		// setup player

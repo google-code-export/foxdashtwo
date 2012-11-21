@@ -52,6 +52,11 @@ public class Quad
 	// phys rect is stored in shader coordinates
 	public ArrayList<RectFExtended> phys_rect_list = new ArrayList<RectFExtended>();
 	
+	// maximul AABB is calculated by the engine
+	// used to determine if an object is on screen
+	// also helpful in physics
+	public RectFExtended best_fit_aabb = new RectFExtended();
+	
 	// begin by holding these
 	public int width;
 	public int height;
@@ -257,18 +262,39 @@ public class Quad
 		my_position_matrix[12] = pos_tr_x; 	my_position_matrix[13] = neg_tr_y; 	my_position_matrix[14] = z_buffer;
 		my_position_matrix[15] = pos_tr_x; 	my_position_matrix[16] = pos_tr_y; 	my_position_matrix[17] = z_buffer;
 		
+		double x_maximul = Double.MIN_VALUE;
+		double y_maximul = Double.MIN_VALUE;
+		double x_minimul = Double.MAX_VALUE;
+		double y_minimul = Double.MAX_VALUE;
+		
 		// rotate and convert
 		for (int i = 0; i < 18; i = i + 3)
 		{
-			double tr_x1 = my_position_matrix[i];
-			double tr_y1 = my_position_matrix[i + 1];
+			// get coordinate
+			final double tr_x1 = my_position_matrix[i];
+			final double tr_y1 = my_position_matrix[i + 1];
 			
-			double tr_x2 = tr_x1 * cos_rads - tr_y1 * sin_rads;
-			double tr_y2 = tr_y1 * cos_rads + tr_x1 * sin_rads;
+			// apply transforms
+			final double tr_x2 = tr_x1 * cos_rads - tr_y1 * sin_rads;
+			final double tr_y2 = tr_y1 * cos_rads + tr_x1 * sin_rads;
 		
+			// set value
 			my_position_matrix[i] = (float) Functions.screenWidthToShaderWidth(tr_x2);
 			my_position_matrix[i + 1] = (float) Functions.screenHeightToShaderHeight(tr_y2);
+		
+			// calculate max and min
+			if(tr_x2 > x_maximul)
+				x_maximul = tr_x2;
+			if(tr_x2 < x_minimul)
+				x_minimul = tr_x2;
+			if(tr_y2 > y_maximul)
+				y_maximul = tr_y2;
+			if(tr_y2 < y_minimul)
+				y_minimul = tr_y2;
 		}
+		
+		// set our maximul aabb
+		best_fit_aabb.setExtendedRectF(x_minimul, y_maximul, x_maximul, y_minimul);
 		
 		// Initialize the buffers. and store the new coords
 		if (my_position == null)
@@ -276,10 +302,6 @@ public class Quad
 		else
 			my_position.clear();
 		my_position.put(my_position_matrix).position(0);
-		
-		//haha, I'm mad!! rotating an AABB
-		for(int i = phys_rect_list.size() - 1; i >= 0; i--)
-			phys_rect_list.get(i).rotate(degree);
 	}
 	
 	// these x and y are in shader space 0 to 1
@@ -408,7 +430,7 @@ public class Quad
 			return;
 		
 		// If on screen, draw.
-		if (skip_draw_check || com.kobaj.math.Functions.onShader(phys_rect_list))
+		if (skip_draw_check || com.kobaj.math.Functions.onShader(best_fit_aabb))
 		{
 			onSetupAmbient(my_view_matrix, my_proj_matrix, color, Constants.ambient_light);
 			

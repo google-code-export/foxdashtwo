@@ -1,7 +1,5 @@
 package com.kobaj.math;
 
-import java.util.ArrayList;
-
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.opengl.GLES20;
@@ -151,13 +149,12 @@ public class Functions
 		return false;
 	}
 	
-	public static final boolean onShader(ArrayList<RectFExtended> objects)
+	public static final boolean onShader(RectFExtended objects)
 	{
 		updateShaderRectFView();
 		
-		for (int i = objects.size() - 1; i >= 0; i--)
-			if (equalIntersects(objects.get(i).main_rect, shader_rectf_view))
-				return true;
+		if (equalIntersects(objects.main_rect, shader_rectf_view))
+			return true;
 		
 		return false;
 	}
