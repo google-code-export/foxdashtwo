@@ -9,6 +9,7 @@ import com.kobaj.loader.FileHandler;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 import com.kobaj.message.PopupManager;
+import com.kobaj.opengldrawable.Quad.QuadAnimated;
 import com.kobaj.screen.screenaddons.BaseDebugScreen;
 import com.kobaj.screen.screenaddons.BaseInteractionScreen;
 import com.kobaj.screen.screenaddons.BaseLoadingScreen;
@@ -50,6 +51,7 @@ public class SinglePlayerScreen extends BaseScreen
 		// grab from disk
 		boolean loaded = false;
 		String[] levels = FileHandler.getFileList();
+		if(levels != null)
 		for (String p : levels)
 			if (p.equalsIgnoreCase(save_file_name + format))
 			{

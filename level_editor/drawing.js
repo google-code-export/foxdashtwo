@@ -256,6 +256,9 @@ function drawMyImageRotation(img, x1, y1, width, height, degree, scale)
 	
 	degree = -degree;
 	
+	var before_width = width;
+	var before_height = height;
+	
 	width = width * scale;
 	height = height * scale;
 	
@@ -271,7 +274,7 @@ function drawMyImageRotation(img, x1, y1, width, height, degree, scale)
 	
 	//begin rotation
 	context.save();
-	context.translate(x1 + width / 2.0, y1 - height / 2.0);
+	context.translate(x1 + (before_width / 2.0), y1 - before_height / 2.0);
 	context.rotate(degree * Math.PI / 180);
 	
 	if(squareOnScreen(x1, y1, width, height))
