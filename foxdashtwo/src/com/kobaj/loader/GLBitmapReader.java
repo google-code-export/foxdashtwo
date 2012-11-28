@@ -9,10 +9,9 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.opengl.GLES20;
 import android.opengl.GLUtils;
-import android.util.Log;
 import android.util.SparseArray;
 
-import com.kobaj.foxdashtwo.FoxdashtwoActivity;
+import com.kobaj.foxdashtwo.GameActivity;
 import com.kobaj.openglgraphics.ETC1Extended;
 
 public class GLBitmapReader
@@ -78,7 +77,7 @@ public class GLBitmapReader
 	
 	public static void loadTextureFromETC1(final int resource)
 	{
-		FoxdashtwoActivity.mGLView.queueEvent(new Runnable()
+		GameActivity.mGLView.queueEvent(new Runnable()
 		{
 			public void run()
 			{
@@ -138,7 +137,7 @@ public class GLBitmapReader
 		bmp1.recycle();
 		bmp1 = null;
 		
-		FoxdashtwoActivity.mGLView.queueEvent(new Runnable()
+		GameActivity.mGLView.queueEvent(new Runnable()
 		{
 			public void run()
 			{
