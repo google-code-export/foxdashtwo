@@ -25,6 +25,35 @@ https://lh4.googleusercontent.com/-K_sqN0diyCg/UHTNzwTBeaI/AAAAAAAAAa8/ky6u3i6ui
 
 https://lh3.googleusercontent.com/-AFpB2DtBJhQ/UHTNzuRulpI/AAAAAAAAAa4/fml3llzHwdM/s200/Untitled.gif
 
+The XML to make an animation is as follows.
+{{{
+<frameAnimation>
+   <animation_set>
+      <entry>
+         <!-- Animations go here -->
+          
+         <!-- What is this animation called? -->
+         <enumGlobalAnimationList>stop</enumGlobalAnimationList>
+         <frameSet>
+            <!-- How many frames per second -->
+            <rec_fps>1.0</rec_fps>
+            <frame_list>
+                
+                <!-- Frames go here -->
+ 			<sprite n="frame_1.png" x="0" y="0" w="100" h="100"/>
+            
+            </frame_list>
+         </frameSet>
+
+      </entry>
+   </animation_set>
+</frameAnimation>
+}}}
+
+Which means you can use utilities like TexturePacker very easily to make animations.
+
+http://i.imgur.com/qJQDI.png
+
 ==Cut Scenes==
 Handled by moving the animations along a vector in engine, making things easy and there no need for rendering outside of the game.
 
