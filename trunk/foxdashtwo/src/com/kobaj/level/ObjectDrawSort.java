@@ -10,7 +10,9 @@ public class ObjectDrawSort implements Comparator<LevelObject>
 	{
 		if(object1.z_plane < object2.z_plane)
 			return -1;
-		else
+		else if(object1.z_plane > object2.z_plane)
 			return 1;
+		else 
+			return 0;
 	}
 }

@@ -90,10 +90,10 @@ public class GLBitmapReader
 				if (loaded_item != null)
 				{
 					// see if its a duplicate
-					if (loaded_item.bitmap_hash != my_etc1.getETC1Hash(resource))
+				/*	if (loaded_item.bitmap_hash != my_etc1.getETC1Hash(resource))
 						Log.e("loading_collision",
 								": loadTextureFromBitmap There was a collision with compressed texture. Resource ID: " + resource + " ... " + loaded_item.bitmap_hash + ": " + my_etc1.getETC1Hash(resource));
-					
+					*/
 					// don't overwrite
 					return;
 				}
@@ -147,9 +147,9 @@ public class GLBitmapReader
 				if (loaded_item != null)
 				{
 					// see if its a duplicate
-					if (loaded_item.bitmap_hash != hash)
+					/*if (loaded_item.bitmap_hash != hash)
 						Log.e("loading_collision", ": loadTextureFromBitmap There was a collision with texture. Resource ID: " + resource + " ... " + loaded_item.bitmap_hash + ": " + hash);
-					
+					*/
 					// don't overwrite
 					return;
 				}
