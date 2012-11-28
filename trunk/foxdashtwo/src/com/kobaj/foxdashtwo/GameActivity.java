@@ -3,6 +3,7 @@ package com.kobaj.foxdashtwo;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
@@ -13,12 +14,14 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 
 import com.kobaj.math.Constants;
+import com.kobaj.networking.EnumNetworkAction;
 
-public class GameActivity extends FragmentActivity
+public class GameActivity extends FragmentActivity implements com.kobaj.networking.NetworkManager.FinishedURLListener
 {
 	/** Called when the activity is first created. */
 	
 	private PowerManager.WakeLock wl;
+	public static ConnectivityManager cm;
 	
 	public static com.kobaj.opengl.MyGLSurfaceView mGLView;
 	
@@ -47,6 +50,9 @@ public class GameActivity extends FragmentActivity
 		// keeping the screen on
 		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK, "DoNotDimScreen");
+		
+		//networking state
+		cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 		
 		// volume controls
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
@@ -119,5 +125,11 @@ public class GameActivity extends FragmentActivity
 	{
 		com.kobaj.math.Constants.input_manager.eventUpdate(e);
 		return true;
+	}
+
+	public void onFinishedURL(String value, EnumNetworkAction action)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -104,13 +104,19 @@ public class Constants
 	public static final double max_brightness = 0.75;
 	public static final double min_brightness = 0.55;
 	
+	//text (obviously?)
 	public static Text text;
 	public static double text_size = 16.0; // all text is the same size (how lame!)
 	
+	//camera
 	public static float[] my_view_matrix = new float[16];
 	public static float[] my_proj_matrix = new float[16];
 	public static final float[] identity_matrix = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 };
 	
+	//lighting
 	public static AmbientLightShader ambient_light;
 	public static CompressedLightShader compressed_light;
+	
+	//networking 
+	public static final String main_url = "http://something.com";
 }

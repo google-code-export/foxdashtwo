@@ -1,15 +1,10 @@
 package com.kobaj.screen;
 
-import android.support.v4.app.DialogFragment;
-
 import com.kobaj.foxdashtwo.R;
-import com.kobaj.input.EnumKeyCodes;
 import com.kobaj.input.GameInputModifier;
 import com.kobaj.loader.FileHandler;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
-import com.kobaj.message.PopupManager;
-import com.kobaj.opengldrawable.Quad.QuadAnimated;
 import com.kobaj.screen.screenaddons.BaseDebugScreen;
 import com.kobaj.screen.screenaddons.BaseInteractionScreen;
 import com.kobaj.screen.screenaddons.BaseLoadingScreen;
@@ -90,13 +85,6 @@ public class SinglePlayerScreen extends BaseScreen
 		
 		// interaction
 		interaction_addon.onUpdate(delta, my_modifier, test_level);
-		
-		// let the user load a map
-		if (Constants.input_manager.getKeyPressed(EnumKeyCodes.back))
-		{
-			DialogFragment newFragment = new PopupManager();
-			newFragment.show(Constants.fragment_manager, "missiles");
-		}
 		
 		Functions.checkGlError();
 	}
