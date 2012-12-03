@@ -44,7 +44,7 @@ public class Level
 	@ElementList
 	public ArrayList<LevelAmbientLight> light_list; // all lights including blooms
 	
-	ArrayList<LevelBloomLight> bloom_light_list = new ArrayList<LevelBloomLight>(); // only blooms
+	private ArrayList<LevelBloomLight> bloom_light_list = new ArrayList<LevelBloomLight>(); // only blooms
 	
 	@Element
 	public LevelObject player;
@@ -57,9 +57,9 @@ public class Level
 	public void onInitialize()
 	{
 		// backdrop
-		if(backdrop_color != Color.TRANSPARENT)
+		if (backdrop_color != Color.TRANSPARENT)
 		{
-			my_backdrop = new QuadColorShape(1,1, backdrop_color, 0);
+			my_backdrop = new QuadColorShape(1, 1, backdrop_color, 0);
 			my_backdrop.setWidthHeight(Constants.width, Constants.height);
 			my_backdrop.z_pos -= (10.0 * Constants.z_modifier);
 		}
@@ -74,8 +74,8 @@ public class Level
 		for (int i = object_list.size() - 1; i >= 0; i--)
 			object_list.get(i).onInitialize();
 		
-		//sort the objects
-		 Collections.sort(object_list, new ObjectDrawSort());
+		// sort the objects
+		Collections.sort(object_list, new ObjectDrawSort());
 		
 		// setup lights
 		for (int i = light_list.size() - 1; i >= 0; i--)
@@ -88,10 +88,10 @@ public class Level
 				if (temp.is_bloom)
 					bloom_light_list.add(temp);
 			}
-			else if(LevelCustomLight.class.isAssignableFrom(light_list.get(i).getClass()))
+			else if (LevelCustomLight.class.isAssignableFrom(light_list.get(i).getClass()))
 			{
 				LevelCustomLight temp = LevelCustomLight.class.cast(light_list.get(i));
-				if(temp.is_bloom)
+				if (temp.is_bloom)
 					bloom_light_list.add(temp);
 			}
 		}
@@ -99,10 +99,10 @@ public class Level
 		// setup events
 		for (int i = event_list.size() - 1; i >= 0; i--)
 		{
-			event_list.get(i).onInitialize();
+			event_list.get(i).onInitialize(player, object_list, light_list);
 			if (event_list.get(i).this_event == EnumLevelEvent.send_to_start)
 				LevelEventTransportPlayer.class.cast(event_list.get(i).my_possible_event).setTransportTo(x_player, y_player);
-			else if(event_list.get(i).this_event == EnumLevelEvent.invisible_wall)
+			else if (event_list.get(i).this_event == EnumLevelEvent.invisible_wall)
 			{
 				LevelEvent original = event_list.get(i);
 				
@@ -144,16 +144,16 @@ public class Level
 			light_list.get(i).onUpdate(delta);
 		
 		for (int i = event_list.size() - 1; i >= 0; i--)
-			event_list.get(i).onUpdate(delta, player.quad_object);
+			event_list.get(i).onUpdate(delta);
 	}
 	
 	public void onDrawObject()
 	{
-		//backdrop
-		if(backdrop_color != Color.TRANSPARENT)
+		// backdrop
+		if (backdrop_color != Color.TRANSPARENT)
 			my_backdrop.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, Color.WHITE, true);
 		
-		//draw sorted
+		// draw sorted
 		for (int i = object_list.size() - 1; i >= 0; i--)
 			object_list.get(i).onDrawObject();
 		
@@ -167,12 +167,14 @@ public class Level
 	
 	public void onDrawLight()
 	{
+		// lights 
 		for (int i = light_list.size() - 1; i >= 0; i--)
 			light_list.get(i).onDrawLight();
 	}
 	
 	public void onDrawConstant()
 	{
+		// events
 		for (int i = event_list.size() - 1; i >= 0; i--)
 			event_list.get(i).onDraw();
 	}
@@ -228,8 +230,8 @@ public class Level
 		LevelEvent tempe = new LevelEvent();
 		tempe.height = 200;
 		tempe.width = 600;
-		tempe.affected_object_strings = new ArrayList<String>();
-		tempe.affected_object_strings.add("empty");
+		tempe.id_strings = new ArrayList<String>();
+		tempe.id_strings.add("empty");
 		tempe.x_pos = 0;
 		tempe.y_pos = 0;
 		

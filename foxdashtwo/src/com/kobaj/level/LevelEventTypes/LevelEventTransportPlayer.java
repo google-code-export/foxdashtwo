@@ -15,7 +15,7 @@ public class LevelEventTransportPlayer extends LevelEventBase
 	private double y_start;
 	
 	private boolean teleporting = false;
-	private double time_total = 4000; //4 seconds
+	private double time_total = 4000; // 4 seconds
 	private double time_elapsed = 0;
 	
 	public LevelEventTransportPlayer(EnumLevelEvent type)
@@ -29,24 +29,20 @@ public class LevelEventTransportPlayer extends LevelEventBase
 		x_destination = x;
 		y_destination = y;
 	}
-
+	
 	@Override
-	public void onInitialize()
+	public void onUpdate(double delta, boolean active)
 	{
+		Quad player = player_cache.quad_object;
 		
-	}
-
-	@Override
-	public void onUpdate(double delta, Quad player, boolean active)
-	{
-		if(active && !teleporting)
+		if (active && !teleporting)
 		{
 			teleporting = true;
 			x_start = player.x_pos;
 			y_start = player.y_pos;
 		}
 		
-		if(teleporting)
+		if (teleporting)
 		{
 			time_elapsed += delta;
 			
@@ -62,7 +58,7 @@ public class LevelEventTransportPlayer extends LevelEventBase
 			player.z_pos = -(1 + 0 * Constants.z_modifier);
 			player.setPos(x_current, y_current, EnumDrawFrom.center);
 			
-			if(time_elapsed >= time_total)
+			if (time_elapsed >= time_total)
 			{
 				player.z_pos = -(1 + 5 * Constants.z_modifier);
 				time_elapsed = 0;
@@ -70,12 +66,4 @@ public class LevelEventTransportPlayer extends LevelEventBase
 			}
 		}
 	}
-
-	@Override
-	public void onDraw()
-	{
-		// TODO Auto-generated method stub
-		
-	}
-	
 }

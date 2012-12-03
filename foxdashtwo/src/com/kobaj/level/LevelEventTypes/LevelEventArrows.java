@@ -6,6 +6,8 @@ import com.kobaj.foxdashtwo.R;
 import com.kobaj.foxdashtwo.UserSettings;
 import com.kobaj.input.InputType.EnumInputType;
 import com.kobaj.level.EnumLevelEvent;
+import com.kobaj.level.LevelObject;
+import com.kobaj.level.LevelTypeLight.LevelAmbientLight;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.EnumDrawFrom;
@@ -31,8 +33,10 @@ public class LevelEventArrows extends LevelEventBase
 	}
 	
 	@Override
-	public void onInitialize()
+	public void onInitialize(LevelObject player, ArrayList<LevelObject> objects, ArrayList<LevelAmbientLight> lights, ArrayList<String> id_strings)
 	{
+		super.onInitialize(player, objects, lights, id_strings);
+		
 		// drawable
 		// all the different types of level events
 		if (this_event == EnumLevelEvent.left_arrow || this_event == EnumLevelEvent.right_arrow)
@@ -78,7 +82,7 @@ public class LevelEventArrows extends LevelEventBase
 	}
 	
 	@Override
-	public void onUpdate(double delta, Quad player, boolean active)
+	public void onUpdate(double delta, boolean active)
 	{
 		if (active || brightness != 0)
 		{
@@ -97,7 +101,7 @@ public class LevelEventArrows extends LevelEventBase
 	@Override
 	public void onDraw()
 	{
-		if(brightness == 0)
+		if (brightness == 0)
 			return;
 		
 		int first_color = Functions.makeColor(255, 255, 255, (int) (255 * brightness));

@@ -5,12 +5,13 @@ import java.util.ArrayList;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
 
+import com.kobaj.level.LevelEventTypes.LevelEventActive;
 import com.kobaj.level.LevelEventTypes.LevelEventArrows;
 import com.kobaj.level.LevelEventTypes.LevelEventBase;
 import com.kobaj.level.LevelEventTypes.LevelEventTransportPlayer;
+import com.kobaj.level.LevelTypeLight.LevelAmbientLight;
 import com.kobaj.math.Functions;
 import com.kobaj.math.android.RectF;
-import com.kobaj.opengldrawable.Quad.Quad;
 
 public class LevelEvent
 {
@@ -30,49 +31,57 @@ public class LevelEvent
 	public String id = "unset"; // identifier.
 	
 	@ElementList
-	public ArrayList<String> affected_object_strings;
+	public ArrayList<String> id_strings;
 	
 	// my elements
 	public RectF my_collision_rect;
-	
 	public LevelEventBase my_possible_event;
 	
-	public void onInitialize()
-	{
+	protected LevelObject player_cache;
+	
+	public void onInitialize(LevelObject player, ArrayList<LevelObject> objects, ArrayList<LevelAmbientLight> lights)
+	{		
+		//nice reference to our player
+		player_cache = player;
+		
 		// bottom left
 		my_collision_rect = new RectF((float) Functions.screenXToShaderX(x_pos), (float) (Functions.screenYToShaderY(y_pos + height)), (float) (Functions.screenXToShaderX(x_pos + width)),
 				(float) Functions.screenYToShaderY(y_pos));
 		
-		if(this_event == EnumLevelEvent.left_arrow ||
-				this_event == EnumLevelEvent.right_arrow ||
-				this_event == EnumLevelEvent.up_arrow)
+		if (this_event == EnumLevelEvent.left_arrow || this_event == EnumLevelEvent.right_arrow || this_event == EnumLevelEvent.up_arrow)
 			my_possible_event = new LevelEventArrows(this_event);
-		else if(this_event == EnumLevelEvent.send_to_start)
-		{
+		else if (this_event == EnumLevelEvent.send_to_start)
 			my_possible_event = new LevelEventTransportPlayer(this_event);
-		}
+		else if (this_event == EnumLevelEvent.active_off ||
+				 this_event == EnumLevelEvent.active_on ||
+				 this_event == EnumLevelEvent.active_anti_touch ||
+				 this_event == EnumLevelEvent.active_touch ||
+				 this_event == EnumLevelEvent.active_toggle)
+			my_possible_event = new LevelEventActive(this_event);
 		
-		if(my_possible_event != null)
-			my_possible_event.onInitialize();
+		if (my_possible_event != null)
+			my_possible_event.onInitialize(player, objects, lights, id_strings);
 	}
 	
-	public void onUpdate(double delta, Quad player)
+	public void onUpdate(double delta)
 	{
-		boolean active = false;
-		for (int i = player.phys_rect_list.size() - 1; i >= 0; i--)
-			if (Functions.equalIntersects(player.phys_rect_list.get(i).main_rect, my_collision_rect))
-			{
-				active = true;
-				break;
-			}
+		if (my_possible_event != null)
+		{
+			boolean active = false;
+			for (int i = player_cache.quad_object.phys_rect_list.size() - 1; i >= 0; i--)
+				if (Functions.equalIntersects(player_cache.quad_object.phys_rect_list.get(i).main_rect, my_collision_rect))
+				{
+					active = true;
+					break;
+				}
 		
-		if(my_possible_event != null)
-			my_possible_event.onUpdate(delta, player, active);
+			my_possible_event.onUpdate(delta, active);
+		}
 	}
 	
 	public void onDraw()
 	{
-		if(my_possible_event != null)
+		if (my_possible_event != null)
 			my_possible_event.onDraw();
 	}
 }

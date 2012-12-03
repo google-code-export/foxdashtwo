@@ -4,36 +4,34 @@ import org.simpleframework.xml.Element;
 
 import android.graphics.Color;
 
+import com.kobaj.level.LevelEntityActive;
 import com.kobaj.math.Constants;
 import com.kobaj.opengldrawable.Quad.Quad;
 import com.kobaj.opengldrawable.Quad.QuadColorShape;
 
-public class LevelAmbientLight
+public class LevelAmbientLight extends LevelEntityActive
 {
 	@Element
-	public boolean active;
-	
-	@Element
-	public String id = "unset"; //identifier. 
+	public String id = "unset"; // identifier.
 	
 	@Element
 	public int color;
 	
 	public Quad quad_light;
-
+	
 	public void onInitialize()
 	{
 		quad_light = new QuadColorShape(0, com.kobaj.math.Constants.height, com.kobaj.math.Constants.width, 0, color, 0);
 	}
-
+	
 	public void onUpdate(double delta)
 	{
-		// do nothing.	
+		// do nothing.
 	}
 	
 	public void onDrawLight()
 	{
-		if(active)
+		if (active)
 			quad_light.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, Color.WHITE, true);
 	}
 }
