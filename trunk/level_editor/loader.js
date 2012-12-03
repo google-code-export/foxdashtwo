@@ -120,12 +120,12 @@ function getLevelDefinition(thisthis)
 		def += '      <width>' + events_array[o].width + '</width>\n';
 		def += '      <height>' + events_array[o].height + '</height>\n';
 
-		def += '      <affected_object_strings>\n';
+		def += '      <id_strings>\n';
 		var strings_array = events_array[o].affected_strings.split(',');
 		if (strings_array.length > 0)
 			for (n in strings_array)
 				def += '        <String>' + $.trim(n) + '</String>\n';
-		def += '      </affected_object_strings>\n';
+		def += '      </id_strings>\n';
 
 		def += '    </levelEvent>\n';
 	}
@@ -269,7 +269,13 @@ function levelChanged(level)
 				temp.event_name_id = ($(this).find("id").text() ? $(this).find("id").text() : "000x0")
 
 				var strings_array = new Array();
-				$(this).find("affected_object_strings").each(function()
+				
+				// because I keep changing things...
+				var id_strings = $(this).find("id_strings");
+				if(id_strings.length == 0)
+					id_strings = $(this).find("affected_object_strings");
+				
+				id_strings.each(function()
 				{
 					strings_array.push($(this).find("String").text());
 				})

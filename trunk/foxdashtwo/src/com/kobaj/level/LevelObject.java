@@ -14,7 +14,7 @@ import com.kobaj.opengldrawable.Quad.Quad;
 import com.kobaj.opengldrawable.Quad.QuadColorShape;
 import com.kobaj.opengldrawable.Quad.QuadCompressed;
 
-public class LevelObject
+public class LevelObject extends LevelEntityActive
 {
 	@Element
 	public EnumLevelObject this_object;
@@ -30,8 +30,6 @@ public class LevelObject
 	public double scale;
 	@Element
 	public double degree;
-	@Element
-	public boolean active; // render or not?
 	@Element
 	public String id = "unset"; // identifier.
 	
