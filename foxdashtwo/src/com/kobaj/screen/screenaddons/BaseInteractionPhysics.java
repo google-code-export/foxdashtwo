@@ -6,7 +6,7 @@ import com.kobaj.math.AverageMaker;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 
-public class BaseInteractionScreen
+public class BaseInteractionPhysics
 {
 	// camera zoom
 	private AverageMaker my_camera_average = new AverageMaker(20);

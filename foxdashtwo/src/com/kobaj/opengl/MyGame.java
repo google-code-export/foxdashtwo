@@ -3,6 +3,7 @@ package com.kobaj.opengl;
 import android.graphics.Color;
 import android.opengl.GLES20;
 
+import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.EnumDrawFrom;
@@ -80,16 +81,32 @@ public class MyGame extends MyGLRender
 		
 		if(draw_fps)
 		{
-		//fps
-			int color = Color.BLUE;
+			//fps
+			int fps_color = Color.BLUE;
 			if(fps.fps < 60)
-				color = Color.GREEN;
+				fps_color = Color.GREEN;
 			if(fps.fps < 45)
-				color = Color.YELLOW;
+				fps_color = Color.YELLOW;
 			if(fps.fps < 30)
-				color = Color.RED;
-		
-			Constants.text.drawNumber(fps.fps, Functions.screenXToShaderX(25), Functions.screenYToShaderY((int)Functions.fix_y(25)), EnumDrawFrom.top_left, color);
+				fps_color = Color.RED;
+			
+			int oos_color = Color.RED;
+			if(Constants.objects_drawn_screen < 50)
+				oos_color = Color.YELLOW;
+			if(Constants.objects_drawn_screen < 35)
+				oos_color = Color.GREEN;
+			if(Constants.objects_drawn_screen < 20)
+				oos_color = Color.BLUE;
+			
+			double x_pos = Functions.screenXToShaderX(100);
+			double y_pos = Functions.screenYToShaderY((int)Functions.fix_y(50));
+			
+			Constants.text.drawText(R.string.fps, x_pos, y_pos, EnumDrawFrom.bottom_right);
+			Constants.text.drawNumber(fps.fps, x_pos, y_pos, EnumDrawFrom.bottom_left, fps_color);
+			
+			Constants.text.drawText(R.string.oos, x_pos, y_pos, EnumDrawFrom.top_right);
+			Constants.text.drawNumber(Constants.objects_drawn_screen, x_pos, y_pos, EnumDrawFrom.top_left, oos_color);
+			Constants.objects_drawn_screen = 0;
 		}
 	}
 	

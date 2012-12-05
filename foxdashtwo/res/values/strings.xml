@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    
+    <!-- general -->
     <string name="hello">Hello World,\nFoxdashtwoActivity!</string>
     <string name="app_name">Fox Dash Two</string>
     <string name="loading">Loading</string>
+    
+    <!-- metrics -->
+    <string name="fps">FPS:</string>
+    <string name="oos">OOS:</string>
     
     <!-- input -->
     <string name="left">Left</string>
@@ -20,9 +26,10 @@
     <string name="alert_dialog_cancel">Cancel</string>
     <string name="alert_dialog_xml">Do you have some XML?</string>
     
-    <!-- annoying, but you have to put your string name here too -->
+    <!-- annoying, but you have to put your string name here too if you want to draw it in game -->
     <string-array name="my_sa">
-        <item>hello</item>
+        <item>fps</item>
+        <item>oos</item>
         <item>app_name</item>
         <item>loading</item>
         <item>left</item>
