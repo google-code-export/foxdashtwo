@@ -6,8 +6,9 @@ import com.kobaj.loader.FileHandler;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 import com.kobaj.screen.screenaddons.BaseDebugScreen;
-import com.kobaj.screen.screenaddons.BaseInteractionScreen;
+import com.kobaj.screen.screenaddons.BaseInteractionPhysics;
 import com.kobaj.screen.screenaddons.BaseLoadingScreen;
+import com.kobaj.screen.screenaddons.EnumDebugType;
 
 public class SinglePlayerScreen extends BaseScreen
 {
@@ -20,7 +21,7 @@ public class SinglePlayerScreen extends BaseScreen
 	// addons
 	BaseDebugScreen debug_addon;
 	BaseLoadingScreen loading_addon;
-	BaseInteractionScreen interaction_addon;
+	BaseInteractionPhysics interaction_addon;
 	
 	// may be deleted later
 	public static final String save_file_name = "external_level";
@@ -41,7 +42,7 @@ public class SinglePlayerScreen extends BaseScreen
 	{
 		// load our addons. Do the loader first
 		loading_addon = new BaseLoadingScreen();
-		interaction_addon = new BaseInteractionScreen();
+		interaction_addon = new BaseInteractionPhysics();
 		
 		// grab from disk
 		boolean loaded = false;
@@ -69,7 +70,9 @@ public class SinglePlayerScreen extends BaseScreen
 		// control input
 		my_modifier.onInitialize();
 		
-		//debug_addon = new BaseDebugScreen(test_level, false, false);
+		debug_addon = new BaseDebugScreen(test_level, EnumDebugType.aabb);
+		
+		System.gc();
 	}
 	
 	@Override
@@ -85,6 +88,8 @@ public class SinglePlayerScreen extends BaseScreen
 		
 		// interaction
 		interaction_addon.onUpdate(delta, my_modifier, test_level);
+		
+		debug_addon.onUpdate(delta, test_level);
 		
 		Functions.checkGlError();
 	}
@@ -105,9 +110,8 @@ public class SinglePlayerScreen extends BaseScreen
 	public void onDrawConstant()
 	{
 		test_level.onDrawConstant();
-		
-		// draw some helpful bounding boxes
-		//debug_addon.onDrawObject(test_level);
+	
+		debug_addon.onDrawObject();
 		
 		// draw the controls
 		my_modifier.onDraw();

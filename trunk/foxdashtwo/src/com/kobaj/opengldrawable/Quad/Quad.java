@@ -55,15 +55,18 @@ public class Quad
 	// maximul AABB is calculated by the engine
 	// used to determine if an object is on screen
 	// also helpful in physics
+	// stored in shader coordinates
 	public RectFExtended best_fit_aabb = new RectFExtended();
 	
 	// begin by holding these
+	// should be read only to outside classes...
 	public int width;
 	public int height;
 	public double shader_width;
 	public double shader_height;
 	public int square;
-	private double scale_value = 1.0;
+	public double scale_value = 1.0;
+	public double degree = 0;
 	
 	// data about the quad
 	private float[] my_position_matrix = new float[18];
@@ -78,6 +81,11 @@ public class Quad
 	protected int my_texture_data_handle = -1;
 	protected int texture_resource = -1;
 	
+	// this is a temporary bitmap that holds onto a bitmap that is passed in
+	// just long enough so that it gets loaded onto the gpu
+	// then it gets disposed.
+	private Bitmap nullify_me; 
+	
 	// constructores
 	protected Quad()
 	{
@@ -90,8 +98,6 @@ public class Quad
 		com.kobaj.loader.GLBitmapReader.loadTextureFromResource(texture_resource, false);
 		onCreate(texture_resource, width, height);
 	}
-	
-	private Bitmap nullify_me;
 	
 	public Quad(int texture_resource, Bitmap bmp, int width, int height)
 	{
@@ -130,7 +136,7 @@ public class Quad
 		// set our texture resource
 		this.texture_resource = texture_resource;
 		
-		// position data
+		// width height data
 		setWidthHeight(width, height);
 		
 		// texture data
@@ -221,6 +227,8 @@ public class Quad
 		if(scale_value < 0 || scale_value > 1)
 			scale_value = 1;
 		
+		this.degree = degree;
+		
 		final double old_scale_value = this.scale_value;
 		final double scale_factor = (scale_value / old_scale_value);
 		this.scale_value = scale_value;
@@ -275,12 +283,12 @@ public class Quad
 			final double tr_y1 = my_position_matrix[i + 1];
 			
 			// apply transforms
-			final double tr_x2 = tr_x1 * cos_rads - tr_y1 * sin_rads;
-			final double tr_y2 = tr_y1 * cos_rads + tr_x1 * sin_rads;
+			final double tr_x2 = Functions.screenWidthToShaderWidth(tr_x1 * cos_rads - tr_y1 * sin_rads);
+			final double tr_y2 = Functions.screenHeightToShaderHeight(tr_y1 * cos_rads + tr_x1 * sin_rads);
 		
 			// set value
-			my_position_matrix[i] = (float) Functions.screenWidthToShaderWidth(tr_x2);
-			my_position_matrix[i + 1] = (float) Functions.screenHeightToShaderHeight(tr_y2);
+			my_position_matrix[i] = (float) tr_x2;
+			my_position_matrix[i + 1] = (float) tr_y2;
 		
 			// calculate max and min
 			if(tr_x2 > x_maximul)
@@ -295,12 +303,14 @@ public class Quad
 		
 		// set our maximul aabb
 		best_fit_aabb.setExtendedRectF(x_minimul, y_maximul, x_maximul, y_minimul);
+		best_fit_aabb.setPositionWithOffset(x_pos, y_pos);
 		
 		// Initialize the buffers. and store the new coords
 		if (my_position == null)
 			my_position = ByteBuffer.allocateDirect(my_position_matrix.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
 		else
 			my_position.clear();
+		
 		my_position.put(my_position_matrix).position(0);
 	}
 	
@@ -339,6 +349,7 @@ public class Quad
 		}
 		
 		// set the rectangle
+		best_fit_aabb.setPositionWithOffset(x_pos, y_pos);
 		for (int i = phys_rect_list.size() - 1; i >= 0; i--)
 			phys_rect_list.get(i).setPositionWithOffset(x_pos, y_pos);
 	}
@@ -414,6 +425,7 @@ public class Quad
 	// main stuffs
 	protected void onDraw()
 	{
+		Constants.objects_drawn_screen++;
 		GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 6);
 	}
 	

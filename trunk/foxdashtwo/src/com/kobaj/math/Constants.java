@@ -119,4 +119,7 @@ public class Constants
 	
 	//networking 
 	public static final String main_url = "http://something.com";
+	
+	//metrics
+	public static int objects_drawn_screen = 0;
 }

@@ -1,7 +1,5 @@
 package com.kobaj.screen.screenaddons;
 
-import android.graphics.Color;
-
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
@@ -60,7 +58,7 @@ public class BaseLoadingScreen
 			setPosition(my_shapes[i], i);
 			
 			// draw them all
-			my_shapes[i].onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, Color.WHITE, true);
+			my_shapes[i].onDrawAmbient();
 		}
 		
 		// draw some text

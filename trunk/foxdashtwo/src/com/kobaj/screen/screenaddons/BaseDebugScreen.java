@@ -2,12 +2,9 @@ package com.kobaj.screen.screenaddons;
 
 import java.util.ArrayList;
 
-import android.graphics.Color;
-import com.kobaj.math.android.RectF;
-
 import com.kobaj.level.Level;
-import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
+import com.kobaj.math.android.RectF;
 import com.kobaj.opengldrawable.EnumDrawFrom;
 import com.kobaj.opengldrawable.Quad.Quad;
 import com.kobaj.opengldrawable.Quad.QuadColorShape;
@@ -15,138 +12,107 @@ import com.kobaj.opengldrawable.Quad.QuadColorShape;
 public class BaseDebugScreen
 {
 	private ArrayList<QuadColorShape> outline_quads;
-	private boolean only_outlines; //show object outline, or physics rectangles
-	private boolean show_lights; //show lights or not
+	private EnumDebugType type;
 	
-	public BaseDebugScreen(Level test_level, boolean only_outlines, boolean show_lights)
-	{	
+	public BaseDebugScreen(Level test_level, EnumDebugType type)
+	{
+		this.type = type;
 		outline_quads = new ArrayList<QuadColorShape>();
-		this.only_outlines = only_outlines;
-		this.show_lights = show_lights;
-	
-		if(test_level == null)
-			return;
 		
-		// lights
-		if(show_lights)
-			if(test_level.event_list != null)
-		for (int i = test_level.light_list.size() - 1; i >= 0; i--)
-			outline_quads.add(onMakeBoundingBox(test_level.light_list.get(i).quad_light));
-		
-		//events
-		if(test_level.event_list != null)
-		for (int i = test_level.event_list.size() - 1; i >= 0; i--)
-			outline_quads.add(onMakeBoundingBox(test_level.event_list.get(i).my_collision_rect));
-		
-		// object
-		if (only_outlines)
+		if (type == EnumDebugType.aabb)
 		{
-			if(test_level.object_list != null)
-			for (int e = test_level.object_list.size() - 1; e >= 0; e--)
-				outline_quads.add(onMakeBoundingBox(test_level.object_list.get(e).quad_object));
-			
-			if(test_level.player != null)
-			outline_quads.add(onMakeBoundingBox(test_level.player.quad_object));
+			for (int i = test_level.object_list.size() - 1; i >= 0; i--)
+			{
+				Quad temp = test_level.object_list.get(i).quad_object;
+				outline_quads.add(new QuadColorShape( // slightly inaccurate
+						(int) Functions.shaderXToScreenX(temp.best_fit_aabb.main_rect.left), // left
+						(int) Functions.shaderYToScreenY(temp.best_fit_aabb.main_rect.top), // top
+						(int) Functions.shaderXToScreenX(temp.best_fit_aabb.main_rect.right), // right
+						(int) Functions.shaderYToScreenY(temp.best_fit_aabb.main_rect.bottom), // bottom
+						0x44FF00AA, // color
+						0)); // blur
+			}
 		}
-		else
+		else if (type == EnumDebugType.physics)
 		{
-			// draw some helpful bounding boxes
-			for (int e = test_level.object_list.size() - 1; e >= 0; e--)
-				for (int i = test_level.object_list.get(e).quad_object.phys_rect_list.size() - 1; i >= 0; i--)
-					outline_quads.add(onMakeBoundingBox(test_level.object_list.get(e).quad_object.phys_rect_list.get(i).main_rect));
+			for (int i = test_level.object_list.size() - 1; i >= 0; i--)
+			{
+				Quad outer_temp = test_level.object_list.get(i).quad_object;
+				for (int e = outer_temp.phys_rect_list.size() - 1; e >= 0; e--)
+				{
+					
+					RectF temp = outer_temp.phys_rect_list.get(e).main_rect;
+					outline_quads.add(new QuadColorShape( // slightly inaccurate
+							(int) Functions.shaderXToScreenX(temp.left), // left
+							(int) Functions.shaderYToScreenY(temp.top), // top
+							(int) Functions.shaderXToScreenX(temp.right), // right
+							(int) Functions.shaderYToScreenY(temp.bottom), // bottom
+							0x4400FFAA, // color
+							0)); // blur
+				}
+			}
+		}
+		else if (type == EnumDebugType.player_physics)
+		{
 			for (int i = test_level.player.quad_object.phys_rect_list.size() - 1; i >= 0; i--)
-				outline_quads.add(onMakeBoundingBox(test_level.player.quad_object.phys_rect_list.get(i).main_rect));
+			{
+				RectF temp = test_level.player.quad_object.phys_rect_list.get(i).main_rect;
+				
+				outline_quads.add(new QuadColorShape( // slightly inaccurate
+						(int) Functions.shaderXToScreenX(temp.left), // left
+						(int) Functions.shaderYToScreenY(temp.top), // top
+						(int) Functions.shaderXToScreenX(temp.right), // right
+						(int) Functions.shaderYToScreenY(temp.bottom), // bottom
+						0x4400FFAA, // color
+						0)); // blur
+			}
 		}
 	}
 	
-	public void onDrawObject(Level test_level)
+	double timeout = 0;
+	int on_draw = 0;
+	
+	public void onUpdate(double delta, Level test_level)
 	{
-		//update everything
-		
-		// lights
-		int j = 0;
-		if(show_lights)
-		for (int i = test_level.light_list.size() - 1; i >= 0; i--, j++)
-			onUpdateBoundingBox(test_level.light_list.get(i).quad_light, j);
-		
-		//events
-		for(int i = test_level.event_list.size() - 1; i>=0; i--, j++)
-			onUpdateBoundingBox(test_level.event_list.get(i).my_collision_rect, j);
-		
-		// object
-		if (only_outlines)
+		// look at our ondraw
+		timeout += delta;
+		if (timeout > 2000)
 		{
-			for (int e = test_level.object_list.size() - 1; e >= 0; e--, j++)
-				onUpdateBoundingBox(test_level.object_list.get(e).quad_object, j);
+			timeout = 0;
+			on_draw += 1;
 			
-			onUpdateBoundingBox(test_level.player.quad_object, j);
-		}
-		else
-		{
-			// draw some helpful bounding boxes
-			for (int e = test_level.object_list.size() - 1; e >= 0; e--, j++)
-				for (int i = test_level.object_list.get(e).quad_object.phys_rect_list.size() - 1; i >= 0; i--, j++)
-					onUpdateBoundingBox(test_level.object_list.get(e).quad_object.phys_rect_list.get(i).main_rect, j);
-			for (int i = test_level.player.quad_object.phys_rect_list.size() - 1; i >= 0; i--, j++)
-				onUpdateBoundingBox(test_level.player.quad_object.phys_rect_list.get(i).main_rect, j);
+			if (on_draw > outline_quads.size() - 1)
+				on_draw = 0;
 		}
 		
-		//draw everything
-		for(int q = outline_quads.size() - 1; q >= 0; q--)
-			outline_quads.get(q).onDrawAmbient(Constants.my_view_matrix, Constants.my_proj_matrix, Color.WHITE, true);
-	}
-	
-	private void onUpdateBoundingBox(Quad my_quad, int j)
-	{
-		onUpdateBoundingBox(my_quad.x_pos, my_quad.y_pos + my_quad.shader_height,
-				my_quad.x_pos + my_quad.shader_width, my_quad.y_pos, j);
-	}
-	
-	private void onUpdateBoundingBox(RectF bounding_box, int j)
-	{
-		double left = Functions.shaderXToScreenX(bounding_box.left);
-		double top = Functions.shaderYToScreenY(bounding_box.top);
-		double right = Functions.shaderXToScreenX(bounding_box.right);
-		double bottom = Functions.shaderYToScreenY(bounding_box.bottom);
+		// then update positions and things
+		if (type == EnumDebugType.aabb)
+			for (int i = test_level.object_list.size() - 1; i >= 0; i--)
+			{
+				Quad temp = test_level.object_list.get(i).quad_object;
+				Quad relative = outline_quads.get(i);
+				relative.setWidthHeightRotationScale(temp.width, temp.height, temp.degree, 1.0); // dont need to scale.
+				relative.setPos(temp.x_pos, temp.y_pos, EnumDrawFrom.center);
+			}
+		else if (type == EnumDebugType.physics)
+			for (int i = test_level.object_list.size() - 1; i >= 0; i--)
+			{
+				Quad temp = test_level.object_list.get(i).quad_object;
+				for (int e = temp.phys_rect_list.size() - 1; e >= 0; e--)
+					outline_quads.get(e).setPos(temp.x_pos, temp.y_pos, EnumDrawFrom.center);
+			}
+		else if (type == EnumDebugType.player_physics)
+			for (int i = test_level.player.quad_object.phys_rect_list.size() - 1; i >= 0; i--)
+				outline_quads.get(i).setPos(test_level.player.x_pos, test_level.player.y_pos, EnumDrawFrom.center);
 		
-		onUpdateBoundingBox(left, top, right,bottom, j);
 	}
 	
-	private void onUpdateBoundingBox(double left, double top, double right, double bottom, int j)
-	{	
-		// holy garbage creation batman
-		outline_quads.get(j).setPos(left, bottom, EnumDrawFrom.center);
-	}
-	
-	
-	
-	
-	private QuadColorShape onMakeBoundingBox(Quad my_quad)
+	public void onDrawObject()
 	{
-		return onMakeBoundingBox((int) Functions.shaderXToScreenX(my_quad.x_pos), (int) Functions.shaderYToScreenY(my_quad.y_pos + my_quad.shader_height),
-				(int) Functions.shaderXToScreenX(my_quad.x_pos + my_quad.shader_width), (int) Functions.shaderYToScreenY(my_quad.y_pos));
-	}
-	
-	private QuadColorShape onMakeBoundingBox(RectF bounding_box)
-	{
-		//TODO figure out why this errors.
-		if(bounding_box == null)
-			return onMakeBoundingBox((int) 0, (int) 0, (int) 0, (int) 0);
+		// make this outline_quads.get(on_draw).onDrawAmbient() to walk through drawable quads.
+		// kinda useful...I guess.
 		
-		double left = Functions.shaderXToScreenX(bounding_box.left);
-		double top = Functions.shaderYToScreenY(bounding_box.top);
-		double right = Functions.shaderXToScreenX(bounding_box.right);
-		double bottom = Functions.shaderYToScreenY(bounding_box.bottom);
-		
-		return onMakeBoundingBox((int) left, (int) top, (int) right, (int) bottom);
+		for (int i = outline_quads.size() - 1; i >= 0; i--)
+			outline_quads.get(i).onDrawAmbient();
 	}
-	
-	// this is in screen coords
-	private QuadColorShape onMakeBoundingBox(int left, int top, int right, int bottom)
-	{
-		// holy garbage creation batman
-		QuadColorShape outline = new QuadColorShape(left - 1, top + 1, right + 1, bottom - 1, 0x55FF00FF, 0);
-		return outline;
-	}
-	
 }

@@ -253,6 +253,99 @@ public class FunctionsTest
 	}
 	
 	@Test
+	public void testFunctionsEqualIntersects() throws Exception
+	{
+		RectF a = new RectF(0, 1, 1, 0);
+		RectF b = new RectF(0, 0, 0, 0);
+		
+		// general collisions
+		
+		// first that they are the exact same
+		b = new RectF(0, 1, 1, 0);
+		assertThat(Functions.equalIntersects(a, b), equalTo(true));
+		
+		// b is bigger
+		b = new RectF(-1, 2, 2, -1);
+		assertThat(Functions.equalIntersects(a, b), equalTo(true));
+		
+		// b is smaller
+		b = new RectF(.25f, .75f, .75f, .25f);
+		assertThat(Functions.equalIntersects(a, b), equalTo(true));
+		
+		// parallel collisions
+		
+		// b on top collision
+		b = new RectF(.25f, 2.0f, .75f, .5f);
+		assertThat(Functions.equalIntersects(a, b), equalTo(true));
+		
+		// b on bottom collision
+		b = new RectF(.25f, .5f, .75f, -.5f);
+		assertThat(Functions.equalIntersects(a, b), equalTo(true));
+		
+		// b on left collision
+		b = new RectF(-1.0f, .75f, .5f, .25f);
+		assertThat(Functions.equalIntersects(a, b), equalTo(true));
+		
+		// b on right collision
+		b = new RectF(.5f, .75f, 2.0f, .25f);
+		assertThat(Functions.equalIntersects(a, b), equalTo(true));
+		
+		// corner collisions
+		
+		// b on top left collision
+		b = new RectF(-1.0f, 2.0f, .75f, .5f);
+		assertThat(Functions.equalIntersects(a, b), equalTo(true));
+		
+		// b on bottom left collision
+		b = new RectF(-1.0f, .5f, .75f, -.5f);
+		assertThat(Functions.equalIntersects(a, b), equalTo(true));
+		
+		// b on top right collision
+		b = new RectF(.25f, 2.0f, 2.0f, .5f);
+		assertThat(Functions.equalIntersects(a, b), equalTo(true));
+		
+		// b on bottom right collision
+		b = new RectF(.25f, .5f, 2.0f, -.5f);
+		assertThat(Functions.equalIntersects(a, b), equalTo(true));
+		
+		// no collisions small
+		
+		// b on top
+		b = new RectF(.25f, 2.0f, .75f, 1.5f);
+		assertThat(Functions.equalIntersects(a, b), equalTo(false));
+		
+		// b on bottom
+		b = new RectF(.25f, -1.5f, .75f, -2.0f);
+		assertThat(Functions.equalIntersects(a, b), equalTo(false));
+		
+		// b on left
+		b = new RectF(-2.0f, .75f, -1.0f, .25f);
+		assertThat(Functions.equalIntersects(a, b), equalTo(false));
+		
+		// b on right
+		b = new RectF(1.5f, .75f, 2.0f, .25f);
+		assertThat(Functions.equalIntersects(a, b), equalTo(false));
+		
+		// no collisions big
+		
+		// b on top
+		b = new RectF(-1.0f, 2.0f, 2.0f, 1.5f);
+		assertThat(Functions.equalIntersects(a, b), equalTo(false));
+		
+		// b on bottom
+		b = new RectF(-1.0f, -1.5f, 2.0f, -2.0f);
+		assertThat(Functions.equalIntersects(a, b), equalTo(false));
+		
+		// b on left
+		b = new RectF(-2.0f, 2.0f, -1.0f, -.25f);
+		assertThat(Functions.equalIntersects(a, b), equalTo(false));
+		
+		// b on right
+		b = new RectF(1.5f, 2.0f, 2.0f, -.25f);
+		assertThat(Functions.equalIntersects(a, b), equalTo(false));
+	}
+	
+	@Test
 	public void testFunctionsSetEqualIntersects() throws Exception
 	{
 		RectF send_back = new RectF();
