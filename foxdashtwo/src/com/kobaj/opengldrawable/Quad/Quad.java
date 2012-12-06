@@ -425,7 +425,7 @@ public class Quad
 	// main stuffs
 	protected void onDraw()
 	{
-		Constants.objects_drawn_screen++;
+		Constants.quads_drawn_screen++;
 		GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 6);
 	}
 	

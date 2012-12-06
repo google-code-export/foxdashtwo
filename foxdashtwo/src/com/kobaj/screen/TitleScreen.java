@@ -51,4 +51,11 @@ public class TitleScreen extends BaseScreen
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void onPause()
+	{
+		// TODO Auto-generated method stub
+		
+	}
 }

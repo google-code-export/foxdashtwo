@@ -20,8 +20,7 @@ public class MyGLSurfaceView extends GLSurfaceView {
     
     public void onScreenPause()
     {
+		super.onPause();
     	my_game.onScreenPause();
-		
-		this.onPause();
     }
 }

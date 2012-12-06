@@ -61,7 +61,7 @@ public class PopupManager extends DialogFragment
 		// Pass null as the parent view because its going in the dialog layout
 		builder.setTitle(R.string.alert_dialog_xml)
 		.setView(mView)
-		.setPositiveButton(R.string.alert_dialog_ok, new DialogInterface.OnClickListener()
+		.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener()
 		{
 			public void onClick(DialogInterface dialog, int id)
 			{
@@ -69,7 +69,7 @@ public class PopupManager extends DialogFragment
 				mListener.onDialogPositiveClick(PopupManager.this);
 			}
 		})
-		.setNegativeButton(R.string.alert_dialog_cancel, new DialogInterface.OnClickListener()
+		.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener()
 		{
 			public void onClick(DialogInterface dialog, int id)
 			{

@@ -213,4 +213,27 @@ public class Text
 			temp.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, color, true);
 		}
 	}
+	
+	//return the size of a section of text in screen coords
+	public int measureTextWidth(int resource_id)
+	{
+		if(bitmap_buffer.indexOfKey(resource_id) >= 0)
+		{
+			Quad temp = bitmap_buffer.get(resource_id);
+			return temp.width;
+		}
+		
+		return 0;
+	}
+	
+	public int measureTextHeight(int resource_id)
+	{
+		if(bitmap_buffer.indexOfKey(resource_id) >= 0)
+		{
+			Quad temp = bitmap_buffer.get(resource_id);
+			return temp.height;
+		}
+		
+		return 0;
+	}
 }
