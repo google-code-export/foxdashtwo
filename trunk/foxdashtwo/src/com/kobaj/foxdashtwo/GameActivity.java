@@ -1,11 +1,11 @@
 package com.kobaj.foxdashtwo;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.PowerManager;
 import android.support.v4.app.FragmentActivity;
 import android.util.DisplayMetrics;
@@ -20,17 +20,20 @@ public class GameActivity extends FragmentActivity implements com.kobaj.networki
 {
 	/** Called when the activity is first created. */
 	
+	//the fuck are you doing?!
+	public static Activity activity;
+	
+	//related to permissions mostly
 	private PowerManager.WakeLock wl;
 	public static ConnectivityManager cm;
 	
+	//drawing
 	public static com.kobaj.opengl.MyGLSurfaceView mGLView;
 	
 	// saving state
 	protected String shared_prefs_name = "com.kobaj.foxdashtwo_prefs";
 	public static SharedPreferences mPrefs;
 	public static SharedPreferences.Editor ed;
-	
-	public static Handler itself;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -73,6 +76,8 @@ public class GameActivity extends FragmentActivity implements com.kobaj.networki
 		// as the ContentView for this Activity
 		mGLView = new com.kobaj.opengl.MyGLSurfaceView(this);
 		setContentView(mGLView);
+		
+		GameActivity.activity = this;
 	}
 	
 	@Override
@@ -83,7 +88,6 @@ public class GameActivity extends FragmentActivity implements com.kobaj.networki
 		
 		// save user settings
 		UserSettings.saveUserSettings();
-		
 		ed.commit();
 		
 		mGLView.onScreenPause();

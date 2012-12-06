@@ -8,7 +8,7 @@
     
     <!-- metrics -->
     <string name="fps">FPS:</string>
-    <string name="oos">OOS:</string>
+    <string name="qos">QOS:</string>
     
     <!-- input -->
     <string name="left">Left</string>
@@ -22,20 +22,28 @@
     <string name="touch_here">Touch Here</string>
     
     <!-- popup -->
-    <string name="alert_dialog_ok">OK</string>
-    <string name="alert_dialog_cancel">Cancel</string>
-    <string name="alert_dialog_xml">Do you have some XML?</string>
+    <string name="paused">Paused</string>
+    <string name="are_you_sure">Are you sure?</string>
+    <string name="quit">Quit</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="alert_dialog_xml">Ineedtobedeletedlater</string>
     
     <!-- annoying, but you have to put your string name here too if you want to draw it in game -->
     <string-array name="my_sa">
         <item>fps</item>
-        <item>oos</item>
+        <item>qos</item>
         <item>app_name</item>
         <item>loading</item>
         <item>left</item>
         <item>right</item>
         <item>jump</item>
         <item>touch_here</item>
+        <item>ok</item>
+        <item>cancel</item>
+        <item>quit</item>
+        <item>paused</item>
+        <item>are_you_sure</item>
     </string-array>
     
 </resources>

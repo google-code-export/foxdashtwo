@@ -121,5 +121,6 @@ public class Constants
 	public static final String main_url = "http://something.com";
 	
 	//metrics
-	public static int objects_drawn_screen = 0;
+	public static boolean draw_fps= true;
+	public static int quads_drawn_screen = 0;
 }

@@ -19,8 +19,6 @@ public class MyGame extends MyGLRender
 	private BaseScreen currently_active_screen;
 	private BaseScreen next_active_screen;
 	
-	public boolean draw_fps= true;
-	
 	//dont touch the variables below this line
 	//final drawable.
 	private QuadRenderTo scene;
@@ -34,7 +32,12 @@ public class MyGame extends MyGLRender
     
     public void onChangeScreen(BaseScreen next_active_screen)
     {
-			this.next_active_screen = next_active_screen;
+		this.next_active_screen = next_active_screen;
+    }
+    
+    public void onChangeScreenState(EnumScreenState new_state)
+    {
+    	this.currently_active_screen.current_state = new_state;
     }
 	
 	//for the record this is called everytime the screen is reset/paused/resumed
@@ -67,47 +70,22 @@ public class MyGame extends MyGLRender
 		}
 		
 		//update as usual
-		if(currently_active_screen.current_state == EnumScreenState.running)
+		if(currently_active_screen.current_state == EnumScreenState.running ||
+				currently_active_screen.current_state == EnumScreenState.paused)
 			currently_active_screen.onUpdate(delta);
 	}
 	
 	@Override
 	protected void onDraw()
 	{	
-		if(currently_active_screen.current_state == EnumScreenState.running)
+		if(currently_active_screen.current_state == EnumScreenState.running || 
+				currently_active_screen.current_state == EnumScreenState.paused)
 			onRunningDraw();
 		else if(currently_active_screen.current_state == EnumScreenState.loading)
 			onLoadingDraw();
 		
-		if(draw_fps)
-		{
-			//fps
-			int fps_color = Color.BLUE;
-			if(fps.fps < 60)
-				fps_color = Color.GREEN;
-			if(fps.fps < 45)
-				fps_color = Color.YELLOW;
-			if(fps.fps < 30)
-				fps_color = Color.RED;
-			
-			int oos_color = Color.RED;
-			if(Constants.objects_drawn_screen < 50)
-				oos_color = Color.YELLOW;
-			if(Constants.objects_drawn_screen < 35)
-				oos_color = Color.GREEN;
-			if(Constants.objects_drawn_screen < 20)
-				oos_color = Color.BLUE;
-			
-			double x_pos = Functions.screenXToShaderX(100);
-			double y_pos = Functions.screenYToShaderY((int)Functions.fix_y(50));
-			
-			Constants.text.drawText(R.string.fps, x_pos, y_pos, EnumDrawFrom.bottom_right);
-			Constants.text.drawNumber(fps.fps, x_pos, y_pos, EnumDrawFrom.bottom_left, fps_color);
-			
-			Constants.text.drawText(R.string.oos, x_pos, y_pos, EnumDrawFrom.top_right);
-			Constants.text.drawNumber(Constants.objects_drawn_screen, x_pos, y_pos, EnumDrawFrom.top_left, oos_color);
-			Constants.objects_drawn_screen = 0;
-		}
+		if(Constants.draw_fps)
+			onDrawMetrics();
 	}
 	
 	private void onLoadingDraw()
@@ -140,10 +118,40 @@ public class MyGame extends MyGLRender
 		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA); // no see thru
 		currently_active_screen.onDrawConstant();	
 	}
+	
+	private void onDrawMetrics()
+	{
+		//fps
+		int fps_color = Color.BLUE;
+		if(fps.fps < 60)
+			fps_color = Color.GREEN;
+		if(fps.fps < 45)
+			fps_color = Color.YELLOW;
+		if(fps.fps < 30)
+			fps_color = Color.RED;
+		
+		int oos_color = Color.RED;
+		if(Constants.quads_drawn_screen < 50)
+			oos_color = Color.YELLOW;
+		if(Constants.quads_drawn_screen < 35)
+			oos_color = Color.GREEN;
+		if(Constants.quads_drawn_screen < 20)
+			oos_color = Color.BLUE;
+		
+		double x_pos = Functions.screenXToShaderX(100);
+		double y_pos = Functions.screenYToShaderY((int)Functions.fix_y(50));
+		
+		Constants.text.drawText(R.string.fps, x_pos, y_pos, EnumDrawFrom.bottom_right);
+		Constants.text.drawNumber(fps.fps, x_pos, y_pos, EnumDrawFrom.bottom_left, fps_color);
+		
+		Constants.text.drawText(R.string.qos, x_pos, y_pos, EnumDrawFrom.top_right);
+		Constants.text.drawNumber(Constants.quads_drawn_screen, x_pos, y_pos, EnumDrawFrom.top_left, oos_color);
+		Constants.quads_drawn_screen = 0;
+	}
 
 	@Override
 	protected void onPause()
 	{
-		
+		currently_active_screen.onPause();
 	}
 }

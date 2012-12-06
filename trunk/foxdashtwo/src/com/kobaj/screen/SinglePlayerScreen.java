@@ -1,14 +1,14 @@
 package com.kobaj.screen;
 
 import com.kobaj.foxdashtwo.R;
+import com.kobaj.input.EnumKeyCodes;
 import com.kobaj.input.GameInputModifier;
 import com.kobaj.loader.FileHandler;
 import com.kobaj.math.Constants;
-import com.kobaj.math.Functions;
 import com.kobaj.screen.screenaddons.BaseDebugScreen;
 import com.kobaj.screen.screenaddons.BaseInteractionPhysics;
 import com.kobaj.screen.screenaddons.BaseLoadingScreen;
-import com.kobaj.screen.screenaddons.EnumDebugType;
+import com.kobaj.screen.screenaddons.BasePauseScreen;
 
 public class SinglePlayerScreen extends BaseScreen
 {
@@ -16,16 +16,14 @@ public class SinglePlayerScreen extends BaseScreen
 	private GameInputModifier my_modifier;
 	
 	// test level
+	public int test_level_R = R.raw.test_level;
 	private com.kobaj.level.Level test_level;
 	
 	// addons
 	BaseDebugScreen debug_addon;
 	BaseLoadingScreen loading_addon;
 	BaseInteractionPhysics interaction_addon;
-	
-	// may be deleted later
-	public static final String save_file_name = "external_level";
-	private static final String format = ".xml";
+	BasePauseScreen pause_addon;
 	
 	public SinglePlayerScreen()
 	{
@@ -44,33 +42,18 @@ public class SinglePlayerScreen extends BaseScreen
 		loading_addon = new BaseLoadingScreen();
 		interaction_addon = new BaseInteractionPhysics();
 		
-		// grab from disk
-		boolean loaded = false;
-		String[] levels = FileHandler.getFileList();
-		if(levels != null)
-		for (String p : levels)
-			if (p.equalsIgnoreCase(save_file_name + format))
-			{
-				loaded = true;
-				test_level = FileHandler.readSerialFile("external_level", com.kobaj.level.Level.class);
-				
-				if(test_level == null)
-					loaded = false;
-				
-				break;
-			}
-		
-		if (!loaded)
-			test_level = FileHandler.readSerialResource(Constants.resources, R.raw.test_level, com.kobaj.level.Level.class);
-		
 		// level
+		test_level = FileHandler.readSerialResource(Constants.resources, test_level_R, com.kobaj.level.Level.class);
 		if (test_level != null)
 			test_level.onInitialize();
 		
-		// control input
+		// control input and other addons
 		my_modifier.onInitialize();
 		
-		debug_addon = new BaseDebugScreen(test_level, EnumDebugType.aabb);
+		// debug_addon = new BaseDebugScreen(test_level, EnumDebugType.aabb);
+		
+		pause_addon = new BasePauseScreen();
+		pause_addon.onInitialize();
 		
 		System.gc();
 	}
@@ -78,8 +61,29 @@ public class SinglePlayerScreen extends BaseScreen
 	@Override
 	public void onUpdate(double delta)
 	{
-		Functions.checkGlError();
+		if (current_state != EnumScreenState.paused)
+			onRunningUpdate(delta);
+		else
+			pause_addon.onUpdate(delta);
 		
+		// go into pause mode by hitting menu, search, back...
+		if (Constants.input_manager.getKeyPressed(EnumKeyCodes.back) || //
+				Constants.input_manager.getKeyPressed(EnumKeyCodes.menu) || //
+				Constants.input_manager.getKeyPressed(EnumKeyCodes.search)) //
+		{
+			// this is possible because onUpdate is only called when in two states, running or paused
+			if (current_state != EnumScreenState.paused)
+			{
+				pause_addon.reset();
+				current_state = EnumScreenState.paused;
+			}
+			else
+				current_state = EnumScreenState.running;
+		}
+	}
+	
+	private void onRunningUpdate(double delta)
+	{
 		// just for now, this may be deleted later to replace a button
 		my_modifier.onUpdate();
 		
@@ -89,9 +93,7 @@ public class SinglePlayerScreen extends BaseScreen
 		// interaction
 		interaction_addon.onUpdate(delta, my_modifier, test_level);
 		
-		debug_addon.onUpdate(delta, test_level);
-		
-		Functions.checkGlError();
+		// debug_addon.onUpdate(delta, test_level);
 	}
 	
 	@Override
@@ -110,11 +112,14 @@ public class SinglePlayerScreen extends BaseScreen
 	public void onDrawConstant()
 	{
 		test_level.onDrawConstant();
-	
-		debug_addon.onDrawObject();
+		
+		// debug_addon.onDrawObject();
 		
 		// draw the controls
-		my_modifier.onDraw();
+		if (current_state != EnumScreenState.paused)
+			my_modifier.onDraw();
+		else
+			pause_addon.onDraw();
 	}
 	
 	@Override
@@ -123,5 +128,12 @@ public class SinglePlayerScreen extends BaseScreen
 		// we want all loading screens to look the same, so we use this helper loader thingy :)
 		if (loading_addon != null)
 			loading_addon.onDrawLoading(delta);
+	}
+	
+	@Override
+	public void onPause()
+	{
+		// only on game screens to we send the system into paused state.
+		current_state = EnumScreenState.paused;
 	}
 }

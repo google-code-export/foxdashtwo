@@ -8,12 +8,12 @@ public abstract class BaseScreen implements Runnable
 	
 	public void onInitialize()
 	{
+		current_state = EnumScreenState.loading;
 		new Thread(this).start();
 	}
 	
 	public void run()
 	{
-		current_state = EnumScreenState.loading;
 		onLoad();
 		current_state = EnumScreenState.running;
 	}
@@ -31,4 +31,7 @@ public abstract class BaseScreen implements Runnable
 	
 	//draw a loading screen. only time we do math in draw
 	public abstract void onDrawLoading(double delta); 
+	
+	//do something when the system pauses
+	public abstract void onPause();
 }
