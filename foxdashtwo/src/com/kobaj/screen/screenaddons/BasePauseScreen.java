@@ -3,83 +3,124 @@ package com.kobaj.screen.screenaddons;
 import com.kobaj.foxdashtwo.GameActivity;
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Constants;
-import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.Button;
 import com.kobaj.opengldrawable.EnumDrawFrom;
-import com.kobaj.opengldrawable.Quad.QuadCompressed;
 import com.kobaj.screen.EnumScreenState;
+import com.kobaj.screen.screenaddons.settings.BaseSettingsScreen;
 
-public class BasePauseScreen
+public class BasePauseScreen extends BasePopup
 {
-	private QuadCompressed main_popup;
-	private QuadCompressed secondary_popup;
-	
 	private Button quit_button;
 	private Button cancel_button;
+	private Button settings_button;
 	
-	public boolean ready_to_quit = false;
+	// let users edit settings right in game!
+	private BaseSettingsScreen base_settings = new BaseSettingsScreen();
 	
-	private double label_x;
-	private double label_y;
+	private boolean ready_to_quit = false;
+	private boolean settings_visible = false;
 	
+	@Override
 	public void onInitialize()
 	{
-		double center_x = 0; //heh
-		double center_y = 0;
+		super.onInitialize();
 		
-		main_popup = new QuadCompressed(R.raw.big_popup, R.raw.big_popup_alpha, 626, 386);
-		secondary_popup = new QuadCompressed(R.raw.little_popup, R.raw.little_popup, 326, 206);
+		base_settings.onInitialize();
 		
-		double shift_y = Functions.screenHeightToShaderHeight(45);
-		double shift_x = Functions.screenWidthToShaderWidth(90);
+		cancel_button = new Button(R.string.cancel);
+		quit_button = new Button(R.string.quit);
+		settings_button = new Button(R.string.settings);
 		
-		label_x = center_x;
-		label_y = center_y + shift_y;
+		Button[] buttons = BasePopup.alignButtonsAlongXAxis(center_y - shift_y, cancel_button, quit_button);
 		
-		quit_button = new Button(R.string.quit, center_x + shift_x, center_y - shift_y);
-		cancel_button = new Button(R.string.cancel, center_x - shift_x, center_y - shift_y);
+		// this is ok because its an array
+		for (Button button : buttons)
+			button.onInitialize();
+		
+		// couple extra buttons
+		buttons = BasePopup.alignButtonsAlongXAxis(center_y - 3.0 * shift_y, settings_button);
+		
+		for (Button button : buttons)
+			button.onInitialize();
 	}
 	
 	public void reset()
 	{
 		ready_to_quit = false;
+		settings_visible = false;
+		
+		// all our childrens
+		base_settings.reset();
 	}
 	
-	public void onUpdate(double delta)
+	@Override
+	public boolean onUpdate(double delta)
 	{
-		if(ready_to_quit)
+		onUpdateNoBoolean(delta);
+		return true;
+	}
+	
+	private void onUpdateNoBoolean(double delta)
+	{
+		// only update our children
+		if (settings_visible)
 		{
-			if(quit_button.isReleased())
+			if (!base_settings.onUpdate(delta))
+				settings_visible = false;
+		}
+		else
+			handleButtons();
+		
+	}
+	
+	private void handleButtons()
+	{
+		// turning on or off children
+		if (settings_button.isReleased())
+			settings_visible = true;
+		
+		// do our screen
+		if (ready_to_quit)
+		{
+			if (quit_button.isReleased())
 			{
-				//terrible
+				// terrible
 				GameActivity.activity.finish();
 			}
-			else if(cancel_button.isReleased())
-					ready_to_quit = false;
+			else if (cancel_button.isReleased())
+				ready_to_quit = false;
 		}
 		else
 		{
-			if(quit_button.isReleased())
+			if (quit_button.isReleased())
 				ready_to_quit = true;
-			else if(cancel_button.isReleased())
+			else if (cancel_button.isReleased())
 			{
-				//also terrible
+				// also terrible
 				GameActivity.mGLView.my_game.onChangeScreenState(EnumScreenState.running);
 			}
 		}
 	}
 	
+	@Override
 	public void onDraw()
 	{
-		if(ready_to_quit)
+		if (settings_visible)
+		{
+			base_settings.onDraw();
+			return;
+		}
+		
+		if (ready_to_quit)
 		{
 			secondary_popup.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, 0xCCFFDDDD, true);
 			Constants.text.drawText(R.string.are_you_sure, label_x, label_y, EnumDrawFrom.center);
 		}
 		else
 		{
-			main_popup.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, 0xCC999999, true);
+			main_popup.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, main_color, true);
 			Constants.text.drawText(R.string.paused, label_x, label_y, EnumDrawFrom.center);
+			settings_button.onDrawConstant();
 		}
 		
 		cancel_button.onDrawConstant();
