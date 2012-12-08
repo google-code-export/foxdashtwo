@@ -2,6 +2,8 @@ package com.kobaj.audio;
 
 import java.util.ArrayList;
 
+import com.kobaj.math.Constants;
+
 //this is an extension of the music player
 //it lets you pass in a list of songs
 //and how to transition between them
@@ -11,144 +13,107 @@ public class MusicPlayList
 	private ArrayList<Integer> play_list;
 	private int currently_playing_key = 0;
 	
-	//store a reference to the player
-	//I know, I love statics, but this just doesnt go there.
-	private Music music_player;
+	private int fade_length = 0;
+	private boolean loop_list = true;
 	
-	//how to play the list.
-	public double volume = 1.0;
-	public boolean should_loop = true;
+	// set to how long you want to play (say, 30,000 milliseconds (30 seconds) of each song in playlist)
+	// or -1 for the whole song.
+	private int play_time = -1;
 	
-	// the below is in milliseconds
-	public int transition_fade_time = 10000;
-	//set to how long you want to play (say, 30,000 milliseconds (30 seconds) of each song in playlist)
-	//or -1 for the whole song.
-	public int play_time = 30000;
-	
-	private EnumMusicStates current_state = EnumMusicStates.playing;
-	
-	public MusicPlayList(Music music_player)
+	public void onUpdate()
 	{
-		this.music_player = music_player;
+		if(Constants.music_player.getMusicState() != EnumMusicStates.playing)
+			return;
+		
+		int local_play_length = play_time;
+		if (play_time == -1)
+			local_play_length = Constants.music_player.getDuration();
+		
+		local_play_length -= fade_length;
+		
+		final int current_position = Constants.music_player.getCurrentPosition();
+		
+		//ready to swap to the next song
+		if (current_position > local_play_length)
+		{
+			currently_playing_key += 1;
+			
+			if (currently_playing_key >= play_list.size())
+			{
+				if (loop_list)
+					currently_playing_key = 0;
+				else
+				{
+					Constants.music_player.stop(fade_length);
+					return;
+				}
+			}
+			
+			Constants.music_player.changeSong(play_list.get(currently_playing_key), fade_length);
+				
+		}
 	}
 	
+	//assume we want to play the whole song
 	public void setPlayList(int... sound_ids)
 	{
-		if(play_list == null)
+		setPlayList(-1, sound_ids);
+	}
+	
+	public void setPlayList(int play_time, int... sound_ids)
+	{
+		this.play_time = play_time;
+		
+		if (play_list == null)
 			play_list = new ArrayList<Integer>();
 		
 		play_list.clear();
 		
-		//this is ok because its just a regular array
-		for(int sound_id: sound_ids)
+		// this is ok because its just a regular array
+		for (int sound_id : sound_ids)
 			play_list.add(sound_id);
 	}
 	
-	public void onUpdate()
+	public void clearPlayList()
 	{
-		if(music_player.currently_playing != -1)
-		{
-			if(current_state == EnumMusicStates.fade_out)
-			{
-				//lower the volume
-				final double end_duration = get_real_duration();
-				final double start_duration = end_duration - transition_fade_time;
-				
-				final double calculated_volume =  com.kobaj.math.Functions.linearInterpolate(start_duration, end_duration, music_player.media_player.getCurrentPosition(), volume, 0.0);
-				music_player.play(music_player.currently_playing, calculated_volume);
-				
-				//if volume is 0, we are done fading out.
-				if(calculated_volume <= 0.0)
-				{
-					currently_playing_key += 1;
-					
-					//see if we are at the end of the list
-					if(currently_playing_key == play_list.size())
-					{
-						if(!should_loop)
-						{
-							//stop the music
-							music_player.stop();
-							return;
-						}
-						else
-							currently_playing_key = 0;
-					}
-					
-					//keep going
-					current_state = EnumMusicStates.fade_in;
-					music_player.play(play_list.get(currently_playing_key), 0.0);
-				}
-			}
-			
-			else if(current_state == EnumMusicStates.playing)
-			{
-				//see what current time is in relation to duration and play_time
-				final int duration = get_real_duration() - transition_fade_time;
-				
-				final int current_time = music_player.media_player.getCurrentPosition();
-				
-				//if its time to fade out, make it so!
-				if(current_time >= duration)
-					current_state = EnumMusicStates.fade_out;
-			}
-			
-			else if(current_state == EnumMusicStates.fade_in)
-			{	
-				//simply fade in. real easy. :)
-				double calculated_volume = com.kobaj.math.Functions.linearInterpolate(0, transition_fade_time, music_player.media_player.getCurrentPosition(), 0.0, volume);
-				
-				if(calculated_volume == volume)
-				{
-					current_state = EnumMusicStates.playing;
-					return;
-				}
-					
-				music_player.play(music_player.currently_playing, calculated_volume);
-			}
-		}
-	}
-	
-	private int get_real_duration()
-	{
-		int duration = music_player.media_player.getDuration();
+		if (play_list == null)
+			play_list = new ArrayList<Integer>();
 		
-		if(play_time != -1 && play_time < duration)
-			duration = play_time;
-				
-		return duration;
-	}
-	
-	//returns true on success
-	public boolean start()
-	{
-		if(play_list.size() == 0)
-			return false;
-		
-		if(music_player.media_player.isPlaying())
-		{
-			//smoothly transition out of what we are currently playing
-			current_state = EnumMusicStates.fade_out;
-		}
-		else
-		{
-			//start playing the new playlist.	
-			current_state = EnumMusicStates.fade_in;
-			music_player.play(play_list.get(0), 0.0);
-		}
-		
-		return true;
-	}
-	
-	public void fadeStop()
-	{
-		current_state = EnumMusicStates.fade_out;
 		play_list.clear();
+		currently_playing_key = 0;
+	}
+	
+	// assume zero fade length
+	public void start()
+	{
+		start(0);
+	}
+	
+	// assume the user wants to play first song
+	// and that user does want to loop
+	public void start(int fade_length)
+	{
+		start(0, true);
+	}
+	
+	public void start(int fade_length, boolean loop_list)
+	{
+		if (fade_length < 0)
+			fade_length = 0;
+		
+		this.fade_length = fade_length;
+		this.loop_list = loop_list;
+		Constants.music_player.start(play_list.get(currently_playing_key), fade_length, false);
 	}
 	
 	public void stop()
 	{
-		play_list.clear();
-		music_player.stop();
+		stop(0);
+	}
+	
+	public void stop(int fade_length)
+	{
+		this.fade_length = fade_length;
+		Constants.music_player.stop(fade_length);
 	}
 }

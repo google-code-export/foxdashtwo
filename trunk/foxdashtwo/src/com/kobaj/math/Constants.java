@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.support.v4.app.FragmentManager;
 
-import com.kobaj.audio.MusicPlayList;
+import com.kobaj.audio.MusicPlayer;
 import com.kobaj.audio.Sound;
 import com.kobaj.input.InputManager;
 import com.kobaj.opengldrawable.Text;
@@ -93,7 +93,7 @@ public class Constants
 	
 	public static Physics physics;
 	
-	public static MusicPlayList music_play_list;
+	public static MusicPlayer music_player;
 	public static Sound sound;
 	
 	public static InputManager input_manager;

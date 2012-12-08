@@ -4,5 +4,5 @@ package com.kobaj.audio;
 //simply a little helper for transitions of music in the music play list.
 public enum EnumMusicStates
 {
-	fade_out, fade_in, playing
+	fade_out, fade_in, playing, stopped
 }

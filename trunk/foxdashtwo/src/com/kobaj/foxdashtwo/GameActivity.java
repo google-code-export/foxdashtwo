@@ -86,6 +86,9 @@ public class GameActivity extends FragmentActivity implements com.kobaj.networki
 		super.onPause();
 		wl.release();
 		
+		//shut down the music
+		Constants.music_player.stop();
+		
 		// save user settings
 		UserSettings.saveUserSettings();
 		ed.commit();

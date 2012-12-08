@@ -55,12 +55,18 @@ public class SinglePlayerScreen extends BaseScreen
 		pause_addon = new BasePauseScreen();
 		pause_addon.onInitialize();
 		
+		//testing sounds
+		Constants.music_player.start(R.raw.tunnel, 5000, true);
+		
 		System.gc();
 	}
 	
 	@Override
 	public void onUpdate(double delta)
 	{
+		//that music
+		Constants.music_player.onUpdate();
+		
 		if (current_state != EnumScreenState.paused)
 			onRunningUpdate(delta);
 		else

@@ -9,20 +9,23 @@ public class Button
 {
 	private int label;
 	private int padding = 35;
-	private double x_pos;
-	private double y_pos;
+	public double x_pos;
+	public double y_pos;
 	private QuadCompressed invisible_outline;
 	
+	public int width;
+	public int height;
+	
 	// these are shader coordinates of the center of the button
-	public Button(int resource_label, double x_pos, double y_pos)
+	public Button(int resource_label)
 	{
 		this.label = resource_label;
-		int width = Constants.text.measureTextWidth(label) + padding;
-		int height = Constants.text.measureTextHeight(label) + padding;
-		
-		this.x_pos = x_pos;
-		this.y_pos = y_pos;
-		
+		width = Constants.text.measureTextWidth(label) + padding;
+		height = Constants.text.measureTextHeight(label) + padding;
+	}
+	
+	public void onInitialize()
+	{
 		invisible_outline = new QuadCompressed(R.raw.black_alpha, R.raw.black_alpha, width, height);
 		invisible_outline.setPos(x_pos, y_pos, EnumDrawFrom.center);
 	}
