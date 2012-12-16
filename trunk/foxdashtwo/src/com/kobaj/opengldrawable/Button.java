@@ -9,9 +9,7 @@ public class Button
 {
 	private int label;
 	private int padding = 35;
-	public double x_pos;
-	public double y_pos;
-	private QuadCompressed invisible_outline;
+	public QuadCompressed invisible_outline;
 	
 	public int width;
 	public int height;
@@ -27,7 +25,6 @@ public class Button
 	public void onInitialize()
 	{
 		invisible_outline = new QuadCompressed(R.raw.black_alpha, R.raw.black_alpha, width, height);
-		invisible_outline.setPos(x_pos, y_pos, EnumDrawFrom.center);
 	}
 	
 	private boolean current_touch;
@@ -63,7 +60,8 @@ public class Button
 		if(isTouched())
 			color = 0xEE888899;
 			
-		invisible_outline.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, color, true);
-		Constants.text.drawText(label, x_pos, y_pos, EnumDrawFrom.center);
+		invisible_outline.color = color;
+		invisible_outline.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, true);
+		Constants.text.drawText(label, invisible_outline.x_pos, invisible_outline.y_pos, EnumDrawFrom.center, invisible_outline.color, invisible_outline.degree);
 	}
 }

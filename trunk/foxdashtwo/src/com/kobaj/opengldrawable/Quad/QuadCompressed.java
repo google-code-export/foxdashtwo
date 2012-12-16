@@ -78,7 +78,7 @@ public class QuadCompressed extends Quad
 	}
 	
 	@Override
-	public void onDrawAmbient(float[] my_view_matrix, float[] my_proj_matrix, int color, boolean skip_draw_check)
+	public void onDrawAmbient(float[] my_view_matrix, float[] my_proj_matrix, boolean skip_draw_check)
 	{
 		// if we have a handle, draw.
 		if (!setTextureDataHandle())
@@ -90,7 +90,7 @@ public class QuadCompressed extends Quad
 		// If on screen, draw.
 		if (skip_draw_check || com.kobaj.math.Functions.onShader(best_fit_aabb))
 		{
-			onSetupAmbient(my_view_matrix, my_proj_matrix, color, Constants.compressed_light);
+			onSetupAmbient(my_view_matrix, my_proj_matrix, Constants.compressed_light);
 			
 			// additional alpha
 			GLES20.glActiveTexture(GLES20.GL_TEXTURE1);

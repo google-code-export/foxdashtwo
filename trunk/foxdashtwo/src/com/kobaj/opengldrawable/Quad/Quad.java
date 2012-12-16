@@ -31,8 +31,6 @@ public class Quad
 	public EnumDrawFrom currently_drawn = EnumDrawFrom.center;
 	
 	// these are in shader coordinates 0 to 1
-	// I would much rather extend a physics object
-	// but that wouldn't really fit in with this model.
 	// anyway, dont be fooled, these are public to READ but not public to SET
 	public double x_pos = 0.0;
 	public double y_pos = 0.0;
@@ -41,14 +39,16 @@ public class Quad
 	public double x_vel = 0.0;
 	public double y_vel = 0.0;
 	
+	//this is new
+	public int color = Color.WHITE;
+	
 	// z index doesnt have to specially be set.
 	// objects will only collide if on the same z index plane.
 	// this shouldn't really change much actually.
 	public double z_pos = -1.0f;
 	
 	// physics rectangle. An object can have multiple
-	// rectangles so it has better 'resolution' when interacting with other
-	// quads
+	// rectangles so it has better 'resolution' when interacting with other quads
 	// phys rect is stored in shader coordinates
 	public ArrayList<RectFExtended> phys_rect_list = new ArrayList<RectFExtended>();
 	
@@ -207,6 +207,7 @@ public class Quad
 		setWidthHeightRotationScale(width, height, 0, 1);
 	}
 	
+	//rotate from the center
 	public void setRotationZ(double degrees)
 	{
 		setWidthHeightRotationScale(width, height, degrees, 1);
@@ -356,7 +357,7 @@ public class Quad
 	
 	// methods for
 	// drawing stuffs
-	protected <T extends BaseLightShader> void onSetupAmbient(float[] my_view_matrix, float[] my_proj_matrix, int color, T ambient_light)
+	protected <T extends BaseLightShader> void onSetupAmbient(float[] my_view_matrix, float[] my_proj_matrix, T ambient_light)
 	{
 		//setup the program
 		GLES20.glUseProgram(ambient_light.my_shader);
@@ -432,10 +433,10 @@ public class Quad
 	// ouside calls
 	public void onDrawAmbient()
 	{
-		onDrawAmbient(com.kobaj.math.Constants.my_view_matrix, com.kobaj.math.Constants.my_proj_matrix, Color.WHITE, false);
+		onDrawAmbient(com.kobaj.math.Constants.my_view_matrix, com.kobaj.math.Constants.my_proj_matrix, false);
 	}
 	
-	public void onDrawAmbient(float[] my_view_matrix, float[] my_proj_matrix, int color, boolean skip_draw_check)
+	public void onDrawAmbient(float[] my_view_matrix, float[] my_proj_matrix, boolean skip_draw_check)
 	{
 		// if we have a handle, draw.
 		if (!setTextureDataHandle())
@@ -444,7 +445,7 @@ public class Quad
 		// If on screen, draw.
 		if (skip_draw_check || com.kobaj.math.Functions.onShader(best_fit_aabb))
 		{
-			onSetupAmbient(my_view_matrix, my_proj_matrix, color, Constants.ambient_light);
+			onSetupAmbient(my_view_matrix, my_proj_matrix, Constants.ambient_light);
 			
 			// Draw the cube.
 			onDraw();

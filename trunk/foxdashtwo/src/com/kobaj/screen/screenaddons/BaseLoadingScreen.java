@@ -22,27 +22,7 @@ public class BaseLoadingScreen
 	// this function will linear interpolate between the two colors
 	public int getColor(int i)
 	{
-		// pull apart
-		int pc = Constants.loading_primary_color;
-		int pr = (pc >> 16) & 0xFF;
-		int pg = (pc >> 8) & 0xFF;
-		int pb = (pc & 0xFF);
-		int pa = pc >>> 24;
-		
-		int sc = Constants.loading_secondary_color;
-		int sr = (sc >> 16) & 0xFF;
-		int sg = (sc >> 8) & 0xFF;
-		int sb = (sc & 0xFF);
-		int sa = sc >>> 24;
-		
-		// lerp
-		int lr = (int) Functions.linearInterpolate(0, Constants.loading_max_shapes - 1, i, pr, sr);
-		int lg = (int) Functions.linearInterpolate(0, Constants.loading_max_shapes - 1, i, pg, sg);
-		int lb = (int) Functions.linearInterpolate(0, Constants.loading_max_shapes - 1, i, pb, sb);
-		int la = (int) Functions.linearInterpolate(0, Constants.loading_max_shapes - 1, i, pa, sa);
-		
-		// stick back together;
-		return (la << 24) | (lr << 16) | (lg << 8) | lb;
+		return Functions.linearInterpolateColor(0, Constants.loading_max_shapes - 1, i, Constants.loading_primary_color, Constants.loading_secondary_color);
 	}
 	
 	public void onDrawLoading(double delta)

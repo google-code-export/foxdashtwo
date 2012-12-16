@@ -4,7 +4,7 @@ import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Constants;
 import com.kobaj.opengldrawable.Button;
 import com.kobaj.opengldrawable.EnumDrawFrom;
-import com.kobaj.screen.screenaddons.BasePopup;
+import com.kobaj.screen.screenaddons.floatingframe.BasePopup;
 
 public class BaseAudioSettingsScreen extends BasePopup
 {
@@ -21,11 +21,10 @@ public class BaseAudioSettingsScreen extends BasePopup
 		volume_up_button = new Button(R.string.volume_up);
 		volume_down_button = new Button(R.string.volume_down);
 		
-		Button[] buttons = BasePopup.alignButtonsAlongXAxis(center_y - shift_y, cancel_button, volume_up_button, volume_down_button);
-		
-		// this is ok because its an array
-		for (Button button : buttons)
-			button.onInitialize();
+		cancel_button.onInitialize();
+		volume_up_button.onInitialize();
+		volume_down_button.onInitialize();
+		BasePopup.alignButtonsAlongXAxis(center_y - shift_y, cancel_button, volume_up_button, volume_down_button);
 	}
 	
 	@Override
@@ -44,7 +43,7 @@ public class BaseAudioSettingsScreen extends BasePopup
 	@Override
 	public void onDraw()
 	{
-		main_popup.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, main_color, true);
+		main_popup.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, true);
 		Constants.text.drawText(R.string.audio, label_x, label_y, EnumDrawFrom.center);
 		
 		volume_down_button.onDrawConstant();

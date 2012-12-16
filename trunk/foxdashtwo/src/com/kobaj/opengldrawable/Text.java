@@ -148,6 +148,8 @@ public class Text
 		drawNumber(this_number, x, y, where, Color.WHITE);
 	}
 	
+	//if you want to do the math to rotate an int, be my guest. I'll be over here...
+	
 	public void drawNumber(int this_number, double x, double y, EnumDrawFrom where, int color)
 	{
 		double total_width = 0;
@@ -187,7 +189,8 @@ public class Text
 			temp.setPos(x - current_width, y, where);
 			
 			// draw
-			temp.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, color, true);
+			temp.color = color;
+			temp.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, true);
 			
 			// continue
 			number = number / 10;
@@ -199,18 +202,27 @@ public class Text
 	{
 		drawText(resource_value, x, y, where, Color.WHITE);
 	}
-	
+
 	public void drawText(int resource_value, double x, double y, EnumDrawFrom where, int color)
+	{
+		drawText(resource_value, x, y, where, color, 0);
+	}
+	
+	public void drawText(int resource_value, double x, double y, EnumDrawFrom where, int color, double degree)
 	{
 		if (bitmap_buffer.indexOfKey(resource_value) >= 0)
 		{
 			// optimize the gets
 			Quad temp = bitmap_buffer.get(resource_value);
-			
+		
+			temp.color = color;
+			if(temp.degree != degree)
+				temp.setRotationZ(degree);
 			temp.setPos(x, y, where);
 			
 			// draw pretty!
-			temp.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, color, true);
+			temp.color = color;
+			temp.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, true);
 		}
 	}
 	

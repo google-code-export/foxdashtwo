@@ -110,9 +110,16 @@ public class LevelEventArrows extends LevelEventBase
 		if (brightness > 0)
 		{
 			if (my_draw != null)
-				my_draw.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, first_color, true);
+			{
+				my_draw.color = first_color;
+				my_draw.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, true);
+			}
+			
 			if (secondary_draw != null)
-				secondary_draw.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, first_color, true);
+			{
+				secondary_draw.color =  first_color;
+				secondary_draw.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, true);
+			}
 		}
 		else if (brightness < 0 && UserSettings.active_input_type == EnumInputType.halfhalf)
 			for (int i = x_poss.size() - 1; i >= 0; i--)

@@ -1,10 +1,9 @@
 package com.kobaj.screen;
 
-
 public class BlankScreen extends BaseScreen
 {
 	@Override
-	public void onInitialize()
+	public void onLoad()
 	{
 		// TODO Auto-generated method stub
 		
@@ -39,13 +38,6 @@ public class BlankScreen extends BaseScreen
 	}
 
 	@Override
-	public void onLoad()
-	{
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void onDrawLoading(double delta)
 	{
 		// TODO Auto-generated method stub
@@ -58,4 +50,5 @@ public class BlankScreen extends BaseScreen
 		// TODO Auto-generated method stub
 		
 	}
+	
 }

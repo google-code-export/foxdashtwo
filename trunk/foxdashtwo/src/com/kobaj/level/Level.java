@@ -151,7 +151,7 @@ public class Level
 	{
 		// backdrop
 		if (backdrop_color != Color.TRANSPARENT)
-			my_backdrop.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, Color.WHITE, true);
+			my_backdrop.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, true);
 		
 		// draw sorted
 		for (int i = object_list.size() - 1; i >= 0; i--)

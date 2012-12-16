@@ -8,7 +8,7 @@ import com.kobaj.math.Constants;
 import com.kobaj.screen.screenaddons.BaseDebugScreen;
 import com.kobaj.screen.screenaddons.BaseInteractionPhysics;
 import com.kobaj.screen.screenaddons.BaseLoadingScreen;
-import com.kobaj.screen.screenaddons.BasePauseScreen;
+import com.kobaj.screen.screenaddons.floatingframe.BasePauseScreen;
 
 public class SinglePlayerScreen extends BaseScreen
 {

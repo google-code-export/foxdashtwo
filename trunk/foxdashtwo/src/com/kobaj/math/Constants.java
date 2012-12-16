@@ -48,13 +48,13 @@ public class Constants
 	public static final double z_modifier = 0.00001;
 	
 	// physics constants
-	public static final double gravity_default = 0.000650;
+	public static final double gravity_default = 0.000700;
 	public static final double max_y_velocity_default = 2.5;
 	public static final double max_x_velocity_default = 2.5;
 	public static final double normal_acceleration_default = 0.00050;
 	public static final double normal_reverse_acceleration_default = 0.00600;
 	public static final double collision_detection_height_default = 2.0;
-	public static final double jump_velocity_default = 0.650;
+	public static final double jump_velocity_default = 0.700;
 	public static final double jump_limiter_default = 0.185;
 	
 	// physics variables

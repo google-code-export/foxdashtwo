@@ -1,4 +1,4 @@
-package com.kobaj.screen.screenaddons;
+package com.kobaj.screen.screenaddons.floatingframe;
 
 import com.kobaj.foxdashtwo.GameActivity;
 import com.kobaj.foxdashtwo.R;
@@ -16,6 +16,7 @@ public class BasePauseScreen extends BasePopup
 	
 	// let users edit settings right in game!
 	private BaseSettingsScreen base_settings = new BaseSettingsScreen();
+	private BaseQuit base_quit = new BaseQuit();
 	
 	private boolean ready_to_quit = false;
 	private boolean settings_visible = false;
@@ -26,22 +27,19 @@ public class BasePauseScreen extends BasePopup
 		super.onInitialize();
 		
 		base_settings.onInitialize();
+		base_quit.onInitialize();
 		
 		cancel_button = new Button(R.string.cancel);
 		quit_button = new Button(R.string.quit);
 		settings_button = new Button(R.string.settings);
 		
-		Button[] buttons = BasePopup.alignButtonsAlongXAxis(center_y - shift_y, cancel_button, quit_button);
-		
-		// this is ok because its an array
-		for (Button button : buttons)
-			button.onInitialize();
+		cancel_button.onInitialize();
+		quit_button.onInitialize();
+		BasePopup.alignButtonsAlongXAxis(center_y - shift_y, cancel_button, quit_button);
 		
 		// couple extra buttons
-		buttons = BasePopup.alignButtonsAlongXAxis(center_y - 3.0 * shift_y, settings_button);
-		
-		for (Button button : buttons)
-			button.onInitialize();
+		settings_button.onInitialize();
+		BasePopup.alignButtonsAlongXAxis(center_y - 3.0 * shift_y, settings_button);
 	}
 	
 	public void reset()
@@ -64,10 +62,9 @@ public class BasePauseScreen extends BasePopup
 	{
 		// only update our children
 		if (settings_visible)
-		{
-			if (!base_settings.onUpdate(delta))
-				settings_visible = false;
-		}
+			settings_visible = base_settings.onUpdate(delta);
+		else if (ready_to_quit)
+			ready_to_quit = base_quit.onUpdate(delta);
 		else
 			handleButtons();
 		
@@ -78,27 +75,12 @@ public class BasePauseScreen extends BasePopup
 		// turning on or off children
 		if (settings_button.isReleased())
 			settings_visible = true;
-		
-		// do our screen
-		if (ready_to_quit)
+		else if (quit_button.isReleased())
+			ready_to_quit = true;
+		else if (cancel_button.isReleased())
 		{
-			if (quit_button.isReleased())
-			{
-				// terrible
-				GameActivity.activity.finish();
-			}
-			else if (cancel_button.isReleased())
-				ready_to_quit = false;
-		}
-		else
-		{
-			if (quit_button.isReleased())
-				ready_to_quit = true;
-			else if (cancel_button.isReleased())
-			{
-				// also terrible
-				GameActivity.mGLView.my_game.onChangeScreenState(EnumScreenState.running);
-			}
+			// also terrible
+			GameActivity.mGLView.my_game.onChangeScreenState(EnumScreenState.running);
 		}
 	}
 	
@@ -113,17 +95,17 @@ public class BasePauseScreen extends BasePopup
 		
 		if (ready_to_quit)
 		{
-			secondary_popup.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, 0xCCFFDDDD, true);
-			Constants.text.drawText(R.string.are_you_sure, label_x, label_y, EnumDrawFrom.center);
+			base_quit.onDraw();
+			return;
 		}
 		else
 		{
-			main_popup.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, main_color, true);
+			main_popup.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, true);
 			Constants.text.drawText(R.string.paused, label_x, label_y, EnumDrawFrom.center);
+			
 			settings_button.onDrawConstant();
+			cancel_button.onDrawConstant();
+			quit_button.onDrawConstant();
 		}
-		
-		cancel_button.onDrawConstant();
-		quit_button.onDrawConstant();
 	}
 }

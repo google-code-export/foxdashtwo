@@ -68,7 +68,8 @@ public class InputTypeHalfHalf extends InputTypeBase
 		else
 			alpha = (int)(255 * Constants.max_brightness);
 		my_quad.setPos(Functions.screenXToShaderX(1), Functions.screenYToShaderY(0), EnumDrawFrom.bottom_left);
-		my_quad.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, Functions.makeColor(255, 255, 255, alpha), true);
+		my_quad.color = Functions.makeColor(255, 255, 255, alpha);
+		my_quad.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, true);
 		
 		//draw right
 		if(getTouchedRight())
@@ -76,6 +77,7 @@ public class InputTypeHalfHalf extends InputTypeBase
 		else
 			alpha = (int)(255 * Constants.max_brightness);
 		my_quad.setPos(Functions.screenXToShaderX(Constants.width), Functions.screenYToShaderY(0), EnumDrawFrom.bottom_right);
-		my_quad.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, Functions.makeColor(255, 255, 255, alpha), true);	
+		Functions.makeColor(255, 255, 255, alpha);
+		my_quad.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, true);	
 	}
 }

@@ -4,7 +4,7 @@ import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Constants;
 import com.kobaj.opengldrawable.Button;
 import com.kobaj.opengldrawable.EnumDrawFrom;
-import com.kobaj.screen.screenaddons.BasePopup;
+import com.kobaj.screen.screenaddons.floatingframe.BasePopup;
 
 public class BaseSettingsScreen extends BasePopup
 {
@@ -25,11 +25,9 @@ public class BaseSettingsScreen extends BasePopup
 		cancel_button = new Button(R.string.cancel);
 		audio_button = new Button(R.string.audio);
 		
-		Button[] buttons =  BasePopup.alignButtonsAlongXAxis(center_y - shift_y, cancel_button, audio_button);
-		
-		// this is ok because its an array
-		for (Button button : buttons)
-			button.onInitialize();
+		cancel_button.onInitialize();
+		audio_button.onInitialize();
+		BasePopup.alignButtonsAlongXAxis(center_y - shift_y, cancel_button, audio_button);
 	}
 	
 	public void reset()
@@ -65,7 +63,7 @@ public class BaseSettingsScreen extends BasePopup
 			return;
 		}
 		
-		main_popup.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, main_color, true);
+		main_popup.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, true);
 		Constants.text.drawText(R.string.settings, label_x, label_y, EnumDrawFrom.center);
 		
 		audio_button.onDrawConstant();

@@ -1,8 +1,9 @@
-package com.kobaj.screen.screenaddons;
+package com.kobaj.screen.screenaddons.floatingframe;
 
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.Button;
+import com.kobaj.opengldrawable.EnumDrawFrom;
 import com.kobaj.opengldrawable.Quad.QuadCompressed;
 
 public abstract class BasePopup
@@ -19,6 +20,7 @@ public abstract class BasePopup
 	protected final double center_y = 0;
 	
 	protected final int main_color = 0xCC999999;
+	protected final int sec_color = 0xCCFFDDDD; 
 	
 	public void onInitialize()
 	{
@@ -30,6 +32,10 @@ public abstract class BasePopup
 		
 		label_x = center_x;
 		label_y = center_y + shift_y;
+		
+		//set colors
+		secondary_popup.color = sec_color;
+		main_popup.color = main_color;
 	}
 	
 	public abstract boolean onUpdate(double delta); // true it shows, false it doesn't show.
@@ -59,8 +65,9 @@ public abstract class BasePopup
 			// calculate current button position
 			int half_button_width = (button.width / 2);
 			int x_pos = half_width + half_button_width;
-			button.x_pos = Functions.screenWidthToShaderWidth(x_pos);
-			button.y_pos = y_pos;
+			double bx_pos = Functions.screenWidthToShaderWidth(x_pos);
+			double by_pos = y_pos;
+			button.invisible_outline.setPos(bx_pos, by_pos, EnumDrawFrom.center);
 			
 			// calculate next buttons starting point
 			half_width += button.width + padding;
