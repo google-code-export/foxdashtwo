@@ -18,8 +18,16 @@ public class MusicPlayer
 		this.music_player = music_player;
 	}
 	
+	public boolean isLoaded()
+	{
+		return music_player.loaded;
+	}
+	
 	public void onUpdate()
 	{
+		if(!music_player.loaded)
+			return;
+		
 		if (current_state == EnumMusicStates.fade_in)
 		{
 			final int current_position = music_player.media_player.getCurrentPosition();
@@ -85,11 +93,17 @@ public class MusicPlayer
 	
 	public int getCurrentPosition()
 	{
+		if(!music_player.loaded)
+			return 0;
+		
 		return music_player.media_player.getCurrentPosition();
 	}
 	
 	public int getDuration()
-	{
+	{		
+		if(!music_player.loaded)
+			return 0;
+		
 		return music_player.media_player.getDuration();
 	}
 	
@@ -179,6 +193,9 @@ public class MusicPlayer
 	
 	private void checkFadeEnd()
 	{
+		if(!music_player.loaded)
+			return;
+			
 		if (fade_end < 0)
 			fade_end = 0;
 		

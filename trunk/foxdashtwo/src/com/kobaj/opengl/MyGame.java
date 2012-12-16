@@ -70,7 +70,9 @@ public class MyGame extends MyGLRender
 		
 		// update as usual
 		if (currently_active_screen.current_state == EnumScreenState.running || currently_active_screen.current_state == EnumScreenState.paused)
+		{
 			currently_active_screen.onUpdate(delta);
+		}
 	}
 	
 	@Override
