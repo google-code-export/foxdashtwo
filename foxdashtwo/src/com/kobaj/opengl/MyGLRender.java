@@ -7,6 +7,7 @@ import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 import android.os.SystemClock;
+import android.util.Log;
 
 import com.kobaj.audio.Music;
 import com.kobaj.audio.MusicPlayer;
@@ -23,6 +24,8 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 {
 	// and fps
 	protected FPSManager fps;
+	
+	private int exception_count = 0;
 	
 	public void onSurfaceCreated(GL10 unused, EGLConfig config)
 	{
@@ -60,6 +63,8 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 	public void onSurfaceChanged(GL10 unused, int width, int height)
 	{
 		// gotta reset
+		exception_count = 0;
+		
 		com.kobaj.loader.GLBitmapReader.resetLoadedTextures();
 		
 		GLES20.glViewport(0, 0, width, height);
@@ -98,12 +103,39 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 	
 	public void onDrawFrame(GL10 unused)
 	{
-		onUpdateFrame();
+		// a very interesting bug requires this try catch. Allow me to explain.
+		// when the app resumes from a non application.finish() state
+		// it crashes with a NullPointerException. No stack trace
+		// I debugged this for an hour, and could not find a null pointer
+		// whats interesting, if you catch the first NPE, then let the system continue
+		// it works perfectly fine. Go figure.
 		
-		// Redraw background color
-		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+		try
+		{
+			onUpdateFrame();
 		
-		onDraw();
+			// Redraw background color
+			GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+		
+			onDraw();
+		}
+		catch(NullPointerException e)
+		{
+			exception_count++;
+			Log.e("Draw Frame Exception", e.toString());
+			
+			try
+			{
+				Thread.sleep(Constants.exception_timeout);
+			}
+			catch (InterruptedException e1)
+			{
+				Log.e("Draw Frame Timeout", e1.toString());
+			}
+			
+			if(exception_count > 10)
+				throw e;
+		}
 	}
 	
 	protected abstract void onDraw();

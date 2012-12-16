@@ -1,9 +1,12 @@
 package com.kobaj.screen;
 
+import android.util.Log;
+
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.input.EnumKeyCodes;
 import com.kobaj.input.GameInputModifier;
 import com.kobaj.loader.FileHandler;
+import com.kobaj.loader.GLBitmapReader;
 import com.kobaj.math.Constants;
 import com.kobaj.screen.screenaddons.BaseDebugScreen;
 import com.kobaj.screen.screenaddons.BaseInteractionPhysics;
@@ -57,13 +60,26 @@ public class SinglePlayerScreen extends BaseScreen
 		
 		//testing sounds
 		Constants.music_player.start(R.raw.tunnel, 5000, true);
+		while(!Constants.music_player.isLoaded())
+		{
+			try
+			{
+				Thread.sleep(Constants.exception_timeout);
+			}
+			catch (InterruptedException e)
+			{
+				Log.e("Single Player Exception", e.toString());
+			}
+		}
+		
+		GLBitmapReader.isLoaded();
 		
 		System.gc();
 	}
 	
 	@Override
 	public void onUpdate(double delta)
-	{
+	{	
 		//that music
 		Constants.music_player.onUpdate();
 		

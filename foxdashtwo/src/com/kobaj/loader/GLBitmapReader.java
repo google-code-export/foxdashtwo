@@ -2,6 +2,8 @@ package com.kobaj.loader;
 
 //http://blog.poweredbytoast.com/loading-opengl-textures-in-android
 
+import java.util.ArrayList;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -9,9 +11,11 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.opengl.GLES20;
 import android.opengl.GLUtils;
+import android.util.Log;
 import android.util.SparseArray;
 
 import com.kobaj.foxdashtwo.GameActivity;
+import com.kobaj.math.Constants;
 import com.kobaj.openglgraphics.ETC1Extended;
 
 public class GLBitmapReader
@@ -26,9 +30,44 @@ public class GLBitmapReader
 	// way of giving out resource id's to objects that dont have them natively
 	private static int loaded_resource_id = 9;
 	
+	//way of seeing when we're done loading
+	private static ArrayList<Boolean> loading_list = new ArrayList<Boolean>();
+	//this method blocks the thread, dont put it on the UI
+	public static boolean isLoaded()
+	{
+		int current_size = loading_list.size();
+		while(true)
+		{
+			boolean good = true;
+			for(int i = loading_list.size() - 1; i>=0; i--)
+				if(!loading_list.get(i))
+				{
+					good = false;
+					break;
+				}
+			
+			if(good)
+			{
+				if(current_size == loading_list.size())
+					return false;
+			}
+			
+			try
+			{
+				Thread.sleep(Constants.exception_timeout);
+			}
+			catch (InterruptedException e)
+			{
+				Log.e("Loading Exception", e.toString());
+			}
+		}
+	}
+	
 	// in case context is lost
 	public static void resetLoadedTextures()
 	{
+		loading_list.clear();
+		
 		int[] temp = new int[loaded_textures.size()];
 		for (int i = loaded_textures.size() - 1; i >= 0; i--)
 			temp[i] = loaded_textures.valueAt(i).texture_id;
@@ -77,10 +116,13 @@ public class GLBitmapReader
 	
 	public static void loadTextureFromETC1(final int resource)
 	{
+		final int my_index = loading_list.size();
+		loading_list.add(false);
+		
 		GameActivity.mGLView.queueEvent(new Runnable()
 		{
 			public void run()
-			{
+			{	
 				// get our ETC1 system ready
 				ETC1Extended my_etc1 = new ETC1Extended();
 				
@@ -88,12 +130,7 @@ public class GLBitmapReader
 				GLLoadedTexture loaded_item = loaded_textures.get(resource);
 				if (loaded_item != null)
 				{
-					// see if its a duplicate
-				/*	if (loaded_item.bitmap_hash != my_etc1.getETC1Hash(resource))
-						Log.e("loading_collision",
-								": loadTextureFromBitmap There was a collision with compressed texture. Resource ID: " + resource + " ... " + loaded_item.bitmap_hash + ": " + my_etc1.getETC1Hash(resource));
-					*/
-					// don't overwrite
+					loading_list.set(my_index, true);
 					return;
 				}
 				
@@ -106,12 +143,17 @@ public class GLBitmapReader
 				
 				// save in our sources
 				loaded_textures.put(resource, load);
+				
+				loading_list.set(my_index, true);
 			}
 		});
 	}
 	
 	public static void loadTextureFromBitmap(final int resource, Bitmap temp)
 	{
+		final int my_index = loading_list.size();
+		loading_list.add(false);
+		
 		final int hash = temp.hashCode();
 		
 		// flip it the right way around.
@@ -141,15 +183,12 @@ public class GLBitmapReader
 		{
 			public void run()
 			{
+				
 				// get an item from our loaded resources (to see if this is a duplicate entry and thus can be skipped).
 				GLLoadedTexture loaded_item = loaded_textures.get(resource);
 				if (loaded_item != null)
 				{
-					// see if its a duplicate
-					/*if (loaded_item.bitmap_hash != hash)
-						Log.e("loading_collision", ": loadTextureFromBitmap There was a collision with texture. Resource ID: " + resource + " ... " + loaded_item.bitmap_hash + ": " + hash);
-					*/
-					// don't overwrite
+					loading_list.set(my_index, true);
 					return;
 				}
 				
@@ -180,6 +219,7 @@ public class GLBitmapReader
 				
 				// cleanup!
 				bmp.recycle();
+				loading_list.set(my_index, true);
 			}
 		});
 	}

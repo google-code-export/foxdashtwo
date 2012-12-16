@@ -17,6 +17,7 @@ import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 
 // as of 10/24/12 this is 156 tests :)
+// as of 12/15/12 this is 178 tests :D
 
 @RunWith(SampleTestRunner.class)
 public class FunctionsTest
@@ -40,6 +41,14 @@ public class FunctionsTest
 		assertThat(Functions.linearInterpolateUnclamped(0, 100, 50, -1, 1), equalTo(0.0));
 		
 		assertThat(Functions.linearInterpolateUnclamped(0, 100, 200, -1, 1), equalTo(3.0));
+	}
+	
+	@Test
+	public void testFunctionsLinearInterpolateColor() throws Exception
+	{
+		assertThat(Functions.linearInterpolateColor(0, 1, 1, Color.WHITE, Color.BLACK), equalTo(Color.BLACK));
+		assertThat(Functions.linearInterpolateColor(0, 1, 0, Color.WHITE, Color.BLACK), equalTo(Color.WHITE));
+		assertThat(Functions.linearInterpolateColor(0, 1, .5, Color.WHITE, Color.BLACK), equalTo(-8421505));	
 	}
 	
 	@Test
