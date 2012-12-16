@@ -2,7 +2,7 @@ package com.kobaj.foxdashtwo;
 
 import android.os.Bundle;
 
-import com.kobaj.screen.SinglePlayerScreen;
+import com.kobaj.screen.TitleScreen;
 
 public final class FoxdashtwoActivity extends GameActivity
 {
@@ -11,6 +11,7 @@ public final class FoxdashtwoActivity extends GameActivity
 	{
 		super.onCreate(savedInstanceState);
 		
-		mGLView.my_game.onChangeScreen(new SinglePlayerScreen());
+		//mGLView.my_game.onChangeScreen(new SinglePlayerScreen());
+		mGLView.my_game.onChangeScreen(new TitleScreen());
 	}
 }

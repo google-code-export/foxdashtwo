@@ -96,21 +96,24 @@ public class InputTypeNintendo extends InputTypeBase
 			alpha = (int)(255 * Constants.min_brightness);
 		else
 			alpha = (int)(255 * Constants.max_brightness);
-		my_quad_left.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, Functions.makeColor(255, 255, 255, alpha), true);
+		my_quad_left.color = Functions.makeColor(255, 255, 255, alpha);
+		my_quad_left.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, true);
 		
 		//right
 		if(getTouchedRight())
 			alpha = (int)(255 * Constants.min_brightness);
 		else
 			alpha = (int)(255 * Constants.max_brightness);
-		my_quad_right.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, Functions.makeColor(255, 255, 255, alpha), true);
+		my_quad_right.color = Functions.makeColor(255, 255, 255, alpha);
+		my_quad_right.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, true);
 		
 		//jump
 		if(getTouchedJump())
 			alpha = (int)(255 * Constants.min_brightness);
 		else
 			alpha = (int)(255 * Constants.max_brightness);
-		my_quad_jump.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, Functions.makeColor(255, 255, 255, alpha), true);
+		my_quad_jump.color = Functions.makeColor(255, 255, 255, alpha);
+		my_quad_jump.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, true);
 	
 		//text
 		Constants.text.drawText(R.string.left, my_quad_left.x_pos, my_quad_left.y_pos, EnumDrawFrom.center);

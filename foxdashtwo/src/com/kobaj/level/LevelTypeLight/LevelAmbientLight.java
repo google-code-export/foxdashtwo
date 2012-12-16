@@ -2,8 +2,6 @@ package com.kobaj.level.LevelTypeLight;
 
 import org.simpleframework.xml.Element;
 
-import android.graphics.Color;
-
 import com.kobaj.level.LevelEntityActive;
 import com.kobaj.math.Constants;
 import com.kobaj.opengldrawable.Quad.Quad;
@@ -32,6 +30,6 @@ public class LevelAmbientLight extends LevelEntityActive
 	public void onDrawLight()
 	{
 		if (active)
-			quad_light.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, Color.WHITE, true);
+			quad_light.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, true);
 	}
 }
