@@ -77,7 +77,7 @@ public class InputTypeHalfHalf extends InputTypeBase
 		else
 			alpha = (int)(255 * Constants.max_brightness);
 		my_quad.setPos(Functions.screenXToShaderX(Constants.width), Functions.screenYToShaderY(0), EnumDrawFrom.bottom_right);
-		Functions.makeColor(255, 255, 255, alpha);
+		my_quad.color = Functions.makeColor(255, 255, 255, alpha);
 		my_quad.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, true);	
 	}
 }

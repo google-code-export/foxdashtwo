@@ -30,25 +30,26 @@ public class GLBitmapReader
 	// way of giving out resource id's to objects that dont have them natively
 	private static int loaded_resource_id = 9;
 	
-	//way of seeing when we're done loading
+	// way of seeing when we're done loading
 	private static ArrayList<Boolean> loading_list = new ArrayList<Boolean>();
-	//this method blocks the thread, dont put it on the UI
+	
+	// this method blocks the thread, dont put it on the UI
 	public static boolean isLoaded()
 	{
 		int current_size = loading_list.size();
-		while(true)
+		while (true)
 		{
 			boolean good = true;
-			for(int i = loading_list.size() - 1; i>=0; i--)
-				if(!loading_list.get(i))
+			for (int i = loading_list.size() - 1; i >= 0; i--)
+				if (!loading_list.get(i))
 				{
 					good = false;
 					break;
 				}
 			
-			if(good)
+			if (good)
 			{
-				if(current_size == loading_list.size())
+				if (current_size == loading_list.size())
 					return false;
 			}
 			
@@ -122,10 +123,7 @@ public class GLBitmapReader
 		GameActivity.mGLView.queueEvent(new Runnable()
 		{
 			public void run()
-			{	
-				// get our ETC1 system ready
-				ETC1Extended my_etc1 = new ETC1Extended();
-				
+			{
 				// see if stuff is already loaded
 				GLLoadedTexture loaded_item = loaded_textures.get(resource);
 				if (loaded_item != null)
@@ -133,6 +131,9 @@ public class GLBitmapReader
 					loading_list.set(my_index, true);
 					return;
 				}
+				
+				// get our ETC1 system ready
+				ETC1Extended my_etc1 = new ETC1Extended();
 				
 				// prepair our entry
 				GLLoadedTexture load = new GLLoadedTexture();
@@ -151,9 +152,21 @@ public class GLBitmapReader
 	
 	public static void loadTextureFromBitmap(final int resource, Bitmap temp)
 	{
+		
 		final int my_index = loading_list.size();
 		loading_list.add(false);
 		
+		// get an item from our loaded resources
+		GLLoadedTexture loaded_item = loaded_textures.get(resource);
+		if (loaded_item != null)
+		{
+			loading_list.set(my_index, true);
+			return;
+		}
+		
+		// a way of remembering whats been loaded
+		// protip bitmap hashes are not accurate at all
+		// for comparing tow bitmaps to be the same or not
 		final int hash = temp.hashCode();
 		
 		// flip it the right way around.
@@ -183,15 +196,6 @@ public class GLBitmapReader
 		{
 			public void run()
 			{
-				
-				// get an item from our loaded resources (to see if this is a duplicate entry and thus can be skipped).
-				GLLoadedTexture loaded_item = loaded_textures.get(resource);
-				if (loaded_item != null)
-				{
-					loading_list.set(my_index, true);
-					return;
-				}
-				
 				// make a loader
 				// put out info into someplace safe.
 				GLLoadedTexture load = new GLLoadedTexture();

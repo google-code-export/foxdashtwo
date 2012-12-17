@@ -53,7 +53,7 @@ public class Constants
 	public static final double max_x_velocity_default = 2.5;
 	public static final double normal_acceleration_default = 0.00050;
 	public static final double normal_reverse_acceleration_default = 0.00600;
-	public static final double collision_detection_height_default = 2.0;
+	public static final double collision_detection_height_default = 1.0;
 	public static final double jump_velocity_default = 0.750;
 	public static final double jump_limiter_default = 0.185;
 	
@@ -125,5 +125,5 @@ public class Constants
 	public static int quads_drawn_screen = 0;
 	
 	//errors
-	public static int exception_timeout = 300;
+	public static int exception_timeout = 300; //ms
 }
