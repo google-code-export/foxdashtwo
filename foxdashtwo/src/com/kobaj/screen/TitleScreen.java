@@ -5,7 +5,9 @@ import android.graphics.Color;
 import com.kobaj.foxdashtwo.GameActivity;
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Constants;
+import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.Button;
+import com.kobaj.opengldrawable.EnumDrawFrom;
 import com.kobaj.opengldrawable.Tween.TweenEvent;
 import com.kobaj.opengldrawable.Tween.TweenManager;
 import com.kobaj.screen.screenaddons.floatingframe.BaseQuit;
@@ -118,6 +120,10 @@ public class TitleScreen extends BaseScreen
 			base_quit.onDraw();
 		else
 		{
+			double x_pos = Functions.screenXToShaderX(500);
+			double y_pos = Functions.screenYToShaderY((int) Functions.fix_y(100));
+			Constants.text.drawText(R.string.fdtdh, x_pos, y_pos, EnumDrawFrom.center);
+			
 			play_button.onDrawConstant();
 			settings_button.onDrawConstant();
 			quit_button.onDrawConstant();

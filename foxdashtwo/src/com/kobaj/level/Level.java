@@ -16,6 +16,9 @@ import com.kobaj.level.LevelTypeLight.LevelPointLight;
 import com.kobaj.level.LevelTypeLight.LevelSpotLight;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
+import com.kobaj.math.android.RectF;
+import com.kobaj.opengldrawable.EnumDrawFrom;
+import com.kobaj.opengldrawable.NewParticle.NParticleEmitter;
 import com.kobaj.opengldrawable.Quad.QuadColorShape;
 
 public class Level
@@ -41,16 +44,21 @@ public class Level
 	@ElementList
 	public ArrayList<LevelObject> object_list;
 	
+	public ArrayList<LevelObject> physics_objects = new ArrayList<LevelObject>(); // references for only physics. 
+	
 	@ElementList
 	public ArrayList<LevelAmbientLight> light_list; // all lights including blooms
 	
-	private ArrayList<LevelBloomLight> bloom_light_list = new ArrayList<LevelBloomLight>(); // only blooms
+	private ArrayList<LevelBloomLight> bloom_light_list = new ArrayList<LevelBloomLight>(); // references for only blooms
 	
 	@Element
 	public LevelObject player;
 	
 	@ElementList
 	public ArrayList<LevelEvent> event_list;
+	
+	// and our local particles
+	private ArrayList<NParticleEmitter> local_np_emitter = new ArrayList<NParticleEmitter>();
 	
 	// no constructor
 	
@@ -68,16 +76,36 @@ public class Level
 		double x_player = Functions.screenXToShaderX(player.x_pos);
 		double y_player = Functions.screenYToShaderY(player.y_pos);
 		
-		bloom_light_list.clear();
-		
 		// setup general objects
+		local_np_emitter.clear();
+		physics_objects.clear();
 		for (int i = object_list.size() - 1; i >= 0; i--)
-			object_list.get(i).onInitialize();
+		{
+			LevelObject reference = object_list.get(i);
+			reference.onInitialize();
+			
+			// do some particles
+			if (reference.this_object == EnumLevelObject.floating1)
+			{
+				RectF emitt_from = new RectF((float) (reference.quad_object.best_fit_aabb.main_rect.left + Functions.screenWidthToShaderWidth(45)),
+						(float) (reference.quad_object.best_fit_aabb.main_rect.top - Functions.screenHeightToShaderHeight(85)),
+						(float) (reference.quad_object.best_fit_aabb.main_rect.right - Functions.screenWidthToShaderWidth(45)),
+						(float) (reference.quad_object.best_fit_aabb.main_rect.bottom + Functions.screenHeightToShaderHeight(85)));
+				
+				NParticleEmitter test = new NParticleEmitter(emitt_from);
+				test.onInitialize();
+				test.preUpdate();
+				local_np_emitter.add(test);
+				
+				physics_objects.add(reference);
+			}
+		}
 		
 		// sort the objects
 		Collections.sort(object_list, new ObjectDrawSort());
 		
 		// setup lights
+		bloom_light_list.clear();
 		for (int i = light_list.size() - 1; i >= 0; i--)
 		{
 			// store bloom lights in another array for easy use later
@@ -145,6 +173,13 @@ public class Level
 		
 		for (int i = event_list.size() - 1; i >= 0; i--)
 			event_list.get(i).onUpdate(delta);
+		
+		//whaaaaat
+		for (int i = physics_objects.size() - 1; i >= 0; i--)
+			physics_objects.get(i).onUpdate(delta);
+		
+		for (int i = local_np_emitter.size() - 1; i >= 0; i--)
+			local_np_emitter.get(i).onUpdate(delta);
 	}
 	
 	public void onDrawObject()
@@ -153,12 +188,16 @@ public class Level
 		if (backdrop_color != Color.TRANSPARENT)
 			my_backdrop.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, true);
 		
-		// draw sorted
+		// draw sorted objects
 		for (int i = object_list.size() - 1; i >= 0; i--)
 			object_list.get(i).onDrawObject();
 		
 		// player
 		player.quad_object.onDrawAmbient();
+		
+		// particles
+		for (int i = local_np_emitter.size() - 1; i >= 0; i--)
+			local_np_emitter.get(i).onDraw();
 		
 		// bloom lights
 		for (int i = bloom_light_list.size() - 1; i >= 0; i--)
@@ -167,7 +206,7 @@ public class Level
 	
 	public void onDrawLight()
 	{
-		// lights 
+		// lights
 		for (int i = light_list.size() - 1; i >= 0; i--)
 			light_list.get(i).onDrawLight();
 	}
@@ -177,6 +216,22 @@ public class Level
 		// events
 		for (int i = event_list.size() - 1; i >= 0; i--)
 			event_list.get(i).onDraw();
+	}
+	
+	public void objectInteraction(final RectF collision, final LevelObject player, final LevelObject reference)
+	{
+		//up down collision
+		if(collision.width() == 0)
+		{
+			if(reference.this_object == EnumLevelObject.floating1)
+			if(player.quad_object.y_pos > reference.quad_object.y_pos) //remember this is the center of the object
+			{
+				// just a test value
+				player.quad_object.setPos(player.quad_object.x_pos,
+						player.quad_object.y_pos - Constants.collision_detection_height, EnumDrawFrom.center);
+				reference.quad_object.y_acc -= .00001;
+			}
+		}
 	}
 	
 	// this method will be deleted.

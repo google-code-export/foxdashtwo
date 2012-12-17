@@ -10,8 +10,7 @@ public final class FoxdashtwoActivity extends GameActivity
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		
-		//mGLView.my_game.onChangeScreen(new SinglePlayerScreen());
+
 		mGLView.my_game.onChangeScreen(new TitleScreen());
 	}
 }

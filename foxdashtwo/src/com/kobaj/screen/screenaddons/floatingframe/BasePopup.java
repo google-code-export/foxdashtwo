@@ -25,7 +25,8 @@ public abstract class BasePopup
 	public void onInitialize()
 	{
 		main_popup = new QuadCompressed(R.raw.big_popup, R.raw.big_popup_alpha, 626, 386);
-		secondary_popup = new QuadCompressed(R.raw.little_popup, R.raw.little_popup, 326, 206);
+		secondary_popup = new QuadCompressed(R.raw.big_popup, R.raw.big_popup_alpha, 626, 386);
+		secondary_popup.setScale(.5);
 		
 		shift_y = Functions.screenHeightToShaderHeight(45);
 		shift_x = Functions.screenWidthToShaderWidth(60);

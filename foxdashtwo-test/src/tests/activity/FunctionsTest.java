@@ -155,6 +155,19 @@ public class FunctionsTest
 		assertThat(Functions.shaderHeightToScreenHeight(0), equalTo(0.0));
 	}
 	
+	@Test 
+	public void testFunctionsRandomDouble()
+	{
+		for(int i = 0; i < 90000; i++)
+		{
+			double min = i - .4645;
+			double max = i + .73840;
+			double random = Functions.randomDouble(min, max);
+			assertThat(random >= min, equalTo(true));
+			assertThat(random <= max, equalTo(true));
+		}
+	}
+	
 	@Test
 	public void testFunctionsInRectF() throws Exception
 	{

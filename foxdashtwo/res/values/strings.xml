@@ -5,6 +5,7 @@
     <string name="hello">Hello World,\nFoxdashtwoActivity!</string>
     <string name="app_name">Fox Dash Two</string>
     <string name="loading">Loading</string>
+    <string name="fdtdh">Fox Dash Two. \nDash Harder.</string>
     
     <!-- metrics -->
     <string name="fps">FPS:</string>
@@ -43,12 +44,14 @@
         <item>hello</item>
         <item>app_name</item>
         <item>loading</item>
+        <item>fdtdh</item>
         <item>fps</item>
         <item>qos</item>
         <item>volume</item>
         <item>mpos</item>
         <item>left</item>
         <item>right</item>
+        <item>jump</item>
         <item>touch_here</item>
         <item>paused</item>
         <item>are_you_sure</item>

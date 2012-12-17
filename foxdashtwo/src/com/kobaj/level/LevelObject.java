@@ -5,6 +5,7 @@ import org.simpleframework.xml.Element;
 import android.graphics.Color;
 
 import com.kobaj.foxdashtwo.R;
+import com.kobaj.math.AverageMaker;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 import com.kobaj.math.RectFExtended;
@@ -40,9 +41,12 @@ public class LevelObject extends LevelEntityActive
 	public double width;
 	public double height;
 	
+	// these dont change,
+	public double x_pos_shader;
+	public double y_pos_shader;
+	
 	public void onInitialize()
 	{
-		// will be changed in the future
 		if (this_object == EnumLevelObject.bg1)
 			quad_object = new QuadCompressed(R.raw.bg1, R.raw.bg1_alpha, 1659, 1064);
 		else if (this_object == EnumLevelObject.bg2)
@@ -94,17 +98,42 @@ public class LevelObject extends LevelEntityActive
 			quad_object = new QuadCompressed(R.raw.transparent_alpha, R.raw.transparent_alpha, (int) width, (int) height);
 		else if (this_object == EnumLevelObject.test)
 			quad_object = new QuadColorShape(0, 200, 200, 0, Color.WHITE, 0);
+		else if (this_object == EnumLevelObject.floating1)
+		{
+			quad_object = new QuadCompressed(R.raw.floating1, R.raw.floating1_alpha, 391, 198);
+			RectF previous = quad_object.phys_rect_list.get(0).main_rect;//
+			quad_object.phys_rect_list.add(new RectFExtended(previous.left + Functions.screenWidthToShaderWidth(45), //
+					previous.top - Functions.screenHeightToShaderHeight(30),//
+					previous.right - Functions.screenWidthToShaderWidth(45),//
+					previous.bottom + Functions.screenHeightToShaderHeight(50)));//
+			quad_object.phys_rect_list.remove(0);
+		}
 		else
 			quad_object = new QuadColorShape(0, 200, 200, 0, Color.RED, 0);
 		
 		quad_object.z_pos -= (z_plane * Constants.z_modifier);
-		quad_object.setPos(com.kobaj.math.Functions.screenXToShaderX(x_pos), com.kobaj.math.Functions.screenYToShaderY(y_pos), draw_from);
+		quad_object.setPos(Functions.screenXToShaderX(x_pos), Functions.screenYToShaderY(y_pos), draw_from);
+		
+		// note how these are set AFTER
+		this.x_pos_shader = quad_object.x_pos;
+		this.y_pos_shader = quad_object.y_pos;
 		
 		width = quad_object.width;
 		height = quad_object.height;
 		
 		if (degree != 0 || scale != 1)
 			quad_object.setWidthHeightRotationScale(quad_object.width, quad_object.height, degree, scale);
+	}
+	
+	AverageMaker y_average = new AverageMaker(10);
+	
+	public void onUpdate(double delta)
+	{
+		if (this_object == EnumLevelObject.floating1)
+		{
+			Constants.physics.addSpringY(.00005, .005, 0, quad_object.y_pos - y_pos_shader, quad_object);
+			Constants.physics.integratePhysics(delta, quad_object);
+		}
 	}
 	
 	public void onDrawObject()

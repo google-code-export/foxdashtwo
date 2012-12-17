@@ -11,6 +11,7 @@ import com.kobaj.math.Constants;
 import com.kobaj.screen.screenaddons.BaseDebugScreen;
 import com.kobaj.screen.screenaddons.BaseInteractionPhysics;
 import com.kobaj.screen.screenaddons.BaseLoadingScreen;
+import com.kobaj.screen.screenaddons.EnumDebugType;
 import com.kobaj.screen.screenaddons.floatingframe.BasePauseScreen;
 
 public class SinglePlayerScreen extends BaseScreen
@@ -32,10 +33,6 @@ public class SinglePlayerScreen extends BaseScreen
 	{
 		// initialize everything
 		my_modifier = new GameInputModifier();
-		
-		/*
-		 * helpful while I build the level class com.kobaj.level.Level test = new com.kobaj.level.Level(); test.writeOut(); com.kobaj.loader.XMLHandler.writeSerialFile(test, "test_level");
-		 */
 	}
 	
 	@Override
@@ -58,9 +55,9 @@ public class SinglePlayerScreen extends BaseScreen
 		pause_addon = new BasePauseScreen();
 		pause_addon.onInitialize();
 		
-		//testing sounds
+		// testing sounds
 		Constants.music_player.start(R.raw.tunnel, 5000, true);
-		while(!Constants.music_player.isLoaded())
+		while (!Constants.music_player.isLoaded())
 		{
 			try
 			{
@@ -74,13 +71,15 @@ public class SinglePlayerScreen extends BaseScreen
 		
 		GLBitmapReader.isLoaded();
 		
+		debug_addon = new BaseDebugScreen(test_level, EnumDebugType.aabb);
+		
 		System.gc();
 	}
 	
 	@Override
 	public void onUpdate(double delta)
-	{	
-		//that music
+	{
+		// that music
 		Constants.music_player.onUpdate();
 		
 		if (current_state != EnumScreenState.paused)
@@ -122,6 +121,8 @@ public class SinglePlayerScreen extends BaseScreen
 	public void onDrawObject()
 	{
 		test_level.onDrawObject();
+		
+		// debug_addon.onDrawObject();
 	}
 	
 	@Override
@@ -134,8 +135,6 @@ public class SinglePlayerScreen extends BaseScreen
 	public void onDrawConstant()
 	{
 		test_level.onDrawConstant();
-		
-		// debug_addon.onDrawObject();
 		
 		// draw the controls
 		if (current_state != EnumScreenState.paused)
