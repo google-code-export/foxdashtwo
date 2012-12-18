@@ -88,13 +88,13 @@ public class Particles
 		Particle the_particle = new Particle();
 		
 		the_particle.actual_quad = new QuadColorShape(radius, particle_color, is_bloom, 0);
-		the_particle.actual_quad.setPos(com.kobaj.math.Functions.screenXToShaderX(x), com.kobaj.math.Functions.screenYToShaderY(y), com.kobaj.opengldrawable.EnumDrawFrom.center);
+		the_particle.actual_quad.setXYPos(com.kobaj.math.Functions.screenXToShaderX(x), com.kobaj.math.Functions.screenYToShaderY(y), com.kobaj.opengldrawable.EnumDrawFrom.center);
 		
 		//add a bloom particle if requested
 		if(is_bloom)
 		{
 			the_particle.bloom_quad = new QuadColorShape(radius, particle_color, true, 0);
-			the_particle.bloom_quad.setPos(com.kobaj.math.Functions.screenXToShaderX(x), com.kobaj.math.Functions.screenYToShaderY(y), com.kobaj.opengldrawable.EnumDrawFrom.center);
+			the_particle.bloom_quad.setXYPos(com.kobaj.math.Functions.screenXToShaderX(x), com.kobaj.math.Functions.screenYToShaderY(y), com.kobaj.opengldrawable.EnumDrawFrom.center);
 		}
 	
 		return the_particle;
@@ -131,7 +131,7 @@ public class Particles
 						final double new_x = com.kobaj.math.Functions.polarToX(p.degree, radius) + shader_x;
 						final double new_y = com.kobaj.math.Functions.polarToY(p.degree, radius) + shader_y;
 						
-						p.actual_quad.setPos(new_x, new_y, EnumDrawFrom.center);
+						p.actual_quad.setXYPos(new_x, new_y, EnumDrawFrom.center);
 					}
 					else
 						reboot_particle(p);
@@ -142,7 +142,7 @@ public class Particles
 					final double new_x = com.kobaj.math.Functions.linearInterpolate(0, p.max_travel_time, p.travel_time, p.start_x, p.go_x);
 					final double new_y = com.kobaj.math.Functions.linearInterpolate(0, p.max_travel_time, p.travel_time, p.start_y, p.go_y);
 					
-					p.actual_quad.setPos(new_x, new_y, EnumDrawFrom.center);
+					p.actual_quad.setXYPos(new_x, new_y, EnumDrawFrom.center);
 				}
 			}
 			else

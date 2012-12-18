@@ -56,6 +56,7 @@ public class Constants
 	public static final double collision_detection_height_default = 1.0;
 	public static final double jump_velocity_default = 0.750;
 	public static final double jump_limiter_default = 0.185;
+	public static final double player_downward_platform_acc_default = -.001;
 	
 	// physics variables
 	public static double gravity;
@@ -67,6 +68,7 @@ public class Constants
 	public static double jump_velocity;
 	public static double jump_limiter;
 	public static double max_speed;
+	public static double player_downward_platform_acc;
 	
 	// same regardless of screen.
 	public static final double normal_air_damping = .90;
@@ -111,6 +113,8 @@ public class Constants
 	//camera
 	public static float[] my_view_matrix = new float[16];
 	public static float[] my_proj_matrix = new float[16];
+	public static float[] my_vp_matrix = new float[16];
+	public static float[] my_ip_matrix = new float[16];
 	public static final float[] identity_matrix = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 };
 	
 	//lighting

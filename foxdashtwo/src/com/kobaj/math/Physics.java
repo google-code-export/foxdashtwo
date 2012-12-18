@@ -67,7 +67,7 @@ public class Physics
 		// add position
 		double x_pos = the_quad.x_pos + the_quad.x_vel * delta;
 		double y_pos = the_quad.y_pos + the_quad.y_vel * delta;
-		the_quad.setPos(x_pos, y_pos, com.kobaj.opengldrawable.EnumDrawFrom.center);
+		the_quad.setXYPos(x_pos, y_pos, com.kobaj.opengldrawable.EnumDrawFrom.center);
 	}
 	
 	// check for a collision and return true if the collision is up and down (the player can jump)
@@ -175,14 +175,14 @@ public class Physics
 		{
 			if (my_collision.centerX() > the_quad.x_pos) // push object to the right
 				width = -width;
-			the_quad.setPos(the_quad.x_pos + width, the_quad.y_pos, com.kobaj.opengldrawable.EnumDrawFrom.center);
+			the_quad.setXYPos(the_quad.x_pos + width, the_quad.y_pos, com.kobaj.opengldrawable.EnumDrawFrom.center);
 			the_quad.x_vel = 0;
 		}
 		else
 		{
 			if (my_collision.centerY() > the_quad.y_pos)
 				height = -height;
-			the_quad.setPos(the_quad.x_pos, the_quad.y_pos + height, com.kobaj.opengldrawable.EnumDrawFrom.center);
+			the_quad.setXYPos(the_quad.x_pos, the_quad.y_pos + height, com.kobaj.opengldrawable.EnumDrawFrom.center);
 			the_quad.y_vel = 0;
 		}
 	}

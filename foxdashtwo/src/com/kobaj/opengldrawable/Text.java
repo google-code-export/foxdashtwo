@@ -186,11 +186,11 @@ public class Text
 			
 			// translate
 			current_width += temp.shader_width;
-			temp.setPos(x - current_width, y, where);
+			temp.setXYPos(x - current_width, y, where);
 			
 			// draw
 			temp.color = color;
-			temp.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, true);
+			temp.onDrawAmbient(Constants.my_ip_matrix, true);
 			
 			// continue
 			number = number / 10;
@@ -218,11 +218,11 @@ public class Text
 			temp.color = color;
 			if(temp.degree != degree)
 				temp.setRotationZ(degree);
-			temp.setPos(x, y, where);
+			temp.setXYPos(x, y, where);
 			
 			// draw pretty!
 			temp.color = color;
-			temp.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, true);
+			temp.onDrawAmbient(Constants.my_ip_matrix, true);
 		}
 	}
 	

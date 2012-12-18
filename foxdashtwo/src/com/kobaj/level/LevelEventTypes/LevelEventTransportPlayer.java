@@ -55,12 +55,12 @@ public class LevelEventTransportPlayer extends LevelEventBase
 			player.x_vel = 0;
 			player.y_vel = 0;
 			
-			player.z_pos = -(1 + 0 * Constants.z_modifier);
-			player.setPos(x_current, y_current, EnumDrawFrom.center);
+			player.setZPos(-(1 + 0 * Constants.z_modifier));
+			player.setXYPos(x_current, y_current, EnumDrawFrom.center);
 			
 			if (time_elapsed >= time_total)
 			{
-				player.z_pos = -(1 + 5 * Constants.z_modifier);
+				player.setZPos(-(1 + 5 * Constants.z_modifier));
 				time_elapsed = 0;
 				teleporting = false;
 			}

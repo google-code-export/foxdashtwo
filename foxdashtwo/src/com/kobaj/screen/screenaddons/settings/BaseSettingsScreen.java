@@ -63,7 +63,7 @@ public class BaseSettingsScreen extends BasePopup
 			return;
 		}
 		
-		main_popup.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, true);
+		main_popup.onDrawAmbient(Constants.my_ip_matrix, true);
 		Constants.text.drawText(R.string.settings, label_x, label_y, EnumDrawFrom.center);
 		
 		audio_button.onDrawConstant();

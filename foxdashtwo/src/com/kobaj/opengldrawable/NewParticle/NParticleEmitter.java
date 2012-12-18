@@ -100,7 +100,7 @@ public class NParticleEmitter
 					// random position
 					double x_pos = Functions.randomDouble(emit_location.left, emit_location.right);
 					double y_pos = Functions.randomDouble(emit_location.bottom, emit_location.top);
-					reference.quad_reference.setPos(x_pos, y_pos, EnumDrawFrom.center);
+					reference.quad_reference.setXYPos(x_pos, y_pos, EnumDrawFrom.center);
 					
 					// random velocity calculated based on direction.
 					double degree = Functions.randomDouble(direction_start, direction_end);

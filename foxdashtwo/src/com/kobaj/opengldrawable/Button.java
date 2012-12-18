@@ -61,7 +61,7 @@ public class Button
 			color = 0xEE888899;
 			
 		invisible_outline.color = color;
-		invisible_outline.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, true);
+		invisible_outline.onDrawAmbient(Constants.my_ip_matrix, true);
 		Constants.text.drawText(label, invisible_outline.x_pos, invisible_outline.y_pos, EnumDrawFrom.center, invisible_outline.color, invisible_outline.degree);
 	}
 }

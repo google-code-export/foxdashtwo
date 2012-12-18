@@ -92,18 +92,18 @@ public class BaseDebugScreen
 				Quad temp = test_level.object_list.get(i).quad_object;
 				Quad relative = outline_quads.get(i);
 				relative.setWidthHeightRotationScale(temp.width, temp.height, temp.degree, 1.0); // dont need to scale.
-				relative.setPos(temp.x_pos, temp.y_pos, EnumDrawFrom.center);
+				relative.setXYPos(temp.x_pos, temp.y_pos, EnumDrawFrom.center);
 			}
 		else if (type == EnumDebugType.physics)
 			for (int i = test_level.object_list.size() - 1; i >= 0; i--)
 			{
 				Quad temp = test_level.object_list.get(i).quad_object;
 				for (int e = temp.phys_rect_list.size() - 1; e >= 0; e--)
-					outline_quads.get(e).setPos(temp.x_pos, temp.y_pos, EnumDrawFrom.center);
+					outline_quads.get(e).setXYPos(temp.x_pos, temp.y_pos, EnumDrawFrom.center);
 			}
 		else if (type == EnumDebugType.player_physics)
 			for (int i = test_level.player.quad_object.phys_rect_list.size() - 1; i >= 0; i--)
-				outline_quads.get(i).setPos(test_level.player.x_pos, test_level.player.y_pos, EnumDrawFrom.center);
+				outline_quads.get(i).setXYPos(test_level.player.x_pos, test_level.player.y_pos, EnumDrawFrom.center);
 		
 	}
 	

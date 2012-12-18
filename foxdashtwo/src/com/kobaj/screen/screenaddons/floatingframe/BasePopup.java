@@ -68,7 +68,7 @@ public abstract class BasePopup
 			int x_pos = half_width + half_button_width;
 			double bx_pos = Functions.screenWidthToShaderWidth(x_pos);
 			double by_pos = y_pos;
-			button.invisible_outline.setPos(bx_pos, by_pos, EnumDrawFrom.center);
+			button.invisible_outline.setXYPos(bx_pos, by_pos, EnumDrawFrom.center);
 			
 			// calculate next buttons starting point
 			half_width += button.width + padding;

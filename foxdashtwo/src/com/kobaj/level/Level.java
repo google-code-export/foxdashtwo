@@ -65,11 +65,14 @@ public class Level
 	public void onInitialize()
 	{
 		// backdrop
+		// hey, you, the one about to optimize this out
+		// the backdrop is never not transparent (at least it shouldnt be).
+		// dont worry about it.
 		if (backdrop_color != Color.TRANSPARENT)
 		{
 			my_backdrop = new QuadColorShape(1, 1, backdrop_color, 0);
 			my_backdrop.setWidthHeight(Constants.width, Constants.height);
-			my_backdrop.z_pos -= (10.0 * Constants.z_modifier);
+			my_backdrop.setZPos(my_backdrop.z_pos - (10.0 * Constants.z_modifier));
 		}
 		
 		// pre-player
@@ -155,8 +158,8 @@ public class Level
 		
 		// setup player
 		player.quad_object = new com.kobaj.opengldrawable.Quad.QuadColorShape(0, 64, 64, 0, Color.GRAY, 0);
-		player.quad_object.z_pos -= (5 /* player.z_plane */* Constants.z_modifier);
-		player.quad_object.setPos(x_player, y_player, player.draw_from);
+		player.quad_object.setZPos(player.quad_object.z_pos - (5 /* player.z_plane */ * Constants.z_modifier));
+		player.quad_object.setXYPos(x_player, y_player, player.draw_from);
 		
 		// set widths and heights for the camera
 		left_shader_limit = (Functions.screenXToShaderX(left_limit) + Constants.ratio);
@@ -186,7 +189,7 @@ public class Level
 	{
 		// backdrop
 		if (backdrop_color != Color.TRANSPARENT)
-			my_backdrop.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, true);
+			my_backdrop.onDrawAmbient(Constants.my_ip_matrix, true);
 		
 		// draw sorted objects
 		for (int i = object_list.size() - 1; i >= 0; i--)
@@ -227,9 +230,9 @@ public class Level
 			if(player.quad_object.y_pos > reference.quad_object.y_pos) //remember this is the center of the object
 			{
 				// just a test value
-				player.quad_object.setPos(player.quad_object.x_pos,
+				player.quad_object.setXYPos(player.quad_object.x_pos,
 						player.quad_object.y_pos - Constants.collision_detection_height, EnumDrawFrom.center);
-				reference.quad_object.y_acc -= .00001;
+				reference.quad_object.y_acc += Constants.player_downward_platform_acc;
 			}
 		}
 	}

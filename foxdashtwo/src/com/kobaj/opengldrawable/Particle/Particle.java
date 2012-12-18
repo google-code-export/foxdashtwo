@@ -24,13 +24,13 @@ public class Particle
 	public void reset(double x, double y)
 	{
 		// reset everything.
-		actual_quad.setPos(x, y, EnumDrawFrom.center);
+		actual_quad.setXYPos(x, y, EnumDrawFrom.center);
 		actual_quad.x_vel = 0;
 		actual_quad.y_vel = 0;
 		
 		if (bloom_quad != null)
 		{
-			bloom_quad.setPos(x, y, EnumDrawFrom.center);
+			bloom_quad.setXYPos(x, y, EnumDrawFrom.center);
 			bloom_quad.x_vel = 0;
 			bloom_quad.y_vel = 0;
 		}
@@ -109,7 +109,7 @@ public class Particle
 		}
 		else
 		{
-			actual_quad.setPos(0 + shader_x, 0 + shader_y, EnumDrawFrom.center);
+			actual_quad.setXYPos(0 + shader_x, 0 + shader_y, EnumDrawFrom.center);
 			
 			start_x = 0 + shader_x;
 			start_y = 0 + shader_y;

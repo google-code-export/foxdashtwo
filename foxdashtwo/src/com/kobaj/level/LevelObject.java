@@ -111,8 +111,8 @@ public class LevelObject extends LevelEntityActive
 		else
 			quad_object = new QuadColorShape(0, 200, 200, 0, Color.RED, 0);
 		
-		quad_object.z_pos -= (z_plane * Constants.z_modifier);
-		quad_object.setPos(Functions.screenXToShaderX(x_pos), Functions.screenYToShaderY(y_pos), draw_from);
+		quad_object.setZPos(quad_object.z_pos - (z_plane * Constants.z_modifier));
+		quad_object.setXYPos(Functions.screenXToShaderX(x_pos), Functions.screenYToShaderY(y_pos), draw_from);
 		
 		// note how these are set AFTER
 		this.x_pos_shader = quad_object.x_pos;

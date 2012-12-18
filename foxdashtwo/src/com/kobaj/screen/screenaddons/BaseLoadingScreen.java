@@ -62,6 +62,6 @@ public class BaseLoadingScreen
 		double x = Functions.polarRadToY(local_total_delta, r);
 		
 		// set it all
-		my_quad.setPos(x, y, EnumDrawFrom.center);
+		my_quad.setXYPos(x, y, EnumDrawFrom.center);
 	}
 }

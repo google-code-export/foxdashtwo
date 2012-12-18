@@ -30,6 +30,6 @@ public class LevelAmbientLight extends LevelEntityActive
 	public void onDrawLight()
 	{
 		if (active)
-			quad_light.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, true);
+			quad_light.onDrawAmbient(Constants.my_ip_matrix, true);
 	}
 }

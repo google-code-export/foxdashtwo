@@ -20,15 +20,15 @@ public class InputTypeNintendo extends InputTypeBase
 		
 		//left
 		my_quad_left = new QuadColorShape(Constants.input_circle_width, Constants.input_draw_color, 0);
-		my_quad_left.setPos(Functions.screenXToShaderX(Constants.input_circle_width), shader_circle_pos_y, EnumDrawFrom.bottom_left);
+		my_quad_left.setXYPos(Functions.screenXToShaderX(Constants.input_circle_width), shader_circle_pos_y, EnumDrawFrom.bottom_left);
 		
 		//right
 		my_quad_right = new QuadColorShape(Constants.input_circle_width, Constants.input_draw_color, 0);
-		my_quad_right.setPos(Functions.screenXToShaderX(Constants.input_circle_width * 3), shader_circle_pos_y, EnumDrawFrom.bottom_left);
+		my_quad_right.setXYPos(Functions.screenXToShaderX(Constants.input_circle_width * 3), shader_circle_pos_y, EnumDrawFrom.bottom_left);
 		
 		//jump
 		my_quad_jump = new QuadColorShape(Constants.input_circle_width, Constants.input_draw_color, 0);
-		my_quad_jump.setPos(Functions.screenXToShaderX(Constants.width - Constants.input_circle_width), shader_circle_pos_y, EnumDrawFrom.bottom_right);
+		my_quad_jump.setXYPos(Functions.screenXToShaderX(Constants.width - Constants.input_circle_width), shader_circle_pos_y, EnumDrawFrom.bottom_right);
 	}
 	
 	public boolean getTouchedJump()
@@ -97,7 +97,7 @@ public class InputTypeNintendo extends InputTypeBase
 		else
 			alpha = (int)(255 * Constants.max_brightness);
 		my_quad_left.color = Functions.makeColor(255, 255, 255, alpha);
-		my_quad_left.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, true);
+		my_quad_left.onDrawAmbient(Constants.my_ip_matrix, true);
 		
 		//right
 		if(getTouchedRight())
@@ -105,7 +105,7 @@ public class InputTypeNintendo extends InputTypeBase
 		else
 			alpha = (int)(255 * Constants.max_brightness);
 		my_quad_right.color = Functions.makeColor(255, 255, 255, alpha);
-		my_quad_right.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, true);
+		my_quad_right.onDrawAmbient(Constants.my_ip_matrix, true);
 		
 		//jump
 		if(getTouchedJump())
@@ -113,7 +113,7 @@ public class InputTypeNintendo extends InputTypeBase
 		else
 			alpha = (int)(255 * Constants.max_brightness);
 		my_quad_jump.color = Functions.makeColor(255, 255, 255, alpha);
-		my_quad_jump.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, true);
+		my_quad_jump.onDrawAmbient(Constants.my_ip_matrix, true);
 	
 		//text
 		Constants.text.drawText(R.string.left, my_quad_left.x_pos, my_quad_left.y_pos, EnumDrawFrom.center);

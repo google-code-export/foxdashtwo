@@ -100,7 +100,7 @@ public class BasePauseScreen extends BasePopup
 		}
 		else
 		{
-			main_popup.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, true);
+			main_popup.onDrawAmbient(Constants.my_ip_matrix, true);
 			Constants.text.drawText(R.string.paused, label_x, label_y, EnumDrawFrom.center);
 			
 			settings_button.onDrawConstant();
