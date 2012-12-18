@@ -91,7 +91,14 @@ public class BaseDebugScreen
 			{
 				Quad temp = test_level.object_list.get(i).quad_object;
 				Quad relative = outline_quads.get(i);
-				relative.setWidthHeightRotationScale(temp.width, temp.height, temp.degree, 1.0); // dont need to scale.
+				//TODO FIX ME
+				//DONT FORGET TO SET ME BACK
+				//THE LINE BELOW
+				relative.setRotationZ(temp.degree);
+				relative.setScale(1.0);
+				relative.setWidthHeight(temp.width, temp.height);
+				
+				//relative.setWidthHeightRotationScale(temp.width, temp.height, temp.degree, 1.0); // dont need to scale.
 				relative.setXYPos(temp.x_pos, temp.y_pos, EnumDrawFrom.center);
 			}
 		else if (type == EnumDebugType.physics)
