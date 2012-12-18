@@ -47,6 +47,10 @@ public class Quad
 	// this shouldn't really change much actually.
 	public double z_pos = -1.0f;
 	
+	//other values
+	public double scale_value = 1.0;
+	public double degree = 0;
+	
 	// physics rectangle. An object can have multiple
 	// rectangles so it has better 'resolution' when interacting with other quads
 	// phys rect is stored in shader coordinates
@@ -65,8 +69,6 @@ public class Quad
 	public double shader_width;
 	public double shader_height;
 	public int square;
-	public double scale_value = 1.0;
-	public double degree = 0;
 	
 	// data about the quad
 	private float[] my_position_matrix = new float[18];
@@ -191,20 +193,15 @@ public class Quad
 	// this is a value between 1.0 and
 	public void setScale(double scale_value)
 	{
-			setWidthHeightRotationScale(width, height, 0, scale_value);
-	}
-	
-	// do note: this doesn't change the physics bounding box.
-	// this is in screen size
-	public void setWidthHeight(int width, int height)
-	{
-			setWidthHeightRotationScale(width, height, 0, 1);
+		this.scale_value = scale_value;
+		//setWidthHeightRotationScale(width, height, 0, scale_value);
 	}
 	
 	// rotate from the center
 	public void setRotationZ(double degrees)
 	{
-			setWidthHeightRotationScale(width, height, degrees, 1);
+		this.degree = degrees;
+		//setWidthHeightRotationScale(width, height, degrees, 1);
 	}
 	
 	// Why oh why are you doing this instead of a very simple matrix rotation Jakob?
@@ -216,17 +213,13 @@ public class Quad
 	
 	// width and height are in screen values 0 - 800
 	// scale will override width and height if it is not 1.
-	public void setWidthHeightRotationScale(int width, int height, double degree, double scale_value)
+	public void setWidthHeight(int width, int height)
 	{
 		// double check all values
 		if (scale_value < 0 || scale_value > 1)
 			scale_value = 1;
 		
-		this.degree = degree;
-		
-		final double old_scale_value = this.scale_value;
-		final double scale_factor = (scale_value / old_scale_value);
-		this.scale_value = scale_value;
+		final double scale_factor = 1.0;
 		
 		// width and height
 		width = (int) (width * scale_factor);
@@ -245,7 +238,7 @@ public class Quad
 		this.shader_height = Functions.screenHeightToShaderHeight(height);
 		
 		// begin rotation data
-		final double rads = (float) Math.toRadians(degree);
+		final double rads = (float) Math.toRadians(0);
 		final double cos_rads = Math.cos(rads);
 		final double sin_rads = Math.sin(rads);
 		
@@ -370,12 +363,24 @@ public class Quad
 	}
 	
 	private boolean position_set = false;
+	private float[] translation_matrix = new float[16];
+	private float[] rotation_matrix = new float[16];
+	private float[] scale_matrix = new float[16];
+	private float[] my_rs_matrix = new float[16];
 	private void update_position_matrix()
 	{
 		// set the quad up
 		Matrix.setIdentityM(my_model_matrix, 0);
-		Matrix.translateM(my_model_matrix, 0, (float) x_pos, (float) y_pos, (float) z_pos);
+		Matrix.setIdentityM(translation_matrix, 0);
+		Matrix.setIdentityM(scale_matrix, 0);
+		
+		Matrix.scaleM(scale_matrix, 0,  (float)this.scale_value, (float)this.scale_value, (float)this.scale_value);
+		Matrix.setRotateEulerM(rotation_matrix, 0, 0.0f, 0.0f, (float)-degree);
+		Matrix.translateM(translation_matrix, 0, (float) x_pos, (float) y_pos, (float) z_pos);
 	
+		Matrix.multiplyMM(my_rs_matrix, 0, rotation_matrix, 0, scale_matrix, 0);
+		Matrix.multiplyMM(this.my_model_matrix, 0, translation_matrix, 0, my_rs_matrix, 0);
+		
 		//I'm not sure why the game doesn't work without this...
 		position_set = true;
 	}
@@ -384,8 +389,7 @@ public class Quad
 	// drawing stuffs
 	protected <T extends BaseLightShader> void onSetupAmbient(float[] my_vp_matrix, T ambient_light)
 	{
-		if(!position_set)
-			update_position_matrix();
+		update_position_matrix();
 		
 		// setup the program
 		GLES20.glUseProgram(ambient_light.my_shader);

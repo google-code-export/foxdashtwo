@@ -122,7 +122,14 @@ public class LevelObject extends LevelEntityActive
 		height = quad_object.height;
 		
 		if (degree != 0 || scale != 1)
-			quad_object.setWidthHeightRotationScale(quad_object.width, quad_object.height, degree, scale);
+		{
+			//TODO FIX ME
+			//DONT FORGET TO SET ME BACK
+			//THE LINE BELOW
+			quad_object.setRotationZ(degree);
+			quad_object.setScale(scale);
+			//quad_object.setWidthHeightRotationScale(quad_object.width, quad_object.height, degree, scale);
+		}
 	}
 	
 	AverageMaker y_average = new AverageMaker(10);
