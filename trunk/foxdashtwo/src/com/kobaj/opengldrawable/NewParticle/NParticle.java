@@ -29,10 +29,10 @@ public class NParticle
 	public void onInitialize()
 	{
 		//this will be changed in the future to compressed user chosen quads
-		this.quad_reference = new QuadColorShape(5, 0x99000099, true, 0);
+		this.quad_reference = new QuadColorShape(8, 0x99000099, true, 0);
 		
 		if(vary_scale)
-			quad_reference.setScale(Functions.randomDouble(0.2, 1.0));
+			quad_reference.setScale(Functions.randomDouble(0.3, 1.0));
 	}
 	
 	public void reset()

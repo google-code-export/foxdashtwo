@@ -39,7 +39,7 @@ public class Quad
 	public double x_vel = 0.0;
 	public double y_vel = 0.0;
 	
-	//this is new
+	// this is new
 	public int color = Color.WHITE;
 	
 	// z index doesnt have to specially be set.
@@ -75,7 +75,6 @@ public class Quad
 	
 	// camera
 	private float[] my_mvp_matrix = new float[16];
-	private float[] my_mv_matrix = new float[16];
 	
 	// handle to texture
 	protected int my_texture_data_handle = -1;
@@ -84,7 +83,7 @@ public class Quad
 	// this is a temporary bitmap that holds onto a bitmap that is passed in
 	// just long enough so that it gets loaded onto the gpu
 	// then it gets disposed.
-	private Bitmap nullify_me; 
+	private Bitmap nullify_me;
 	
 	// constructores
 	protected Quad()
@@ -118,7 +117,7 @@ public class Quad
 			GLLoadedTexture proposed_handle = GLBitmapReader.loaded_textures.get(texture_resource);
 			if (proposed_handle != null)
 			{
-				if(nullify_me != null)
+				if (nullify_me != null)
 					nullify_me = null;
 				
 				my_texture_data_handle = proposed_handle.texture_id;
@@ -179,12 +178,7 @@ public class Quad
 		// Texture coordinate data.
 		final float[] cubeTextureCoordinateData = {
 				// Front face
-				one_x, -one_y,
-				one_x, -two_y,
-				two_x, -one_y,
-				one_x, -two_y,
-				two_x, -two_y,
-				two_x, -one_y };
+				one_x, -one_y, one_x, -two_y, two_x, -one_y, one_x, -two_y, two_x, -two_y, two_x, -one_y };
 		
 		if (my_tex_coord == null)
 			my_tex_coord = ByteBuffer.allocateDirect(cubeTextureCoordinateData.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
@@ -194,23 +188,23 @@ public class Quad
 		my_tex_coord.put(cubeTextureCoordinateData).position(0);
 	}
 	
-	// this is a value between 1.0 and 
+	// this is a value between 1.0 and
 	public void setScale(double scale_value)
 	{
-		setWidthHeightRotationScale(width, height, 0, scale_value);
+			setWidthHeightRotationScale(width, height, 0, scale_value);
 	}
 	
 	// do note: this doesn't change the physics bounding box.
 	// this is in screen size
 	public void setWidthHeight(int width, int height)
 	{
-		setWidthHeightRotationScale(width, height, 0, 1);
+			setWidthHeightRotationScale(width, height, 0, 1);
 	}
 	
-	//rotate from the center
+	// rotate from the center
 	public void setRotationZ(double degrees)
 	{
-		setWidthHeightRotationScale(width, height, degrees, 1);
+			setWidthHeightRotationScale(width, height, degrees, 1);
 	}
 	
 	// Why oh why are you doing this instead of a very simple matrix rotation Jakob?
@@ -224,8 +218,8 @@ public class Quad
 	// scale will override width and height if it is not 1.
 	public void setWidthHeightRotationScale(int width, int height, double degree, double scale_value)
 	{
-		//double check all values
-		if(scale_value < 0 || scale_value > 1)
+		// double check all values
+		if (scale_value < 0 || scale_value > 1)
 			scale_value = 1;
 		
 		this.degree = degree;
@@ -235,11 +229,11 @@ public class Quad
 		this.scale_value = scale_value;
 		
 		// width and height
-		width = (int)(width * scale_factor);
-		height = (int)(height * scale_factor);
+		width = (int) (width * scale_factor);
+		height = (int) (height * scale_factor);
 		
 		// then the physics
-		for(int i = phys_rect_list.size() - 1; i >= 0; i--)
+		for (int i = phys_rect_list.size() - 1; i >= 0; i--)
 			phys_rect_list.get(i).setScale(scale_value);
 		
 		// store these for our bounding rectangle
@@ -264,12 +258,24 @@ public class Quad
 		final float z_buffer = 0.0f;
 		
 		// X, Y, Z
-		my_position_matrix[0] = neg_tr_x; 	my_position_matrix[1] = pos_tr_y; 	my_position_matrix[2] = z_buffer;
-		my_position_matrix[3] = neg_tr_x; 	my_position_matrix[4] = neg_tr_y; 	my_position_matrix[5] = z_buffer;
-		my_position_matrix[6] = pos_tr_x; 	my_position_matrix[7] = pos_tr_y; 	my_position_matrix[8] = z_buffer;
-		my_position_matrix[9] = neg_tr_x; 	my_position_matrix[10] = neg_tr_y; 	my_position_matrix[11] = z_buffer;
-		my_position_matrix[12] = pos_tr_x; 	my_position_matrix[13] = neg_tr_y; 	my_position_matrix[14] = z_buffer;
-		my_position_matrix[15] = pos_tr_x; 	my_position_matrix[16] = pos_tr_y; 	my_position_matrix[17] = z_buffer;
+		my_position_matrix[0] = neg_tr_x;
+		my_position_matrix[1] = pos_tr_y;
+		my_position_matrix[2] = z_buffer;
+		my_position_matrix[3] = neg_tr_x;
+		my_position_matrix[4] = neg_tr_y;
+		my_position_matrix[5] = z_buffer;
+		my_position_matrix[6] = pos_tr_x;
+		my_position_matrix[7] = pos_tr_y;
+		my_position_matrix[8] = z_buffer;
+		my_position_matrix[9] = neg_tr_x;
+		my_position_matrix[10] = neg_tr_y;
+		my_position_matrix[11] = z_buffer;
+		my_position_matrix[12] = pos_tr_x;
+		my_position_matrix[13] = neg_tr_y;
+		my_position_matrix[14] = z_buffer;
+		my_position_matrix[15] = pos_tr_x;
+		my_position_matrix[16] = pos_tr_y;
+		my_position_matrix[17] = z_buffer;
 		
 		double x_maximul = Double.MIN_VALUE;
 		double y_maximul = Double.MIN_VALUE;
@@ -286,19 +292,19 @@ public class Quad
 			// apply transforms
 			final double tr_x2 = Functions.screenWidthToShaderWidth(tr_x1 * cos_rads - tr_y1 * sin_rads);
 			final double tr_y2 = Functions.screenHeightToShaderHeight(tr_y1 * cos_rads + tr_x1 * sin_rads);
-		
+			
 			// set value
 			my_position_matrix[i] = (float) tr_x2;
 			my_position_matrix[i + 1] = (float) tr_y2;
-		
+			
 			// calculate max and min
-			if(tr_x2 > x_maximul)
+			if (tr_x2 > x_maximul)
 				x_maximul = tr_x2;
-			if(tr_x2 < x_minimul)
+			if (tr_x2 < x_minimul)
 				x_minimul = tr_x2;
-			if(tr_y2 > y_maximul)
+			if (tr_y2 > y_maximul)
 				y_maximul = tr_y2;
-			if(tr_y2 < y_minimul)
+			if (tr_y2 < y_minimul)
 				y_minimul = tr_y2;
 		}
 		
@@ -315,8 +321,14 @@ public class Quad
 		my_position.put(my_position_matrix).position(0);
 	}
 	
+	public void setZPos(double z)
+	{
+		this.z_pos = z;
+		update_position_matrix();
+	}
+	
 	// these x and y are in shader space 0 to 1
-	public void setPos(double x, double y, EnumDrawFrom where)
+	public void setXYPos(double x, double y, EnumDrawFrom where)
 	{
 		currently_drawn = where;
 		
@@ -349,17 +361,33 @@ public class Quad
 			y_pos = y;
 		}
 		
+		update_position_matrix();
+		
 		// set the rectangle
 		best_fit_aabb.setPositionWithOffset(x_pos, y_pos);
 		for (int i = phys_rect_list.size() - 1; i >= 0; i--)
 			phys_rect_list.get(i).setPositionWithOffset(x_pos, y_pos);
 	}
 	
+	private boolean position_set = false;
+	private void update_position_matrix()
+	{
+		// set the quad up
+		Matrix.setIdentityM(my_model_matrix, 0);
+		Matrix.translateM(my_model_matrix, 0, (float) x_pos, (float) y_pos, (float) z_pos);
+	
+		//I'm not sure why the game doesn't work without this...
+		position_set = true;
+	}
+	
 	// methods for
 	// drawing stuffs
-	protected <T extends BaseLightShader> void onSetupAmbient(float[] my_view_matrix, float[] my_proj_matrix, T ambient_light)
+	protected <T extends BaseLightShader> void onSetupAmbient(float[] my_vp_matrix, T ambient_light)
 	{
-		//setup the program
+		if(!position_set)
+			update_position_matrix();
+		
+		// setup the program
 		GLES20.glUseProgram(ambient_light.my_shader);
 		
 		// quick attempt at optimization
@@ -369,14 +397,14 @@ public class Quad
 		float blue = 1;
 		float alpha = 1;
 		
-		if(color == Color.BLACK)
+		if (color == Color.BLACK)
 		{
 			red = 0;
 			green = 0;
 			blue = 0;
 			alpha = 0;
 		}
-		else if(color != Color.WHITE)
+		else if (color != Color.WHITE)
 		{
 			red = (float) Functions.byteToShader(Functions.red(color));
 			green = (float) Functions.byteToShader(Functions.green(color));
@@ -392,28 +420,16 @@ public class Quad
 		GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, my_texture_data_handle);
 		GLES20.glUniform1i(ambient_light.my_texture_uniform_handle, 0);
 		
-		// set the quad up
-		// Functions.setIdentity(my_model_matrix);
-		Matrix.setIdentityM(my_model_matrix, 0);
-		Matrix.translateM(my_model_matrix, 0, (float) x_pos, (float) y_pos, (float) z_pos);
-		
 		// pass in position information
 		GLES20.glVertexAttribPointer(ambient_light.my_position_handle, 3, GLES20.GL_FLOAT, false, 0, my_position);
-		GLES20.glEnableVertexAttribArray(ambient_light.my_position_handle);
 		
 		// Pass in the texture coordinate information
 		GLES20.glVertexAttribPointer(ambient_light.my_tex_coord_handle, 2, GLES20.GL_FLOAT, false, 0, my_tex_coord);
-		GLES20.glEnableVertexAttribArray(ambient_light.my_tex_coord_handle);
 		
-		// This multiplies the view matrix by the model matrix, and stores the
+		// multiplies the vp matrix with the model matrix
 		// result in the MVP matrix
 		// (which currently contains model * view).
-		Matrix.multiplyMM(my_mv_matrix, 0, my_view_matrix, 0, my_model_matrix, 0);
-		
-		// This multiplies the modelview matrix by the projection matrix, and
-		// stores the result in the MVP matrix
-		// (which now contains model * view * projection).
-		Matrix.multiplyMM(my_mvp_matrix, 0, my_proj_matrix, 0, my_mv_matrix, 0);
+		Matrix.multiplyMM(my_mvp_matrix, 0, my_vp_matrix, 0, my_model_matrix, 0);
 		
 		// Pass in the combined matrix.
 		GLES20.glUniformMatrix4fv(ambient_light.my_mvp_matrix_handle, 1, false, my_mvp_matrix, 0);
@@ -433,10 +449,10 @@ public class Quad
 	// ouside calls
 	public void onDrawAmbient()
 	{
-		onDrawAmbient(com.kobaj.math.Constants.my_view_matrix, com.kobaj.math.Constants.my_proj_matrix, false);
+		onDrawAmbient(Constants.my_vp_matrix, false);
 	}
 	
-	public void onDrawAmbient(float[] my_view_matrix, float[] my_proj_matrix, boolean skip_draw_check)
+	public void onDrawAmbient(float[] my_vp_matrix, boolean skip_draw_check)
 	{
 		// if we have a handle, draw.
 		if (!setTextureDataHandle())
@@ -445,7 +461,7 @@ public class Quad
 		// If on screen, draw.
 		if (skip_draw_check || com.kobaj.math.Functions.onShader(best_fit_aabb))
 		{
-			onSetupAmbient(my_view_matrix, my_proj_matrix, Constants.ambient_light);
+			onSetupAmbient(my_vp_matrix, Constants.ambient_light);
 			
 			// Draw the cube.
 			onDraw();

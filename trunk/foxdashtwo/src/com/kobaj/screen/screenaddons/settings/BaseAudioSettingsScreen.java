@@ -43,7 +43,7 @@ public class BaseAudioSettingsScreen extends BasePopup
 	@Override
 	public void onDraw()
 	{
-		main_popup.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, true);
+		main_popup.onDrawAmbient(Constants.my_ip_matrix, true);
 		Constants.text.drawText(R.string.audio, label_x, label_y, EnumDrawFrom.center);
 		
 		volume_down_button.onDrawConstant();

@@ -80,7 +80,7 @@ public class TweenManager
 			quad_reference.color = color;
 		}
 		
-		quad_reference.setPos(x_pos, y_pos, EnumDrawFrom.center);
+		quad_reference.setXYPos(x_pos, y_pos, EnumDrawFrom.center);
 		
 		// at the very end
 		if (current_time > max_time)

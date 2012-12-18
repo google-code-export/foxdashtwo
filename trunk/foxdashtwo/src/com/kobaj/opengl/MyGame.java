@@ -111,7 +111,7 @@ public class MyGame extends MyGLRender
 		
 		// final scene
 		GLES20.glBlendFunc(GLES20.GL_DST_COLOR, GLES20.GL_ZERO); // masking
-		scene.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, true);
+		scene.onDrawAmbient(Constants.my_ip_matrix, true);
 		
 		// text below this line
 		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA); // no see thru

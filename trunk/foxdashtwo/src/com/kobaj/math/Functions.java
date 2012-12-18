@@ -623,5 +623,7 @@ public class Functions
 		Constants.jump_limiter = Functions.screenHeightToShaderHeight(Constants.jump_limiter_default);
 		
 		Constants.max_speed = Functions.speed(Constants.max_x_velocity, Constants.max_y_velocity);
+		
+		Constants.player_downward_platform_acc = Functions.screenHeightToShaderHeight(Constants.player_downward_platform_acc_default);
 	}
 }
