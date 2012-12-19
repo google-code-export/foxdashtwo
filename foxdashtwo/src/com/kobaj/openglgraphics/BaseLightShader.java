@@ -32,7 +32,9 @@ public abstract class BaseLightShader
 		
 		// get handle to the vertex shader's vPosition member
 		my_position_handle = GLES20.glGetAttribLocation(my_shader, "a_Position");
+		GLES20.glEnableVertexAttribArray(my_position_handle);
 		my_tex_coord_handle = GLES20.glGetAttribLocation(my_shader, "a_TexCoordinate");
+		GLES20.glEnableVertexAttribArray(my_tex_coord_handle);
 		
 		my_color_handle = GLES20.glGetUniformLocation(my_shader, "u_Color");
 		

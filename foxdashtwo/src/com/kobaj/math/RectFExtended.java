@@ -8,7 +8,7 @@ public class RectFExtended
 	// truley this should not be public
 	// and should only be accessed by accessors
 	// but that would incur too much extra overhead
-	public final RectF main_rect;
+	public final RectF main_rect = new RectF();
 	
 	private double scale_value = 1.0;
 	private double x_pos;
@@ -18,8 +18,18 @@ public class RectFExtended
 	private double half_width;
 	private double half_height;
 	
+	public RectFExtended()
+	{
+		
+	}
+	
 	// these are in shader coordinates
 	public RectFExtended(double left, double top, double right, double bottom)
+	{
+		setExtendedRectF(left, top, right, bottom);
+	}
+	
+	public void setExtendedRectF(double left, double top, double right, double bottom)
 	{
 		x_offset = (left + right) / 2.0;
 		y_offset = (top + bottom) / 2.0;
@@ -27,7 +37,10 @@ public class RectFExtended
 		half_width = (right - left) / 2.0;
 		half_height = (top - bottom) / 2.0;
 		
-		main_rect = new RectF((float) (x_offset - half_width), (float) (y_offset + half_height), (float) (x_offset + half_width), (float) (y_offset - half_height));
+		main_rect.left = (float) (x_offset - half_width);
+		main_rect.top = (float) (y_offset + half_height);
+		main_rect.right = (float) (x_offset + half_width);
+		main_rect.bottom = (float) (y_offset - half_height);
 	}
 	
 	// shader coordinates
@@ -67,39 +80,6 @@ public class RectFExtended
 	{
 		half_width = new_half_width;
 		half_height = new_half_height;
-		setPositionWithOffset(x_pos, y_pos);
-	}
-	
-	//rotates by 90 degrees only.
-	public void rotate(double degree)
-	{
-		if(degree < 0)
-			return;
-		if(degree > 360)
-			return;
-		
-		final double orig_half_width = half_width;
-		final double orig_half_height = half_height;
-		
-		if(degree >= 45 && degree <= 135)
-		{
-			half_width = orig_half_height;
-			half_height = orig_half_width;
-			
-			x_offset = -x_offset;
-		}
-		else if(degree > 135 && degree < 225)
-		{
-			x_offset = -x_offset;
-			y_offset = -y_offset;
-		}
-		else if(degree >= 225 && degree < 315)
-		{
-			half_width = orig_half_height;
-			half_height = orig_half_width;
-			y_offset = -y_offset;
-		}
-		
 		setPositionWithOffset(x_pos, y_pos);
 	}
 }

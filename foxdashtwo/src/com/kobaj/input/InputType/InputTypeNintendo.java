@@ -20,22 +20,22 @@ public class InputTypeNintendo extends InputTypeBase
 		
 		//left
 		my_quad_left = new QuadColorShape(Constants.input_circle_width, Constants.input_draw_color, 0);
-		my_quad_left.setPos(Functions.screenXToShaderX(Constants.input_circle_width), shader_circle_pos_y, EnumDrawFrom.bottom_left);
+		my_quad_left.setXYPos(Functions.screenXToShaderX(Constants.input_circle_width), shader_circle_pos_y, EnumDrawFrom.bottom_left);
 		
 		//right
 		my_quad_right = new QuadColorShape(Constants.input_circle_width, Constants.input_draw_color, 0);
-		my_quad_right.setPos(Functions.screenXToShaderX(Constants.input_circle_width * 3), shader_circle_pos_y, EnumDrawFrom.bottom_left);
+		my_quad_right.setXYPos(Functions.screenXToShaderX(Constants.input_circle_width * 3), shader_circle_pos_y, EnumDrawFrom.bottom_left);
 		
 		//jump
 		my_quad_jump = new QuadColorShape(Constants.input_circle_width, Constants.input_draw_color, 0);
-		my_quad_jump.setPos(Functions.screenXToShaderX(Constants.width - Constants.input_circle_width), shader_circle_pos_y, EnumDrawFrom.bottom_right);
+		my_quad_jump.setXYPos(Functions.screenXToShaderX(Constants.width - Constants.input_circle_width), shader_circle_pos_y, EnumDrawFrom.bottom_right);
 	}
 	
 	public boolean getTouchedJump()
 	{
 		for(int i = 0; i < Constants.input_manager.fingerCount; i++)
 			if(Constants.input_manager.getTouched(i))
-				if(Functions.inRectF(my_quad_jump.phys_rect_list.get(0).main_rect, Functions.screenXToShaderX(Constants.input_manager.getX(i)), Functions.screenYToShaderY(Functions.fix_y(Constants.input_manager.getY(i)))))
+				if(Functions.inRectF(my_quad_jump.best_fit_aabb.main_rect, Functions.screenXToShaderX(Constants.input_manager.getX(i)), Functions.screenYToShaderY(Functions.fix_y(Constants.input_manager.getY(i)))))
 					return true;
 				
 		return false;
@@ -46,7 +46,7 @@ public class InputTypeNintendo extends InputTypeBase
 	{
 		for(int i = 0; i < Constants.input_manager.fingerCount; i++)
 			if(Constants.input_manager.getPressed(i))
-				if(Functions.inRectF(my_quad_jump.phys_rect_list.get(0).main_rect, Functions.screenXToShaderX(Constants.input_manager.getX(i)), Functions.screenYToShaderY(Functions.fix_y(Constants.input_manager.getY(i)))))
+				if(Functions.inRectF(my_quad_jump.best_fit_aabb.main_rect, Functions.screenXToShaderX(Constants.input_manager.getX(i)), Functions.screenYToShaderY(Functions.fix_y(Constants.input_manager.getY(i)))))
 					return true;
 				
 		return false;
@@ -57,7 +57,7 @@ public class InputTypeNintendo extends InputTypeBase
 	{
 		for(int i = 0; i < Constants.input_manager.fingerCount; i++)
 			if(Constants.input_manager.getReleased(i))
-				if(Functions.inRectF(my_quad_jump.phys_rect_list.get(0).main_rect, Functions.screenXToShaderX(Constants.input_manager.getX(i)), Functions.screenYToShaderY(Functions.fix_y(Constants.input_manager.getY(i)))))
+				if(Functions.inRectF(my_quad_jump.best_fit_aabb.main_rect, Functions.screenXToShaderX(Constants.input_manager.getX(i)), Functions.screenYToShaderY(Functions.fix_y(Constants.input_manager.getY(i)))))
 					return true;
 				
 		return false;
@@ -68,7 +68,7 @@ public class InputTypeNintendo extends InputTypeBase
 	{
 		for(int i = 0; i < Constants.input_manager.fingerCount; i++)
 			if(Constants.input_manager.getTouched(i))
-				if(Functions.inRectF(my_quad_left.phys_rect_list.get(0).main_rect, Functions.screenXToShaderX(Constants.input_manager.getX(i)), Functions.screenYToShaderY(Functions.fix_y(Constants.input_manager.getY(i)))))
+				if(Functions.inRectF(my_quad_left.best_fit_aabb.main_rect, Functions.screenXToShaderX(Constants.input_manager.getX(i)), Functions.screenYToShaderY(Functions.fix_y(Constants.input_manager.getY(i)))))
 					return true;
 				
 		return false;
@@ -79,7 +79,7 @@ public class InputTypeNintendo extends InputTypeBase
 	{
 		for(int i = 0; i < Constants.input_manager.fingerCount; i++)
 			if(Constants.input_manager.getTouched(i))
-				if(Functions.inRectF(my_quad_right.phys_rect_list.get(0).main_rect, Functions.screenXToShaderX(Constants.input_manager.getX(i)), Functions.screenYToShaderY(Functions.fix_y(Constants.input_manager.getY(i)))))
+				if(Functions.inRectF(my_quad_right.best_fit_aabb.main_rect, Functions.screenXToShaderX(Constants.input_manager.getX(i)), Functions.screenYToShaderY(Functions.fix_y(Constants.input_manager.getY(i)))))
 					return true;
 				
 		return false;
@@ -96,21 +96,24 @@ public class InputTypeNintendo extends InputTypeBase
 			alpha = (int)(255 * Constants.min_brightness);
 		else
 			alpha = (int)(255 * Constants.max_brightness);
-		my_quad_left.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, Functions.makeColor(255, 255, 255, alpha), true);
+		my_quad_left.color = Functions.makeColor(255, 255, 255, alpha);
+		my_quad_left.onDrawAmbient(Constants.my_ip_matrix, true);
 		
 		//right
 		if(getTouchedRight())
 			alpha = (int)(255 * Constants.min_brightness);
 		else
 			alpha = (int)(255 * Constants.max_brightness);
-		my_quad_right.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, Functions.makeColor(255, 255, 255, alpha), true);
+		my_quad_right.color = Functions.makeColor(255, 255, 255, alpha);
+		my_quad_right.onDrawAmbient(Constants.my_ip_matrix, true);
 		
 		//jump
 		if(getTouchedJump())
 			alpha = (int)(255 * Constants.min_brightness);
 		else
 			alpha = (int)(255 * Constants.max_brightness);
-		my_quad_jump.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, Functions.makeColor(255, 255, 255, alpha), true);
+		my_quad_jump.color = Functions.makeColor(255, 255, 255, alpha);
+		my_quad_jump.onDrawAmbient(Constants.my_ip_matrix, true);
 	
 		//text
 		Constants.text.drawText(R.string.left, my_quad_left.x_pos, my_quad_left.y_pos, EnumDrawFrom.center);

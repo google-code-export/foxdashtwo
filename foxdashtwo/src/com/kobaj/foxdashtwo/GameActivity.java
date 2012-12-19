@@ -1,10 +1,11 @@
 package com.kobaj.foxdashtwo;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.PowerManager;
 import android.support.v4.app.FragmentActivity;
 import android.util.DisplayMetrics;
@@ -13,21 +14,26 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 
 import com.kobaj.math.Constants;
+import com.kobaj.networking.EnumNetworkAction;
 
-public class GameActivity extends FragmentActivity
+public class GameActivity extends FragmentActivity implements com.kobaj.networking.NetworkManager.FinishedURLListener
 {
 	/** Called when the activity is first created. */
 	
-	private PowerManager.WakeLock wl;
+	//the fuck are you doing?!
+	public static Activity activity;
 	
+	//related to permissions mostly
+	private PowerManager.WakeLock wl;
+	public static ConnectivityManager cm;
+	
+	//drawing
 	public static com.kobaj.opengl.MyGLSurfaceView mGLView;
 	
 	// saving state
 	protected String shared_prefs_name = "com.kobaj.foxdashtwo_prefs";
 	public static SharedPreferences mPrefs;
 	public static SharedPreferences.Editor ed;
-	
-	public static Handler itself;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -48,6 +54,9 @@ public class GameActivity extends FragmentActivity
 		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK, "DoNotDimScreen");
 		
+		//networking state
+		cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		
 		// volume controls
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
 		
@@ -67,6 +76,8 @@ public class GameActivity extends FragmentActivity
 		// as the ContentView for this Activity
 		mGLView = new com.kobaj.opengl.MyGLSurfaceView(this);
 		setContentView(mGLView);
+		
+		GameActivity.activity = this;
 	}
 	
 	@Override
@@ -75,9 +86,11 @@ public class GameActivity extends FragmentActivity
 		super.onPause();
 		wl.release();
 		
+		//shut down the music
+		Constants.music_player.stop();
+		
 		// save user settings
 		UserSettings.saveUserSettings();
-		
 		ed.commit();
 		
 		mGLView.onScreenPause();
@@ -119,5 +132,11 @@ public class GameActivity extends FragmentActivity
 	{
 		com.kobaj.math.Constants.input_manager.eventUpdate(e);
 		return true;
+	}
+
+	public void onFinishedURL(String value, EnumNetworkAction action)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 }
