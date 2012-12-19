@@ -7,9 +7,10 @@ import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 import android.os.SystemClock;
+import android.util.Log;
 
 import com.kobaj.audio.Music;
-import com.kobaj.audio.MusicPlayList;
+import com.kobaj.audio.MusicPlayer;
 import com.kobaj.audio.Sound;
 import com.kobaj.math.Constants;
 import com.kobaj.math.FPSManager;
@@ -21,8 +22,10 @@ import com.kobaj.openglgraphics.CompressedLightShader;
 
 public abstract class MyGLRender implements GLSurfaceView.Renderer
 {
-	//and fps
+	// and fps
 	protected FPSManager fps;
+	
+	private int exception_count = 0;
 	
 	public void onSurfaceCreated(GL10 unused, EGLConfig config)
 	{
@@ -34,9 +37,9 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		
 		// disable depth testing
 		GLES20.glDisable(GLES20.GL_DEPTH_TEST);
-		//GLES20.glEnable(GLES20.GL_DEPTH_TEST);
+		// GLES20.glEnable(GLES20.GL_DEPTH_TEST);
 		
-		//mmm blending
+		// mmm blending
 		GLES20.glEnable(GLES20.GL_BLEND);
 		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA); // no see thru
 		
@@ -44,14 +47,14 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		Constants.ambient_light = new AmbientLightShader();
 		Constants.compressed_light = new CompressedLightShader();
 		
-		//fps
+		// fps
 		fps = new FPSManager();
 		
-		//sound and audio setup
-		Constants.music_play_list = new MusicPlayList(new Music());
+		// sound and audio setup
+		Constants.music_player = new MusicPlayer(new Music());
 		Constants.sound = new Sound();
-
-		//physics setup
+		
+		// physics setup
 		Constants.physics = new Physics();
 	}
 	
@@ -59,7 +62,9 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 	
 	public void onSurfaceChanged(GL10 unused, int width, int height)
 	{
-		//gotta reset
+		// gotta reset
+		exception_count = 0;
+		
 		com.kobaj.loader.GLBitmapReader.resetLoadedTextures();
 		
 		GLES20.glViewport(0, 0, width, height);
@@ -67,52 +72,84 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		Constants.width = width;
 		Constants.height = height;
 		
-		float ratio = (float) (width / height);
+		float ratio = (float) (width) / (float)(height);
 		Constants.ratio = ratio;
 		Constants.shader_width = ratio * 2.0;
 		
 		// this projection matrix is applied to object coodinates
 		// in the onDrawFrame() method
 		
-		Matrix.frustumM(Constants.my_proj_matrix, 0, -ratio, ratio, -1, 1, .9999999999f, 2);
-		//Matrix.orthoM(Constants.my_proj_matrix, 0, -ratio, ratio, -1, 1, .99999999f, 2);
-		Matrix.setLookAtM(Constants.my_view_matrix, 0, //this is the identity...
-				0, 0, 0, 
-				0f, 0f, -5.0f, 
-				0f, 1.0f, 0.0f);
+		Matrix.orthoM(Constants.my_proj_matrix, 0, -ratio, ratio, -1, 1, .99999999f, 2);
+		Matrix.setLookAtM(Constants.my_view_matrix, 0, // this is the identity...
+				0, 0, 0, 0f, 0f, -5.0f, 0f, 1.0f, 0.0f);
+		
+		//multiply
+		Matrix.multiplyMM(Constants.my_ip_matrix, 0, Constants.my_proj_matrix, 0, Constants.identity_matrix, 0);
 		
 		Constants.x_shader_translation = 0;
 		Constants.y_shader_translation = 0;
 		
-		//finish setup
+		// finish setup
 		Constants.text = new Text();
 		
 		onInitialize();
 		
-		//after all that, see if we have any opengl errors
+		// after all that, see if we have any opengl errors
 		Functions.checkGlError();
 	}
 	
 	public void onSurfaceDestroyed()
 	{
-		//empty for now
+		// empty for now
 	}
 	
 	public void onDrawFrame(GL10 unused)
-	{	
-		onUpdateFrame();
+	{
+		// a very interesting bug requires this try catch. Allow me to explain.
+		// when the app resumes from a non application.finish() state
+		// it crashes with a NullPointerException. No stack trace
+		// I debugged this for an hour, and could not find a null pointer
+		// whats interesting, if you catch the first NPE, then let the system continue
+		// it works perfectly fine. Go figure.
 		
-		// Redraw background color
-		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+		try
+		{
+			//update everything
+			onUpdateFrame();
 		
-		onDraw();
+			// Redraw background color
+			GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+		
+			//calculate vp matrix
+			Matrix.multiplyMM(Constants.my_vp_matrix, 0, Constants.my_proj_matrix, 0, Constants.my_view_matrix, 0);
+			
+			//draw everything!!
+			onDraw();
+		}
+		catch(NullPointerException e)
+		{
+			exception_count++;
+			Log.e("Draw Frame Exception", e.toString());
+			
+			try
+			{
+				Thread.sleep(Constants.exception_timeout);
+			}
+			catch (InterruptedException e1)
+			{
+				Log.e("Draw Frame Timeout", e1.toString());
+			}
+			
+			if(exception_count > 10)
+				throw e;
+		}
 	}
 	
 	protected abstract void onDraw();
 	
 	public void onUpdateFrame()
 	{
-		//might put fps here.
+		// might put fps here.
 		fps.onUpdate(SystemClock.uptimeMillis());
 		
 		onUpdate(fps.getDelta());

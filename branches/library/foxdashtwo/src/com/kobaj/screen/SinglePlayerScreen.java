@@ -1,17 +1,18 @@
 package com.kobaj.screen;
 
-import android.support.v4.app.DialogFragment;
+import android.util.Log;
 
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.input.EnumKeyCodes;
 import com.kobaj.input.GameInputModifier;
 import com.kobaj.loader.FileHandler;
+import com.kobaj.loader.GLBitmapReader;
 import com.kobaj.math.Constants;
-import com.kobaj.math.Functions;
-import com.kobaj.message.PopupManager;
 import com.kobaj.screen.screenaddons.BaseDebugScreen;
-import com.kobaj.screen.screenaddons.BaseInteractionScreen;
+import com.kobaj.screen.screenaddons.BaseInteractionPhysics;
 import com.kobaj.screen.screenaddons.BaseLoadingScreen;
+import com.kobaj.screen.screenaddons.EnumDebugType;
+import com.kobaj.screen.screenaddons.floatingframe.BasePauseScreen;
 
 public class SinglePlayerScreen extends BaseScreen
 {
@@ -19,25 +20,19 @@ public class SinglePlayerScreen extends BaseScreen
 	private GameInputModifier my_modifier;
 	
 	// test level
+	public int test_level_R = R.raw.test_level;
 	private com.kobaj.level.Level test_level;
 	
 	// addons
 	BaseDebugScreen debug_addon;
 	BaseLoadingScreen loading_addon;
-	BaseInteractionScreen interaction_addon;
-	
-	// may be deleted later
-	public static final String save_file_name = "external_level";
-	private static final String format = ".xml";
+	BaseInteractionPhysics interaction_addon;
+	BasePauseScreen pause_addon;
 	
 	public SinglePlayerScreen()
 	{
 		// initialize everything
 		my_modifier = new GameInputModifier();
-		
-		/*
-		 * helpful while I build the level class com.kobaj.level.Level test = new com.kobaj.level.Level(); test.writeOut(); com.kobaj.loader.XMLHandler.writeSerialFile(test, "test_level");
-		 */
 	}
 	
 	@Override
@@ -45,41 +40,71 @@ public class SinglePlayerScreen extends BaseScreen
 	{
 		// load our addons. Do the loader first
 		loading_addon = new BaseLoadingScreen();
-		interaction_addon = new BaseInteractionScreen();
-		
-		// grab from disk
-		boolean loaded = false;
-		String[] levels = FileHandler.getFileList();
-		for (String p : levels)
-			if (p.equalsIgnoreCase(save_file_name + format))
-			{
-				loaded = true;
-				test_level = FileHandler.readSerialFile("external_level", com.kobaj.level.Level.class);
-				
-				if(test_level == null)
-					loaded = false;
-				
-				break;
-			}
-		
-		if (!loaded)
-			test_level = FileHandler.readSerialResource(Constants.resources, R.raw.test_level, com.kobaj.level.Level.class);
+		interaction_addon = new BaseInteractionPhysics();
 		
 		// level
+		test_level = FileHandler.readSerialResource(Constants.resources, test_level_R, com.kobaj.level.Level.class);
 		if (test_level != null)
 			test_level.onInitialize();
 		
-		// control input
+		// control input and other addons
 		my_modifier.onInitialize();
 		
-		//debug_addon = new BaseDebugScreen(test_level, false, false);
+		// debug_addon = new BaseDebugScreen(test_level, EnumDebugType.aabb);
+		
+		pause_addon = new BasePauseScreen();
+		pause_addon.onInitialize();
+		
+		// testing sounds
+		Constants.music_player.start(R.raw.tunnel, 5000, true);
+		while (!Constants.music_player.isLoaded())
+		{
+			try
+			{
+				Thread.sleep(Constants.exception_timeout);
+			}
+			catch (InterruptedException e)
+			{
+				Log.e("Single Player Exception", e.toString());
+			}
+		}
+		
+		GLBitmapReader.isLoaded();
+		
+		debug_addon = new BaseDebugScreen(test_level, EnumDebugType.aabb);
+		
+		System.gc();
 	}
 	
 	@Override
 	public void onUpdate(double delta)
 	{
-		Functions.checkGlError();
+		// that music
+		Constants.music_player.onUpdate();
 		
+		if (current_state != EnumScreenState.paused)
+			onRunningUpdate(delta);
+		else
+			pause_addon.onUpdate(delta);
+		
+		// go into pause mode by hitting menu, search, back...
+		if (Constants.input_manager.getKeyPressed(EnumKeyCodes.back) || //
+				Constants.input_manager.getKeyPressed(EnumKeyCodes.menu) || //
+				Constants.input_manager.getKeyPressed(EnumKeyCodes.search)) //
+		{
+			// this is possible because onUpdate is only called when in two states, running or paused
+			if (current_state != EnumScreenState.paused)
+			{
+				pause_addon.reset();
+				current_state = EnumScreenState.paused;
+			}
+			else
+				current_state = EnumScreenState.running;
+		}
+	}
+	
+	private void onRunningUpdate(double delta)
+	{
 		// just for now, this may be deleted later to replace a button
 		my_modifier.onUpdate();
 		
@@ -89,20 +114,15 @@ public class SinglePlayerScreen extends BaseScreen
 		// interaction
 		interaction_addon.onUpdate(delta, my_modifier, test_level);
 		
-		// let the user load a map
-		if (Constants.input_manager.getKeyPressed(EnumKeyCodes.back))
-		{
-			DialogFragment newFragment = new PopupManager();
-			newFragment.show(Constants.fragment_manager, "missiles");
-		}
-		
-		Functions.checkGlError();
+		//debug_addon.onUpdate(delta, test_level);
 	}
 	
 	@Override
 	public void onDrawObject()
 	{
 		test_level.onDrawObject();
+		
+		//debug_addon.onDrawObject();
 	}
 	
 	@Override
@@ -116,11 +136,11 @@ public class SinglePlayerScreen extends BaseScreen
 	{
 		test_level.onDrawConstant();
 		
-		// draw some helpful bounding boxes
-		//debug_addon.onDrawObject(test_level);
-		
 		// draw the controls
-		my_modifier.onDraw();
+		if (current_state != EnumScreenState.paused)
+			my_modifier.onDraw();
+		else
+			pause_addon.onDraw();
 	}
 	
 	@Override
@@ -129,5 +149,12 @@ public class SinglePlayerScreen extends BaseScreen
 		// we want all loading screens to look the same, so we use this helper loader thingy :)
 		if (loading_addon != null)
 			loading_addon.onDrawLoading(delta);
+	}
+	
+	@Override
+	public void onPause()
+	{
+		// only on game screens to we send the system into paused state.
+		current_state = EnumScreenState.paused;
 	}
 }

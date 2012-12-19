@@ -2,29 +2,44 @@ package com.kobaj.screen.screenaddons;
 
 import com.kobaj.input.GameInputModifier;
 import com.kobaj.level.Level;
+import com.kobaj.level.LevelObject;
 import com.kobaj.math.AverageMaker;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
+import com.kobaj.math.android.RectF;
 
-public class BaseInteractionScreen
+public class BaseInteractionPhysics
 {
 	// camera zoom
 	private AverageMaker my_camera_average = new AverageMaker(20);
+	public RectF collision = new RectF();
 	
-	private final boolean integratePhysics(final double delta, final Level test_level)
+	private final boolean integratePhysics(final double delta, final Level the_level)
 	{
 		boolean can_jump = false;
 		
-		Constants.physics.integrate_physics(delta, test_level.player.quad_object);
+		Constants.physics.integratePhysics(delta, the_level.player.quad_object);
 		
-		for (int i = test_level.object_list.size() - 1; i >= 0; i--)
-			if(Constants.physics.check_collision(test_level.player.quad_object, test_level.object_list.get(i).quad_object, 0))
+		for (int i = the_level.object_list.size() - 1; i >= 0; i--)
+		{
+			LevelObject reference = the_level.object_list.get(i);
+			
+			collision.left = 0;
+			collision.top = 0;
+			collision.right = 0;
+			collision.bottom = 0;
+			
+			if(Constants.physics.checkCollision(collision, the_level.player.quad_object, reference.quad_object, 0))
 				can_jump = true;
+			
+			if(collision.width() != 0 || collision.height() != 0)
+				the_level.objectInteraction(collision, the_level.player, reference);
+		}
 		
 		return can_jump;
 	}
 	
-	private final boolean handleTouchInput(final boolean can_jump, final GameInputModifier my_modifier, final Level test_level)
+	private final boolean handleTouchInput(final boolean can_jump, final GameInputModifier my_modifier, final Level the_level)
 	{
 		// initial touch
 		if (my_modifier.getInputType().getLeftXorRight())
@@ -35,7 +50,7 @@ public class BaseInteractionScreen
 			if (my_modifier.getInputType().getTouchedRight())
 			{
 				// if we are on the ground
-				if (can_jump && test_level.player.quad_object.x_vel < 0)
+				if (can_jump && the_level.player.quad_object.x_vel < 0)
 					move_amount += Constants.normal_reverse_acceleration;
 				else
 					move_amount += Constants.normal_acceleration;
@@ -44,7 +59,7 @@ public class BaseInteractionScreen
 			// if touch left
 			else if (my_modifier.getInputType().getTouchedLeft())
 			{
-				if (can_jump && test_level.player.quad_object.x_vel > 0)
+				if (can_jump && the_level.player.quad_object.x_vel > 0)
 					move_amount += -Constants.normal_reverse_acceleration;
 				else
 					move_amount += -Constants.normal_acceleration;
@@ -55,7 +70,7 @@ public class BaseInteractionScreen
 				move_amount *= Constants.normal_air_damping;
 			
 			// add the key press (force) to the player acceleration
-			test_level.player.quad_object.x_acc += move_amount;
+			the_level.player.quad_object.x_acc += move_amount;
 			
 			return true;
 		}
@@ -63,21 +78,21 @@ public class BaseInteractionScreen
 		return false;
 	}
 	
-	private void addForce(final boolean is_touched, final boolean can_jump, final GameInputModifier my_modifier, final Level test_level)
+	private void addForce(final boolean is_touched, final boolean can_jump, final GameInputModifier my_modifier, final Level the_level)
 	{
 		// add gravity
-		Constants.physics.add_gravity(test_level.player.quad_object);
+		Constants.physics.addGravity(the_level.player.quad_object);
 		
 		// add friction
 		if (!is_touched && can_jump)
-			test_level.player.quad_object.x_acc -= Constants.normal_friction * test_level.player.quad_object.x_vel;
+			the_level.player.quad_object.x_acc -= Constants.normal_friction * the_level.player.quad_object.x_vel;
 		
 		// add jump
 		if (my_modifier.getInputType().getPressedJump() && can_jump)
-			test_level.player.quad_object.y_vel = Constants.jump_velocity;
+			the_level.player.quad_object.y_vel = Constants.jump_velocity;
 		else if (my_modifier.getInputType().getReleasedJump())
-			if (test_level.player.quad_object.y_vel > Constants.jump_limiter)
-				test_level.player.quad_object.y_vel = Constants.jump_limiter;
+			if (the_level.player.quad_object.y_vel > Constants.jump_limiter)
+				the_level.player.quad_object.y_vel = Constants.jump_limiter;
 	}
 	
 	private void setCameraXY(final Level test_level)
@@ -116,19 +131,19 @@ public class BaseInteractionScreen
 		Functions.setCameraZ(my_camera_average.calculateAverage(buffer));
 	}
 	
-	public void onUpdate(final double delta, final GameInputModifier my_modifier, final Level test_level)
+	public void onUpdate(final double delta, final GameInputModifier my_modifier, final Level the_level)
 	{
 		// first physics integration (make the objects follow gravity/forces and collide)
-		boolean can_jump = integratePhysics(delta, test_level);
+		boolean can_jump = integratePhysics(delta, the_level);
 		
 		// next handle touch input (see what our fingers are doing)
-		boolean is_touched = handleTouchInput(can_jump, my_modifier, test_level);
+		boolean is_touched = handleTouchInput(can_jump, my_modifier, the_level);
 		
 		// add forces
-		addForce(is_touched, can_jump, my_modifier, test_level);
+		addForce(is_touched, can_jump, my_modifier, the_level);
 		
 		// set camera positions
-		setCameraXY(test_level);
-		setCameraZ(test_level);
+		setCameraXY(the_level);
+		setCameraZ(the_level);
 	}
 }

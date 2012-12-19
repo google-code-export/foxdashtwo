@@ -1,7 +1,5 @@
 package com.kobaj.screen.screenaddons;
 
-import android.graphics.Color;
-
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
@@ -24,27 +22,7 @@ public class BaseLoadingScreen
 	// this function will linear interpolate between the two colors
 	public int getColor(int i)
 	{
-		// pull apart
-		int pc = Constants.loading_primary_color;
-		int pr = (pc >> 16) & 0xFF;
-		int pg = (pc >> 8) & 0xFF;
-		int pb = (pc & 0xFF);
-		int pa = pc >>> 24;
-		
-		int sc = Constants.loading_secondary_color;
-		int sr = (sc >> 16) & 0xFF;
-		int sg = (sc >> 8) & 0xFF;
-		int sb = (sc & 0xFF);
-		int sa = sc >>> 24;
-		
-		// lerp
-		int lr = (int) Functions.linearInterpolate(0, Constants.loading_max_shapes - 1, i, pr, sr);
-		int lg = (int) Functions.linearInterpolate(0, Constants.loading_max_shapes - 1, i, pg, sg);
-		int lb = (int) Functions.linearInterpolate(0, Constants.loading_max_shapes - 1, i, pb, sb);
-		int la = (int) Functions.linearInterpolate(0, Constants.loading_max_shapes - 1, i, pa, sa);
-		
-		// stick back together;
-		return (la << 24) | (lr << 16) | (lg << 8) | lb;
+		return Functions.linearInterpolateColor(0, Constants.loading_max_shapes - 1, i, Constants.loading_primary_color, Constants.loading_secondary_color);
 	}
 	
 	public void onDrawLoading(double delta)
@@ -60,7 +38,7 @@ public class BaseLoadingScreen
 			setPosition(my_shapes[i], i);
 			
 			// draw them all
-			my_shapes[i].onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, Color.WHITE, true);
+			my_shapes[i].onDrawAmbient();
 		}
 		
 		// draw some text
@@ -84,6 +62,6 @@ public class BaseLoadingScreen
 		double x = Functions.polarRadToY(local_total_delta, r);
 		
 		// set it all
-		my_quad.setPos(x, y, EnumDrawFrom.center);
+		my_quad.setXYPos(x, y, EnumDrawFrom.center);
 	}
 }

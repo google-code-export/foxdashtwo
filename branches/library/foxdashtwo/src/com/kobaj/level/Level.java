@@ -16,6 +16,9 @@ import com.kobaj.level.LevelTypeLight.LevelPointLight;
 import com.kobaj.level.LevelTypeLight.LevelSpotLight;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
+import com.kobaj.math.android.RectF;
+import com.kobaj.opengldrawable.EnumDrawFrom;
+import com.kobaj.opengldrawable.NewParticle.NParticleEmitter;
 import com.kobaj.opengldrawable.Quad.QuadColorShape;
 
 public class Level
@@ -41,10 +44,12 @@ public class Level
 	@ElementList
 	public ArrayList<LevelObject> object_list;
 	
+	public ArrayList<LevelObject> physics_objects = new ArrayList<LevelObject>(); // references for only physics. 
+	
 	@ElementList
 	public ArrayList<LevelAmbientLight> light_list; // all lights including blooms
 	
-	ArrayList<LevelBloomLight> bloom_light_list = new ArrayList<LevelBloomLight>(); // only blooms
+	private ArrayList<LevelBloomLight> bloom_light_list = new ArrayList<LevelBloomLight>(); // references for only blooms
 	
 	@Element
 	public LevelObject player;
@@ -52,32 +57,58 @@ public class Level
 	@ElementList
 	public ArrayList<LevelEvent> event_list;
 	
+	// and our local particles
+	private ArrayList<NParticleEmitter> local_np_emitter = new ArrayList<NParticleEmitter>();
+	
 	// no constructor
 	
 	public void onInitialize()
 	{
 		// backdrop
-		if(backdrop_color != Color.TRANSPARENT)
+		// hey, you, the one about to optimize this out
+		// the backdrop is never not transparent (at least it shouldnt be).
+		// dont worry about it.
+		if (backdrop_color != Color.TRANSPARENT)
 		{
-			my_backdrop = new QuadColorShape(1,1, backdrop_color, 0);
+			my_backdrop = new QuadColorShape(1, 1, backdrop_color, 0);
 			my_backdrop.setWidthHeight(Constants.width, Constants.height);
-			my_backdrop.z_pos -= (10.0 * Constants.z_modifier);
+			my_backdrop.setZPos(my_backdrop.z_pos - (10.0 * Constants.z_modifier));
 		}
 		
 		// pre-player
 		double x_player = Functions.screenXToShaderX(player.x_pos);
 		double y_player = Functions.screenYToShaderY(player.y_pos);
 		
-		bloom_light_list.clear();
-		
 		// setup general objects
+		local_np_emitter.clear();
+		physics_objects.clear();
 		for (int i = object_list.size() - 1; i >= 0; i--)
-			object_list.get(i).onInitialize();
+		{
+			LevelObject reference = object_list.get(i);
+			reference.onInitialize();
+			
+			// do some particles
+			if (reference.this_object == EnumLevelObject.floating1)
+			{
+				RectF emitt_from = new RectF((float) (reference.quad_object.best_fit_aabb.main_rect.left + Functions.screenWidthToShaderWidth(45)),
+						(float) (reference.quad_object.best_fit_aabb.main_rect.top - Functions.screenHeightToShaderHeight(85)),
+						(float) (reference.quad_object.best_fit_aabb.main_rect.right - Functions.screenWidthToShaderWidth(45)),
+						(float) (reference.quad_object.best_fit_aabb.main_rect.bottom + Functions.screenHeightToShaderHeight(85)));
+				
+				NParticleEmitter test = new NParticleEmitter(emitt_from);
+				test.onInitialize();
+				test.preUpdate();
+				local_np_emitter.add(test);
+				
+				physics_objects.add(reference);
+			}
+		}
 		
-		//sort the objects
-		 Collections.sort(object_list, new ObjectDrawSort());
+		// sort the objects
+		Collections.sort(object_list, new ObjectDrawSort());
 		
 		// setup lights
+		bloom_light_list.clear();
 		for (int i = light_list.size() - 1; i >= 0; i--)
 		{
 			// store bloom lights in another array for easy use later
@@ -88,10 +119,10 @@ public class Level
 				if (temp.is_bloom)
 					bloom_light_list.add(temp);
 			}
-			else if(LevelCustomLight.class.isAssignableFrom(light_list.get(i).getClass()))
+			else if (LevelCustomLight.class.isAssignableFrom(light_list.get(i).getClass()))
 			{
 				LevelCustomLight temp = LevelCustomLight.class.cast(light_list.get(i));
-				if(temp.is_bloom)
+				if (temp.is_bloom)
 					bloom_light_list.add(temp);
 			}
 		}
@@ -99,15 +130,36 @@ public class Level
 		// setup events
 		for (int i = event_list.size() - 1; i >= 0; i--)
 		{
-			event_list.get(i).onInitialize();
+			event_list.get(i).onInitialize(player, object_list, light_list);
 			if (event_list.get(i).this_event == EnumLevelEvent.send_to_start)
 				LevelEventTransportPlayer.class.cast(event_list.get(i).my_possible_event).setTransportTo(x_player, y_player);
+			else if (event_list.get(i).this_event == EnumLevelEvent.invisible_wall)
+			{
+				LevelEvent original = event_list.get(i);
+				
+				LevelObject temp = new LevelObject();
+				temp.active = false;
+				temp.degree = 0;
+				temp.scale = 1;
+				temp.this_object = EnumLevelObject.transparent;
+				temp.id = original.id;
+				temp.x_pos = original.x_pos;
+				temp.y_pos = original.y_pos;
+				temp.width = original.width;
+				temp.height = original.height;
+				temp.z_plane = 5;
+				
+				temp.onInitialize();
+				
+				object_list.add(temp);
+				event_list.remove(i);
+			}
 		}
 		
 		// setup player
 		player.quad_object = new com.kobaj.opengldrawable.Quad.QuadColorShape(0, 64, 64, 0, Color.GRAY, 0);
-		player.quad_object.z_pos -= (5 /* player.z_plane */* Constants.z_modifier);
-		player.quad_object.setPos(x_player, y_player, player.draw_from);
+		player.quad_object.setZPos(player.quad_object.z_pos - (5 /* player.z_plane */ * Constants.z_modifier));
+		player.quad_object.setXYPos(x_player, y_player, player.draw_from);
 		
 		// set widths and heights for the camera
 		left_shader_limit = (Functions.screenXToShaderX(left_limit) + Constants.ratio);
@@ -123,21 +175,32 @@ public class Level
 			light_list.get(i).onUpdate(delta);
 		
 		for (int i = event_list.size() - 1; i >= 0; i--)
-			event_list.get(i).onUpdate(delta, player.quad_object);
+			event_list.get(i).onUpdate(delta);
+		
+		//whaaaaat
+		for (int i = physics_objects.size() - 1; i >= 0; i--)
+			physics_objects.get(i).onUpdate(delta);
+		
+		for (int i = local_np_emitter.size() - 1; i >= 0; i--)
+			local_np_emitter.get(i).onUpdate(delta);
 	}
 	
 	public void onDrawObject()
 	{
-		//backdrop
-		if(backdrop_color != Color.TRANSPARENT)
-			my_backdrop.onDrawAmbient(Constants.identity_matrix, Constants.my_proj_matrix, Color.WHITE, true);
+		// backdrop
+		if (backdrop_color != Color.TRANSPARENT)
+			my_backdrop.onDrawAmbient(Constants.my_ip_matrix, true);
 		
-		//draw sorted
+		// draw sorted objects
 		for (int i = object_list.size() - 1; i >= 0; i--)
 			object_list.get(i).onDrawObject();
 		
 		// player
 		player.quad_object.onDrawAmbient();
+		
+		// particles
+		for (int i = local_np_emitter.size() - 1; i >= 0; i--)
+			local_np_emitter.get(i).onDraw();
 		
 		// bloom lights
 		for (int i = bloom_light_list.size() - 1; i >= 0; i--)
@@ -146,14 +209,32 @@ public class Level
 	
 	public void onDrawLight()
 	{
+		// lights
 		for (int i = light_list.size() - 1; i >= 0; i--)
 			light_list.get(i).onDrawLight();
 	}
 	
 	public void onDrawConstant()
 	{
+		// events
 		for (int i = event_list.size() - 1; i >= 0; i--)
 			event_list.get(i).onDraw();
+	}
+	
+	public void objectInteraction(final RectF collision, final LevelObject player, final LevelObject reference)
+	{
+		//up down collision
+		if(collision.width() == 0)
+		{
+			if(reference.this_object == EnumLevelObject.floating1)
+			if(player.quad_object.y_pos > reference.quad_object.y_pos) //remember this is the center of the object
+			{
+				// just a test value
+				player.quad_object.setXYPos(player.quad_object.x_pos,
+						player.quad_object.y_pos - Constants.collision_detection_height, EnumDrawFrom.center);
+				reference.quad_object.y_acc += Constants.player_downward_platform_acc;
+			}
+		}
 	}
 	
 	// this method will be deleted.
@@ -207,8 +288,8 @@ public class Level
 		LevelEvent tempe = new LevelEvent();
 		tempe.height = 200;
 		tempe.width = 600;
-		tempe.affected_object_strings = new ArrayList<String>();
-		tempe.affected_object_strings.add("empty");
+		tempe.id_strings = new ArrayList<String>();
+		tempe.id_strings.add("empty");
 		tempe.x_pos = 0;
 		tempe.y_pos = 0;
 		

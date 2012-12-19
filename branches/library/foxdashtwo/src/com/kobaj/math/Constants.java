@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.support.v4.app.FragmentManager;
 
-import com.kobaj.audio.MusicPlayList;
+import com.kobaj.audio.MusicPlayer;
 import com.kobaj.audio.Sound;
 import com.kobaj.input.InputManager;
 import com.kobaj.opengldrawable.Text;
@@ -48,14 +48,15 @@ public class Constants
 	public static final double z_modifier = 0.00001;
 	
 	// physics constants
-	public static final double gravity_default = 0.000650;
+	public static final double gravity_default = 0.000800;
 	public static final double max_y_velocity_default = 2.5;
 	public static final double max_x_velocity_default = 2.5;
 	public static final double normal_acceleration_default = 0.00050;
 	public static final double normal_reverse_acceleration_default = 0.00600;
-	public static final double collision_detection_height_default = 2.0;
-	public static final double jump_velocity_default = 0.650;
+	public static final double collision_detection_height_default = 1.0;
+	public static final double jump_velocity_default = 0.800;
 	public static final double jump_limiter_default = 0.185;
+	public static final double player_downward_platform_acc_default = -.001;
 	
 	// physics variables
 	public static double gravity;
@@ -67,6 +68,7 @@ public class Constants
 	public static double jump_velocity;
 	public static double jump_limiter;
 	public static double max_speed;
+	public static double player_downward_platform_acc;
 	
 	// same regardless of screen.
 	public static final double normal_air_damping = .90;
@@ -93,7 +95,7 @@ public class Constants
 	
 	public static Physics physics;
 	
-	public static MusicPlayList music_play_list;
+	public static MusicPlayer music_player;
 	public static Sound sound;
 	
 	public static InputManager input_manager;
@@ -104,13 +106,28 @@ public class Constants
 	public static final double max_brightness = 0.75;
 	public static final double min_brightness = 0.55;
 	
+	//text (obviously?)
 	public static Text text;
 	public static double text_size = 16.0; // all text is the same size (how lame!)
 	
+	//camera
 	public static float[] my_view_matrix = new float[16];
 	public static float[] my_proj_matrix = new float[16];
+	public static float[] my_vp_matrix = new float[16];
+	public static float[] my_ip_matrix = new float[16];
 	public static final float[] identity_matrix = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 };
 	
+	//lighting
 	public static AmbientLightShader ambient_light;
 	public static CompressedLightShader compressed_light;
+	
+	//networking 
+	public static final String main_url = "http://something.com";
+	
+	//metrics
+	public static boolean draw_fps= true;
+	public static int quads_drawn_screen = 0;
+	
+	//errors
+	public static int exception_timeout = 300; //ms
 }

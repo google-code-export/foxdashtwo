@@ -31,11 +31,11 @@ public class QuadAnimated extends QuadCompressed
 	private void updateTexCoords()
 	{
 		// translate the frames coordinates
-		final float tr_start_x = (float) com.kobaj.math.Functions.linearInterpolate(0.0, square, currently_playing_frameset_reference.current_frame_reference.start_x, 0.0, 1.0);
-		final float tr_start_y = (float) com.kobaj.math.Functions.linearInterpolate(0.0, square, currently_playing_frameset_reference.current_frame_reference.start_y, 0.0, 1.0);
+		final float tr_start_x = (float) com.kobaj.math.Functions.linearInterpolate(0.0, square, currently_playing_frameset_reference.current_frame_reference.x_start, 0.0, 1.0);
+		final float tr_start_y = (float) com.kobaj.math.Functions.linearInterpolate(0.0, square, currently_playing_frameset_reference.current_frame_reference.y_start, 0.0, 1.0);
 		
-		final float tr_end_x = (float) com.kobaj.math.Functions.linearInterpolate(0.0, square, currently_playing_frameset_reference.current_frame_reference.end_x, 0.0, 1.0);
-		final float tr_end_y = (float) com.kobaj.math.Functions.linearInterpolate(0.0, square, currently_playing_frameset_reference.current_frame_reference.end_y, 0.0, 1.0);
+		final float tr_end_x = (float) com.kobaj.math.Functions.linearInterpolate(0.0, square, currently_playing_frameset_reference.current_frame_reference.x_end, 0.0, 1.0);
+		final float tr_end_y = (float) com.kobaj.math.Functions.linearInterpolate(0.0, square, currently_playing_frameset_reference.current_frame_reference.y_end, 0.0, 1.0);
 		
 		complexUpdateTexCoords(tr_start_x, tr_end_x, tr_start_y, tr_end_y);
 	}

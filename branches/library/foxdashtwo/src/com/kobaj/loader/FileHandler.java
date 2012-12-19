@@ -1,17 +1,17 @@
 package com.kobaj.loader;
 
-import java.io.ByteArrayOutputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
 import android.content.res.Resources;
-import android.content.res.Resources.NotFoundException;
 import android.os.Environment;
 import android.util.Log;
 
@@ -20,7 +20,6 @@ public class FileHandler
 	private final static String file_directory = "/foxdashtwo";
 	private final static String error_tag = "XML Serial Error";
 	private final static String save_format = ".xml";
-	private final static String file_format = "UTF-8";
 	
 	// some of these create a little bit of string garbage, but its assumed this is only
 	// called when loading, thus we will be using a system.gc after all is done loading.
@@ -127,8 +126,7 @@ public class FileHandler
 			{
 				if (sdcardFile.exists())
 				{
-					byte[] temp = ioStreamtoByteArray(new FileInputStream(sdcardFile));
-					String temp2 = new String(temp, file_format);
+					String temp2 = ioStreamToString(new FileInputStream(sdcardFile));
 					try
 					{
 						finalReturn = serial.read(type, temp2);
@@ -154,19 +152,22 @@ public class FileHandler
 		T final_return = null;
 		
 		// dont need to check for directory or read access, as resources are in memory.
+		final_return = readString(ioStreamToString(resources.openRawResource(identity)), type);
+
+		
+		return final_return;
+	}
+	
+	public static <T> T readString(String input, Class<? extends T> type)
+	{
+		T final_return = null;
 		
 		// read it in
 		Serializer serial = new Persister();
 		
 		try
 		{
-			byte[] byte_temp = ioStreamtoByteArray(resources.openRawResource(identity));
-			String string_temp = new String(byte_temp, file_format);
-			final_return = serial.read(type, string_temp);
-		}
-		catch (NotFoundException e)
-		{
-			Log.e(error_tag, e.toString());
+			final_return = serial.read(type, input);
 		}
 		catch (Exception e)
 		{
@@ -198,34 +199,34 @@ public class FileHandler
 		return false;
 	}
 	
-	private static byte[] ioStreamtoByteArray(InputStream is)
+	public static String ioStreamToString(InputStream is)
 	{
-		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-		
-		int nRead;
-		byte[] data = new byte[16384];
-		
+		BufferedReader reader = null;
+		StringBuilder b = new StringBuilder();
 		try
 		{
-			while ((nRead = is.read(data, 0, data.length)) != -1)
-			{
-				buffer.write(data, 0, nRead);
-			}
+			reader = new BufferedReader(new InputStreamReader(is));
+			String line = "";
+			while ((line = reader.readLine()) != null)
+				b.append(line);
 		}
 		catch (IOException e)
 		{
 			Log.e(error_tag, e.toString());
 		}
-		
-		try
+		finally
 		{
-			buffer.flush();
-		}
-		catch (IOException e)
-		{
-			Log.e(error_tag, e.toString());
+			if (reader != null)
+				try
+				{
+					reader.close();
+				}
+				catch (IOException e)
+				{
+					Log.e(error_tag, e.toString());
+				}
 		}
 		
-		return buffer.toByteArray();
+		return b.toString();
 	}
 }

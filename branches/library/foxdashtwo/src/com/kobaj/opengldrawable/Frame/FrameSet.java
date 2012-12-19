@@ -8,7 +8,7 @@ import org.simpleframework.xml.ElementList;
 public class FrameSet
 {
 	@ElementList
-	public ArrayList<Frame> frame_list;
+	public ArrayList<Sprite> frame_list;
 	
 	//animation information
 	//recomended fps to play the animation at
@@ -19,7 +19,7 @@ public class FrameSet
 	
 	//current frame information
 	private int current_frame;
-	public Frame current_frame_reference;
+	public Sprite current_frame_reference;
 	
 	//assume loop animation forever
 	public boolean repeat = true;

@@ -1,7 +1,5 @@
 package com.kobaj.math;
 
-import java.util.ArrayList;
-
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.opengl.GLES20;
@@ -34,6 +32,33 @@ public class Functions
 		return minY * (value - maxX) / (minX - maxX) + maxY * (value - minX) / (maxX - minX);
 	}
 	
+	// lerp between two colors, usually minX is 0, maxX is 1, value is between those two.
+	public static final int linearInterpolateColor(double minX, double maxX, double value, int start_color, int end_color)
+	{
+		// pull apart
+		// we keep a copy of these functions because its faster than calling the methods.
+		int pc = start_color;
+		int pr = (pc >> 16) & 0xFF;
+		int pg = (pc >> 8) & 0xFF;
+		int pb = (pc & 0xFF);
+		int pa = pc >>> 24;
+		
+		int sc = end_color;
+		int sr = (sc >> 16) & 0xFF;
+		int sg = (sc >> 8) & 0xFF;
+		int sb = (sc & 0xFF);
+		int sa = sc >>> 24;
+		
+		// lerp
+		int lr = (int) Functions.linearInterpolate(minX, maxX, value, pr, sr);
+		int lg = (int) Functions.linearInterpolate(minX, maxX, value, pg, sg);
+		int lb = (int) Functions.linearInterpolate(minX, maxX, value, pb, sb);
+		int la = (int) Functions.linearInterpolate(minX, maxX, value, pa, sa);
+		
+		// stick back together;
+		return (la << 24) | (lr << 16) | (lg << 8) | lb;
+	}
+	
 	public static final double clamp(double max, double value, double min)
 	{
 		return Math.max(Math.min(value, max), min);
@@ -48,11 +73,12 @@ public class Functions
 	// input 0 to 255, output 0 to 1
 	// really helpful for color transformations
 	private static double[] byte_to_shader_lookup;
+	
 	public static final double byteToShader(int input)
 	{
 		if (input < 0)
 			return 0;
-		else if(input > 255)
+		else if (input > 255)
 			return 1;
 		
 		// small optimization
@@ -116,54 +142,58 @@ public class Functions
 	// random between two values
 	public static final double randomDouble(double min, double max)
 	{
-		return min + (Math.random() * ((max - min) + 1));
+		if(min == max)
+			return max;
+		
+		return min + (Math.random() * (max - min));
 	}
 	
 	public static final int randomInt(int min, int max)
 	{
+		if(min == max)
+			return max;
+		
 		return (int) randomDouble(min, max);
 	}
 	
-	//see if something is inside of a rectangle
-	//be sure to match rectf and x and y coords to shader or screen
+	// see if something is inside of a rectangle
+	// be sure to match rectf and x and y coords to shader or screen
 	public static final boolean inRectF(RectF rectangle, double x, double y)
 	{
-		return (x <= rectangle.right && x >= rectangle.left &&
-				(y <= rectangle.top && y >= rectangle.bottom));
+		return (x <= rectangle.right && x >= rectangle.left && (y <= rectangle.top && y >= rectangle.bottom));
 	}
 	
 	// helpful to see whats on screen
-	//screen coordinates
+	// screen coordinates
 	public static final boolean onScreen(int x, int y)
 	{
 		return onShader(screenXToShaderX(x), screenYToShaderY(y));
 	}
 	
-	//shader coordinates
+	// shader coordinates
 	public static final boolean onShader(double x, double y)
 	{
 		updateShaderRectFView();
 		
-		if (x >= shader_rectf_view.left && x <= shader_rectf_view.right
-			&& y >= shader_rectf_view.bottom && y <= shader_rectf_view.top)
-				return true;
+		if (x >= shader_rectf_view.left && x <= shader_rectf_view.right && y >= shader_rectf_view.bottom && y <= shader_rectf_view.top)
+			return true;
 		
 		return false;
 	}
 	
-	public static final boolean onShader(ArrayList<RectFExtended> objects)
+	public static final boolean onShader(RectFExtended objects)
 	{
 		updateShaderRectFView();
 		
-		for (int i = objects.size() - 1; i >= 0; i--)
-			if (equalIntersects(objects.get(i).main_rect, shader_rectf_view))
-				return true;
+		if (equalIntersects(objects.main_rect, shader_rectf_view))
+			return true;
 		
 		return false;
 	}
 	
-	//helper method for the above so the two onShaders are consistent.
-	protected static RectF shader_rectf_view = new RectF();
+	// helper method for the above so the two onShaders are consistent.
+	public static RectF shader_rectf_view = new RectF();
+	
 	protected static final void updateShaderRectFView()
 	{
 		final double neg_zoom = Constants.ratio * Constants.z_shader_translation;
@@ -177,12 +207,12 @@ public class Functions
 	// helpful method
 	// strangly, it is programmed different than RectF.intersects...
 	public static final boolean equalIntersects(RectF a, RectF b)
-	{	
+	{
 		return equalIntersects(a, b.left, b.top, b.right, b.bottom);
 	}
 	
 	public static final boolean equalIntersects(RectF a, double left, double top, double right, double bottom)
-	{	
+	{
 		return (a.left <= right && left <= a.right && a.top >= bottom && top >= a.bottom);
 	}
 	
@@ -252,7 +282,7 @@ public class Functions
 	}
 	
 	// not really a math function, but we need a static error check for open gl
-	public static void checkGlError()
+	public static final void checkGlError()
 	{
 		int error;
 		while ((error = GLES20.glGetError()) != GLES20.GL_NO_ERROR)
@@ -260,7 +290,7 @@ public class Functions
 	}
 	
 	// thanks to http://www.gamedev.net/topic/229831-nearest-power-of-2/
-	public static int nearestPowerOf2(int x)
+	public static final int nearestPowerOf2(int x)
 	{
 		--x;
 		x |= x >> 1;
@@ -273,11 +303,10 @@ public class Functions
 	
 	// just one simple place to update all the camera variables
 	// this is in shader coordinates
-	public static void setCamera(double x_camera, double y_camera)
-	{	
-		//nothing has changed
-		if(x_camera == Constants.x_shader_translation &&
-		   y_camera == Constants.y_shader_translation)
+	public static final void setCamera(double x_camera, double y_camera)
+	{
+		// nothing has changed
+		if (x_camera == Constants.x_shader_translation && y_camera == Constants.y_shader_translation)
 			return;
 		
 		Matrix.setIdentityM(Constants.my_view_matrix, 0);
@@ -287,12 +316,12 @@ public class Functions
 	}
 	
 	// positive values make the camera move away from objects towards player
-	public static void setCameraZ(double z_camera)
+	public static final void setCameraZ(double z_camera)
 	{
-		if(z_camera < 0)
+		if (z_camera < 0)
 			return;
 		
-		if(Constants.z_shader_translation == z_camera)
+		if (Constants.z_shader_translation == z_camera)
 			return;
 		
 		Matrix.setIdentityM(Constants.my_view_matrix, 0);
@@ -301,44 +330,44 @@ public class Functions
 	}
 	
 	// calculate speed from two velocities
-	public static double speed(double x_velocity, double y_velocity)
+	public static final double speed(double x_velocity, double y_velocity)
 	{
 		return Math.sqrt(x_velocity * x_velocity + y_velocity * y_velocity);
 	}
 	
-	//color selection functions
+	// color selection functions
 	// I'm not sure why, but this runs faster than the Color.red() etc functions
-	public static int red(int input)
+	public static final int red(int input)
 	{
 		return (input >> 16) & 0xFF;
 	}
 	
-	public static int green(int input)
+	public static final int green(int input)
 	{
 		return (input >> 8) & 0xFF;
 	}
 	
-	public static int blue(int input)
+	public static final int blue(int input)
 	{
 		return (input & 0xFF);
 	}
 	
-	public static int alpha(int input)
+	public static final int alpha(int input)
 	{
 		return input >>> 24;
 	}
 	
-	public static int makeColor(int r, int g, int b, int a)
+	// why aren't you using byte? cause.
+	public static final int makeColor(int r, int g, int b, int a)
 	{
-		if(r > 255 || g > 255 || b > 255 || a > 255 ||
-				r < 0 || g < 0 || b < 0 || a < 0)
+		if (r > 255 || g > 255 || b > 255 || a > 255 || r < 0 || g < 0 || b < 0 || a < 0)
 			return Color.WHITE;
 		
 		return (a << 24) | (r << 16) | (g << 8) | b;
 	}
 	
 	// when needing to blur something
-	public static Bitmap fastBlur(Bitmap sentBitmap, int radius)
+	public static final Bitmap fastBlur(Bitmap sentBitmap, int radius)
 	{
 		// Stack Blur Algorithm by Mario Klingemann <mario@quasimondo.com>
 		
@@ -581,8 +610,8 @@ public class Functions
 		return bitmap;
 	}
 	
-	//setup the constants
-	public static void adjustConstantsToScreen()
+	// setup the constants
+	public static final void adjustConstantsToScreen()
 	{
 		Constants.gravity = -Functions.screenHeightToShaderHeight(Constants.gravity_default);
 		Constants.max_y_velocity = Functions.screenHeightToShaderHeight(Constants.max_y_velocity_default);
@@ -594,5 +623,7 @@ public class Functions
 		Constants.jump_limiter = Functions.screenHeightToShaderHeight(Constants.jump_limiter_default);
 		
 		Constants.max_speed = Functions.speed(Constants.max_x_velocity, Constants.max_y_velocity);
+		
+		Constants.player_downward_platform_acc = Functions.screenHeightToShaderHeight(Constants.player_downward_platform_acc_default);
 	}
 }
