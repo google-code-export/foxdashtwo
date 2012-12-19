@@ -2,5 +2,5 @@ package com.kobaj.screen.screenaddons;
 
 public enum EnumDebugType
 {
-	aabb, physics, player_physics/*lights, particles, events*/
+	aabb, physics, unoptimized_physics, player_physics, camera/*lights, particles, events*/
 }

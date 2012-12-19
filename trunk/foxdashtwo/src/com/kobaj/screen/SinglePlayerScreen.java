@@ -114,7 +114,7 @@ public class SinglePlayerScreen extends BaseScreen
 		// interaction
 		interaction_addon.onUpdate(delta, my_modifier, test_level);
 		
-		// debug_addon.onUpdate(delta, test_level);
+		//debug_addon.onUpdate(delta, test_level);
 	}
 	
 	@Override
@@ -122,7 +122,7 @@ public class SinglePlayerScreen extends BaseScreen
 	{
 		test_level.onDrawObject();
 		
-		// debug_addon.onDrawObject();
+		//debug_addon.onDrawObject();
 	}
 	
 	@Override

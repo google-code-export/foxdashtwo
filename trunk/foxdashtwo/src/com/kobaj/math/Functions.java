@@ -192,7 +192,7 @@ public class Functions
 	}
 	
 	// helper method for the above so the two onShaders are consistent.
-	protected static RectF shader_rectf_view = new RectF();
+	public static RectF shader_rectf_view = new RectF();
 	
 	protected static final void updateShaderRectFView()
 	{

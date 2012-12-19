@@ -7,6 +7,8 @@ import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 import com.kobaj.math.android.RectF;
 import com.kobaj.opengldrawable.EnumDrawFrom;
+import com.kobaj.opengldrawable.Quad.Quad;
+import com.kobaj.opengldrawable.Quad.QuadRenderShell;
 
 public class NParticleEmitter
 {
@@ -41,7 +43,7 @@ public class NParticleEmitter
 	public int start_lifetime = 3000; // 3 seconds
 	
 	// the below are just containers
-	private ArrayList<NParticle> all_particles = new ArrayList<NParticle>();
+	private ArrayList<Quad> used_quads = new ArrayList<Quad>();
 	private Stack<NParticle> unused_pool = new Stack<NParticle>();
 	private ArrayList<NParticle> used_pool = new ArrayList<NParticle>();
 	private double current_time;
@@ -63,7 +65,6 @@ public class NParticleEmitter
 		// normalize our velocity
 		start_velocity = Functions.screenHeightToShaderHeight(start_velocity);
 		
-		all_particles.clear();
 		unused_pool.clear();
 		used_pool.clear();
 		
@@ -76,7 +77,6 @@ public class NParticleEmitter
 		{
 			NParticle temp = new NParticle(vary_scale, fade_in, fade_out, start_lifetime);
 			temp.onInitialize();
-			all_particles.add(temp);
 			unused_pool.push(temp);
 		}
 	}
@@ -142,7 +142,11 @@ public class NParticleEmitter
 	
 	public void onDraw()
 	{
-		for (int i = used_pool.size() - 1; i >= 0; i--)
-			used_pool.get(i).quad_reference.onDrawAmbient();
+		used_quads.clear();
+		for(int i = used_pool.size() - 1; i >=0; i--)
+			used_quads.add(used_pool.get(i).quad_reference);
+		
+		//INSTANCE THAT HECK YEAH
+		QuadRenderShell.onDrawQuad(Constants.my_vp_matrix, false, Constants.ambient_light, used_quads);
 	}
 }

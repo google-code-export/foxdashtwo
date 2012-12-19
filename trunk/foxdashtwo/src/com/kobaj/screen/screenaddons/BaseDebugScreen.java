@@ -67,10 +67,20 @@ public class BaseDebugScreen
 						0)); // blur
 			}
 		}
+		else if (type == EnumDebugType.camera)
+		{
+			outline_quads.add(new QuadColorShape( //
+					(int) Functions.shaderXToScreenX(Functions.shader_rectf_view.left),//
+					(int) Functions.shaderYToScreenY(Functions.shader_rectf_view.top),//
+					(int) Functions.shaderXToScreenX(Functions.shader_rectf_view.right),//
+					(int) Functions.shaderYToScreenY(Functions.shader_rectf_view.bottom),//
+					0x440000FF,//
+					0));//
+		}
 	}
 	
-	double timeout = 0;
-	int on_draw = 0;
+	private double timeout = 0;
+	private int on_draw = 0;
 	
 	public void onUpdate(double delta, Level test_level)
 	{
@@ -91,14 +101,11 @@ public class BaseDebugScreen
 			{
 				Quad temp = test_level.object_list.get(i).quad_object;
 				Quad relative = outline_quads.get(i);
-				//TODO FIX ME
-				//DONT FORGET TO SET ME BACK
-				//THE LINE BELOW
 				relative.setRotationZ(temp.degree);
-				relative.setScale(1.0);
+				relative.setScale(temp.scale_value);
 				relative.setWidthHeight(temp.width, temp.height);
 				
-				//relative.setWidthHeightRotationScale(temp.width, temp.height, temp.degree, 1.0); // dont need to scale.
+				// relative.setWidthHeightRotationScale(temp.width, temp.height, temp.degree, 1.0); // dont need to scale.
 				relative.setXYPos(temp.x_pos, temp.y_pos, EnumDrawFrom.center);
 			}
 		else if (type == EnumDebugType.physics)
@@ -111,7 +118,8 @@ public class BaseDebugScreen
 		else if (type == EnumDebugType.player_physics)
 			for (int i = test_level.player.quad_object.phys_rect_list.size() - 1; i >= 0; i--)
 				outline_quads.get(i).setXYPos(test_level.player.x_pos, test_level.player.y_pos, EnumDrawFrom.center);
-		
+		else if (type == EnumDebugType.camera)
+			outline_quads.get(0).setXYPos(Functions.shader_rectf_view.left, Functions.shader_rectf_view.top, EnumDrawFrom.top_left);
 	}
 	
 	public void onDrawObject()
@@ -121,5 +129,7 @@ public class BaseDebugScreen
 		
 		for (int i = outline_quads.size() - 1; i >= 0; i--)
 			outline_quads.get(i).onDrawAmbient();
+		
+		// outline_quads.get(on_draw).onDrawAmbient(Constants.my_vp_matrix, true);
 	}
 }

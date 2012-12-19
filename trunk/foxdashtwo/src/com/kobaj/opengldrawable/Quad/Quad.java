@@ -11,7 +11,6 @@ import java.util.ArrayList;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.opengl.GLES20;
 import android.opengl.Matrix;
 
 import com.kobaj.loader.GLBitmapReader;
@@ -20,13 +19,9 @@ import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 import com.kobaj.math.RectFExtended;
 import com.kobaj.opengldrawable.EnumDrawFrom;
-import com.kobaj.openglgraphics.BaseLightShader;
 
 public class Quad
 {
-	// transformation matrix to convert from object to world space
-	private float[] my_model_matrix = new float[16];
-	
 	// and placed in the exact center of the quad
 	public EnumDrawFrom currently_drawn = EnumDrawFrom.center;
 	
@@ -47,7 +42,7 @@ public class Quad
 	// this shouldn't really change much actually.
 	public double z_pos = -1.0f;
 	
-	//other values
+	// other values
 	public double scale_value = 1.0;
 	public double degree = 0;
 	
@@ -61,6 +56,7 @@ public class Quad
 	// also helpful in physics
 	// stored in shader coordinates
 	public RectFExtended best_fit_aabb = new RectFExtended();
+	private float[] best_fit_vector = new float[4];
 	
 	// begin by holding these
 	// should be read only to outside classes...
@@ -75,8 +71,13 @@ public class Quad
 	protected FloatBuffer my_position;
 	protected FloatBuffer my_tex_coord;
 	
-	// camera
-	private float[] my_mvp_matrix = new float[16];
+	// movement matrixes
+	// transformation matrix to convert from object to world space
+	public float[] my_model_matrix = new float[16];
+	private float[] translation_matrix = new float[16];
+	private float[] rotation_matrix = new float[16];
+	private float[] scale_matrix = new float[16];
+	private float[] my_rs_matrix = new float[16];
 	
 	// handle to texture
 	protected int my_texture_data_handle = -1;
@@ -109,7 +110,7 @@ public class Quad
 	
 	// method that will go and get the texture handle after it has been loaded
 	// so that we can draw the texture!
-	protected boolean setTextureDataHandle()
+	public boolean setTextureDataHandle()
 	{
 		if (my_texture_data_handle != -1)
 			return true;
@@ -158,6 +159,9 @@ public class Quad
 		// set/add/remove more rectangles as needed.
 		if (phys_rect_list.isEmpty())
 			phys_rect_list.add(new RectFExtended(-tr_x, tr_y, tr_x, -tr_y));
+		
+		// finally
+		update_position_matrix(true);
 	}
 	
 	// methods for calculating stuffs
@@ -180,7 +184,13 @@ public class Quad
 		// Texture coordinate data.
 		final float[] cubeTextureCoordinateData = {
 				// Front face
-				one_x, -one_y, one_x, -two_y, two_x, -one_y, one_x, -two_y, two_x, -two_y, two_x, -one_y };
+				one_x, -one_y,//
+				one_x, -two_y,//
+				two_x, -one_y,//
+				
+				one_x, -two_y,//
+				two_x, -two_y,//
+				two_x, -one_y };//
 		
 		if (my_tex_coord == null)
 			my_tex_coord = ByteBuffer.allocateDirect(cubeTextureCoordinateData.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
@@ -194,41 +204,25 @@ public class Quad
 	public void setScale(double scale_value)
 	{
 		this.scale_value = scale_value;
-		//setWidthHeightRotationScale(width, height, 0, scale_value);
+		
+		// then the physics
+		for (int i = phys_rect_list.size() - 1; i >= 0; i--)
+			phys_rect_list.get(i).setScale(scale_value);
+		
+		this.update_position_matrix(true);
 	}
 	
 	// rotate from the center
 	public void setRotationZ(double degrees)
 	{
 		this.degree = degrees;
-		//setWidthHeightRotationScale(width, height, degrees, 1);
+		this.update_position_matrix(true);
 	}
-	
-	// Why oh why are you doing this instead of a very simple matrix rotation Jakob?
-	// Thats a good question, I very well could use model * view * projection where model is scale * rotation * translation
-	// however when working on android devices we have to deal with orthographic projections
-	// where the ratio is /not/ one.
-	// meaning a model * view * projection with rotation will end up skewed!
-	// By doing vertex multiplication with compensated coords, we eliminate the skew!
 	
 	// width and height are in screen values 0 - 800
 	// scale will override width and height if it is not 1.
 	public void setWidthHeight(int width, int height)
 	{
-		// double check all values
-		if (scale_value < 0 || scale_value > 1)
-			scale_value = 1;
-		
-		final double scale_factor = 1.0;
-		
-		// width and height
-		width = (int) (width * scale_factor);
-		height = (int) (height * scale_factor);
-		
-		// then the physics
-		for (int i = phys_rect_list.size() - 1; i >= 0; i--)
-			phys_rect_list.get(i).setScale(scale_value);
-		
 		// store these for our bounding rectangle
 		this.width = width;
 		this.height = height;
@@ -237,13 +231,8 @@ public class Quad
 		this.shader_width = Functions.screenWidthToShaderWidth(width);
 		this.shader_height = Functions.screenHeightToShaderHeight(height);
 		
-		// begin rotation data
-		final double rads = (float) Math.toRadians(0);
-		final double cos_rads = Math.cos(rads);
-		final double sin_rads = Math.sin(rads);
-		
-		float pos_tr_x = width / 2.0f;
-		float pos_tr_y = height / 2.0f;
+		float pos_tr_x = (float) (this.shader_width / 2.0);
+		float pos_tr_y = (float) (this.shader_height / 2.0f);
 		
 		float neg_tr_x = -pos_tr_x;
 		float neg_tr_y = -pos_tr_y;
@@ -254,22 +243,40 @@ public class Quad
 		my_position_matrix[0] = neg_tr_x;
 		my_position_matrix[1] = pos_tr_y;
 		my_position_matrix[2] = z_buffer;
+		
 		my_position_matrix[3] = neg_tr_x;
 		my_position_matrix[4] = neg_tr_y;
 		my_position_matrix[5] = z_buffer;
+		
 		my_position_matrix[6] = pos_tr_x;
 		my_position_matrix[7] = pos_tr_y;
 		my_position_matrix[8] = z_buffer;
+		
 		my_position_matrix[9] = neg_tr_x;
 		my_position_matrix[10] = neg_tr_y;
 		my_position_matrix[11] = z_buffer;
+		
 		my_position_matrix[12] = pos_tr_x;
 		my_position_matrix[13] = neg_tr_y;
 		my_position_matrix[14] = z_buffer;
+		
 		my_position_matrix[15] = pos_tr_x;
 		my_position_matrix[16] = pos_tr_y;
 		my_position_matrix[17] = z_buffer;
 		
+		// Initialize the buffers. and store the new coords
+		if (my_position == null)
+			my_position = ByteBuffer.allocateDirect(my_position_matrix.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
+		else
+			my_position.clear();
+		
+		my_position.put(my_position_matrix).position(0);
+		
+		updateBestFitAABB();
+	}
+	
+	private void updateBestFitAABB()
+	{
 		double x_maximul = Double.MIN_VALUE;
 		double y_maximul = Double.MIN_VALUE;
 		double x_minimul = Double.MAX_VALUE;
@@ -279,16 +286,15 @@ public class Quad
 		for (int i = 0; i < 18; i = i + 3)
 		{
 			// get coordinate
-			final double tr_x1 = my_position_matrix[i];
-			final double tr_y1 = my_position_matrix[i + 1];
+			best_fit_vector[0] = my_position_matrix[i];
+			best_fit_vector[1] = my_position_matrix[i + 1];
+			best_fit_vector[2] = my_position_matrix[i + 2];
+			best_fit_vector[3] = 0.0f;
 			
-			// apply transforms
-			final double tr_x2 = Functions.screenWidthToShaderWidth(tr_x1 * cos_rads - tr_y1 * sin_rads);
-			final double tr_y2 = Functions.screenHeightToShaderHeight(tr_y1 * cos_rads + tr_x1 * sin_rads);
+			Matrix.multiplyMV(best_fit_vector, 0, this.my_model_matrix, 0, best_fit_vector, 0);
 			
-			// set value
-			my_position_matrix[i] = (float) tr_x2;
-			my_position_matrix[i + 1] = (float) tr_y2;
+			final float tr_x2 = best_fit_vector[0];
+			final float tr_y2 = best_fit_vector[1];
 			
 			// calculate max and min
 			if (tr_x2 > x_maximul)
@@ -304,20 +310,12 @@ public class Quad
 		// set our maximul aabb
 		best_fit_aabb.setExtendedRectF(x_minimul, y_maximul, x_maximul, y_minimul);
 		best_fit_aabb.setPositionWithOffset(x_pos, y_pos);
-		
-		// Initialize the buffers. and store the new coords
-		if (my_position == null)
-			my_position = ByteBuffer.allocateDirect(my_position_matrix.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
-		else
-			my_position.clear();
-		
-		my_position.put(my_position_matrix).position(0);
 	}
 	
 	public void setZPos(double z)
 	{
 		this.z_pos = z;
-		update_position_matrix();
+		update_position_matrix(false);
 	}
 	
 	// these x and y are in shader space 0 to 1
@@ -354,7 +352,7 @@ public class Quad
 			y_pos = y;
 		}
 		
-		update_position_matrix();
+		update_position_matrix(false);
 		
 		// set the rectangle
 		best_fit_aabb.setPositionWithOffset(x_pos, y_pos);
@@ -362,95 +360,28 @@ public class Quad
 			phys_rect_list.get(i).setPositionWithOffset(x_pos, y_pos);
 	}
 	
-	private boolean position_set = false;
-	private float[] translation_matrix = new float[16];
-	private float[] rotation_matrix = new float[16];
-	private float[] scale_matrix = new float[16];
-	private float[] my_rs_matrix = new float[16];
-	private void update_position_matrix()
+	private void update_position_matrix(boolean also_update_scale_or_rotation)
 	{
 		// set the quad up
-		Matrix.setIdentityM(my_model_matrix, 0);
+		if (also_update_scale_or_rotation)
+		{
+			Matrix.setIdentityM(my_model_matrix, 0);
+			Matrix.setIdentityM(scale_matrix, 0);
+			Matrix.scaleM(scale_matrix, 0, (float) this.scale_value, (float) this.scale_value, (float) this.scale_value);
+			Matrix.setRotateEulerM(rotation_matrix, 0, 0.0f, 0.0f, (float) -degree);
+			Matrix.multiplyMM(my_rs_matrix, 0, rotation_matrix, 0, scale_matrix, 0);
+			
+			// and our aabb
+			updateBestFitAABB();
+		}
+		
 		Matrix.setIdentityM(translation_matrix, 0);
-		Matrix.setIdentityM(scale_matrix, 0);
-		
-		Matrix.scaleM(scale_matrix, 0,  (float)this.scale_value, (float)this.scale_value, (float)this.scale_value);
-		Matrix.setRotateEulerM(rotation_matrix, 0, 0.0f, 0.0f, (float)-degree);
 		Matrix.translateM(translation_matrix, 0, (float) x_pos, (float) y_pos, (float) z_pos);
-	
-		Matrix.multiplyMM(my_rs_matrix, 0, rotation_matrix, 0, scale_matrix, 0);
+		
 		Matrix.multiplyMM(this.my_model_matrix, 0, translation_matrix, 0, my_rs_matrix, 0);
-		
-		//I'm not sure why the game doesn't work without this...
-		position_set = true;
 	}
 	
-	// methods for
-	// drawing stuffs
-	protected <T extends BaseLightShader> void onSetupAmbient(float[] my_vp_matrix, T ambient_light)
-	{
-		update_position_matrix();
-		
-		// setup the program
-		GLES20.glUseProgram(ambient_light.my_shader);
-		
-		// quick attempt at optimization
-		// this is white
-		float red = 1;
-		float green = 1;
-		float blue = 1;
-		float alpha = 1;
-		
-		if (color == Color.BLACK)
-		{
-			red = 0;
-			green = 0;
-			blue = 0;
-			alpha = 0;
-		}
-		else if (color != Color.WHITE)
-		{
-			red = (float) Functions.byteToShader(Functions.red(color));
-			green = (float) Functions.byteToShader(Functions.green(color));
-			blue = (float) Functions.byteToShader(Functions.blue(color));
-			alpha = (float) Functions.byteToShader(Functions.alpha(color));
-		}
-		
-		// pass in color
-		GLES20.glUniform4f(ambient_light.my_color_handle, red, green, blue, alpha);
-		
-		// Set the active texture unit to texture unit 0 and bind necissary handles
-		GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-		GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, my_texture_data_handle);
-		GLES20.glUniform1i(ambient_light.my_texture_uniform_handle, 0);
-		
-		// pass in position information
-		GLES20.glVertexAttribPointer(ambient_light.my_position_handle, 3, GLES20.GL_FLOAT, false, 0, my_position);
-		
-		// Pass in the texture coordinate information
-		GLES20.glVertexAttribPointer(ambient_light.my_tex_coord_handle, 2, GLES20.GL_FLOAT, false, 0, my_tex_coord);
-		
-		// multiplies the vp matrix with the model matrix
-		// result in the MVP matrix
-		// (which currently contains model * view).
-		Matrix.multiplyMM(my_mvp_matrix, 0, my_vp_matrix, 0, my_model_matrix, 0);
-		
-		// Pass in the combined matrix.
-		GLES20.glUniformMatrix4fv(ambient_light.my_mvp_matrix_handle, 1, false, my_mvp_matrix, 0);
-		
-		// Clear the currently bound buffer (so future OpenGL calls do not use
-		// this buffer).
-		GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0);
-	}
-	
-	// main stuffs
-	protected void onDraw()
-	{
-		Constants.quads_drawn_screen++;
-		GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 6);
-	}
-	
-	// ouside calls
+	// ouside calls, now just a nice wrapper...
 	public void onDrawAmbient()
 	{
 		onDrawAmbient(Constants.my_vp_matrix, false);
@@ -458,17 +389,7 @@ public class Quad
 	
 	public void onDrawAmbient(float[] my_vp_matrix, boolean skip_draw_check)
 	{
-		// if we have a handle, draw.
-		if (!setTextureDataHandle())
-			return;
-		
 		// If on screen, draw.
-		if (skip_draw_check || com.kobaj.math.Functions.onShader(best_fit_aabb))
-		{
-			onSetupAmbient(my_vp_matrix, Constants.ambient_light);
-			
-			// Draw the cube.
-			onDraw();
-		}
+		QuadRenderShell.onDrawQuad(my_vp_matrix, skip_draw_check, Constants.ambient_light, this);
 	}
 }
