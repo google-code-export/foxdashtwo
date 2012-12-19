@@ -34,7 +34,6 @@ public class Constants
 	
 	// this is (width / height)
 	public static double ratio;
-	public static double hratio = 1.0;
 	
 	// this is where the camera is translated to
 	public static double x_shader_translation;
@@ -49,13 +48,13 @@ public class Constants
 	public static final double z_modifier = 0.00001;
 	
 	// physics constants
-	public static final double gravity_default = 0.000750;
+	public static final double gravity_default = 0.000800;
 	public static final double max_y_velocity_default = 2.5;
 	public static final double max_x_velocity_default = 2.5;
 	public static final double normal_acceleration_default = 0.00050;
 	public static final double normal_reverse_acceleration_default = 0.00600;
 	public static final double collision_detection_height_default = 1.0;
-	public static final double jump_velocity_default = 0.750;
+	public static final double jump_velocity_default = 0.800;
 	public static final double jump_limiter_default = 0.185;
 	public static final double player_downward_platform_acc_default = -.001;
 	

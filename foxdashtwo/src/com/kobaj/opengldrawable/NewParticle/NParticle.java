@@ -47,14 +47,12 @@ public class NParticle
 		{
 			current_time += delta;
 			
-			//fade in
-			if(current_time <= fade_in_time)
-			{
-				quad_reference.color = Functions.makeColor(255,255,255,(int) Functions.linearInterpolate(0, fade_out_time, current_time, 0, 255));
-			}
-			
 			//white
 			quad_reference.color = Color.WHITE;
+			
+			//fade in
+			if(current_time <= fade_in_time)
+				quad_reference.color = Functions.makeColor(255,255,255,(int) Functions.linearInterpolate(0, fade_in_time, current_time, 0, 255));
 			
 			//fade out
 			int fade_time = life_time - fade_out_time;
