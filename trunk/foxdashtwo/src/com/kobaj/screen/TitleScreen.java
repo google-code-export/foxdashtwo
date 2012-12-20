@@ -8,13 +8,11 @@ import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.Button;
 import com.kobaj.opengldrawable.EnumDrawFrom;
-import com.kobaj.opengldrawable.Quad.Quad;
 import com.kobaj.opengldrawable.Tween.EnumTweenEvent;
 import com.kobaj.opengldrawable.Tween.TweenEvent;
 import com.kobaj.opengldrawable.Tween.TweenManager;
 import com.kobaj.screen.screenaddons.floatingframe.BaseQuit;
 import com.kobaj.screen.screenaddons.settings.BaseSettingsScreen;
-import com.kobaj.screen.screenaddons.settings.DebugScreen;
 
 public class TitleScreen extends BaseScreen
 {
@@ -73,15 +71,7 @@ public class TitleScreen extends BaseScreen
 		
 		base_quit = new BaseQuit();
 		base_quit.onInitialize();
-		
-		mouse_cross = DebugScreen.mouse(Color.BLUE);
-		mouse_rot = DebugScreen.mouse(Color.GREEN);
 	}
-	
-	private double delete_me = 0;
-	private Quad delete_me_too;
-	private Quad mouse_cross;
-	private Quad mouse_rot;
 	
 	@Override
 	public void onUpdate(double delta)
@@ -93,6 +83,7 @@ public class TitleScreen extends BaseScreen
 			ready_to_quit = base_quit.onUpdate(delta);
 		else
 		{
+			// testing spring
 			double y_pos_shader = 0;
 			Constants.physics.addSpringY(.00003, .007, 0, play_button.invisible_outline.y_pos - y_pos_shader, play_button.invisible_outline);
 			Constants.physics.integratePhysics(delta, play_button.invisible_outline);
@@ -105,61 +96,12 @@ public class TitleScreen extends BaseScreen
 			Constants.physics.addSpringY(.00003, .007, 0, quit_button.invisible_outline.y_pos - y_pos_shader, quit_button.invisible_outline);
 			Constants.physics.integratePhysics(delta, quit_button.invisible_outline);
 			
-			double left = quit_button.invisible_outline.best_fit_aabb.main_rect.left;
-			double top = quit_button.invisible_outline.best_fit_aabb.main_rect.top;
-			double right = quit_button.invisible_outline.best_fit_aabb.main_rect.right;
-			double bottom = quit_button.invisible_outline.best_fit_aabb.main_rect.bottom;
-			
-			left = Functions.shaderXToScreenX(left);
-			top = Functions.shaderYToScreenY(top);
-			right = Functions.shaderXToScreenX(right);
-			bottom = Functions.shaderXToScreenX(bottom);
-			
-			settings_button.invisible_outline.setScale(4);
-
-			delete_me += delta;
-			if (delete_me > 4000)
-			{
-				delete_me = 0;
-				
-				if (delete_me_too == null)
-				{
-					delete_me_too = DebugScreen.outline(settings_button.invisible_outline.unrotated_aabb.main_rect,
-							settings_button.invisible_outline.best_fit_aabb.main_rect);
-					
-					//delete_me_too = DebugScreen.outline(play_button.invisible_outline.best_fit_aabb.main_rect, settings_button.invisible_outline.best_fit_aabb.main_rect,
-					//		quit_button.invisible_outline.best_fit_aabb.main_rect);
-					delete_me_too.setXYPos(0, 0, EnumDrawFrom.center);
-				}
-			}
-			
-			double x = Functions.screenXToShaderX(Constants.input_manager.getX(0));
-			double y = Functions.screenYToShaderY(Functions.fix_y(Constants.input_manager.getY(0)));
-			mouse_cross.setXYPos(x, y, EnumDrawFrom.center);
-			
-			mouse_rot.setRotationZ(settings_button.invisible_outline.degree);
-			
-			// shift
-			x -= settings_button.invisible_outline.x_pos;
-			y -= settings_button.invisible_outline.y_pos;
-			
-			// rotate
-			final double rads = (float) Math.toRadians(-settings_button.invisible_outline.degree);
-			final double cos_rads = Math.cos(rads);
-			final double sin_rads = Math.sin(rads);
-			x = (x * cos_rads - y * sin_rads);
-			y = (y * cos_rads + x * sin_rads);
-			
-			// shift back
-			x += settings_button.invisible_outline.x_pos;
-			y += settings_button.invisible_outline.y_pos;
-			
-			mouse_rot.setXYPos(x, y, EnumDrawFrom.center);
-			
+			// tween
 			play_tween.onUpdate(delta);
 			settings_tween.onUpdate(delta);
 			quit_tween.onUpdate(delta);
 			
+			// and buttons
 			if (play_button.isReleased())
 				GameActivity.mGLView.my_game.onChangeScreen(new SinglePlayerScreen());
 			else if (quit_button.isReleased())
@@ -202,12 +144,6 @@ public class TitleScreen extends BaseScreen
 			settings_button.onDrawConstant();
 			quit_button.onDrawConstant();
 		}
-		
-		if(delete_me_too != null)
-			delete_me_too.onDrawAmbient(Constants.my_ip_matrix, true);
-		
-		mouse_cross.onDrawAmbient(Constants.my_ip_matrix, true);
-		mouse_rot.onDrawAmbient(Constants.my_ip_matrix, true);
 	}
 	
 	@Override
