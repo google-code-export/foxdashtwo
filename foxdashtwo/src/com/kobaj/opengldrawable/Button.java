@@ -34,10 +34,7 @@ public class Button
 	private boolean old_touch;
 	
 	public boolean isReleased()
-	{	
-		if(true)
-			return false;
-		
+	{
 		boolean returned_touch = false;
 		current_touch = isTouched();
 		
@@ -62,17 +59,17 @@ public class Button
 		final double rads = (float) Math.toRadians(-invisible_outline.degree);
 		final double cos_rads = Math.cos(rads);
 		final double sin_rads = Math.sin(rads);
-		x = (x * cos_rads - y * sin_rads);
-		y = (y * cos_rads + x * sin_rads);
+		double nx = (x * cos_rads - y * sin_rads);
+		double ny = (y * cos_rads + x * sin_rads);
 		
 		// shift back
-		x += invisible_outline.x_pos;
-		y += invisible_outline.y_pos;
+		nx += invisible_outline.x_pos;
+		ny += invisible_outline.y_pos;
 		
 		// check
 		for (int i = 0; i < Constants.input_manager.fingerCount; i++)
 			if (Constants.input_manager.getTouched(i))
-				if (Functions.inRectF(invisible_outline.unrotated_aabb.main_rect, x, y))
+				if (Functions.inRectF(invisible_outline.unrotated_aabb.main_rect, nx, ny))
 					return true;
 		
 		return false;
