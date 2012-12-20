@@ -9,17 +9,17 @@ import com.kobaj.opengldrawable.EnumDrawFrom;
 import com.kobaj.opengldrawable.Quad.Quad;
 import com.kobaj.opengldrawable.Quad.QuadColorShape;
 
-public class BaseDebugScreen
+public class LevelDebugScreen
 {
 	private ArrayList<QuadColorShape> outline_quads;
 	private EnumDebugType type;
 	
-	public BaseDebugScreen(Level test_level, EnumDebugType type)
+	public LevelDebugScreen(Level test_level, EnumDebugType type)
 	{
 		this.type = type;
 		outline_quads = new ArrayList<QuadColorShape>();
 		
-		if (type == EnumDebugType.aabb)
+		if (type == EnumDebugType.original_aabb)
 		{
 			for (int i = test_level.object_list.size() - 1; i >= 0; i--)
 			{
@@ -96,16 +96,12 @@ public class BaseDebugScreen
 		}
 		
 		// then update positions and things
-		if (type == EnumDebugType.aabb)
+		if (type == EnumDebugType.original_aabb)
 			for (int i = test_level.object_list.size() - 1; i >= 0; i--)
 			{
 				Quad temp = test_level.object_list.get(i).quad_object;
 				Quad relative = outline_quads.get(i);
-				relative.setRotationZ(temp.degree);
-				relative.setScale(temp.scale_value);
-				relative.setWidthHeight(temp.width, temp.height);
-				
-				// relative.setWidthHeightRotationScale(temp.width, temp.height, temp.degree, 1.0); // dont need to scale.
+
 				relative.setXYPos(temp.x_pos, temp.y_pos, EnumDrawFrom.center);
 			}
 		else if (type == EnumDebugType.physics)

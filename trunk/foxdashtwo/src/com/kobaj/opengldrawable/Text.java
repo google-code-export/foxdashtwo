@@ -33,7 +33,7 @@ public class Text
 		double size = Constants.text_size * Constants.sd_scale;
 		
 		// new bitmap_buffer!
-		//bitmap_buffer = new SparseArray<Quad>();
+		// bitmap_buffer = new SparseArray<Quad>();
 		bitmap_buffer = new SparseArray<Quad>();
 		
 		// begin by getting all our strings
@@ -52,10 +52,9 @@ public class Text
 		
 		int count = 0;
 		// where it starts to get brilliant.
-		for (String string_name : my_string_array)
+		for (String s : my_string_array)
 		{
 			int key = count;
-			String s = string_name;
 			
 			// grab the id
 			if (count > 9)
@@ -67,79 +66,109 @@ public class Text
 					s = null;
 			}
 			
-			if (s != null)
-			{
-				// generate an image
-				Paint paint_temp = new Paint();
-				paint_temp.setAntiAlias(true);
-				paint_temp.setStyle(Style.FILL);
-				paint_temp.setColor(Color.WHITE);
-				paint_temp.setTextSize((float) size);
-				
-				Paint paint_stroke = new Paint();
-				paint_stroke.setColor(Color.BLACK);
-				paint_stroke.setTextAlign(Paint.Align.CENTER);
-				paint_stroke.setTextSize((float) size);
-				paint_stroke.setTypeface(Typeface.DEFAULT_BOLD);
-				paint_stroke.setStyle(Paint.Style.STROKE);
-				paint_stroke.setStrokeWidth(2);
-				paint_stroke.setAntiAlias(true);
-				
-				// prep
-				ArrayList<Path> path_splits = new ArrayList<Path>();
-				
-				int height = padding;
-				int width = 0;
-				
-				// split it apart
-				for (String line : s.split("\n"))
-				{
-					line = line.trim();
-					
-					// mini measurements
-					Rect rect_temp = new Rect();
-					paint_stroke.getTextBounds(line, 0, line.length(), rect_temp);
-					
-					int this_line_height = Math.abs(rect_temp.top - rect_temp.bottom);
-					int this_line_width = rect_temp.left + rect_temp.right;
-					
-					int old_height = height;
-					
-					height += this_line_height + line_height;
-					if (this_line_width > width)
-						width = this_line_width;
-					
-					// create some paths
-					Path line_path = new Path();
-					paint_temp.getTextPath(line, 0, line.length(), padding, Math.abs(rect_temp.top) + old_height, line_path);
-					path_splits.add(line_path);
-				}
-				
-				// proper padding
-				width += padding * 2;
-				height -= line_height;
-				height += padding;
-				
-				// fullscale measurements
-				Bitmap bitmap_temp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444);
-				Canvas canvas_temp = new Canvas(bitmap_temp);
-				
-				// finaly after all that, draw it
-				for (int i = path_splits.size() - 1; i >= 0; i--)
-				{
-					canvas_temp.drawPath(path_splits.get(i), paint_stroke);
-					canvas_temp.drawPath(path_splits.get(i), paint_temp);
-				}
-				
-				// stuff it in the buffer
-				// note this automatically destroys the bitmap
-				bitmap_buffer.put(key, new Quad(key, bitmap_temp, bitmap_temp.getWidth(), bitmap_temp.getHeight()));
-			}
+			// actual creation
+			generateString(s, size, key);
+			
+			count++;
+		}
+		
+		// bump up the size
+		m_test_array = Constants.resources.getStringArray(R.array.my_sa2);
+		my_string_array.clear();
+		// this is ok because it is an actual array
+		for (String s : m_test_array)
+			my_string_array.add(s);
+		
+		for (String s : my_string_array)
+		{
+			int key = count;
+			
+			// grab the id
+			key = Constants.resources.getIdentifier(s, "string", "com.kobaj.foxdashtwo");
+			if (key != 0)
+				s = Constants.resources.getString(key);
+			else
+				s = null;
+			
+			// actual creation
+			generateString(s, size * 2.0, key);
 			
 			count++;
 		}
 		
 		System.gc();
+	}
+	
+	private void generateString(String s, double size, int key)
+	{
+		if (s != null)
+		{
+			// generate an image
+			Paint paint_temp = new Paint();
+			paint_temp.setAntiAlias(true);
+			paint_temp.setStyle(Style.FILL);
+			paint_temp.setColor(Color.WHITE);
+			paint_temp.setTextSize((float) size);
+			
+			Paint paint_stroke = new Paint();
+			paint_stroke.setColor(Color.BLACK);
+			paint_stroke.setTextAlign(Paint.Align.CENTER);
+			paint_stroke.setTextSize((float) size);
+			paint_stroke.setTypeface(Typeface.DEFAULT_BOLD);
+			paint_stroke.setStyle(Paint.Style.STROKE);
+			paint_stroke.setStrokeWidth(2);
+			paint_stroke.setAntiAlias(true);
+			
+			// prep
+			ArrayList<Path> path_splits = new ArrayList<Path>();
+			
+			int height = padding;
+			int width = 0;
+			
+			// split it apart
+			for (String line : s.split("\n"))
+			{
+				line = line.trim();
+				
+				// mini measurements
+				Rect rect_temp = new Rect();
+				paint_stroke.getTextBounds(line, 0, line.length(), rect_temp);
+				
+				int this_line_height = Math.abs(rect_temp.top - rect_temp.bottom);
+				int this_line_width = rect_temp.left + rect_temp.right;
+				
+				int old_height = height;
+				
+				height += this_line_height + line_height;
+				if (this_line_width > width)
+					width = this_line_width;
+				
+				// create some paths
+				Path line_path = new Path();
+				paint_temp.getTextPath(line, 0, line.length(), padding, Math.abs(rect_temp.top) + old_height, line_path);
+				path_splits.add(line_path);
+			}
+			
+			// proper padding
+			width += padding * 2;
+			height -= line_height;
+			height += padding;
+			
+			// fullscale measurements
+			Bitmap bitmap_temp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444);
+			Canvas canvas_temp = new Canvas(bitmap_temp);
+			
+			// finaly after all that, draw it
+			for (int i = path_splits.size() - 1; i >= 0; i--)
+			{
+				canvas_temp.drawPath(path_splits.get(i), paint_stroke);
+				canvas_temp.drawPath(path_splits.get(i), paint_temp);
+			}
+			
+			// stuff it in the buffer
+			// note this automatically destroys the bitmap
+			bitmap_buffer.put(key, new Quad(key, bitmap_temp, bitmap_temp.getWidth(), bitmap_temp.getHeight()));
+		}
 	}
 	
 	// x and y are in shader coordinates 0 to 1
@@ -148,7 +177,7 @@ public class Text
 		drawNumber(this_number, x, y, where, Color.WHITE);
 	}
 	
-	//if you want to do the math to rotate an int, be my guest. I'll be over here...
+	// if you want to do the math to rotate an int, be my guest. I'll be over here...
 	
 	public void drawNumber(int this_number, double x, double y, EnumDrawFrom where, int color)
 	{
@@ -156,6 +185,15 @@ public class Text
 		
 		// for now we only do positives (sorry).
 		this_number = (int) Math.abs(this_number);
+		
+		boolean zero = false;
+		if (this_number == 0)
+		{
+			// just so our calculations below are correct.
+			// dont worry, we'll still draw a zero.
+			this_number = 2;
+			zero = true;
+		}
 		
 		// prepare to draw by seeing where we draw it.
 		double current_width = 0;
@@ -182,6 +220,10 @@ public class Text
 		{
 			// get the number
 			int key = (number % 10);
+			
+			if (zero)
+				key = 0;
+			
 			Quad temp = bitmap_buffer.get(key);
 			
 			// translate
@@ -202,7 +244,7 @@ public class Text
 	{
 		drawText(resource_value, x, y, where, Color.WHITE);
 	}
-
+	
 	public void drawText(int resource_value, double x, double y, EnumDrawFrom where, int color)
 	{
 		drawText(resource_value, x, y, where, color, 0);
@@ -214,9 +256,9 @@ public class Text
 		{
 			// optimize the gets
 			Quad temp = bitmap_buffer.get(resource_value);
-		
+			
 			temp.color = color;
-			if(temp.degree != degree)
+			if (temp.degree != degree)
 				temp.setRotationZ(degree);
 			temp.setXYPos(x, y, where);
 			
@@ -226,10 +268,10 @@ public class Text
 		}
 	}
 	
-	//return the size of a section of text in screen coords
+	// return the size of a section of text in screen coords
 	public int measureTextWidth(int resource_id)
 	{
-		if(bitmap_buffer.indexOfKey(resource_id) >= 0)
+		if (bitmap_buffer.indexOfKey(resource_id) >= 0)
 		{
 			Quad temp = bitmap_buffer.get(resource_id);
 			return temp.width;
@@ -240,7 +282,7 @@ public class Text
 	
 	public int measureTextHeight(int resource_id)
 	{
-		if(bitmap_buffer.indexOfKey(resource_id) >= 0)
+		if (bitmap_buffer.indexOfKey(resource_id) >= 0)
 		{
 			Quad temp = bitmap_buffer.get(resource_id);
 			return temp.height;

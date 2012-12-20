@@ -1,36 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    
+
     <!-- general -->
     <string name="hello">Hello World,\nFoxdashtwoActivity!</string>
     <string name="app_name">Fox Dash Two</string>
     <string name="loading">Loading</string>
     <string name="fdtdh">Fox Dash Two. \nDash Harder.</string>
-    
+
     <!-- metrics -->
     <string name="fps">FPS:</string>
     <string name="qos">QOS:</string>
     <string name="volume">Volume:</string>
     <string name="mpos">MPos:</string>
-    
+
     <!-- input -->
     <string name="left">Left</string>
     <string name="right">Right</string>
     <string name="jump">Jump</string>
-    
+
     <!-- spacer -->
     <string name="blank"></string>
-    
+
     <!-- level event arrows -->
     <string name="touch_here">Touch Here</string>
-    
+
     <!-- popup -->
     <string name="paused">Paused</string>
     <string name="are_you_sure">Are you sure?</string>
     <string name="settings">Settings</string>
     <string name="audio">Audio</string>
+    <string name="input">Input</string>
+    <string name="music">Music:</string>
+    <string name="sound">Sound:</string>
+    <string name="current">Current:</string>
     <string name="alert_dialog_xml">Ineedtobedeletedlater</string>
-    
+
     <!-- buttons!!!! Squee -->
     <string name="quit">Quit</string>
     <string name="ok">OK</string>
@@ -38,7 +42,13 @@
     <string name="volume_up">Volume Up</string>
     <string name="volume_down">Volume Down</string>
     <string name="play">Play</string>
-    
+    <string name="settings_button">Settings</string>
+    <string name="audio_button">Audio</string>
+    <string name="input_button">Input</string>
+    <string name="title_screen">Title Screen</string>
+    <string name="controller">Controller</string>
+    <string name="halfhalf">HalfHalf</string>
+
     <!-- annoying, but you have to put your string name here too if you want to draw it in game -->
     <string-array name="my_sa">
         <item>hello</item>
@@ -53,16 +63,29 @@
         <item>right</item>
         <item>jump</item>
         <item>touch_here</item>
-        <item>paused</item>
         <item>are_you_sure</item>
-        <item>settings</item>
-        <item>audio</item>
+        <item>music</item>
+        <item>sound</item>
+        <item>current</item>
         <item>quit</item>
         <item>ok</item>
         <item>cancel</item>
         <item>volume_up</item>
         <item>volume_down</item>
         <item>play</item>
+        <item>settings_button</item>
+        <item>audio_button</item>
+        <item>input_button</item>
+        <item>title_screen</item>
+        <item>controller</item>
+        <item>halfhalf</item>
     </string-array>
     
+    <string-array name="my_sa2">
+        <item>paused</item>
+        <item>settings</item>
+        <item>audio</item>
+        <item>input</item>
+    </string-array>
+
 </resources>

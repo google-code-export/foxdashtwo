@@ -11,19 +11,22 @@ public class TweenEvent
 	public double degree;
 	public int color;
 	
-	public TweenEvent(double x_pos, double y_pos)
+	public EnumTweenEvent event;
+	
+	public TweenEvent(EnumTweenEvent event, double x_pos, double y_pos)
 	{
-		this(x_pos, y_pos, Color.WHITE);
+		this(event, x_pos, y_pos, Color.WHITE);
 	}
 	
-	public TweenEvent(double x_pos, double y_pos, int color)
+	public TweenEvent(EnumTweenEvent event, double x_pos, double y_pos, int color)
 	{
-		this(x_pos, y_pos, 0, color);
+		this(event, x_pos, y_pos, 0, color);
 	}
 	
 	// these are in screen coodinates
-	public TweenEvent(double x_pos, double y_pos, int color, double degree)
+	public TweenEvent(EnumTweenEvent event, double x_pos, double y_pos, int color, double degree)
 	{
+		this.event = event;
 		this.x_pos = x_pos;
 		this.y_pos = y_pos;
 		this.degree = degree;

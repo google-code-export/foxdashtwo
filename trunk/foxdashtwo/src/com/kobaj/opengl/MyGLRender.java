@@ -72,7 +72,7 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		Constants.width = width;
 		Constants.height = height;
 		
-		float ratio = (float) (width) / (float)(height);
+		float ratio = (float) (width) / (float) (height);
 		Constants.ratio = ratio;
 		Constants.shader_width = ratio * 2.0;
 		
@@ -83,7 +83,7 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		Matrix.setLookAtM(Constants.my_view_matrix, 0, // this is the identity...
 				0, 0, 0, 0f, 0f, -5.0f, 0f, 1.0f, 0.0f);
 		
-		//multiply
+		// multiply
 		Matrix.multiplyMM(Constants.my_ip_matrix, 0, Constants.my_proj_matrix, 0, Constants.identity_matrix, 0);
 		
 		Constants.x_shader_translation = 0;
@@ -114,19 +114,18 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		
 		try
 		{
-			//update everything
 			onUpdateFrame();
-		
+			
 			// Redraw background color
 			GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
-		
-			//calculate vp matrix
+			
+			// calculate vp matrix
 			Matrix.multiplyMM(Constants.my_vp_matrix, 0, Constants.my_proj_matrix, 0, Constants.my_view_matrix, 0);
 			
-			//draw everything!!
+			// draw everything!!
 			onDraw();
 		}
-		catch(NullPointerException e)
+		catch (NullPointerException e)
 		{
 			exception_count++;
 			Log.e("Draw Frame Exception", e.toString());
@@ -140,7 +139,7 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 				Log.e("Draw Frame Timeout", e1.toString());
 			}
 			
-			if(exception_count > 10)
+			if (exception_count > 10)
 				throw e;
 		}
 	}

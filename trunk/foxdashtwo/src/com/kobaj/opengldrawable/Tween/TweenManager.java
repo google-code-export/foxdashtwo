@@ -16,10 +16,7 @@ public class TweenManager
 	private double current_time = 0;
 	
 	/*
-	 * intended use TweenHolder(myObject.quad, 
-	 * new TweenEvent(0, 0, Color.white), 1000 //one second 
-	 * new TweenEvent(10,10, Color.white), 1000 
-	 * new TweenEvent(10,10, Color.blue));
+	 * intended use TweenHolder(myObject.quad, new TweenEvent(0, 0, Color.white), 1000 //one second new TweenEvent(10,10, Color.white), 1000 new TweenEvent(10,10, Color.blue));
 	 */
 	public TweenManager(Quad quad_reference, Object... tweenables)
 	{
@@ -58,29 +55,36 @@ public class TweenManager
 		int max_time = tween_times.get(current_tween_index);
 		current_time += delta;
 		
-		//tween the position
-		double x_pos = current_event.x_pos;
-		if (current_event.x_pos != next_event.x_pos)
-			x_pos = Functions.linearInterpolate(0, max_time, current_time, current_event.x_pos, next_event.x_pos);
-		double y_pos = current_event.y_pos;
-		if (current_event.y_pos != next_event.y_pos)
-			y_pos = Functions.linearInterpolate(0, max_time, current_time, current_event.y_pos, next_event.y_pos);
-		
-		//tween the rotation
-		if(current_event.degree != next_event.degree)
+		// tween the position
+		if (next_event.event == EnumTweenEvent.move || next_event.event == EnumTweenEvent.move_color || next_event.event == EnumTweenEvent.move_color_rotate
+				|| next_event.event == EnumTweenEvent.move_rotate)
 		{
-			double degree = Functions.linearInterpolate(0, max_time, current_time, current_event.degree, next_event.degree);
-			quad_reference.setRotationZ(degree);
+			double x_pos = current_event.x_pos;
+			if (current_event.x_pos != next_event.x_pos)
+				x_pos = Functions.linearInterpolate(0, max_time, current_time, current_event.x_pos, next_event.x_pos);
+			double y_pos = current_event.y_pos;
+			if (current_event.y_pos != next_event.y_pos)
+				y_pos = Functions.linearInterpolate(0, max_time, current_time, current_event.y_pos, next_event.y_pos);
+			quad_reference.setXYPos(x_pos, y_pos, EnumDrawFrom.center);
 		}
 		
-		//tween the color
-		if(current_event.color != next_event.color)
-		{
-			int color = Functions.linearInterpolateColor(0, max_time, current_time, current_event.color, next_event.color);
-			quad_reference.color = color;
-		}
+		// tween the rotation
+		if (next_event.event == EnumTweenEvent.rotate || next_event.event == EnumTweenEvent.move_rotate || next_event.event == EnumTweenEvent.color_rotate
+				|| next_event.event == EnumTweenEvent.move_color_rotate)
+			if (current_event.degree != next_event.degree)
+			{
+				double degree = Functions.linearInterpolate(0, max_time, current_time, current_event.degree, next_event.degree);
+				quad_reference.setRotationZ(degree);
+			}
 		
-		quad_reference.setXYPos(x_pos, y_pos, EnumDrawFrom.center);
+		// tween the color
+		if (next_event.event == EnumTweenEvent.color || next_event.event == EnumTweenEvent.color_rotate || next_event.event == EnumTweenEvent.move_color
+				|| next_event.event == EnumTweenEvent.move_color_rotate)
+			if (current_event.color != next_event.color)
+			{
+				int color = Functions.linearInterpolateColor(0, max_time, current_time, current_event.color, next_event.color);
+				quad_reference.color = color;
+			}
 		
 		// at the very end
 		if (current_time > max_time)

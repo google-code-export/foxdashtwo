@@ -77,7 +77,7 @@ public class Constants
 	// loading screen pretties
 	public static final int loading_radius = 4;
 	public static final int loading_max_shapes = 8;
-	public static final int loading_primary_color = 0xFF0000FF;
+	public static final int loading_primary_color = 0xFFFF0000;
 	public static final int loading_secondary_color = 0xFF00FF00;
 	
 	// While the below are not really constant and don't belong here

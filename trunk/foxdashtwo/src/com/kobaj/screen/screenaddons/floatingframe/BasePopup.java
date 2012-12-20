@@ -14,13 +14,14 @@ public abstract class BasePopup
 	// these need to be refactored to x_label, etc.
 	protected double label_x;
 	protected double label_y;
-	protected double shift_x;
 	protected double shift_y;
+	protected double cancel_shift_y;
+	protected int default_label_left = 175;
 	protected final double center_x = 0; // heh
 	protected final double center_y = 0;
 	
 	protected final int main_color = 0xCC999999;
-	protected final int sec_color = 0xCCFFDDDD; 
+	protected final int sec_color = 0xCCFFAAAA;
 	
 	public void onInitialize()
 	{
@@ -29,12 +30,13 @@ public abstract class BasePopup
 		secondary_popup.setScale(.5);
 		
 		shift_y = Functions.screenHeightToShaderHeight(45);
-		shift_x = Functions.screenWidthToShaderWidth(60);
+		
+		cancel_shift_y = center_y - 3.0 * shift_y;
 		
 		label_x = center_x;
-		label_y = center_y + shift_y;
+		label_y = center_y + 3.0 * shift_y; // Functions.screenHeightToShaderHeight(95);
 		
-		//set colors
+		// set colors
 		secondary_popup.color = sec_color;
 		main_popup.color = main_color;
 	}
@@ -45,6 +47,11 @@ public abstract class BasePopup
 	
 	// y pos is in shader coords
 	public static Button[] alignButtonsAlongXAxis(double y_pos, Button... buttons)
+	{
+		return alignButtonsAlongXAxis(y_pos, 0, buttons);
+	}
+	
+	public static Button[] alignButtonsAlongXAxis(double y_pos, int shift_x, Button... buttons)
 	{
 		final int padding = 10;
 		
@@ -59,7 +66,7 @@ public abstract class BasePopup
 		total_width -= padding;
 		
 		// this becomes our starting point
-		int half_width = -total_width / 2;
+		int half_width = (-total_width / 2) + shift_x;
 		
 		for (Button button : buttons)
 		{
