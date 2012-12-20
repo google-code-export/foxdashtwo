@@ -56,7 +56,7 @@ public class Quad
 	// also helpful in physics
 	// stored in shader coordinates
 	public RectFExtended best_fit_aabb = new RectFExtended();
-	private float[] best_fit_vector = new float[4];
+	public RectFExtended unrotated_aabb = new RectFExtended();
 	
 	// begin by holding these
 	// should be read only to outside classes...
@@ -159,7 +159,7 @@ public class Quad
 		// set/add/remove more rectangles as needed.
 		if (phys_rect_list.isEmpty())
 			phys_rect_list.add(new RectFExtended(-tr_x, tr_y, tr_x, -tr_y));
-		
+	
 		// finally
 		update_position_matrix(true);
 	}
@@ -282,19 +282,27 @@ public class Quad
 		double x_minimul = Double.MAX_VALUE;
 		double y_minimul = Double.MAX_VALUE;
 		
+		double un_x_max = Double.MIN_VALUE;
+		double un_y_max = Double.MIN_VALUE;
+		double un_x_min = Double.MAX_VALUE;
+		double un_y_min = Double.MAX_VALUE;
+		
+		final double rads = (float) Math.toRadians(degree);
+		final double cos_rads = Math.cos(rads);
+		final double sin_rads = Math.sin(rads);
+		
 		// rotate and convert
 		for (int i = 0; i < 18; i = i + 3)
 		{
-			// get coordinate
-			best_fit_vector[0] = my_position_matrix[i];
-			best_fit_vector[1] = my_position_matrix[i + 1];
-			best_fit_vector[2] = my_position_matrix[i + 2];
-			best_fit_vector[3] = 0.0f;
+			// why not just do Matrix.mulitplyMV(our matrix, our vector).
+			// because that doesn't work. Try it yourself.
 			
-			Matrix.multiplyMV(best_fit_vector, 0, this.my_model_matrix, 0, best_fit_vector, 0);
+			// apply transforms
+			double tr_x1 = my_position_matrix[i] * scale_value;
+			double tr_y1 = my_position_matrix[i + 1] * scale_value;
 			
-			final float tr_x2 = best_fit_vector[0];
-			final float tr_y2 = best_fit_vector[1];
+			final double tr_x2 = (tr_x1 * cos_rads - tr_y1 * sin_rads);
+			final double tr_y2 = (tr_y1 * cos_rads + tr_x1 * sin_rads);
 			
 			// calculate max and min
 			if (tr_x2 > x_maximul)
@@ -305,11 +313,24 @@ public class Quad
 				y_maximul = tr_y2;
 			if (tr_y2 < y_minimul)
 				y_minimul = tr_y2;
+			
+			// calculate max and min
+			if (tr_x1 > un_x_max)
+				un_x_max = tr_x1;
+			if (tr_x1 < un_x_min)
+				un_x_min = tr_x1;
+			if (tr_y1 > un_y_max)
+				un_y_max = tr_y1;
+			if (tr_y1 < un_y_min)
+				un_y_min = tr_y1;
 		}
 		
 		// set our maximul aabb
 		best_fit_aabb.setExtendedRectF(x_minimul, y_maximul, x_maximul, y_minimul);
 		best_fit_aabb.setPositionWithOffset(x_pos, y_pos);
+		
+		unrotated_aabb.setExtendedRectF(un_x_min, un_y_max, un_x_max, un_y_min);
+		unrotated_aabb.setPositionWithOffset(x_pos, y_pos);
 	}
 	
 	public void setZPos(double z)
@@ -355,6 +376,7 @@ public class Quad
 		update_position_matrix(false);
 		
 		// set the rectangle
+		unrotated_aabb.setPositionWithOffset(x_pos, y_pos);
 		best_fit_aabb.setPositionWithOffset(x_pos, y_pos);
 		for (int i = phys_rect_list.size() - 1; i >= 0; i--)
 			phys_rect_list.get(i).setPositionWithOffset(x_pos, y_pos);

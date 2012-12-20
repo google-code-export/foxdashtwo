@@ -14,16 +14,19 @@ public class Button
 	public int width;
 	public int height;
 	
+	public boolean draw_background = true;
+	
 	// these are shader coordinates of the center of the button
 	public Button(int resource_label)
 	{
 		this.label = resource_label;
 		width = Constants.text.measureTextWidth(label) + padding;
-		height = Constants.text.measureTextHeight(label) + padding;
+		height = /* Constants.text.measureTextHeight(label) */23 + padding;
 	}
 	
 	public void onInitialize()
 	{
+		// even if we dont draw this, we will need to instantiate it so we have something to check a bounding box with.
 		invisible_outline = new QuadCompressed(R.raw.black_alpha, R.raw.black_alpha, width, height);
 	}
 	
@@ -31,11 +34,14 @@ public class Button
 	private boolean old_touch;
 	
 	public boolean isReleased()
-	{
+	{	
+		if(true)
+			return false;
+		
 		boolean returned_touch = false;
 		current_touch = isTouched();
 		
-		if(!current_touch && old_touch)
+		if (!current_touch && old_touch)
 			returned_touch = true;
 		
 		old_touch = current_touch;
@@ -44,24 +50,46 @@ public class Button
 	
 	private boolean isTouched()
 	{
+		// get
+		double x = Functions.screenXToShaderX(Constants.input_manager.getX(0));
+		double y = Functions.screenYToShaderY(Functions.fix_y(Constants.input_manager.getY(0)));
+		
+		// shift
+		x -= invisible_outline.x_pos;
+		y -= invisible_outline.y_pos;
+		
+		// rotate
+		final double rads = (float) Math.toRadians(-invisible_outline.degree);
+		final double cos_rads = Math.cos(rads);
+		final double sin_rads = Math.sin(rads);
+		x = (x * cos_rads - y * sin_rads);
+		y = (y * cos_rads + x * sin_rads);
+		
+		// shift back
+		x += invisible_outline.x_pos;
+		y += invisible_outline.y_pos;
+		
+		// check
 		for (int i = 0; i < Constants.input_manager.fingerCount; i++)
-			if(Constants.input_manager.getTouched(i)) 
-			if (Functions.inRectF(invisible_outline.best_fit_aabb.main_rect, // auto format
-					Functions.screenXToShaderX(Constants.input_manager.getX(i)), // can some times be
-					Functions.screenYToShaderY(Functions.fix_y(Constants.input_manager.getY(i))))) // really annoying
-				return true;
+			if (Constants.input_manager.getTouched(i))
+				if (Functions.inRectF(invisible_outline.unrotated_aabb.main_rect, x, y))
+					return true;
 		
 		return false;
 	}
 	
 	public void onDrawConstant()
 	{
-		int color = 0xEEBBBBCC;
-		if(isTouched())
-			color = 0xEE888899;
+		if (draw_background)
+		{
+			int color = 0xEEBBBBCC;
+			if (isTouched())
+				color = 0xEE888899;
 			
-		invisible_outline.color = color;
-		invisible_outline.onDrawAmbient(Constants.my_ip_matrix, true);
+			invisible_outline.color = color;
+			invisible_outline.onDrawAmbient(Constants.my_ip_matrix, true);
+		}
+		
 		Constants.text.drawText(label, invisible_outline.x_pos, invisible_outline.y_pos, EnumDrawFrom.center, invisible_outline.color, invisible_outline.degree);
 	}
 }

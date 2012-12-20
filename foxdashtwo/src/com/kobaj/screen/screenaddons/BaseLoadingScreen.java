@@ -59,7 +59,7 @@ public class BaseLoadingScreen
 		double y = Functions.polarRadToX(local_total_delta, r);
 		
 		// calculate y;
-		double x = Functions.polarRadToY(local_total_delta, r);
+		double x = Constants.ratio * Functions.polarRadToY(local_total_delta, r);
 		
 		// set it all
 		my_quad.setXYPos(x, y, EnumDrawFrom.center);

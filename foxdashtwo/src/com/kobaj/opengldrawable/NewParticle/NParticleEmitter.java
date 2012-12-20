@@ -48,6 +48,7 @@ public class NParticleEmitter
 	private ArrayList<NParticle> used_pool = new ArrayList<NParticle>();
 	private double current_time;
 	private double next_particle_spawn;
+	private boolean update_quads = false;
 	
 	public NParticleEmitter(RectF emit_location)
 	{
@@ -115,6 +116,7 @@ public class NParticleEmitter
 					reference.quad_reference.y_vel = y_vel;
 					
 					used_pool.add(reference);
+					update_quads = true;
 				}
 				
 				//remaining calculations
@@ -136,15 +138,21 @@ public class NParticleEmitter
 			{
 				used_pool.remove(i);
 				unused_pool.push(reference);
+				update_quads = true;
 			}
 		}
 	}
 	
 	public void onDraw()
 	{
-		used_quads.clear();
-		for(int i = used_pool.size() - 1; i >=0; i--)
-			used_quads.add(used_pool.get(i).quad_reference);
+		if(update_quads)
+		{
+			used_quads.clear();
+			for(int i = used_pool.size() - 1; i >=0; i--)
+				used_quads.add(used_pool.get(i).quad_reference);
+		
+			update_quads = false;
+		}
 		
 		//INSTANCE THAT HECK YEAH
 		QuadRenderShell.onDrawQuad(Constants.my_vp_matrix, false, Constants.ambient_light, used_quads);

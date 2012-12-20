@@ -6,10 +6,12 @@ import com.kobaj.math.Constants;
 import com.kobaj.opengldrawable.Button;
 import com.kobaj.opengldrawable.EnumDrawFrom;
 import com.kobaj.screen.EnumScreenState;
+import com.kobaj.screen.TitleScreen;
 import com.kobaj.screen.screenaddons.settings.BaseSettingsScreen;
 
 public class BasePauseScreen extends BasePopup
 {
+	private Button title_button;
 	private Button quit_button;
 	private Button cancel_button;
 	private Button settings_button;
@@ -31,15 +33,16 @@ public class BasePauseScreen extends BasePopup
 		
 		cancel_button = new Button(R.string.cancel);
 		quit_button = new Button(R.string.quit);
-		settings_button = new Button(R.string.settings);
+		settings_button = new Button(R.string.settings_button);
+		title_button = new Button(R.string.title_screen);
 		
 		cancel_button.onInitialize();
 		quit_button.onInitialize();
-		BasePopup.alignButtonsAlongXAxis(center_y - shift_y, cancel_button, quit_button);
-		
-		// couple extra buttons
 		settings_button.onInitialize();
-		BasePopup.alignButtonsAlongXAxis(center_y - 3.0 * shift_y, settings_button);
+		title_button.onInitialize();
+		
+		BasePopup.alignButtonsAlongXAxis(center_y, quit_button, title_button , settings_button);
+		BasePopup.alignButtonsAlongXAxis(cancel_shift_y, cancel_button);
 	}
 	
 	public void reset()
@@ -77,6 +80,11 @@ public class BasePauseScreen extends BasePopup
 			settings_visible = true;
 		else if (quit_button.isReleased())
 			ready_to_quit = true;
+		else if(title_button.isReleased())
+		{
+			GameActivity.mGLView.my_game.onChangeScreen(new TitleScreen());
+			GameActivity.mGLView.my_game.onChangeScreenState(EnumScreenState.running);
+		}
 		else if (cancel_button.isReleased())
 		{
 			// also terrible
@@ -88,21 +96,15 @@ public class BasePauseScreen extends BasePopup
 	public void onDraw()
 	{
 		if (settings_visible)
-		{
 			base_settings.onDraw();
-			return;
-		}
-		
-		if (ready_to_quit)
-		{
+		else if (ready_to_quit)
 			base_quit.onDraw();
-			return;
-		}
 		else
 		{
 			main_popup.onDrawAmbient(Constants.my_ip_matrix, true);
 			Constants.text.drawText(R.string.paused, label_x, label_y, EnumDrawFrom.center);
 			
+			title_button.onDrawConstant();
 			settings_button.onDrawConstant();
 			cancel_button.onDrawConstant();
 			quit_button.onDrawConstant();

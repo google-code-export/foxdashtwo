@@ -42,7 +42,7 @@ public class BaseQuit extends BasePopup
 	public void onDraw()
 	{
 		secondary_popup.onDrawAmbient(Constants.my_ip_matrix, true);
-		Constants.text.drawText(R.string.are_you_sure, label_x, label_y, EnumDrawFrom.center);
+		Constants.text.drawText(R.string.are_you_sure, label_x, shift_y, EnumDrawFrom.center);
 		
 		cancel_button.onDrawConstant();
 		quit_button.onDrawConstant();

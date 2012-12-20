@@ -8,7 +8,7 @@ import com.kobaj.input.GameInputModifier;
 import com.kobaj.loader.FileHandler;
 import com.kobaj.loader.GLBitmapReader;
 import com.kobaj.math.Constants;
-import com.kobaj.screen.screenaddons.BaseDebugScreen;
+import com.kobaj.screen.screenaddons.LevelDebugScreen;
 import com.kobaj.screen.screenaddons.BaseInteractionPhysics;
 import com.kobaj.screen.screenaddons.BaseLoadingScreen;
 import com.kobaj.screen.screenaddons.EnumDebugType;
@@ -24,7 +24,7 @@ public class SinglePlayerScreen extends BaseScreen
 	private com.kobaj.level.Level test_level;
 	
 	// addons
-	BaseDebugScreen debug_addon;
+	LevelDebugScreen debug_addon;
 	BaseLoadingScreen loading_addon;
 	BaseInteractionPhysics interaction_addon;
 	BasePauseScreen pause_addon;
@@ -71,7 +71,7 @@ public class SinglePlayerScreen extends BaseScreen
 		
 		GLBitmapReader.isLoaded();
 		
-		debug_addon = new BaseDebugScreen(test_level, EnumDebugType.aabb);
+		debug_addon = new LevelDebugScreen(test_level, EnumDebugType.original_aabb);
 		
 		System.gc();
 	}
