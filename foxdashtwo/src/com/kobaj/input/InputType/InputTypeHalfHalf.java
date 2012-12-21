@@ -1,83 +1,88 @@
 package com.kobaj.input.InputType;
 
+import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.EnumDrawFrom;
-import com.kobaj.opengldrawable.Quad.QuadColorShape;
+import com.kobaj.opengldrawable.Quad.Quad;
+import com.kobaj.opengldrawable.Quad.QuadCompressed;
 
 public class InputTypeHalfHalf extends InputTypeBase
-{	
-	private QuadColorShape my_quad;
+{
+	private Quad my_quad_left;
+	private Quad my_quad_right;
 	
 	@Override
 	public void onInitialize()
 	{
-		my_quad = new QuadColorShape(0, Constants.height, 2, 0, Constants.input_draw_color, 0);
+		// make
+		my_quad_left = new QuadCompressed(R.raw.black_alpha, R.raw.black_alpha, 2, Constants.height);
+		my_quad_right = new QuadCompressed(R.raw.black_alpha, R.raw.black_alpha, 2, Constants.height);
+		
+		// move
+		my_quad_left.setXYPos(Functions.screenXToShaderX(2), Functions.screenYToShaderY(0), EnumDrawFrom.bottom_left);
+		my_quad_right.setXYPos(Functions.screenXToShaderX(Constants.width - 2), Functions.screenYToShaderY(0), EnumDrawFrom.bottom_right);
 	}
 	
 	@Override
 	public boolean getPressedJump()
 	{
-		if((Constants.input_manager.getTouched(1) && Constants.input_manager.getPressed(0)) ||
-		(Constants.input_manager.getTouched(0) && Constants.input_manager.getPressed(1)) ||
-		(Constants.input_manager.getPressed(1) && Constants.input_manager.getPressed(0)))
+		if ((Constants.input_manager.getTouched(1) && Constants.input_manager.getPressed(0)) || //
+				(Constants.input_manager.getTouched(0) && Constants.input_manager.getPressed(1)) || //
+				(Constants.input_manager.getPressed(1) && Constants.input_manager.getPressed(0))) //
 			return true;
 		
 		return false;
 	}
-
+	
 	@Override
 	public boolean getReleasedJump()
 	{
-		if((Constants.input_manager.getTouched(1) && Constants.input_manager.getReleased(0)) ||
-		(Constants.input_manager.getTouched(0) && Constants.input_manager.getReleased(1)) ||
-		(Constants.input_manager.getReleased(1) && Constants.input_manager.getReleased(0)))
+		if ((Constants.input_manager.getTouched(1) && Constants.input_manager.getReleased(0)) || //
+				(Constants.input_manager.getTouched(0) && Constants.input_manager.getReleased(1)) || //
+				(Constants.input_manager.getReleased(1) && Constants.input_manager.getReleased(0))) //
 			return true;
 		
 		return false;
 	}
-
+	
 	@Override
 	public boolean getTouchedLeft()
 	{
-		for(int i = 0; i < 2; i++)
-			if(Constants.input_manager.getTouched(i) && Constants.input_manager.getX(i) < Constants.width / 2.0)
+		for (int i = 0; i < 2; i++)
+			if (Constants.input_manager.getTouched(i) && Constants.input_manager.getX(i) < Constants.width / 2.0)
 				return true;
 		
 		return false;
 	}
-
+	
 	@Override
 	public boolean getTouchedRight()
 	{
-		for(int i = 0; i < 2; i++)
-			if(Constants.input_manager.getTouched(i) && Constants.input_manager.getX(i) > Constants.width / 2.0)
+		for (int i = 0; i < 2; i++)
+			if (Constants.input_manager.getTouched(i) && Constants.input_manager.getX(i) > Constants.width / 2.0)
 				return true;
 		
 		return false;
 	}
-
+	
 	@Override
 	public void onDraw()
 	{
-		//draw left
-		int alpha = 0;
-		
-		if(getTouchedLeft())
-			alpha = (int)(255 * Constants.min_brightness);
+		// draw left
+		if (getTouchedLeft())
+			my_quad_left.color = Constants.input_press_color;
 		else
-			alpha = (int)(255 * Constants.max_brightness);
-		my_quad.setXYPos(Functions.screenXToShaderX(1), Functions.screenYToShaderY(0), EnumDrawFrom.bottom_left);
-		my_quad.color = Functions.makeColor(255, 255, 255, alpha);
-		my_quad.onDrawAmbient(Constants.my_ip_matrix, true);
+			my_quad_left.color = Constants.input_unpress_color;
 		
-		//draw right
-		if(getTouchedRight())
-			alpha = (int)(255 * Constants.min_brightness);
+		my_quad_left.onDrawAmbient(Constants.my_ip_matrix, true);
+		
+		// draw right
+		if (getTouchedRight())
+			my_quad_right.color = Constants.input_press_color;
 		else
-			alpha = (int)(255 * Constants.max_brightness);
-		my_quad.setXYPos(Functions.screenXToShaderX(Constants.width), Functions.screenYToShaderY(0), EnumDrawFrom.bottom_right);
-		my_quad.color = Functions.makeColor(255, 255, 255, alpha);
-		my_quad.onDrawAmbient(Constants.my_ip_matrix, true);	
+			my_quad_right.color = Constants.input_unpress_color;
+		
+		my_quad_right.onDrawAmbient(Constants.my_ip_matrix, true);
 	}
 }

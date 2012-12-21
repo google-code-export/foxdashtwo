@@ -57,6 +57,7 @@ public class Constants
 	public static final double jump_velocity_default = 0.800;
 	public static final double jump_limiter_default = 0.185;
 	public static final double player_downward_platform_acc_default = -.001;
+	public static final double player_particle_threshold_default = .0001;
 	
 	// physics variables
 	public static double gravity;
@@ -69,10 +70,13 @@ public class Constants
 	public static double jump_limiter;
 	public static double max_speed;
 	public static double player_downward_platform_acc;
+	public static double player_particle_threshold;
 	
 	// same regardless of screen.
 	public static final double normal_air_damping = .90;
 	public static final double normal_friction = .011;
+	public static final double floating_spring = .00005;
+	public static final double floating_damper = .0035;
 	
 	// loading screen pretties
 	public static final int loading_radius = 4;
@@ -100,11 +104,18 @@ public class Constants
 	
 	public static InputManager input_manager;
 	// input constants
-	public static final int input_draw_color = 0xAAFFFFFF;
 	public static final double input_circle_width = 50;
 	public static final int input_swipe_sensitivity = 140;
-	public static final double max_brightness = 0.75;
-	public static final double min_brightness = 0.55;
+	public static final int input_unpress_color = 0xBBBBBBCC;
+	public static final int input_press_color = 0xBB888899;
+	
+	//button constants
+	public static final int unpressed_color = 0xBBBBBBCC;
+	public static final int pressed_color = 0xBB888899;
+	
+	//floating frame colors
+	public static final int frame_main_color = 0xCC999999;
+	public static final int frame_sec_color = 0xCCFFAAAA;
 	
 	//text (obviously?)
 	public static Text text;
