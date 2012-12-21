@@ -79,9 +79,9 @@ public class Button
 	{
 		if (draw_background)
 		{
-			int color = 0xEEBBBBCC;
+			int color = Constants.unpressed_color;
 			if (isTouched())
-				color = 0xEE888899;
+				color = Constants.pressed_color;
 			
 			invisible_outline.color = color;
 			invisible_outline.onDrawAmbient(Constants.my_ip_matrix, true);

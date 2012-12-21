@@ -134,7 +134,7 @@ public class LevelObject extends LevelEntityActive
 	{
 		if (this_object == EnumLevelObject.floating1)
 		{
-			Constants.physics.addSpringY(.00005, .005, 0, quad_object.y_pos - y_pos_shader, quad_object);
+			Constants.physics.addSpringY(Constants.floating_spring, Constants.floating_damper, 0, quad_object.y_pos - y_pos_shader, quad_object);
 			Constants.physics.integratePhysics(delta, quad_object);
 		}
 	}

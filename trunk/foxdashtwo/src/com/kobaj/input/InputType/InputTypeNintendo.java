@@ -1,5 +1,7 @@
 package com.kobaj.input.InputType;
 
+import android.graphics.Color;
+
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
@@ -15,107 +17,110 @@ public class InputTypeNintendo extends InputTypeBase
 	@Override
 	public void onInitialize()
 	{
-		//these will be replaced with images in the future.
+		// these will be replaced with images in the future.
 		double shader_circle_pos_y = Functions.screenYToShaderY(Constants.input_circle_width);
 		
-		//left
-		my_quad_left = new QuadColorShape(Constants.input_circle_width, Constants.input_draw_color, 0);
+		// left
+		my_quad_left = new QuadColorShape(Constants.input_circle_width, Color.WHITE, 0);
 		my_quad_left.setXYPos(Functions.screenXToShaderX(Constants.input_circle_width), shader_circle_pos_y, EnumDrawFrom.bottom_left);
 		
-		//right
-		my_quad_right = new QuadColorShape(Constants.input_circle_width, Constants.input_draw_color, 0);
+		// right
+		my_quad_right = new QuadColorShape(Constants.input_circle_width, Color.WHITE, 0);
 		my_quad_right.setXYPos(Functions.screenXToShaderX(Constants.input_circle_width * 3), shader_circle_pos_y, EnumDrawFrom.bottom_left);
 		
-		//jump
-		my_quad_jump = new QuadColorShape(Constants.input_circle_width, Constants.input_draw_color, 0);
+		// jump
+		my_quad_jump = new QuadColorShape(Constants.input_circle_width, Color.WHITE, 0);
 		my_quad_jump.setXYPos(Functions.screenXToShaderX(Constants.width - Constants.input_circle_width), shader_circle_pos_y, EnumDrawFrom.bottom_right);
 	}
 	
 	public boolean getTouchedJump()
 	{
-		for(int i = 0; i < Constants.input_manager.fingerCount; i++)
-			if(Constants.input_manager.getTouched(i))
-				if(Functions.inRectF(my_quad_jump.best_fit_aabb.main_rect, Functions.screenXToShaderX(Constants.input_manager.getX(i)), Functions.screenYToShaderY(Functions.fix_y(Constants.input_manager.getY(i)))))
+		for (int i = 0; i < Constants.input_manager.fingerCount; i++)
+			if (Constants.input_manager.getTouched(i))
+				if (Functions.inRectF(my_quad_jump.best_fit_aabb.main_rect, Functions.screenXToShaderX(Constants.input_manager.getX(i)),
+						Functions.screenYToShaderY(Functions.fix_y(Constants.input_manager.getY(i)))))
 					return true;
-				
+		
 		return false;
 	}
 	
 	@Override
 	public boolean getPressedJump()
 	{
-		for(int i = 0; i < Constants.input_manager.fingerCount; i++)
-			if(Constants.input_manager.getPressed(i))
-				if(Functions.inRectF(my_quad_jump.best_fit_aabb.main_rect, Functions.screenXToShaderX(Constants.input_manager.getX(i)), Functions.screenYToShaderY(Functions.fix_y(Constants.input_manager.getY(i)))))
+		for (int i = 0; i < Constants.input_manager.fingerCount; i++)
+			if (Constants.input_manager.getPressed(i))
+				if (Functions.inRectF(my_quad_jump.best_fit_aabb.main_rect, Functions.screenXToShaderX(Constants.input_manager.getX(i)),
+						Functions.screenYToShaderY(Functions.fix_y(Constants.input_manager.getY(i)))))
 					return true;
-				
+		
 		return false;
 	}
-
+	
 	@Override
 	public boolean getReleasedJump()
 	{
-		for(int i = 0; i < Constants.input_manager.fingerCount; i++)
-			if(Constants.input_manager.getReleased(i))
-				if(Functions.inRectF(my_quad_jump.best_fit_aabb.main_rect, Functions.screenXToShaderX(Constants.input_manager.getX(i)), Functions.screenYToShaderY(Functions.fix_y(Constants.input_manager.getY(i)))))
+		for (int i = 0; i < Constants.input_manager.fingerCount; i++)
+			if (Constants.input_manager.getReleased(i))
+				if (Functions.inRectF(my_quad_jump.best_fit_aabb.main_rect, Functions.screenXToShaderX(Constants.input_manager.getX(i)),
+						Functions.screenYToShaderY(Functions.fix_y(Constants.input_manager.getY(i)))))
 					return true;
-				
+		
 		return false;
 	}
-
+	
 	@Override
 	public boolean getTouchedLeft()
 	{
-		for(int i = 0; i < Constants.input_manager.fingerCount; i++)
-			if(Constants.input_manager.getTouched(i))
-				if(Functions.inRectF(my_quad_left.best_fit_aabb.main_rect, Functions.screenXToShaderX(Constants.input_manager.getX(i)), Functions.screenYToShaderY(Functions.fix_y(Constants.input_manager.getY(i)))))
+		for (int i = 0; i < Constants.input_manager.fingerCount; i++)
+			if (Constants.input_manager.getTouched(i))
+				if (Functions.inRectF(my_quad_left.best_fit_aabb.main_rect, Functions.screenXToShaderX(Constants.input_manager.getX(i)),
+						Functions.screenYToShaderY(Functions.fix_y(Constants.input_manager.getY(i)))))
 					return true;
-				
+		
 		return false;
 	}
-
+	
 	@Override
 	public boolean getTouchedRight()
 	{
-		for(int i = 0; i < Constants.input_manager.fingerCount; i++)
-			if(Constants.input_manager.getTouched(i))
-				if(Functions.inRectF(my_quad_right.best_fit_aabb.main_rect, Functions.screenXToShaderX(Constants.input_manager.getX(i)), Functions.screenYToShaderY(Functions.fix_y(Constants.input_manager.getY(i)))))
+		for (int i = 0; i < Constants.input_manager.fingerCount; i++)
+			if (Constants.input_manager.getTouched(i))
+				if (Functions.inRectF(my_quad_right.best_fit_aabb.main_rect, Functions.screenXToShaderX(Constants.input_manager.getX(i)),
+						Functions.screenYToShaderY(Functions.fix_y(Constants.input_manager.getY(i)))))
 					return true;
-				
+		
 		return false;
 	}
-
-	//this is constant, so we can do text here too
+	
+	// this is constant, so we can do text here too
 	@Override
 	public void onDraw()
 	{
-		//left
-		int alpha = 0;
-		
-		if(getTouchedLeft())
-			alpha = (int)(255 * Constants.min_brightness);
+		// draw left
+		if (getTouchedLeft())
+			my_quad_left.color = Constants.input_press_color;
 		else
-			alpha = (int)(255 * Constants.max_brightness);
-		my_quad_left.color = Functions.makeColor(255, 255, 255, alpha);
+			my_quad_left.color = Constants.input_unpress_color;
+		
 		my_quad_left.onDrawAmbient(Constants.my_ip_matrix, true);
 		
-		//right
-		if(getTouchedRight())
-			alpha = (int)(255 * Constants.min_brightness);
+		// draw right
+		if (getTouchedRight())
+			my_quad_right.color = Constants.input_press_color;
 		else
-			alpha = (int)(255 * Constants.max_brightness);
-		my_quad_right.color = Functions.makeColor(255, 255, 255, alpha);
+			my_quad_right.color = Constants.input_unpress_color;
+		
 		my_quad_right.onDrawAmbient(Constants.my_ip_matrix, true);
 		
-		//jump
-		if(getTouchedJump())
-			alpha = (int)(255 * Constants.min_brightness);
+		// jump
+		if (getTouchedJump())
+			my_quad_jump.color = Constants.input_press_color;
 		else
-			alpha = (int)(255 * Constants.max_brightness);
-		my_quad_jump.color = Functions.makeColor(255, 255, 255, alpha);
+			my_quad_jump.color = Constants.input_unpress_color;
+
 		my_quad_jump.onDrawAmbient(Constants.my_ip_matrix, true);
-	
-		//text
+		
+		// text
 		Constants.text.drawText(R.string.left, my_quad_left.x_pos, my_quad_left.y_pos, EnumDrawFrom.center);
 		Constants.text.drawText(R.string.right, my_quad_right.x_pos, my_quad_right.y_pos, EnumDrawFrom.center);
 		Constants.text.drawText(R.string.jump, my_quad_jump.x_pos, my_quad_jump.y_pos, EnumDrawFrom.center);

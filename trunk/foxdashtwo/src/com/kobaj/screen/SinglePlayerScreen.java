@@ -105,9 +105,6 @@ public class SinglePlayerScreen extends BaseScreen
 	
 	private void onRunningUpdate(double delta)
 	{
-		// just for now, this may be deleted later to replace a button
-		my_modifier.onUpdate();
-		
 		// update all our objects and lights and things
 		test_level.onUpdate(delta);
 		

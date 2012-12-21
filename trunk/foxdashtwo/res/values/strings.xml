@@ -5,7 +5,7 @@
     <string name="hello">Hello World,\nFoxdashtwoActivity!</string>
     <string name="app_name">Fox Dash Two</string>
     <string name="loading">Loading</string>
-    <string name="fdtdh">Fox Dash Two. \nDash Harder.</string>
+    <string name="fdtdh">Alpha Fox Dash Two. \nDash Harder. \n(Not Actual Subtitle)</string>
 
     <!-- metrics -->
     <string name="fps">FPS:</string>

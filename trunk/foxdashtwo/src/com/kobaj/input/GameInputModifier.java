@@ -10,13 +10,10 @@ import com.kobaj.input.InputType.EnumInputType;
 import com.kobaj.input.InputType.InputTypeBase;
 import com.kobaj.input.InputType.InputTypeHalfHalf;
 import com.kobaj.input.InputType.InputTypeNintendo;
-import com.kobaj.math.Constants;
 
 public class GameInputModifier
 {
 	private HashMap<EnumInputType, InputTypeBase> input_types = new HashMap<EnumInputType, InputTypeBase>();
-	
-	private int swipes = 0;
 	
 	public GameInputModifier()
 	{
@@ -39,28 +36,6 @@ public class GameInputModifier
 	public InputTypeBase getInputType()
 	{
 		return input_types.get(UserSettings.active_input_type);
-	}
-	
-	// technically this method should be replaced with a less intrusive button
-	// but for now this will work.
-	public void onUpdate()
-	{
-		// if we detect a three finger swipe, right to left, we switch input types
-		
-		if (Constants.input_manager.getTouched(0) && Constants.input_manager.getTouched(1) && Constants.input_manager.getTouched(2))
-			swipes += Constants.input_manager.getDeltax(1);
-		else
-			swipes = 0;
-		
-		if (swipes < -Constants.input_swipe_sensitivity * Constants.dip_scale || swipes > Constants.input_swipe_sensitivity * Constants.dip_scale)
-		{
-			if(UserSettings.active_input_type == EnumInputType.halfhalf)
-				UserSettings.active_input_type = EnumInputType.nintendo;
-			else
-				UserSettings.active_input_type = EnumInputType.halfhalf;
-
-			swipes = 0;
-		}
 	}
 	
 	public void onDraw()

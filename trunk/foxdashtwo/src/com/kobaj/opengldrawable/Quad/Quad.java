@@ -88,7 +88,7 @@ public class Quad
 	// then it gets disposed.
 	private Bitmap nullify_me;
 	
-	// constructores
+	// constructors
 	protected Quad()
 	{
 		// do nothing. Assume whoever is extending knows what he/she is doing.

@@ -1,6 +1,7 @@
 package com.kobaj.screen.screenaddons.floatingframe;
 
 import com.kobaj.foxdashtwo.R;
+import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.Button;
 import com.kobaj.opengldrawable.EnumDrawFrom;
@@ -20,9 +21,6 @@ public abstract class BasePopup
 	protected final double center_x = 0; // heh
 	protected final double center_y = 0;
 	
-	protected final int main_color = 0xCC999999;
-	protected final int sec_color = 0xCCFFAAAA;
-	
 	public void onInitialize()
 	{
 		main_popup = new QuadCompressed(R.raw.big_popup, R.raw.big_popup_alpha, 626, 386);
@@ -37,8 +35,8 @@ public abstract class BasePopup
 		label_y = center_y + 3.0 * shift_y; // Functions.screenHeightToShaderHeight(95);
 		
 		// set colors
-		secondary_popup.color = sec_color;
-		main_popup.color = main_color;
+		secondary_popup.color = Constants.frame_sec_color;
+		main_popup.color = Constants.frame_main_color;
 	}
 	
 	public abstract boolean onUpdate(double delta); // true it shows, false it doesn't show.

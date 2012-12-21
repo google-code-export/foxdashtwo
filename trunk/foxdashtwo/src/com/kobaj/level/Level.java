@@ -18,7 +18,9 @@ import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 import com.kobaj.math.android.RectF;
 import com.kobaj.opengldrawable.EnumDrawFrom;
+import com.kobaj.opengldrawable.NewParticle.EnumParticleType;
 import com.kobaj.opengldrawable.NewParticle.NParticleEmitter;
+import com.kobaj.opengldrawable.NewParticle.NParticleManager;
 import com.kobaj.opengldrawable.Quad.QuadColorShape;
 
 public class Level
@@ -44,7 +46,7 @@ public class Level
 	@ElementList
 	public ArrayList<LevelObject> object_list;
 	
-	public ArrayList<LevelObject> physics_objects = new ArrayList<LevelObject>(); // references for only physics. 
+	public ArrayList<LevelObject> physics_objects = new ArrayList<LevelObject>(); // references for only physics.
 	
 	@ElementList
 	public ArrayList<LevelAmbientLight> light_list; // all lights including blooms
@@ -53,6 +55,8 @@ public class Level
 	
 	@Element
 	public LevelObject player;
+	
+	NParticleEmitter player_particles;
 	
 	@ElementList
 	public ArrayList<LevelEvent> event_list;
@@ -95,7 +99,7 @@ public class Level
 						(float) (reference.quad_object.best_fit_aabb.main_rect.right - Functions.screenWidthToShaderWidth(45)),
 						(float) (reference.quad_object.best_fit_aabb.main_rect.bottom + Functions.screenHeightToShaderHeight(85)));
 				
-				NParticleEmitter test = new NParticleEmitter(emitt_from);
+				NParticleEmitter test = NParticleManager.makeEmitter(EnumParticleType.floating_dust, emitt_from);
 				test.onInitialize();
 				test.preUpdate();
 				local_np_emitter.add(test);
@@ -158,8 +162,14 @@ public class Level
 		
 		// setup player
 		player.quad_object = new com.kobaj.opengldrawable.Quad.QuadColorShape(0, 64, 64, 0, Color.GRAY, 0);
-		player.quad_object.setZPos(player.quad_object.z_pos - (5 /* player.z_plane */ * Constants.z_modifier));
+		player.quad_object.setZPos(player.quad_object.z_pos - (5 /* player.z_plane */* Constants.z_modifier));
 		player.quad_object.setXYPos(x_player, y_player, player.draw_from);
+		
+		// player particles
+		RectF player_part_rect = new RectF(0, (float) Functions.screenHeightToShaderHeight(3), (float) Functions.screenWidthToShaderWidth(3), 0);
+		player_particles = NParticleManager.makeEmitter(EnumParticleType.player_dust, player_part_rect);
+		player_particles.onInitialize();
+		local_np_emitter.add(player_particles);
 		
 		// set widths and heights for the camera
 		left_shader_limit = (Functions.screenXToShaderX(left_limit) + Constants.ratio);
@@ -177,7 +187,7 @@ public class Level
 		for (int i = event_list.size() - 1; i >= 0; i--)
 			event_list.get(i).onUpdate(delta);
 		
-		//whaaaaat
+		// whaaaaat
 		for (int i = physics_objects.size() - 1; i >= 0; i--)
 			physics_objects.get(i).onUpdate(delta);
 		
@@ -223,17 +233,38 @@ public class Level
 	
 	public void objectInteraction(final RectF collision, final LevelObject player, final LevelObject reference)
 	{
-		//up down collision
-		if(collision.width() == 0)
+		// up down collision
+		if (collision.width() == 0)
 		{
-			if(reference.this_object == EnumLevelObject.floating1)
-			if(player.quad_object.y_pos > reference.quad_object.y_pos) //remember this is the center of the object
+			// player
+			if (player.quad_object.x_vel > Constants.player_particle_threshold)
 			{
-				// just a test value
-				player.quad_object.setXYPos(player.quad_object.x_pos,
-						player.quad_object.y_pos - Constants.collision_detection_height, EnumDrawFrom.center);
-				reference.quad_object.y_acc += Constants.player_downward_platform_acc;
+				player_particles.number_of_particles = 5;
+				// going left
+				player_particles.direction_end = 180;
+				player_particles.direction_start = 155;
+				player_particles.emit_location.offsetTo(player.quad_object.best_fit_aabb.main_rect.left, collision.top);
 			}
+			else if (player.quad_object.x_vel < -Constants.player_particle_threshold)
+			{
+				player_particles.number_of_particles = 5;
+				
+				// going right
+				player_particles.direction_end = 25;
+				player_particles.direction_start = 0;
+				player_particles.emit_location.offsetTo(player.quad_object.best_fit_aabb.main_rect.right, collision.top);
+			}			
+			else
+				player_particles.killAllParticles();
+			
+			// floating platforms
+			if (reference.this_object == EnumLevelObject.floating1)
+				if (player.quad_object.y_pos > reference.quad_object.y_pos) // remember this is the center of the object
+				{
+					player.quad_object.setXYPos(player.quad_object.x_pos, player.quad_object.y_pos - Constants.collision_detection_height, EnumDrawFrom.center);
+					// it would be neat to have the players velocity affect this downward push. but since we zero out the velocity upon collision, at this point, it would do nothing.
+					reference.quad_object.y_acc += Constants.player_downward_platform_acc;
+				}
 		}
 	}
 	
