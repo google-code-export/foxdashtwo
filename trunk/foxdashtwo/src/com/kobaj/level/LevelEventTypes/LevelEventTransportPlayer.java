@@ -1,6 +1,5 @@
 package com.kobaj.level.LevelEventTypes;
 
-import com.kobaj.level.EnumLevelEvent;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.EnumDrawFrom;

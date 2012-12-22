@@ -25,6 +25,13 @@ public class InputTypeHalfHalf extends InputTypeBase
 	}
 	
 	@Override
+	public void onUnInitialize()
+	{
+		my_quad_left.onUnInitialize();
+		my_quad_right.onUnInitialize();
+	}
+	
+	@Override
 	public boolean getPressedJump()
 	{
 		if ((Constants.input_manager.getTouched(1) && Constants.input_manager.getPressed(0)) || //

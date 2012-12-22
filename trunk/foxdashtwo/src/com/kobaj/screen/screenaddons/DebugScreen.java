@@ -1,4 +1,4 @@
-package com.kobaj.screen.screenaddons.settings;
+package com.kobaj.screen.screenaddons;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;

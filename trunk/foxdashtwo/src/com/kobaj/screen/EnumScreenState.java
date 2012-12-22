@@ -2,5 +2,5 @@ package com.kobaj.screen;
 
 public enum EnumScreenState
 {
-	not_started, stopped, loading, running, paused
+	not_started, loading, running, paused, unload, stopped
 }

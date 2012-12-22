@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.foxdashtwo.UserSettings;
 import com.kobaj.input.InputType.EnumInputType;
-import com.kobaj.level.EnumLevelEvent;
 import com.kobaj.level.LevelObject;
 import com.kobaj.level.LevelTypeLight.LevelAmbientLight;
 import com.kobaj.math.Constants;

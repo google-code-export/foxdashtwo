@@ -33,6 +33,14 @@ public class InputTypeNintendo extends InputTypeBase
 		my_quad_jump.setXYPos(Functions.screenXToShaderX(Constants.width - Constants.input_circle_width), shader_circle_pos_y, EnumDrawFrom.bottom_right);
 	}
 	
+	@Override
+	public void onUnInitialize()
+	{
+		my_quad_left.onUnInitialize();
+		my_quad_right.onUnInitialize();
+		my_quad_jump.onUnInitialize();
+	}
+	
 	public boolean getTouchedJump()
 	{
 		for (int i = 0; i < Constants.input_manager.fingerCount; i++)

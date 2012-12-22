@@ -68,9 +68,6 @@ public class NParticleEmitter
 	
 	public void onInitialize()
 	{
-		// normalize our velocity
-		start_velocity = Functions.screenHeightToShaderHeight(start_velocity);
-		
 		unused_pool.clear();
 		used_pool.clear();
 		
@@ -88,6 +85,15 @@ public class NParticleEmitter
 			temp.onInitialize();
 			unused_pool.push(temp);
 		}
+	}
+	
+	public void onUnInitialize()
+	{
+		for (int i = used_pool.size() - 1; i >= 0; i--)
+			used_pool.get(i).quad_reference.onUnInitialize();
+
+		for (int i = unused_pool.size() - 1; i >= 0; i--)
+			unused_pool.get(i).quad_reference.onUnInitialize();
 	}
 	
 	public void onUpdate(double delta)

@@ -50,5 +50,12 @@ public class BlankScreen extends BaseScreen
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void onUnload()
+	{
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

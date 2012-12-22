@@ -15,6 +15,15 @@ public abstract class LevelBloomLight extends LevelAmbientLight
 	
 	public Quad quad_bloom;
 	
+	@Override
+	public void onUnInitialize()
+	{
+		super.onUnInitialize();
+		
+		if(is_bloom)
+			quad_bloom.onUnInitialize();
+	}
+	
 	protected void setupPositions()
 	{
 		quad_light.setXYPos(com.kobaj.math.Functions.screenXToShaderX(x_pos), com.kobaj.math.Functions.screenYToShaderY(y_pos), com.kobaj.opengldrawable.EnumDrawFrom.bottom_left);

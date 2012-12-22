@@ -63,6 +63,10 @@ public class MyGame extends MyGLRender
 		// screen swap
 		if (next_active_screen != null)
 		{
+			//unload
+			currently_active_screen.onUnInitialize();
+			
+			//load next
 			currently_active_screen = next_active_screen;
 			next_active_screen = null;
 			currently_active_screen.onInitialize();

@@ -74,8 +74,29 @@ public class GLBitmapReader
 			temp[i] = loaded_textures.valueAt(i).texture_id;
 		
 		if (temp.length > 0)
-			GLES20.glDeleteTextures(loaded_textures.size(), temp, 0);
+			GLES20.glDeleteTextures(temp.length, temp, 0);
+		loaded_textures.clear();
 		loaded_textures = new SparseArray<GLLoadedTexture>();
+	}
+	
+	public static void unloadTexture(int ... texture_resources)
+	{
+		int[] temp = new int[texture_resources.length];
+		for(int i = texture_resources.length - 1; i >=0; i--)
+		{
+			int resource_key = texture_resources[i];
+			GLLoadedTexture handle = loaded_textures.get(resource_key);
+			
+			//our resource may have already been unloaded
+			if(handle != null)
+			{
+				temp[i] = handle.texture_id;
+				loaded_textures.remove(resource_key);
+			}
+		}
+		
+		if (temp.length > 0)
+			GLES20.glDeleteTextures(temp.length, temp, 0);
 	}
 	
 	// get a new unused resource id

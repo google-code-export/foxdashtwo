@@ -4,9 +4,9 @@ import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Constants;
 import com.kobaj.opengldrawable.Button;
 import com.kobaj.opengldrawable.EnumDrawFrom;
-import com.kobaj.screen.screenaddons.floatingframe.BasePopup;
+import com.kobaj.screen.screenaddons.floatingframe.BaseFloatingFrame;
 
-public class BaseSettingsScreen extends BasePopup
+public class BaseSettingsScreen extends BaseFloatingFrame
 {
 	private Button audio_button;
 	private Button cancel_button;
@@ -35,8 +35,21 @@ public class BaseSettingsScreen extends BasePopup
 		cancel_button.onInitialize();
 		audio_button.onInitialize();
 		
-		BasePopup.alignButtonsAlongXAxis(center_y, input_button, audio_button);
-		BasePopup.alignButtonsAlongXAxis(cancel_shift_y, cancel_button);
+		BaseFloatingFrame.alignButtonsAlongXAxis(center_y, input_button, audio_button);
+		BaseFloatingFrame.alignButtonsAlongXAxis(cancel_shift_y, cancel_button);
+	}
+	
+	@Override
+	public void onUnInitialize()
+	{
+		super.onUnInitialize();
+		
+		audio_button.onUnInitialize();
+		cancel_button.onUnInitialize();
+		input_button.onUnInitialize();
+		
+		base_audio.onUnInitialize();
+		base_input.onUnInitialize();
 	}
 	
 	public void reset()

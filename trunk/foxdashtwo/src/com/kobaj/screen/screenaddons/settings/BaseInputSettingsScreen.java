@@ -7,9 +7,9 @@ import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.Button;
 import com.kobaj.opengldrawable.EnumDrawFrom;
-import com.kobaj.screen.screenaddons.floatingframe.BasePopup;
+import com.kobaj.screen.screenaddons.floatingframe.BaseFloatingFrame;
 
-public class BaseInputSettingsScreen extends BasePopup
+public class BaseInputSettingsScreen extends BaseFloatingFrame
 {
 	private Button cancel_button;
 	private Button input_half_half_button;
@@ -34,8 +34,18 @@ public class BaseInputSettingsScreen extends BasePopup
 		input_label_x = -Functions.screenWidthToShaderWidth(default_label_left);
 		input_label_y = shift_y;
 		
-		BasePopup.alignButtonsAlongXAxis(center_y, input_nintendo_button, input_half_half_button);
-		BasePopup.alignButtonsAlongXAxis(cancel_shift_y, cancel_button);
+		BaseFloatingFrame.alignButtonsAlongXAxis(center_y, input_nintendo_button, input_half_half_button);
+		BaseFloatingFrame.alignButtonsAlongXAxis(cancel_shift_y, cancel_button);
+	}
+	
+	@Override
+	public void onUnInitialize()
+	{
+		super.onUnInitialize();
+		
+		cancel_button.onUnInitialize();
+		input_half_half_button.onUnInitialize();
+		input_nintendo_button.onUnInitialize();
 	}
 	
 	@Override

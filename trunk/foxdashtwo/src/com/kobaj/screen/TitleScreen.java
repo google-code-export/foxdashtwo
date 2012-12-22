@@ -11,6 +11,7 @@ import com.kobaj.opengldrawable.EnumDrawFrom;
 import com.kobaj.opengldrawable.Tween.EnumTweenEvent;
 import com.kobaj.opengldrawable.Tween.TweenEvent;
 import com.kobaj.opengldrawable.Tween.TweenManager;
+import com.kobaj.screen.screenaddons.floatingframe.BaseError;
 import com.kobaj.screen.screenaddons.floatingframe.BaseQuit;
 import com.kobaj.screen.screenaddons.settings.BaseSettingsScreen;
 
@@ -18,6 +19,7 @@ public class TitleScreen extends BaseScreen
 {
 	private BaseSettingsScreen base_settings;
 	private BaseQuit base_quit;
+	private BaseError base_error;
 	
 	private Button play_button;
 	private Button settings_button;
@@ -25,9 +27,13 @@ public class TitleScreen extends BaseScreen
 	private TweenManager play_tween;
 	private TweenManager settings_tween;
 	private TweenManager quit_tween;
-	
+
+	// not the /best/ way of doing things, but it works and is efficient
 	private boolean ready_to_quit = false;
 	private boolean settings_visible = false;
+	private boolean crash_visible = false;
+	
+	public boolean crashed = false;
 	
 	@Override
 	public void onLoad()
@@ -71,6 +77,26 @@ public class TitleScreen extends BaseScreen
 		
 		base_quit = new BaseQuit();
 		base_quit.onInitialize();
+		
+		if(crashed)
+		{
+			base_error = new BaseError();
+			base_error.onInitialize();
+			crash_visible = true;
+		}
+	}
+	
+	@Override
+	public void onUnload()
+	{
+		if(crashed)
+			base_error.onUnInitialize();
+		
+		base_settings.onUnInitialize();
+		base_quit.onUnInitialize();
+		play_button.onUnInitialize();
+		settings_button.onUnInitialize();
+		quit_button.onUnInitialize();
 	}
 	
 	@Override
@@ -81,6 +107,8 @@ public class TitleScreen extends BaseScreen
 			settings_visible = base_settings.onUpdate(delta);
 		else if (ready_to_quit)
 			ready_to_quit = base_quit.onUpdate(delta);
+		else if(crash_visible)
+			crash_visible = base_error.onUpdate(delta);
 		else
 		{
 			// testing spring
@@ -134,6 +162,8 @@ public class TitleScreen extends BaseScreen
 			base_settings.onDraw();
 		else if (ready_to_quit)
 			base_quit.onDraw();
+		else if(crash_visible)
+			base_error.onDraw();
 		else
 		{
 			double x_pos = Functions.screenXToShaderX(500);
@@ -149,8 +179,7 @@ public class TitleScreen extends BaseScreen
 	@Override
 	public void onDrawLoading(double delta)
 	{
-		// TODO Auto-generated method stub
-		
+		//draw nothing
 	}
 	
 	@Override

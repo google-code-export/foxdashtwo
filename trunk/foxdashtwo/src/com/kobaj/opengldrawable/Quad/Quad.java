@@ -108,6 +108,11 @@ public class Quad
 		onCreate(texture_resource, width, height);
 	}
 	
+	public void onUnInitialize()
+	{
+		GLBitmapReader.unloadTexture(texture_resource);
+	}
+	
 	// method that will go and get the texture handle after it has been loaded
 	// so that we can draw the texture!
 	public boolean setTextureDataHandle()

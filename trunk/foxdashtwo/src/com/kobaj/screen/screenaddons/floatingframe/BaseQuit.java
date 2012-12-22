@@ -6,7 +6,7 @@ import com.kobaj.math.Constants;
 import com.kobaj.opengldrawable.Button;
 import com.kobaj.opengldrawable.EnumDrawFrom;
 
-public class BaseQuit extends BasePopup
+public class BaseQuit extends BaseFloatingFrame
 {
 	private Button quit_button;
 	private Button cancel_button;
@@ -21,7 +21,16 @@ public class BaseQuit extends BasePopup
 		
 		cancel_button.onInitialize();
 		quit_button.onInitialize();
-		BasePopup.alignButtonsAlongXAxis(center_y - shift_y, cancel_button, quit_button);
+		BaseFloatingFrame.alignButtonsAlongXAxis(center_y - shift_y, cancel_button, quit_button);
+	}
+	
+	@Override
+	public void onUnInitialize()
+	{
+		super.onUnInitialize();
+		
+		quit_button.onUnInitialize();
+		cancel_button.onUnInitialize();
 	}
 	
 	@Override
