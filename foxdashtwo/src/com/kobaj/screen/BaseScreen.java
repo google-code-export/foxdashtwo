@@ -6,10 +6,17 @@ public abstract class BaseScreen implements Runnable
 	
 	//constructor should be used to initialize things, but not load them.
 	
-	public void onInitialize()
+	public final void onInitialize()
 	{
 		current_state = EnumScreenState.loading;
 		new Thread(this).start();
+	}
+	
+	public final void onUnInitialize()
+	{
+		current_state = EnumScreenState.unload;
+		onUnload();
+		current_state = EnumScreenState.stopped;
 	}
 	
 	public void run()
@@ -20,6 +27,7 @@ public abstract class BaseScreen implements Runnable
 	
 	//loading things on a seperate thread
 	public abstract void onLoad();
+	public abstract void onUnload();
 	
 	//update the main thread login
 	public abstract void onUpdate(double delta);

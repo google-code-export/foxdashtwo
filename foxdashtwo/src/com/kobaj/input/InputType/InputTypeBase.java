@@ -18,5 +18,6 @@ public abstract class InputTypeBase
 	}
 	
 	public abstract void onInitialize();
+	public abstract void onUnInitialize();
 	public abstract void onDraw();
 }

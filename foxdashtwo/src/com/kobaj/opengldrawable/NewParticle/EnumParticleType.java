@@ -2,5 +2,5 @@ package com.kobaj.opengldrawable.NewParticle;
 
 public enum EnumParticleType
 {
-	floating_dust, player_dust
+	floating_dust, /* ideally there would be more here eventually...*/
 }

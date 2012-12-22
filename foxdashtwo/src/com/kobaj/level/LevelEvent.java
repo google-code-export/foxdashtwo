@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
 
+import com.kobaj.level.LevelEventTypes.EnumLevelEvent;
 import com.kobaj.level.LevelEventTypes.LevelEventActive;
 import com.kobaj.level.LevelEventTypes.LevelEventArrows;
 import com.kobaj.level.LevelEventTypes.LevelEventBase;
+import com.kobaj.level.LevelEventTypes.LevelEventNextLevel;
 import com.kobaj.level.LevelEventTypes.LevelEventTransportPlayer;
 import com.kobaj.level.LevelTypeLight.LevelAmbientLight;
 import com.kobaj.math.Functions;
@@ -58,6 +60,12 @@ public class LevelEvent
 				 this_event == EnumLevelEvent.active_touch ||
 				 this_event == EnumLevelEvent.active_toggle)
 			my_possible_event = new LevelEventActive(this_event);
+		else if(this_event == EnumLevelEvent.next_level)
+		{
+			LevelEventNextLevel temp = new LevelEventNextLevel(this_event);
+			temp.setNextLevel(id_strings.get(0));
+			my_possible_event = temp;
+		}
 		
 		if (my_possible_event != null)
 			my_possible_event.onInitialize(player, objects, lights, id_strings);

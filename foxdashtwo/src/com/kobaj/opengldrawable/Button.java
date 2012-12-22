@@ -30,6 +30,11 @@ public class Button
 		invisible_outline = new QuadCompressed(R.raw.black_alpha, R.raw.black_alpha, width, height);
 	}
 	
+	public void onUnInitialize()
+	{
+		invisible_outline.onUnInitialize();
+	}
+	
 	private boolean current_touch;
 	private boolean old_touch;
 	

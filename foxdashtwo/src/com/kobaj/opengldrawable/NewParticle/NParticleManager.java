@@ -23,26 +23,13 @@ public class NParticleManager
 			emitter.fade_out = 500;
 			emitter.is_affected_by_gravity = false;
 			emitter.number_of_particles = -1;
-			emitter.number_of_particles_shown = 20;
+			emitter.number_of_particles_shown = 15;
 			emitter.start_lifetime = 3000;
-			emitter.start_velocity = Functions.screenHeightToShaderHeight(20); 
+			emitter.start_velocity = Functions.screenHeightToShaderHeight(0.05); 
 			emitter.vary_scale = true;
 			emitter.vary_velocity = true;
 		}
-		else if(type == EnumParticleType.player_dust)
-		{
-			//right hand size
-			emitter.fade_in = 50;
-			emitter.fade_out = 500;
-			emitter.is_affected_by_gravity = false;
-			emitter.number_of_particles = 0;
-			emitter.number_of_particles_shown = 5;
-			emitter.start_lifetime = 500;
-			emitter.custom_spawn_time = 60;
-			emitter.start_velocity = Functions.screenWidthToShaderWidth(50);
-			emitter.vary_scale = true;
-			emitter.vary_velocity = true;	
-		}
+
 		//very last
 		return emitter;
 	}

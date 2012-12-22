@@ -8,6 +8,7 @@ import org.simpleframework.xml.ElementList;
 
 import android.graphics.Color;
 
+import com.kobaj.level.LevelEventTypes.EnumLevelEvent;
 import com.kobaj.level.LevelEventTypes.LevelEventTransportPlayer;
 import com.kobaj.level.LevelTypeLight.LevelAmbientLight;
 import com.kobaj.level.LevelTypeLight.LevelBloomLight;
@@ -55,8 +56,6 @@ public class Level
 	
 	@Element
 	public LevelObject player;
-	
-	NParticleEmitter player_particles;
 	
 	@ElementList
 	public ArrayList<LevelEvent> event_list;
@@ -165,18 +164,33 @@ public class Level
 		player.quad_object.setZPos(player.quad_object.z_pos - (5 /* player.z_plane */* Constants.z_modifier));
 		player.quad_object.setXYPos(x_player, y_player, player.draw_from);
 		
-		// player particles
-		RectF player_part_rect = new RectF(0, (float) Functions.screenHeightToShaderHeight(3), (float) Functions.screenWidthToShaderWidth(3), 0);
-		player_particles = NParticleManager.makeEmitter(EnumParticleType.player_dust, player_part_rect);
-		player_particles.onInitialize();
-		local_np_emitter.add(player_particles);
-		
 		// set widths and heights for the camera
 		left_shader_limit = (Functions.screenXToShaderX(left_limit) + Constants.ratio);
 		right_shader_limit = (Functions.screenXToShaderX(right_limit) - Constants.ratio);
 		
 		top_shader_limit = Functions.screenYToShaderY(top_limit) - Constants.shader_height / 2.0;
 		bottom_shader_limit = Functions.screenYToShaderY(bottom_limit) + Constants.shader_height / 2.0;
+	}
+	
+	public void onUnInitialize()
+	{
+		if (my_backdrop != null)
+			my_backdrop.onUnInitialize();
+		
+		// draw sorted objects
+		for (int i = object_list.size() - 1; i >= 0; i--)
+			object_list.get(i).quad_object.onUnInitialize();
+		
+		// player
+		player.quad_object.onUnInitialize();
+		
+		// particles
+		for (int i = local_np_emitter.size() - 1; i >= 0; i--)
+			local_np_emitter.get(i).onUnInitialize();
+		
+		// bloom lights
+		for (int i = bloom_light_list.size() - 1; i >= 0; i--)
+			bloom_light_list.get(i).onUnInitialize();
 	}
 	
 	public void onUpdate(double delta)
@@ -236,27 +250,6 @@ public class Level
 		// up down collision
 		if (collision.width() == 0)
 		{
-			// player
-			if (player.quad_object.x_vel > Constants.player_particle_threshold)
-			{
-				player_particles.number_of_particles = 5;
-				// going left
-				player_particles.direction_end = 180;
-				player_particles.direction_start = 155;
-				player_particles.emit_location.offsetTo(player.quad_object.best_fit_aabb.main_rect.left, collision.top);
-			}
-			else if (player.quad_object.x_vel < -Constants.player_particle_threshold)
-			{
-				player_particles.number_of_particles = 5;
-				
-				// going right
-				player_particles.direction_end = 25;
-				player_particles.direction_start = 0;
-				player_particles.emit_location.offsetTo(player.quad_object.best_fit_aabb.main_rect.right, collision.top);
-			}			
-			else
-				player_particles.killAllParticles();
-			
 			// floating platforms
 			if (reference.this_object == EnumLevelObject.floating1)
 				if (player.quad_object.y_pos > reference.quad_object.y_pos) // remember this is the center of the object

@@ -56,10 +56,22 @@ public class FileHandler
 		}
 	}
 	
+	public static boolean fileExists(String file)
+	{
+		if(hasStorage(false))
+		{
+			File dir = prepareDirectory();
+			File sdcardFile = new File(dir, file + save_format);
+			return sdcardFile.exists();
+		}
+		
+		return false;
+	}	
+	
 	public static String[] getFileList()
 	{
 		// I'm not 100% sure if this implementation is truly recursive.
-		if (hasStorage(true))
+		if (hasStorage(false))
 		{
 			File dir = prepareDirectory();
 			

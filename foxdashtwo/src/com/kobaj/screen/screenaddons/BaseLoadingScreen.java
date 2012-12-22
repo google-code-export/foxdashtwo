@@ -13,10 +13,16 @@ public class BaseLoadingScreen
 	private double total_delta = 0;
 	private double loading_delta_shift = Math.PI / Constants.loading_max_shapes;
 	
-	public BaseLoadingScreen()
+	public void onInitialize()
 	{
 		for (int i = 0; i < Constants.loading_max_shapes; i++)
 			my_shapes[i] = new QuadColorShape(Constants.loading_radius, getColor(i), 0);
+	}
+	
+	public void onUnInitialize()
+	{
+		for (int i = 0; i < Constants.loading_max_shapes; i++)
+			my_shapes[i].onUnInitialize();
 	}
 	
 	// this function will linear interpolate between the two colors

@@ -2,6 +2,7 @@ package com.kobaj.screen;
 
 import android.util.Log;
 
+import com.kobaj.foxdashtwo.GameActivity;
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.input.EnumKeyCodes;
 import com.kobaj.input.GameInputModifier;
@@ -20,8 +21,9 @@ public class SinglePlayerScreen extends BaseScreen
 	private GameInputModifier my_modifier;
 	
 	// test level
-	public int test_level_R = R.raw.test_level;
-	private com.kobaj.level.Level test_level;
+	public String level_string = null;
+	public int level_R = R.raw.test_level;
+	private com.kobaj.level.Level the_level;
 	
 	// addons
 	LevelDebugScreen debug_addon;
@@ -33,20 +35,31 @@ public class SinglePlayerScreen extends BaseScreen
 	{
 		// initialize everything
 		my_modifier = new GameInputModifier();
+		loading_addon = new BaseLoadingScreen();
+		interaction_addon = new BaseInteractionPhysics(); //has no quads
 	}
 	
 	@Override
 	public void onLoad()
 	{
 		// load our addons. Do the loader first
-		loading_addon = new BaseLoadingScreen();
-		interaction_addon = new BaseInteractionPhysics();
+		loading_addon.onInitialize();
 		
 		// level
-		test_level = FileHandler.readSerialResource(Constants.resources, test_level_R, com.kobaj.level.Level.class);
-		if (test_level != null)
-			test_level.onInitialize();
+		if(level_string != null)
+			the_level = FileHandler.readSerialFile(level_string, com.kobaj.level.Level.class);
+		else
+			the_level = FileHandler.readSerialResource(Constants.resources, level_R, com.kobaj.level.Level.class);
 		
+		if (the_level != null)
+			the_level.onInitialize();
+		else
+		{
+			TitleScreen crash = new TitleScreen();
+			crash.crashed = true;
+			GameActivity.mGLView.my_game.onChangeScreen(crash);
+		}
+			
 		// control input and other addons
 		my_modifier.onInitialize();
 		
@@ -71,9 +84,19 @@ public class SinglePlayerScreen extends BaseScreen
 		
 		GLBitmapReader.isLoaded();
 		
-		debug_addon = new LevelDebugScreen(test_level, EnumDebugType.original_aabb);
+		debug_addon = new LevelDebugScreen(the_level, EnumDebugType.original_aabb);
 		
 		System.gc();
+	}
+
+	@Override
+	public void onUnload()
+	{
+		my_modifier.onUnInitialize();
+		loading_addon.onUnInitialize();
+		pause_addon.onUnInitialize();
+		
+		the_level.onUnInitialize();
 	}
 	
 	@Override
@@ -106,10 +129,10 @@ public class SinglePlayerScreen extends BaseScreen
 	private void onRunningUpdate(double delta)
 	{
 		// update all our objects and lights and things
-		test_level.onUpdate(delta);
+		the_level.onUpdate(delta);
 		
 		// interaction
-		interaction_addon.onUpdate(delta, my_modifier, test_level);
+		interaction_addon.onUpdate(delta, my_modifier, the_level);
 		
 		//debug_addon.onUpdate(delta, test_level);
 	}
@@ -117,7 +140,7 @@ public class SinglePlayerScreen extends BaseScreen
 	@Override
 	public void onDrawObject()
 	{
-		test_level.onDrawObject();
+		the_level.onDrawObject();
 		
 		//debug_addon.onDrawObject();
 	}
@@ -125,13 +148,13 @@ public class SinglePlayerScreen extends BaseScreen
 	@Override
 	public void onDrawLight()
 	{
-		test_level.onDrawLight();
+		the_level.onDrawLight();
 	}
 	
 	@Override
 	public void onDrawConstant()
 	{
-		test_level.onDrawConstant();
+		the_level.onDrawConstant();
 		
 		// draw the controls
 		if (current_state != EnumScreenState.paused)

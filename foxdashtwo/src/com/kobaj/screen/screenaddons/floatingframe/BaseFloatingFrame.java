@@ -7,7 +7,7 @@ import com.kobaj.opengldrawable.Button;
 import com.kobaj.opengldrawable.EnumDrawFrom;
 import com.kobaj.opengldrawable.Quad.QuadCompressed;
 
-public abstract class BasePopup
+public abstract class BaseFloatingFrame
 {
 	protected QuadCompressed main_popup;
 	protected QuadCompressed secondary_popup;
@@ -37,6 +37,12 @@ public abstract class BasePopup
 		// set colors
 		secondary_popup.color = Constants.frame_sec_color;
 		main_popup.color = Constants.frame_main_color;
+	}
+	
+	public void onUnInitialize()
+	{
+		main_popup.onUnInitialize();
+		secondary_popup.onUnInitialize();
 	}
 	
 	public abstract boolean onUpdate(double delta); // true it shows, false it doesn't show.

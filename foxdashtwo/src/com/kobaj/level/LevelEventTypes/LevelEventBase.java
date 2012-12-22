@@ -2,7 +2,6 @@ package com.kobaj.level.LevelEventTypes;
 
 import java.util.ArrayList;
 
-import com.kobaj.level.EnumLevelEvent;
 import com.kobaj.level.LevelObject;
 import com.kobaj.level.LevelTypeLight.LevelAmbientLight;
 

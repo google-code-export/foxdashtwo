@@ -5,9 +5,9 @@ import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.Button;
 import com.kobaj.opengldrawable.EnumDrawFrom;
-import com.kobaj.screen.screenaddons.floatingframe.BasePopup;
+import com.kobaj.screen.screenaddons.floatingframe.BaseFloatingFrame;
 
-public class BaseAudioSettingsScreen extends BasePopup
+public class BaseAudioSettingsScreen extends BaseFloatingFrame
 {
 	private Button cancel_button;
 	private Button volume_up_button;
@@ -47,9 +47,21 @@ public class BaseAudioSettingsScreen extends BasePopup
 		sound_label_x = -Functions.screenWidthToShaderWidth(default_label_left);
 		music_label_x = sound_label_x;
 		
-		BasePopup.alignButtonsAlongXAxis(center_y + shift_y + move_y, volume_down_button, volume_up_button);
-		BasePopup.alignButtonsAlongXAxis(center_y - 2.0 * shift_y + move_y, sound_volume_down_button, sound_volume_up_button);
-		BasePopup.alignButtonsAlongXAxis(cancel_shift_y, cancel_button);
+		BaseFloatingFrame.alignButtonsAlongXAxis(center_y + shift_y + move_y, volume_down_button, volume_up_button);
+		BaseFloatingFrame.alignButtonsAlongXAxis(center_y - 2.0 * shift_y + move_y, sound_volume_down_button, sound_volume_up_button);
+		BaseFloatingFrame.alignButtonsAlongXAxis(cancel_shift_y, cancel_button);
+	}
+	
+	@Override
+	public void onUnInitialize()
+	{
+		super.onUnInitialize();
+		
+		cancel_button.onUnInitialize();
+		volume_up_button.onUnInitialize();
+		volume_down_button.onUnInitialize();
+		sound_volume_up_button.onUnInitialize();
+		sound_volume_down_button.onUnInitialize();
 	}
 	
 	@Override

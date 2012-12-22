@@ -33,6 +33,16 @@ public class GameInputModifier
 		}
 	}
 	
+	public void onUnInitialize()
+	{
+		Iterator<Entry<EnumInputType, InputTypeBase>> it = input_types.entrySet().iterator();
+		while (it.hasNext())
+		{
+			Map.Entry<EnumInputType, InputTypeBase> pairs = (Map.Entry<EnumInputType, InputTypeBase>) it.next();
+			pairs.getValue().onUnInitialize();
+		}
+	}
+	
 	public InputTypeBase getInputType()
 	{
 		return input_types.get(UserSettings.active_input_type);

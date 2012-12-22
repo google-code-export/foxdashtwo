@@ -9,7 +9,7 @@ import com.kobaj.screen.EnumScreenState;
 import com.kobaj.screen.TitleScreen;
 import com.kobaj.screen.screenaddons.settings.BaseSettingsScreen;
 
-public class BasePauseScreen extends BasePopup
+public class BasePauseScreen extends BaseFloatingFrame
 {
 	private Button title_button;
 	private Button quit_button;
@@ -41,8 +41,20 @@ public class BasePauseScreen extends BasePopup
 		settings_button.onInitialize();
 		title_button.onInitialize();
 		
-		BasePopup.alignButtonsAlongXAxis(center_y, quit_button, title_button , settings_button);
-		BasePopup.alignButtonsAlongXAxis(cancel_shift_y, cancel_button);
+		BaseFloatingFrame.alignButtonsAlongXAxis(center_y, quit_button, title_button , settings_button);
+		BaseFloatingFrame.alignButtonsAlongXAxis(cancel_shift_y, cancel_button);
+	}
+	
+	@Override
+	public void onUnInitialize()
+	{
+		base_settings.onUnInitialize();
+		base_quit.onUnInitialize();
+		
+		cancel_button.onUnInitialize();
+		quit_button.onUnInitialize();
+		settings_button.onUnInitialize();
+		title_button.onUnInitialize();
 	}
 	
 	public void reset()

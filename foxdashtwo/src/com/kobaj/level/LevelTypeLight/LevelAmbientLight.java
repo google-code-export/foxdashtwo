@@ -22,6 +22,11 @@ public class LevelAmbientLight extends LevelEntityActive
 		quad_light = new QuadColorShape(0, com.kobaj.math.Constants.height, com.kobaj.math.Constants.width, 0, color, 0);
 	}
 	
+	public void onUnInitialize()
+	{
+		quad_light.onUnInitialize();
+	}
+	
 	public void onUpdate(double delta)
 	{
 		// do nothing.
