@@ -35,7 +35,6 @@ public class Music extends AudioBase
 	}
 	
 	// return true if this is a new song and we can play it.
-	@Override
 	public boolean play(int sound_id, double volume)
 	{
 		boolean is_reset = false;

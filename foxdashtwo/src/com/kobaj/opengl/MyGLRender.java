@@ -17,6 +17,7 @@ import com.kobaj.math.FPSManager;
 import com.kobaj.math.Functions;
 import com.kobaj.math.Physics;
 import com.kobaj.opengldrawable.Text;
+import com.kobaj.opengldrawable.Quad.QuadRenderShell;
 import com.kobaj.openglgraphics.AmbientLightShader;
 import com.kobaj.openglgraphics.CompressedLightShader;
 
@@ -65,10 +66,12 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		// gotta reset
 		exception_count = 0;
 		
+		//clear out the memory
 		com.kobaj.loader.GLBitmapReader.resetLoadedTextures();
+		QuadRenderShell.program_update = true;
 		
+		//set our window
 		GLES20.glViewport(0, 0, width, height);
-		
 		Constants.width = width;
 		Constants.height = height;
 		

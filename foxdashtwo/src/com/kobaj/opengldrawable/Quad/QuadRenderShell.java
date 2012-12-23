@@ -1,5 +1,7 @@
 package com.kobaj.opengldrawable.Quad;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 
@@ -17,17 +19,85 @@ public final class QuadRenderShell
 	// camera
 	private static float[] my_mvp_matrix = new float[16];
 	
+	public static boolean program_update = true;
+	
+	// methods for generating verticies
+	private static float[] my_position_matrix = new float[18];
+	private static FloatBuffer my_position;
+	private static boolean generated = false;
+	private static final void generateVerts()
+	{
+		if(generated)
+			return;
+		
+		float pos_tr_x = 1.0f;
+		float pos_tr_y = 1.0f;
+		
+		float neg_tr_x = -pos_tr_x;
+		float neg_tr_y = -pos_tr_y;
+		
+		final float z_buffer = 0.0f;
+		
+		// X, Y, Z
+		my_position_matrix[0] = neg_tr_x;
+		my_position_matrix[1] = pos_tr_y;
+		my_position_matrix[2] = z_buffer;
+		
+		my_position_matrix[3] = neg_tr_x;
+		my_position_matrix[4] = neg_tr_y;
+		my_position_matrix[5] = z_buffer;
+		
+		my_position_matrix[6] = pos_tr_x;
+		my_position_matrix[7] = pos_tr_y;
+		my_position_matrix[8] = z_buffer;
+		
+		my_position_matrix[9] = neg_tr_x;
+		my_position_matrix[10] = neg_tr_y;
+		my_position_matrix[11] = z_buffer;
+		
+		my_position_matrix[12] = pos_tr_x;
+		my_position_matrix[13] = neg_tr_y;
+		my_position_matrix[14] = z_buffer;
+		
+		my_position_matrix[15] = pos_tr_x;
+		my_position_matrix[16] = pos_tr_y;
+		my_position_matrix[17] = z_buffer;
+		
+		// Initialize the buffers. and store the new coords
+		if (my_position == null)
+			my_position = ByteBuffer.allocateDirect(my_position_matrix.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
+		else
+			my_position.clear();
+		
+		my_position.put(my_position_matrix).position(0);
+		generated = true;
+	}
+	
 	// methods for
 	// drawing stuffs
+	private static int old_program;
 	private static final <T extends BaseLightShader> void onSetupProgram(final T ambient_light)
 	{
+		if(old_program == ambient_light.my_shader && !program_update)
+			return;
+		
+		//change everything
+		old_program = ambient_light.my_shader;
+		program_update = true;
+		
 		// setup the program
 		GLES20.glUseProgram(ambient_light.my_shader);
 	}
 	
+	private static int old_color;
 	private static final <T extends BaseLightShader> void onSetupColor(final int color, final T ambient_light)
 	{
 		// quick attempt at optimization
+		if(color == old_color && !program_update)
+			return;
+		
+		old_color = color;
+		
 		// this is white
 		float red = 1;
 		float green = 1;
@@ -53,8 +123,11 @@ public final class QuadRenderShell
 		GLES20.glUniform4f(ambient_light.my_color_handle, red, green, blue, alpha);
 	}
 	
-	private static final <T extends BaseLightShader> void onSetupPosition(final FloatBuffer my_position, final T ambient_light)
+	private static final <T extends BaseLightShader> void onSetupPosition(final T ambient_light)
 	{
+		if(!program_update)
+			return;
+		
 		// pass in position information
 		GLES20.glVertexAttribPointer(ambient_light.my_position_handle, 3, GLES20.GL_FLOAT, false, 0, my_position);
 	}
@@ -113,6 +186,9 @@ public final class QuadRenderShell
 		if (quads.size() <= 0)
 			return;
 		
+		//generate some verts
+		generateVerts();
+		
 		// first set our program
 		onSetupProgram(shader);
 		
@@ -124,7 +200,7 @@ public final class QuadRenderShell
 			return;
 		
 		onSetupTexture(zero.my_texture_data_handle, zero.my_tex_coord, shader);
-		onSetupPosition(zero.my_position, shader);
+		onSetupPosition(shader);
 		
 		if (QuadCompressed.class.isAssignableFrom(zero.getClass()))
 		{
@@ -146,6 +222,9 @@ public final class QuadRenderShell
 				onDraw();
 			}
 		}
+		
+		//very last
+		program_update = false;
 	}
 	
 	private static final ArrayList<Quad> single_quad = new ArrayList<Quad>();

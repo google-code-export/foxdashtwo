@@ -1,5 +1,7 @@
 package com.kobaj.audio;
 
+import com.kobaj.foxdashtwo.UserSettings;
+
 public class MusicPlayer
 {
 	private Music music_player;
@@ -8,7 +10,6 @@ public class MusicPlayer
 	private int fade_start = 0;
 	private int fade_end = 0;
 	
-	private double desired_volume = 1.0;
 	private int next_song = -1;
 	
 	public double actual_volume = 0.0;
@@ -31,7 +32,7 @@ public class MusicPlayer
 		if (current_state == EnumMusicStates.fade_in)
 		{
 			final int current_position = music_player.media_player.getCurrentPosition();
-			final double calculated_volume = com.kobaj.math.Functions.linearInterpolate(fade_start, fade_end, current_position, 0.0, desired_volume);
+			final double calculated_volume = com.kobaj.math.Functions.linearInterpolate(fade_start, fade_end, current_position, 0.0, UserSettings.desired_music_volume);
 			actual_volume = calculated_volume;
 			music_player.play(music_player.currently_playing, calculated_volume);
 			
@@ -55,7 +56,7 @@ public class MusicPlayer
 		if (current_state == EnumMusicStates.fade_out)
 		{
 			final int current_position = music_player.media_player.getCurrentPosition();
-			final double calculated_volume = com.kobaj.math.Functions.linearInterpolate(fade_start, fade_end, current_position, desired_volume, 0.0);
+			final double calculated_volume = com.kobaj.math.Functions.linearInterpolate(fade_start, fade_end, current_position, UserSettings.desired_music_volume, 0.0);
 			actual_volume = calculated_volume;
 			music_player.play(music_player.currently_playing, calculated_volume);
 			
@@ -77,18 +78,13 @@ public class MusicPlayer
 		else if (input > 1)
 			input = 1;
 		
-		desired_volume = input;
+		UserSettings.desired_music_volume = input;
 		
 		if (current_state == EnumMusicStates.playing)
 		{
-			music_player.play(music_player.currently_playing, desired_volume);
-			actual_volume = desired_volume;
+			music_player.play(music_player.currently_playing, UserSettings.desired_music_volume);
+			actual_volume = UserSettings.desired_music_volume;
 		}
-	}
-	
-	public double getDesiredVolume()
-	{
-		return desired_volume;
 	}
 	
 	public int getCurrentPosition()

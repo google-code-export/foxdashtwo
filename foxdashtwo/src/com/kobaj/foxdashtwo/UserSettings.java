@@ -1,19 +1,17 @@
 package com.kobaj.foxdashtwo;
 
+import org.simpleframework.xml.Element;
+
 import com.kobaj.input.InputType.EnumInputType;
 
 public class UserSettings
 {
+	@Element
 	public static EnumInputType active_input_type = EnumInputType.halfhalf;
-	private final static String ait = "active_input_type";
 	
-	public static void loadUserSettings()
-	{
-		active_input_type = EnumInputType.values()[GameActivity.mPrefs.getInt(ait, EnumInputType.halfhalf.ordinal())];
-	}
+	@Element
+	public static double desired_music_volume = 1.0;
 	
-	public static void saveUserSettings()
-	{
-		GameActivity.ed.putInt(ait, active_input_type.ordinal());
-	}
+	@Element
+	public static double desired_sound_volume = 1.0;
 }

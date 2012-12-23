@@ -1,6 +1,7 @@
 package com.kobaj.screen.screenaddons.settings;
 
 import com.kobaj.foxdashtwo.R;
+import com.kobaj.foxdashtwo.UserSettings;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.Button;
@@ -68,9 +69,13 @@ public class BaseAudioSettingsScreen extends BaseFloatingFrame
 	public boolean onUpdate(double delta)
 	{
 		if (volume_up_button.isReleased())
-			Constants.music_player.setDesiredVolume(Constants.music_player.getDesiredVolume() + .1);
+			Constants.music_player.setDesiredVolume(UserSettings.desired_music_volume + .1);
 		else if (volume_down_button.isReleased())
-			Constants.music_player.setDesiredVolume(Constants.music_player.getDesiredVolume() - .1);
+			Constants.music_player.setDesiredVolume(UserSettings.desired_music_volume - .1);
+		else if(sound_volume_up_button.isReleased())
+			UserSettings.desired_sound_volume += .1;
+		else if(sound_volume_down_button.isReleased())
+			UserSettings.desired_sound_volume -= .1;
 		else if (cancel_button.isReleased())
 			return false;
 		
@@ -84,9 +89,9 @@ public class BaseAudioSettingsScreen extends BaseFloatingFrame
 		Constants.text.drawText(R.string.audio, label_x, label_y, EnumDrawFrom.center);
 		
 		Constants.text.drawText(R.string.music, music_label_x, music_label_y, EnumDrawFrom.bottom_right);
-		Constants.text.drawNumber((int) (Constants.music_player.getDesiredVolume() * 100.0), music_label_x, music_label_y, EnumDrawFrom.bottom_left);
+		Constants.text.drawNumber((int) (UserSettings.desired_music_volume * 100.0), music_label_x, music_label_y, EnumDrawFrom.bottom_left);
 		Constants.text.drawText(R.string.sound, sound_label_x, sound_label_y, EnumDrawFrom.bottom_right);
-		Constants.text.drawNumber((int) (0), sound_label_x, sound_label_y, EnumDrawFrom.bottom_left);
+		Constants.text.drawNumber((int) (UserSettings.desired_sound_volume * 100.0), sound_label_x, sound_label_y, EnumDrawFrom.bottom_left);
 		
 		sound_volume_down_button.onDrawConstant();
 		sound_volume_up_button.onDrawConstant();

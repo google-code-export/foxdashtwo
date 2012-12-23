@@ -277,7 +277,7 @@ public class Quad
 		
 		my_position.put(my_position_matrix).position(0);
 		
-		updateBestFitAABB();
+		update_position_matrix(true);
 	}
 	
 	private void updateBestFitAABB()
@@ -394,7 +394,8 @@ public class Quad
 		{
 			Matrix.setIdentityM(my_model_matrix, 0);
 			Matrix.setIdentityM(scale_matrix, 0);
-			Matrix.scaleM(scale_matrix, 0, (float) this.scale_value, (float) this.scale_value, (float) this.scale_value);
+			Matrix.scaleM(scale_matrix, 0, (float) (this.shader_width / 2.0 * this.scale_value),
+					(float) (this.shader_height / 2.0 *  this.scale_value), (float) this.scale_value);
 			Matrix.setRotateEulerM(rotation_matrix, 0, 0.0f, 0.0f, (float) -degree);
 			Matrix.multiplyMM(my_rs_matrix, 0, rotation_matrix, 0, scale_matrix, 0);
 			

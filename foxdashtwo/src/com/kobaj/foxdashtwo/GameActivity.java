@@ -13,6 +13,7 @@ import android.view.Display;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 
+import com.kobaj.loader.FileHandler;
 import com.kobaj.math.Constants;
 import com.kobaj.networking.EnumNetworkAction;
 
@@ -20,14 +21,14 @@ public class GameActivity extends FragmentActivity implements com.kobaj.networki
 {
 	/** Called when the activity is first created. */
 	
-	//the fuck are you doing?!
+	// the fuck are you doing?!
 	public static Activity activity;
 	
-	//related to permissions mostly
+	// related to permissions mostly
 	private PowerManager.WakeLock wl;
 	public static ConnectivityManager cm;
 	
-	//drawing
+	// drawing
 	public static com.kobaj.opengl.MyGLSurfaceView mGLView;
 	
 	// saving state
@@ -54,7 +55,7 @@ public class GameActivity extends FragmentActivity implements com.kobaj.networki
 		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK, "DoNotDimScreen");
 		
-		//networking state
+		// networking state
 		cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 		
 		// volume controls
@@ -86,11 +87,13 @@ public class GameActivity extends FragmentActivity implements com.kobaj.networki
 		super.onPause();
 		wl.release();
 		
-		//shut down the music
+		// shut down the music
 		Constants.music_player.stop();
 		
 		// save user settings
-		UserSettings.saveUserSettings();
+		FileHandler.writeSerialFile(new UserSettings(), "user_settings");
+		
+		// save any prefs
 		ed.commit();
 		
 		mGLView.onScreenPause();
@@ -103,7 +106,8 @@ public class GameActivity extends FragmentActivity implements com.kobaj.networki
 		wl.acquire();
 		
 		// load user settings
-		UserSettings.loadUserSettings();
+		@SuppressWarnings("unused")
+		UserSettings temp = FileHandler.readSerialFile("user_settings", UserSettings.class);
 		
 		mGLView.onResume();
 	}
@@ -133,7 +137,7 @@ public class GameActivity extends FragmentActivity implements com.kobaj.networki
 		com.kobaj.math.Constants.input_manager.eventUpdate(e);
 		return true;
 	}
-
+	
 	public void onFinishedURL(String value, EnumNetworkAction action)
 	{
 		// TODO Auto-generated method stub

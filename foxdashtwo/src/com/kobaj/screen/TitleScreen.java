@@ -41,6 +41,7 @@ public class TitleScreen extends BaseScreen
 		double x_offset = -.3;
 		
 		play_button = new Button(R.string.play);
+		play_button.draw_background = false;
 		play_button.onInitialize();
 		play_button.invisible_outline.setXYPos(x_offset, -Constants.shader_height - play_button.invisible_outline.shader_height, EnumDrawFrom.center);
 		play_tween = new TweenManager(play_button.invisible_outline,//
@@ -51,6 +52,7 @@ public class TitleScreen extends BaseScreen
 				new TweenEvent(EnumTweenEvent.rotate, 0 + x_offset, 0, Color.WHITE, 35));//
 		
 		settings_button = new Button(R.string.settings_button);
+		settings_button.draw_background = false;
 		settings_button.onInitialize();
 		settings_tween = new TweenManager(settings_button.invisible_outline,//
 				new TweenEvent(EnumTweenEvent.delay, .1 + x_offset, -Constants.shader_height - settings_button.invisible_outline.shader_height),//
@@ -62,6 +64,7 @@ public class TitleScreen extends BaseScreen
 				new TweenEvent(EnumTweenEvent.rotate, .1 + x_offset, -settings_button.invisible_outline.shader_height, Color.WHITE, 35));//
 		
 		quit_button = new Button(R.string.quit);
+		quit_button.draw_background = false;
 		quit_button.onInitialize();
 		quit_tween = new TweenManager(quit_button.invisible_outline,//
 				new TweenEvent(EnumTweenEvent.delay, .2 + x_offset, -Constants.shader_height - quit_button.invisible_outline.shader_height),//
