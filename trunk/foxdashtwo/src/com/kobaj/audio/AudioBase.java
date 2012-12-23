@@ -3,12 +3,10 @@ package com.kobaj.audio;
 public abstract class AudioBase
 {
 	// use this to ensure volumes are what the user specified
-	protected double getCorrectedVolume(double volume)
+	protected double getCorrectedVolume(double stream_volume)
 	{
 		// same for every device
-		volume = com.kobaj.math.Functions.clamp(.99999, volume, .00001);
-		
-		double stream_volume = volume;
+		stream_volume = com.kobaj.math.Functions.clamp(.99999, stream_volume, .00001);
 		
 		// multiply by 100 and turn it into an int
 		// this will make our volume scale into 100 discrete units
@@ -21,5 +19,5 @@ public abstract class AudioBase
 		return 1.0 - log1;
 	}
 	
-	abstract boolean play(int sound_id, double volume);
+	abstract boolean play(int sound_id);
 }

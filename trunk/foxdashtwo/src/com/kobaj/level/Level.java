@@ -8,6 +8,7 @@ import org.simpleframework.xml.ElementList;
 
 import android.graphics.Color;
 
+import com.kobaj.foxdashtwo.R;
 import com.kobaj.level.LevelEventTypes.EnumLevelEvent;
 import com.kobaj.level.LevelEventTypes.LevelEventTransportPlayer;
 import com.kobaj.level.LevelTypeLight.LevelAmbientLight;
@@ -22,13 +23,14 @@ import com.kobaj.opengldrawable.EnumDrawFrom;
 import com.kobaj.opengldrawable.NewParticle.EnumParticleType;
 import com.kobaj.opengldrawable.NewParticle.NParticleEmitter;
 import com.kobaj.opengldrawable.NewParticle.NParticleManager;
-import com.kobaj.opengldrawable.Quad.QuadColorShape;
+import com.kobaj.opengldrawable.Quad.Quad;
+import com.kobaj.opengldrawable.Quad.QuadCompressed;
 
 public class Level
 {
 	@Element
 	public int backdrop_color;
-	private QuadColorShape my_backdrop;
+	private Quad my_backdrop;
 	
 	@Element
 	public int left_limit;
@@ -73,8 +75,8 @@ public class Level
 		// dont worry about it.
 		if (backdrop_color != Color.TRANSPARENT)
 		{
-			my_backdrop = new QuadColorShape(1, 1, backdrop_color, 0);
-			my_backdrop.setWidthHeight(Constants.width, Constants.height);
+			my_backdrop = new QuadCompressed(R.raw.black_alpha, R.raw.black_alpha, Constants.width, Constants.height);
+			my_backdrop.color = backdrop_color;
 			my_backdrop.setZPos(my_backdrop.z_pos - (10.0 * Constants.z_modifier));
 		}
 		
