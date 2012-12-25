@@ -27,13 +27,18 @@ public class TitleScreen extends BaseScreen
 	private TweenManager play_tween;
 	private TweenManager settings_tween;
 	private TweenManager quit_tween;
-
+	
 	// not the /best/ way of doing things, but it works and is efficient
 	private boolean ready_to_quit = false;
 	private boolean settings_visible = false;
 	private boolean crash_visible = false;
 	
+	// display a popup only once when class is loaded
 	public boolean crashed = false;
+	
+	// wheather to fade and what to fade to.
+	public boolean fade_in = true;
+	public boolean fade_play = false;
 	
 	@Override
 	public void onLoad()
@@ -81,7 +86,7 @@ public class TitleScreen extends BaseScreen
 		base_quit = new BaseQuit();
 		base_quit.onInitialize();
 		
-		if(crashed)
+		if (crashed)
 		{
 			base_error = new BaseError();
 			base_error.onInitialize();
@@ -92,7 +97,7 @@ public class TitleScreen extends BaseScreen
 	@Override
 	public void onUnload()
 	{
-		if(crashed)
+		if (crashed)
 			base_error.onUnInitialize();
 		
 		base_settings.onUnInitialize();
@@ -105,15 +110,17 @@ public class TitleScreen extends BaseScreen
 	@Override
 	public void onUpdate(double delta)
 	{
-		// base_settings.onUpdate(delta);
+		// these are all the different possible poups that can be visible
 		if (settings_visible)
 			settings_visible = base_settings.onUpdate(delta);
 		else if (ready_to_quit)
 			ready_to_quit = base_quit.onUpdate(delta);
-		else if(crash_visible)
+		else if (crash_visible)
 			crash_visible = base_error.onUpdate(delta);
 		else
 		{
+			// and if nothing is visible, then just update like normal
+			
 			// testing spring
 			double y_pos_shader = 0;
 			Constants.physics.addSpringY(.00003, .007, 0, play_button.invisible_outline.y_pos - y_pos_shader, play_button.invisible_outline);
@@ -134,7 +141,7 @@ public class TitleScreen extends BaseScreen
 			
 			// and buttons
 			if (play_button.isReleased())
-				GameActivity.mGLView.my_game.onChangeScreen(new SinglePlayerScreen());
+				fade_play = true;
 			else if (quit_button.isReleased())
 				ready_to_quit = true;
 			else if (settings_button.isReleased())
@@ -143,6 +150,13 @@ public class TitleScreen extends BaseScreen
 				settings_visible = true;
 			}
 		}
+		
+		// regardless we fade in
+		if (fade_in)
+			fade_in = tween_fade_in.onUpdate(delta);
+		if (fade_play)
+			if (!tween_fade_out.onUpdate(delta))
+				GameActivity.mGLView.my_game.onChangeScreen(new SinglePlayerScreen());
 	}
 	
 	@Override
@@ -165,7 +179,7 @@ public class TitleScreen extends BaseScreen
 			base_settings.onDraw();
 		else if (ready_to_quit)
 			base_quit.onDraw();
-		else if(crash_visible)
+		else if (crash_visible)
 			base_error.onDraw();
 		else
 		{
@@ -177,12 +191,15 @@ public class TitleScreen extends BaseScreen
 			settings_button.onDrawConstant();
 			quit_button.onDrawConstant();
 		}
+		
+		if (fade_in || fade_play)
+			black_overlay.onDrawAmbient(Constants.my_ip_matrix, true);
 	}
 	
 	@Override
 	public void onDrawLoading(double delta)
 	{
-		//draw nothing
+		// draw nothing
 	}
 	
 	@Override

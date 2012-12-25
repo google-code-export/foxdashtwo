@@ -34,8 +34,16 @@ public class QuadCompressed extends Quad
 		this.alpha_resource = alpha_resource;
 	}
 	
+	// do not delete
+	@Override
+	public void onUnInitialize()
+	{
+		super.onUnInitialize();
+		GLBitmapReader.unloadTexture(alpha_resource);
+	}
+	
 	// these are in shader coordinates. start_x, end_x, start_y, end_y
-	// THIS METHOD IS DIFFERENT THAN THE REGULAR QUAD
+	// THIS METHOD IS DIFFERENT THAN THE REGULAR QUAD, DO NOT DELETE
 	@Override
 	protected void complexUpdateTexCoords(float one_x, float two_x, float one_y, float two_y)
 	{

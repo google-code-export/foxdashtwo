@@ -20,6 +20,7 @@ public class FileHandler
 	private final static String file_directory = "/foxdashtwo";
 	private final static String error_tag = "XML Serial Error";
 	private final static String save_format = ".xml";
+	private final static String fullstop = ".";
 	
 	// some of these create a little bit of string garbage, but its assumed this is only
 	// called when loading, thus we will be using a system.gc after all is done loading.
@@ -31,9 +32,12 @@ public class FileHandler
 		{
 			try
 			{
+				if(!file_name.contains(fullstop))
+					file_name += save_format;
+					
 				// create file and directory
 				File dir = prepareDirectory();
-				File sdcardFile = new File(dir, file_name + save_format);
+				File sdcardFile = new File(dir, file_name);
 				
 				if (sdcardFile.exists())
 					sdcardFile.delete();
@@ -56,12 +60,15 @@ public class FileHandler
 		}
 	}
 	
-	public static boolean fileExists(String file)
+	public static boolean fileExists(String file_name)
 	{
 		if(hasStorage(false))
 		{
+			if(!file_name.contains(fullstop))
+				file_name += save_format;
+			
 			File dir = prepareDirectory();
-			File sdcardFile = new File(dir, file + save_format);
+			File sdcardFile = new File(dir, file_name);
 			return sdcardFile.exists();
 		}
 		
@@ -88,7 +95,7 @@ public class FileHandler
 		return null;
 	}
 	
-	public static <T> boolean writeSerialFile(T writeable, String fileName)
+	public static <T> boolean writeSerialFile(T writeable, String file_name)
 	{
 		if (hasStorage(true))
 		{
@@ -96,7 +103,10 @@ public class FileHandler
 			Serializer serial = new Persister();
 			File dir = prepareDirectory();
 			
-			File sdcardFile = new File(dir, fileName + save_format);
+			if(!file_name.contains(fullstop))
+				file_name += save_format;
+			
+			File sdcardFile = new File(dir, file_name);
 			try
 			{
 				if (sdcardFile.exists())
@@ -124,7 +134,7 @@ public class FileHandler
 	}
 	
 	// read in a file to a class
-	public static <T> T readSerialFile(String fileName, Class<? extends T> type)
+	public static <T> T readSerialFile(String file_name, Class<? extends T> type)
 	{
 		T finalReturn = null;
 		Serializer serial = new Persister();
@@ -133,7 +143,10 @@ public class FileHandler
 		{
 			File dir = prepareDirectory();
 			
-			File sdcardFile = new File(dir, fileName + save_format);
+			if(!file_name.contains(fullstop))
+				file_name += save_format;
+			
+			File sdcardFile = new File(dir, file_name);
 			try
 			{
 				if (sdcardFile.exists())
@@ -170,6 +183,7 @@ public class FileHandler
 		return final_return;
 	}
 	
+	// takes a string and converts it to the type via serializeation
 	public static <T> T readString(String input, Class<? extends T> type)
 	{
 		T final_return = null;
@@ -189,6 +203,7 @@ public class FileHandler
 		return final_return;
 	}
 	
+	//build our folder structure
 	private static File prepareDirectory()
 	{
 		File sdCard = Environment.getExternalStorageDirectory();
@@ -211,6 +226,7 @@ public class FileHandler
 		return false;
 	}
 	
+	//convert iostream to string (io can be from the internet or disk)
 	public static String ioStreamToString(InputStream is)
 	{
 		BufferedReader reader = null;

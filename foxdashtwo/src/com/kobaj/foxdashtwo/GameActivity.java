@@ -78,6 +78,10 @@ public class GameActivity extends FragmentActivity implements com.kobaj.networki
 		mGLView = new com.kobaj.opengl.MyGLSurfaceView(this);
 		setContentView(mGLView);
 		
+		// make a nomedia file for other applications
+		if (!FileHandler.fileExists(".nomedia"))
+			FileHandler.writeTextFile(".nomedia", "");
+		
 		GameActivity.activity = this;
 	}
 	

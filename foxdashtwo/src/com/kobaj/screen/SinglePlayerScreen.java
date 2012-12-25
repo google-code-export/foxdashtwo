@@ -9,10 +9,10 @@ import com.kobaj.input.GameInputModifier;
 import com.kobaj.loader.FileHandler;
 import com.kobaj.loader.GLBitmapReader;
 import com.kobaj.math.Constants;
-import com.kobaj.screen.screenaddons.LevelDebugScreen;
 import com.kobaj.screen.screenaddons.BaseInteractionPhysics;
 import com.kobaj.screen.screenaddons.BaseLoadingScreen;
 import com.kobaj.screen.screenaddons.EnumDebugType;
+import com.kobaj.screen.screenaddons.LevelDebugScreen;
 import com.kobaj.screen.screenaddons.floatingframe.BasePauseScreen;
 
 public class SinglePlayerScreen extends BaseScreen
@@ -26,17 +26,20 @@ public class SinglePlayerScreen extends BaseScreen
 	private com.kobaj.level.Level the_level;
 	
 	// addons
-	LevelDebugScreen debug_addon;
-	BaseLoadingScreen loading_addon;
-	BaseInteractionPhysics interaction_addon;
-	BasePauseScreen pause_addon;
+	private LevelDebugScreen debug_addon;
+	private BaseLoadingScreen loading_addon;
+	private BaseInteractionPhysics interaction_addon;
+	private BasePauseScreen pause_addon;
+	
+	// wheather to fade and what to fade to.
+	public boolean fade_in = true;
 	
 	public SinglePlayerScreen()
 	{
 		// initialize everything
 		my_modifier = new GameInputModifier();
 		loading_addon = new BaseLoadingScreen();
-		interaction_addon = new BaseInteractionPhysics(); //has no quads
+		interaction_addon = new BaseInteractionPhysics(); // has no quads
 	}
 	
 	@Override
@@ -46,7 +49,7 @@ public class SinglePlayerScreen extends BaseScreen
 		loading_addon.onInitialize();
 		
 		// level
-		if(level_string != null)
+		if (level_string != null)
 			the_level = FileHandler.readSerialFile(level_string, com.kobaj.level.Level.class);
 		else
 			the_level = FileHandler.readSerialResource(Constants.resources, level_R, com.kobaj.level.Level.class);
@@ -59,7 +62,7 @@ public class SinglePlayerScreen extends BaseScreen
 			crash.crashed = true;
 			GameActivity.mGLView.my_game.onChangeScreen(crash);
 		}
-			
+		
 		// control input and other addons
 		my_modifier.onInitialize();
 		
@@ -88,7 +91,7 @@ public class SinglePlayerScreen extends BaseScreen
 		
 		System.gc();
 	}
-
+	
 	@Override
 	public void onUnload()
 	{
@@ -134,7 +137,11 @@ public class SinglePlayerScreen extends BaseScreen
 		// interaction
 		interaction_addon.onUpdate(delta, my_modifier, the_level);
 		
-		//debug_addon.onUpdate(delta, test_level);
+		// debug_addon.onUpdate(delta, test_level);
+		
+		// regardless we fade in
+		if (fade_in)
+			fade_in = tween_fade_in.onUpdate(delta);
 	}
 	
 	@Override
@@ -142,7 +149,7 @@ public class SinglePlayerScreen extends BaseScreen
 	{
 		the_level.onDrawObject();
 		
-		//debug_addon.onDrawObject();
+		// debug_addon.onDrawObject();
 	}
 	
 	@Override
@@ -161,6 +168,10 @@ public class SinglePlayerScreen extends BaseScreen
 			my_modifier.onDraw();
 		else
 			pause_addon.onDraw();
+		
+		// finally
+		if (fade_in)
+			black_overlay.onDrawAmbient(Constants.my_ip_matrix, true);
 	}
 	
 	@Override

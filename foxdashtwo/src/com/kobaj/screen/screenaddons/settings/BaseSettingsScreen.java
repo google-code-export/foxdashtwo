@@ -22,11 +22,11 @@ public class BaseSettingsScreen extends BaseFloatingFrame
 	{
 		super.onInitialize();
 		
-		//initialize screens
+		// initialize screens
 		base_audio.onInitialize();
 		base_input.onInitialize();
 		
-		//initialize everything else
+		// initialize everything else
 		input_button = new Button(R.string.input_button);
 		cancel_button = new Button(R.string.cancel);
 		audio_button = new Button(R.string.audio_button);

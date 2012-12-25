@@ -24,6 +24,16 @@ public class Sound extends AudioBase
 	    sound_pool_map = new SparseIntArray();
 	}
 	
+	public void setDesiredVolume(double input)
+	{
+		if (input < 0)
+			input = 0;
+		else if (input > 1)
+			input = 1;
+		
+		UserSettings.desired_sound_volume = input;
+	}
+	
 	//pass in the R value
 	public void addSound(int sound_id)
 	{
