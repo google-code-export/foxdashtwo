@@ -65,7 +65,7 @@ public class BaseInputSettingsScreen extends BaseFloatingFrame
 	public void onDraw()
 	{
 		main_popup.onDrawAmbient(Constants.my_ip_matrix, true);
-		Constants.text.drawText(R.string.audio, label_x, label_y, EnumDrawFrom.center);
+		Constants.text.drawText(R.string.input, label_x, label_y, EnumDrawFrom.center);
 		
 		Constants.text.drawText(R.string.current, input_label_x, input_label_y, EnumDrawFrom.bottom_right);
 		if (UserSettings.active_input_type == EnumInputType.halfhalf)

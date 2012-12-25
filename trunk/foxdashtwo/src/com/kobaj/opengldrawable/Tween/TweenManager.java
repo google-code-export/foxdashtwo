@@ -45,6 +45,7 @@ public class TweenManager
 		current_time = 0;
 	}
 	
+	// returns true when there are tween events still going on
 	public boolean onUpdate(double delta)
 	{
 		if (current_tween_index >= tween_events.size() - 1)
@@ -56,8 +57,10 @@ public class TweenManager
 		current_time += delta;
 		
 		// tween the position
-		if (next_event.event == EnumTweenEvent.move || next_event.event == EnumTweenEvent.move_color || next_event.event == EnumTweenEvent.move_color_rotate
-				|| next_event.event == EnumTweenEvent.move_rotate)
+		if (next_event.event == EnumTweenEvent.move || //
+				next_event.event == EnumTweenEvent.move_color || //
+				next_event.event == EnumTweenEvent.move_color_rotate || //
+				next_event.event == EnumTweenEvent.move_rotate) //
 		{
 			double x_pos = current_event.x_pos;
 			if (current_event.x_pos != next_event.x_pos)
@@ -69,8 +72,10 @@ public class TweenManager
 		}
 		
 		// tween the rotation
-		if (next_event.event == EnumTweenEvent.rotate || next_event.event == EnumTweenEvent.move_rotate || next_event.event == EnumTweenEvent.color_rotate
-				|| next_event.event == EnumTweenEvent.move_color_rotate)
+		if (next_event.event == EnumTweenEvent.rotate || //
+				next_event.event == EnumTweenEvent.move_rotate || //
+				next_event.event == EnumTweenEvent.color_rotate || //
+				next_event.event == EnumTweenEvent.move_color_rotate) //
 			if (current_event.degree != next_event.degree)
 			{
 				double degree = Functions.linearInterpolate(0, max_time, current_time, current_event.degree, next_event.degree);
@@ -78,8 +83,10 @@ public class TweenManager
 			}
 		
 		// tween the color
-		if (next_event.event == EnumTweenEvent.color || next_event.event == EnumTweenEvent.color_rotate || next_event.event == EnumTweenEvent.move_color
-				|| next_event.event == EnumTweenEvent.move_color_rotate)
+		if (next_event.event == EnumTweenEvent.color || //
+				next_event.event == EnumTweenEvent.color_rotate || //
+				next_event.event == EnumTweenEvent.move_color || //
+				next_event.event == EnumTweenEvent.move_color_rotate) //
 			if (current_event.color != next_event.color)
 			{
 				int color = Functions.linearInterpolateColor(0, max_time, current_time, current_event.color, next_event.color);

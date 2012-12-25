@@ -41,7 +41,7 @@ public class BaseAudioSettingsScreen extends BaseFloatingFrame
 		
 		double shift_y = Functions.screenHeightToShaderHeight(32);
 		double move_y = Functions.screenHeightToShaderHeight(5);
-
+		
 		music_label_y = 2 * shift_y + move_y;
 		sound_label_y = -shift_y + move_y;
 		
@@ -72,10 +72,10 @@ public class BaseAudioSettingsScreen extends BaseFloatingFrame
 			Constants.music_player.setDesiredVolume(UserSettings.desired_music_volume + .1);
 		else if (volume_down_button.isReleased())
 			Constants.music_player.setDesiredVolume(UserSettings.desired_music_volume - .1);
-		else if(sound_volume_up_button.isReleased())
-			UserSettings.desired_sound_volume += .1;
-		else if(sound_volume_down_button.isReleased())
-			UserSettings.desired_sound_volume -= .1;
+		else if (sound_volume_up_button.isReleased())
+			Constants.sound.setDesiredVolume(UserSettings.desired_sound_volume + .1);
+		else if (sound_volume_down_button.isReleased()) 
+			Constants.sound.setDesiredVolume(UserSettings.desired_sound_volume - .1);
 		else if (cancel_button.isReleased())
 			return false;
 		

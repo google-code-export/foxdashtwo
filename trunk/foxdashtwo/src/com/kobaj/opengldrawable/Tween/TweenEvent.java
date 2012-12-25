@@ -20,7 +20,7 @@ public class TweenEvent
 	
 	public TweenEvent(EnumTweenEvent event, double x_pos, double y_pos, int color)
 	{
-		this(event, x_pos, y_pos, 0, color);
+		this(event, x_pos, y_pos, color, 0);
 	}
 	
 	// these are in screen coodinates
@@ -29,7 +29,7 @@ public class TweenEvent
 		this.event = event;
 		this.x_pos = x_pos;
 		this.y_pos = y_pos;
-		this.degree = degree;
 		this.color = color;
+		this.degree = degree;
 	}
 }
