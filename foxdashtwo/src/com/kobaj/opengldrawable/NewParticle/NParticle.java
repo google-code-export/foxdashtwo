@@ -1,10 +1,7 @@
 package com.kobaj.opengldrawable.NewParticle;
 
-import android.graphics.Color;
-
 import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.Quad.Quad;
-import com.kobaj.opengldrawable.Quad.QuadColorShape;
 
 public class NParticle
 {
@@ -18,6 +15,10 @@ public class NParticle
 	public Quad quad_reference;
 	public boolean is_dead = false;
 	
+	public int red_reference =  255;
+	public int green_reference =  255;
+	public int blue_reference = 255;
+	
 	public NParticle(boolean vary_scale, int fade_in_time, int fade_out_time, int life_time)
 	{
 		this.fade_in_time = fade_in_time;
@@ -27,10 +28,7 @@ public class NParticle
 	}
 	
 	public void onInitialize()
-	{
-		//this will be changed in the future to compressed user chosen quads
-		this.quad_reference = new QuadColorShape(8, 0x99000099, true, 0);
-		
+	{		
 		if(vary_scale)
 			quad_reference.setScale(Functions.randomDouble(0.3, 1.0));
 	}
@@ -48,18 +46,18 @@ public class NParticle
 			current_time += delta;
 			
 			//white
-			quad_reference.color = Color.WHITE;
+			//quad_reference.color = Functions.makeColor(red_reference, green_reference, blue_reference, 255);
 			
 			//fade in
 			if(current_time <= fade_in_time)
-				quad_reference.color = Functions.makeColor(255,255,255,(int) Functions.linearInterpolate(0, fade_in_time, current_time, 0, 255));
+				quad_reference.color = Functions.makeColor(red_reference, green_reference, blue_reference, (int) Functions.linearInterpolate(0, fade_in_time, current_time, 0, 255));
 			
 			//fade out
 			int fade_time = life_time - fade_out_time;
 			if(current_time > fade_time)
 			{
 				int amount_fade = current_time - fade_time;
-				quad_reference.color = Functions.makeColor(255,255,255,(int) Functions.linearInterpolate(0, fade_out_time, amount_fade, 255, 0));
+				quad_reference.color = Functions.makeColor(red_reference, green_reference, blue_reference, (int) Functions.linearInterpolate(0, fade_out_time, amount_fade, 255, 0));
 			}
 		}
 		

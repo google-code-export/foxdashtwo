@@ -142,7 +142,7 @@ public class Functions
 	// random between two values
 	public static final double randomDouble(double min, double max)
 	{
-		if(min == max)
+		if (min == max)
 			return max;
 		
 		return min + (Math.random() * (max - min));
@@ -150,7 +150,7 @@ public class Functions
 	
 	public static final int randomInt(int min, int max)
 	{
-		if(min == max)
+		if (min == max)
 			return max;
 		
 		return (int) randomDouble(min, max);
@@ -333,6 +333,20 @@ public class Functions
 	public static final double speed(double x_velocity, double y_velocity)
 	{
 		return Math.sqrt(x_velocity * x_velocity + y_velocity * y_velocity);
+	}
+	
+	// distance from two points
+	public static final double distance(double x1, double y1, double x2, double y2)
+	{
+		double intermediate_x = x1 - x2;
+		double intermediate_y = y1 - y2;
+		return (intermediate_x * intermediate_x) + (intermediate_y * intermediate_y);
+	}
+	
+	// distance squared
+	public static final double distanceSquared(double x1, double y1, double x2, double y2)
+	{
+		return Math.sqrt(distance(x1, y1, x2, y2));
 	}
 	
 	// color selection functions

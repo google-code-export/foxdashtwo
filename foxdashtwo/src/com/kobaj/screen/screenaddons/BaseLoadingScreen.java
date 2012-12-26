@@ -33,9 +33,9 @@ public class BaseLoadingScreen
 	
 	public void onDrawLoading(double delta)
 	{
-		total_delta += (Math.PI / 8) * delta / 250;
+		total_delta += (Math.PI / 8.0) * delta / 250.0;
 		
-		if (total_delta >= Math.PI * 4)
+		if (total_delta >= Math.PI * 4.0)
 			total_delta = 0;
 		
 		for (int i = 0; i < Constants.loading_max_shapes; i++)
@@ -44,16 +44,16 @@ public class BaseLoadingScreen
 			setPosition(my_shapes[i], i);
 			
 			// draw them all
-			my_shapes[i].onDrawAmbient();
+			my_shapes[i].onDrawAmbient(Constants.my_ip_matrix, true);
 		}
 		
 		// draw some text
 		Constants.text.drawText(R.string.loading, 0, 0, EnumDrawFrom.center);
 	}
 	
-	private void setPosition(QuadColorShape my_quad, int ith_pos)
+	private void setPosition(QuadColorShape my_quad, double ith_pos)
 	{
-		double local_total_delta = total_delta - loading_delta_shift * (double) ith_pos;
+		double local_total_delta = total_delta - loading_delta_shift * ith_pos;
 		
 		// calculate r
 		// double r = Math.cos(local_total_delta) * Math.sin(local_total_delta); //4 leaf clover
