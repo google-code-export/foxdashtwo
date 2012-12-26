@@ -66,8 +66,6 @@ public class SinglePlayerScreen extends BaseScreen
 		// control input and other addons
 		my_modifier.onInitialize();
 		
-		// debug_addon = new BaseDebugScreen(test_level, EnumDebugType.aabb);
-		
 		pause_addon = new BasePauseScreen();
 		pause_addon.onInitialize();
 		
@@ -87,7 +85,7 @@ public class SinglePlayerScreen extends BaseScreen
 		
 		GLBitmapReader.isLoaded();
 		
-		debug_addon = new LevelDebugScreen(the_level, EnumDebugType.original_aabb);
+		//debug_addon = new LevelDebugScreen(the_level, EnumDebugType.original_aabb);
 		
 		System.gc();
 	}

@@ -64,7 +64,7 @@ public class Level
 	
 	// and our local particles
 	private ArrayList<NParticleEmitter> local_np_emitter = new ArrayList<NParticleEmitter>();
-	
+
 	// no constructor
 	
 	public void onInitialize()
@@ -166,12 +166,23 @@ public class Level
 		player.quad_object.setZPos(player.quad_object.z_pos - (5 /* player.z_plane */* Constants.z_modifier));
 		player.quad_object.setXYPos(x_player, y_player, player.draw_from);
 		
-		// set widths and heights for the camera
+		// set widths and heights for the camera 
 		left_shader_limit = (Functions.screenXToShaderX(left_limit) + Constants.ratio);
 		right_shader_limit = (Functions.screenXToShaderX(right_limit) - Constants.ratio);
 		
 		top_shader_limit = Functions.screenYToShaderY(top_limit) - Constants.shader_height / 2.0;
 		bottom_shader_limit = Functions.screenYToShaderY(bottom_limit) + Constants.shader_height / 2.0;
+		
+		// snow
+		
+		RectF shader_limits_for_snow_test = new RectF((float) Functions.screenXToShaderX(left_limit),//
+				(float) Functions.screenYToShaderY(top_limit),//
+				(float) Functions.screenXToShaderX(right_limit),//
+				(float) Functions.screenYToShaderY(bottom_limit));//
+		NParticleEmitter test = NParticleManager.makeEmitter(EnumParticleType.snow, shader_limits_for_snow_test);
+		test.onInitialize();
+		test.preUpdate();
+		local_np_emitter.add(test);
 	}
 	
 	public void onUnInitialize()

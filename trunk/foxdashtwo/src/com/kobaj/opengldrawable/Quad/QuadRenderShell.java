@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import android.graphics.Color;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
+import android.util.Log;
 
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
@@ -188,10 +189,13 @@ public final class QuadRenderShell
 	// not that you pass in all possible quads.
 	// also they are all on the same z layer.
 	// so like...particles.
-	public static final <T extends BaseLightShader> void onDrawQuad(final float[] my_vp_matrix, final boolean skip_draw_check, final T shader, final ArrayList<Quad> quads)
+	@SuppressWarnings("unchecked")
+	public static final <T extends BaseLightShader> void onDrawQuad(final float[] my_vp_matrix, final boolean skip_draw_check, final T shader, ArrayList<Quad> quads)
 	{
 		if (quads.size() <= 0)
 			return;
+		
+		quads = (ArrayList<Quad>) quads.clone();
 		
 		//generate some verts
 		generateVerts();
@@ -199,12 +203,36 @@ public final class QuadRenderShell
 		// first set our program
 		onSetupProgram(shader);
 		
+		// be sure to draw all of our objects texture handles
+		for(int i = quads.size() - 1; i >= 0; i--)
+		{
+			Quad uncompressed = quads.get(i);
+			boolean removed = false;
+			
+			//see if regular texture is on device yet
+			if (!quads.get(i).setTextureDataHandle())
+			{
+				quads.remove(i);
+				removed = true;
+			}
+			
+			//see if compressed texture is on device
+			if(QuadCompressed.class.isAssignableFrom(uncompressed.getClass()))
+			{
+				QuadCompressed reference = QuadCompressed.class.cast(uncompressed);
+				if (!reference.setAlphaDataHandle() && !removed)
+				{
+					quads.remove(i);
+					removed = true;
+				}
+			}
+		}
+		
+		if (quads.size() <= 0)
+			return;
+		
 		// then begin passing quads to gpu
 		Quad zero = quads.get(0);
-		
-		// if we have a handle, draw.
-		if (!zero.setTextureDataHandle())
-			return;
 		
 		onSetupTexture(zero.my_texture_data_handle, zero.my_tex_coord, shader);
 		onSetupPosition(shader);
@@ -212,10 +240,11 @@ public final class QuadRenderShell
 		if (QuadCompressed.class.isAssignableFrom(zero.getClass()))
 		{
 			QuadCompressed zero_compressed = QuadCompressed.class.cast(zero);
-			onSetupAlpha(zero_compressed.my_alpha_data_handle, (CompressedLightShader) shader);
 			
-			if(!zero_compressed.setAlphaDataHandle())
-				return;
+			if(CompressedLightShader.class.isAssignableFrom(shader.getClass()))
+				onSetupAlpha(zero_compressed.my_alpha_data_handle, (CompressedLightShader) shader);
+			else
+				Log.e("Compressed Shader Error", "Attempted to draw a compressed object with a non compressed shader.");
 		}
 
 		for (int i = quads.size() - 1; i >= 0; i--)

@@ -3,11 +3,14 @@ package com.kobaj.opengldrawable.NewParticle;
 import java.util.ArrayList;
 import java.util.Stack;
 
+import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 import com.kobaj.math.android.RectF;
 import com.kobaj.opengldrawable.EnumDrawFrom;
 import com.kobaj.opengldrawable.Quad.Quad;
+import com.kobaj.opengldrawable.Quad.QuadColorShape;
+import com.kobaj.opengldrawable.Quad.QuadCompressed;
 import com.kobaj.opengldrawable.Quad.QuadRenderShell;
 
 public class NParticleEmitter
@@ -60,6 +63,14 @@ public class NParticleEmitter
 	private double next_particle_spawn;
 	private boolean update_quads = false;
 	
+	// and the unchangeable type
+	private EnumParticleType particle_type;
+	
+	public NParticleEmitter(EnumParticleType type)
+	{
+		this.particle_type = type;
+	}
+	
 	public void preUpdate()
 	{
 		for (int i = 0; i < 100; i++)
@@ -72,7 +83,7 @@ public class NParticleEmitter
 		used_pool.clear();
 		
 		// time till next particle = number_of_particles_shown / start_lifetime;
-		if(custom_spawn_time == -1)
+		if (custom_spawn_time == -1)
 			next_particle_spawn = (double) start_lifetime / (double) number_of_particles_shown;
 		else
 			next_particle_spawn = custom_spawn_time;
@@ -82,6 +93,13 @@ public class NParticleEmitter
 		for (int i = number_of_particles_shown + 1; i >= 0; i--)
 		{
 			NParticle temp = new NParticle(vary_scale, fade_in, fade_out, start_lifetime);
+			
+			// define the quad reference for each particle
+			if (particle_type == EnumParticleType.floating_dust)
+				temp.quad_reference = new QuadColorShape(8, 0x99000099, true, 0);
+			else if(particle_type == EnumParticleType.snow)
+				temp.quad_reference = new QuadCompressed(R.raw.black_alpha, R.raw.black_alpha, 8, 8);
+			
 			temp.onInitialize();
 			unused_pool.push(temp);
 		}
@@ -91,7 +109,7 @@ public class NParticleEmitter
 	{
 		for (int i = used_pool.size() - 1; i >= 0; i--)
 			used_pool.get(i).quad_reference.onUnInitialize();
-
+		
 		for (int i = unused_pool.size() - 1; i >= 0; i--)
 			unused_pool.get(i).quad_reference.onUnInitialize();
 	}
@@ -105,38 +123,7 @@ public class NParticleEmitter
 			current_time += delta;
 			if (current_time > next_particle_spawn)
 			{
-				// see if unused is empty,
-				if (!unused_pool.isEmpty())
-				{
-					// if so, move a particle to the used pool
-					NParticle reference = unused_pool.pop();
-					reference.reset();
-					
-					// random position
-					double x_pos = Functions.randomDouble(emit_location.left, emit_location.right);
-					double y_pos = Functions.randomDouble(emit_location.bottom, emit_location.top);
-					reference.quad_reference.setXYPos(x_pos, y_pos, EnumDrawFrom.center);
-					
-					// random velocity calculated based on direction.
-					double degree = Functions.randomDouble(direction_start, direction_end);
-					double velocity = start_velocity;
-					if (vary_velocity)
-						velocity = Functions.randomDouble(start_velocity / 2.0, start_velocity);
-					
-					double x_vel = velocity * Math.cos(Math.toRadians(degree));
-					double y_vel = velocity * Math.sin(Math.toRadians(degree));
-					
-					reference.quad_reference.x_vel = x_vel;
-					reference.quad_reference.y_vel = y_vel;
-					
-					used_pool.add(reference);
-					update_quads = true;
-				}
-				
-				// remaining calculations
-				if (number_of_particles > 0)
-					number_of_particles--;
-				
+				emittParticle();
 				current_time = 0;
 			}
 		}
@@ -156,6 +143,11 @@ public class NParticleEmitter
 			// we update the particle's position
 			Constants.physics.integratePhysics(delta, reference.quad_reference);
 			
+			// if its snow check and see if it has traveled outside of the spawn area
+			if (particle_type == EnumParticleType.snow)
+				if (!Functions.inRectF(emit_location, reference.quad_reference.x_pos, reference.quad_reference.y_pos))
+					reference.is_dead = true;
+			
 			if (reference.is_dead)
 			{
 				used_pool.remove(i);
@@ -163,6 +155,47 @@ public class NParticleEmitter
 				update_quads = true;
 			}
 		}
+	}
+	
+	public void emittParticle()
+	{
+		// see if unused is empty,
+		if (!unused_pool.isEmpty())
+		{
+			// if so, move a particle to the used pool
+			NParticle reference = unused_pool.pop();
+			reference.reset();
+			
+			// random position
+			double x_pos = Functions.randomDouble(emit_location.left, emit_location.right);
+			
+			double y_pos = 0;
+			if (particle_type == EnumParticleType.snow) // different start location because its snow
+				y_pos = emit_location.top;
+			else
+				y_pos = Functions.randomDouble(emit_location.bottom, emit_location.top);
+			
+			reference.quad_reference.setXYPos(x_pos, y_pos, EnumDrawFrom.center);
+			
+			// random velocity calculated based on direction.
+			double degree = Functions.randomDouble(direction_start, direction_end);
+			double velocity = start_velocity;
+			if (vary_velocity)
+				velocity = Functions.randomDouble(start_velocity / 2.0, start_velocity);
+			
+			double x_vel = velocity * Math.cos(Math.toRadians(degree));
+			double y_vel = velocity * Math.sin(Math.toRadians(degree));
+			
+			reference.quad_reference.x_vel = x_vel;
+			reference.quad_reference.y_vel = y_vel;
+			
+			used_pool.add(reference);
+			update_quads = true;
+		}
+		
+		// remaining calculations
+		if (number_of_particles > 0)
+			number_of_particles--;
 	}
 	
 	public void onDraw()
@@ -177,7 +210,13 @@ public class NParticleEmitter
 		}
 		
 		// INSTANCE THAT HECK YEAH
-		QuadRenderShell.onDrawQuad(Constants.my_vp_matrix, false, Constants.ambient_light, used_quads);
+		if (used_quads.size() > 0)
+		{
+			if (QuadCompressed.class.isAssignableFrom(used_quads.get(0).getClass()))
+				QuadRenderShell.onDrawQuad(Constants.my_vp_matrix, false, Constants.compressed_light, used_quads);
+			else
+				QuadRenderShell.onDrawQuad(Constants.my_vp_matrix, false, Constants.ambient_light, used_quads);
+		}
 	}
 	
 	// puts all particles in the unused pool,
