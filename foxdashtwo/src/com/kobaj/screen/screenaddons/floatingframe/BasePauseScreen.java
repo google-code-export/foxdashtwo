@@ -31,7 +31,7 @@ public class BasePauseScreen extends BaseFloatingFrame
 		base_settings.onInitialize();
 		base_quit.onInitialize();
 		
-		cancel_button = new Button(R.string.cancel);
+		cancel_button = new Button(R.string.back);
 		quit_button = new Button(R.string.quit);
 		settings_button = new Button(R.string.settings_button);
 		title_button = new Button(R.string.title_screen);

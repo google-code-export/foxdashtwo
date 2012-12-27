@@ -5,7 +5,7 @@ import com.kobaj.opengldrawable.Quad.Quad;
 
 public class NParticle
 {
-	private final int life_time;
+	private int life_time;
 	private final int fade_out_time;
 	private final int fade_in_time;
 	private final boolean vary_scale;
@@ -63,5 +63,11 @@ public class NParticle
 		
 		if(current_time > life_time)
 			is_dead = true;
+	}
+	
+	//this will make the particle fade out to its death
+	public void kill()
+	{
+		life_time = current_time + fade_out_time;
 	}
 }

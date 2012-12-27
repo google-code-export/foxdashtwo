@@ -94,9 +94,6 @@ public class GameActivity extends FragmentActivity implements com.kobaj.networki
 		// shut down the music
 		Constants.music_player.stop();
 		
-		// save user settings
-		FileHandler.writeSerialFile(new UserSettings(), "user_settings");
-		
 		// save any prefs
 		ed.commit();
 		
@@ -108,10 +105,6 @@ public class GameActivity extends FragmentActivity implements com.kobaj.networki
 	{
 		super.onResume();
 		wl.acquire();
-		
-		// load user settings
-		@SuppressWarnings("unused")
-		UserSettings temp = FileHandler.readSerialFile("user_settings", UserSettings.class);
 		
 		mGLView.onResume();
 	}

@@ -9,6 +9,7 @@ import org.simpleframework.xml.ElementList;
 import android.graphics.Color;
 
 import com.kobaj.foxdashtwo.R;
+import com.kobaj.foxdashtwo.SinglePlayerSave;
 import com.kobaj.level.LevelEventTypes.EnumLevelEvent;
 import com.kobaj.level.LevelEventTypes.LevelEventTransportPlayer;
 import com.kobaj.level.LevelTypeLight.LevelAmbientLight;
@@ -20,10 +21,12 @@ import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 import com.kobaj.math.android.RectF;
 import com.kobaj.opengldrawable.EnumDrawFrom;
+import com.kobaj.opengldrawable.EnumGlobalAnimationList;
 import com.kobaj.opengldrawable.NewParticle.EnumParticleType;
 import com.kobaj.opengldrawable.NewParticle.NParticleEmitter;
 import com.kobaj.opengldrawable.NewParticle.NParticleManager;
 import com.kobaj.opengldrawable.Quad.Quad;
+import com.kobaj.opengldrawable.Quad.QuadAnimated;
 import com.kobaj.opengldrawable.Quad.QuadCompressed;
 
 public class Level
@@ -64,7 +67,7 @@ public class Level
 	
 	// and our local particles
 	private ArrayList<NParticleEmitter> local_np_emitter = new ArrayList<NParticleEmitter>();
-
+	
 	// no constructor
 	
 	public void onInitialize()
@@ -162,11 +165,17 @@ public class Level
 		}
 		
 		// setup player
-		player.quad_object = new com.kobaj.opengldrawable.Quad.QuadColorShape(0, 64, 64, 0, Color.GRAY, 0);
+		player.quad_object = new QuadAnimated(R.raw.fox, R.raw.fox_alpha, R.raw.fox_animation_list, 350, 180, 1024, 1024);
 		player.quad_object.setZPos(player.quad_object.z_pos - (5 /* player.z_plane */* Constants.z_modifier));
-		player.quad_object.setXYPos(x_player, y_player, player.draw_from);
 		
-		// set widths and heights for the camera 
+		if(SinglePlayerSave.last_checkpoint == null)
+			player.quad_object.setXYPos(x_player, y_player, player.draw_from);
+		else
+		{
+			// TODO implement checkpoints
+		}
+		
+		// set widths and heights for the camera
 		left_shader_limit = (Functions.screenXToShaderX(left_limit) + Constants.ratio);
 		right_shader_limit = (Functions.screenXToShaderX(right_limit) - Constants.ratio);
 		
@@ -174,15 +183,11 @@ public class Level
 		bottom_shader_limit = Functions.screenYToShaderY(bottom_limit) + Constants.shader_height / 2.0;
 		
 		// snow
-		
-		RectF shader_limits_for_snow_test = new RectF((float) Functions.screenXToShaderX(left_limit),//
-				(float) Functions.screenYToShaderY(top_limit),//
-				(float) Functions.screenXToShaderX(right_limit),//
-				(float) Functions.screenYToShaderY(bottom_limit));//
-		NParticleEmitter test = NParticleManager.makeEmitter(EnumParticleType.snow, shader_limits_for_snow_test);
-		test.onInitialize();
-		test.preUpdate();
-		local_np_emitter.add(test);
+		/*
+		 * RectF shader_limits_for_snow_test = new RectF((float) Functions.screenXToShaderX(left_limit),// (float) Functions.screenYToShaderY(top_limit),// (float)
+		 * Functions.screenXToShaderX(right_limit),// (float) Functions.screenYToShaderY(bottom_limit));// NParticleEmitter test = NParticleManager.makeEmitter(EnumParticleType.snow,
+		 * shader_limits_for_snow_test); test.onInitialize(); test.preUpdate(); local_np_emitter.add(test);
+		 */
 	}
 	
 	public void onUnInitialize()
@@ -220,6 +225,29 @@ public class Level
 		
 		for (int i = local_np_emitter.size() - 1; i >= 0; i--)
 			local_np_emitter.get(i).onUpdate(delta);
+		
+		if (QuadAnimated.class.isAssignableFrom(player.quad_object.getClass()))
+		{
+			QuadAnimated reference = QuadAnimated.class.cast(player.quad_object);
+			
+			double current_x_speed = Math.abs(player.quad_object.x_vel);
+			
+			// currently playing animation
+			if (current_x_speed < Constants.player_movement_threshold)
+				reference.setAnimation(EnumGlobalAnimationList.stop);
+			else
+			{
+				reference.setAnimation(EnumGlobalAnimationList.running);
+				
+				// current direction
+				if (player.quad_object.x_vel > 0)
+					reference.reverse_left_right = true;
+				else
+					reference.reverse_left_right = false;
+			}
+			
+			reference.onUpdate(delta);
+		}
 	}
 	
 	public void onDrawObject()

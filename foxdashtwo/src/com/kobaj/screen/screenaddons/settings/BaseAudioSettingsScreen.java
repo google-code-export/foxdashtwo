@@ -27,7 +27,7 @@ public class BaseAudioSettingsScreen extends BaseFloatingFrame
 	{
 		super.onInitialize();
 		
-		cancel_button = new Button(R.string.cancel);
+		cancel_button = new Button(R.string.back);
 		volume_up_button = new Button(R.string.volume_up);
 		volume_down_button = new Button(R.string.volume_down);
 		sound_volume_up_button = new Button(R.string.volume_up);

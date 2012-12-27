@@ -146,7 +146,7 @@ public class NParticleEmitter
 			// if its snow check and see if it has traveled outside of the spawn area
 			if (particle_type == EnumParticleType.snow)
 				if (!Functions.inRectF(emit_location, reference.quad_reference.x_pos, reference.quad_reference.y_pos))
-					reference.is_dead = true;
+					reference.kill();
 			
 			if (reference.is_dead)
 			{

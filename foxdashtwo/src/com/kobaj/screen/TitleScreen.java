@@ -4,6 +4,7 @@ import android.graphics.Color;
 
 import com.kobaj.foxdashtwo.GameActivity;
 import com.kobaj.foxdashtwo.R;
+import com.kobaj.foxdashtwo.SinglePlayerSave;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.Button;
@@ -43,6 +44,7 @@ public class TitleScreen extends BaseScreen
 	@Override
 	public void onLoad()
 	{
+		// availible buttons
 		double x_offset = -.3;
 		
 		play_button = new Button(R.string.play);
@@ -80,12 +82,14 @@ public class TitleScreen extends BaseScreen
 				400,//
 				new TweenEvent(EnumTweenEvent.rotate, .2 + x_offset, 2.0 * -quit_button.invisible_outline.shader_height, Color.WHITE, 35));//
 		
+		// and allow the user to set some settings
 		base_settings = new BaseSettingsScreen();
 		base_settings.onInitialize();
 		
 		base_quit = new BaseQuit();
 		base_quit.onInitialize();
 		
+		// if the last screen had a bug, alert the user on this screen
 		if (crashed)
 		{
 			base_error = new BaseError();
@@ -141,7 +145,11 @@ public class TitleScreen extends BaseScreen
 			
 			// and buttons
 			if (play_button.isReleased())
+			{
+				// erase the last checkpoint since we are 'starting new';
+				SinglePlayerSave.last_checkpoint = null;
 				fade_play = true;
+			}
 			else if (quit_button.isReleased())
 				ready_to_quit = true;
 			else if (settings_button.isReleased())
