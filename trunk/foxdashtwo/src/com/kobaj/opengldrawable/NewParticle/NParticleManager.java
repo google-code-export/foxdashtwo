@@ -33,12 +33,12 @@ public class NParticleManager
 		{
 			emitter.direction_start = 225;
 			emitter.direction_end = 315;
-			emitter.fade_in = emitter.fade_out = 0;
+			emitter.fade_in = emitter.fade_out = 250;
 			emitter.is_affected_by_gravity = false;
 			emitter.number_of_particles = -1;
 			
 			//this number gives a medium density of snow per screen. based on the snow spawn area
-			double density = (spawn.top - spawn.bottom) * (spawn.right - spawn.left) * 10;
+			double density = (spawn.top - spawn.bottom) * (spawn.right - spawn.left) * 5;
 			emitter.number_of_particles_shown = (int) density;
 			emitter.start_lifetime = 999999;
 			emitter.start_velocity = Functions.screenHeightToShaderHeight(.08);

@@ -28,7 +28,7 @@ public class BaseSettingsScreen extends BaseFloatingFrame
 		
 		// initialize everything else
 		input_button = new Button(R.string.input_button);
-		cancel_button = new Button(R.string.cancel);
+		cancel_button = new Button(R.string.back);
 		audio_button = new Button(R.string.audio_button);
 		
 		input_button.onInitialize();

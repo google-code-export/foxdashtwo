@@ -41,6 +41,7 @@
     <string name="quit">Quit</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="back">Back</string>
     <string name="volume_up">Volume Up</string>
     <string name="volume_down">Volume Down</string>
     <string name="play">Play</string>
@@ -78,6 +79,7 @@
         <item>quit</item>
         <item>ok</item>
         <item>cancel</item>
+        <item>back</item>
         <item>volume_up</item>
         <item>volume_down</item>
         <item>play</item>

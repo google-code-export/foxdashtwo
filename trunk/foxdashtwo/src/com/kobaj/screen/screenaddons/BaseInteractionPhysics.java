@@ -20,6 +20,7 @@ public class BaseInteractionPhysics
 		
 		Constants.physics.integratePhysics(delta, the_level.player.quad_object);
 		
+		//integrate all other objects
 		for (int i = the_level.object_list.size() - 1; i >= 0; i--)
 		{
 			LevelObject reference = the_level.object_list.get(i);

@@ -31,6 +31,7 @@ public abstract class BaseScreen implements Runnable
 	{
 		current_state = EnumScreenState.unload;
 		
+		// unload everything
 		black_overlay.onUnInitialize();
 		onUnload();
 		
@@ -39,9 +40,7 @@ public abstract class BaseScreen implements Runnable
 	
 	public void run()
 	{
-		// black_overlay = new QuadColorShape(1,1,Color.BLACK, 0); //if you want to use quadcolorshapes instead of compressed
-		// black_overlay.setWidthHeight(Constants.width, Constants.height);
-		
+		// nice overlay for fade in and out
 		black_overlay = new QuadCompressed(R.raw.black_alpha, R.raw.black_alpha, Constants.width, Constants.height);
 		black_overlay.setXYPos(0, 0, EnumDrawFrom.center);
 		black_overlay.color = Color.BLACK;
@@ -54,6 +53,7 @@ public abstract class BaseScreen implements Runnable
 				fade_delay, //
 				new TweenEvent(EnumTweenEvent.color, 0, 0, Color.BLACK));
 		
+		// load everything else.
 		onLoad();
 		current_state = EnumScreenState.running;
 	}

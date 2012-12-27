@@ -23,7 +23,7 @@ public class BaseInputSettingsScreen extends BaseFloatingFrame
 	{
 		super.onInitialize();
 		
-		cancel_button = new Button(R.string.cancel);
+		cancel_button = new Button(R.string.back);
 		input_half_half_button = new Button(R.string.halfhalf);
 		input_nintendo_button = new Button(R.string.controller);
 		

@@ -49,28 +49,28 @@ public class Constants
 	
 	// physics constants
 	public static final double gravity_default = 0.000800;
-	public static final double max_y_velocity_default = 2.5;
-	public static final double max_x_velocity_default = 2.5;
+	public static final double max_y_velocity_default = 1.0;
+	public static final double max_x_velocity_default = 1.0;
 	public static final double normal_acceleration_default = 0.00050;
 	public static final double normal_reverse_acceleration_default = 0.00600;
 	public static final double collision_detection_height_default = 1.0;
 	public static final double jump_velocity_default = 0.800;
 	public static final double jump_limiter_default = 0.185;
 	public static final double player_downward_platform_acc_default = -.001;
-	public static final double player_particle_threshold_default = .0001;
+	public static final double player_movement_threshold_default = .0001;
 	
 	// physics variables
 	public static double gravity;
-	public static double max_y_velocity;
+	public static double max_y_velocity; //of all objects
 	public static double max_x_velocity;
 	public static double normal_acceleration;
 	public static double normal_reverse_acceleration;
 	public static double collision_detection_height;
 	public static double jump_velocity;
 	public static double jump_limiter;
-	public static double max_speed;
-	public static double player_downward_platform_acc;
-	public static double player_particle_threshold;
+	public static double max_speed; //this is of all objects
+	public static double player_downward_platform_acc; //player specific
+	public static double player_movement_threshold;
 	
 	// same regardless of screen.
 	public static final double normal_air_damping = .90;

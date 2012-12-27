@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.kobaj.foxdashtwo.GameActivity;
 import com.kobaj.foxdashtwo.R;
+import com.kobaj.foxdashtwo.SinglePlayerSave;
 import com.kobaj.input.EnumKeyCodes;
 import com.kobaj.input.GameInputModifier;
 import com.kobaj.loader.FileHandler;
@@ -11,7 +12,6 @@ import com.kobaj.loader.GLBitmapReader;
 import com.kobaj.math.Constants;
 import com.kobaj.screen.screenaddons.BaseInteractionPhysics;
 import com.kobaj.screen.screenaddons.BaseLoadingScreen;
-import com.kobaj.screen.screenaddons.EnumDebugType;
 import com.kobaj.screen.screenaddons.LevelDebugScreen;
 import com.kobaj.screen.screenaddons.floatingframe.BasePauseScreen;
 
@@ -21,8 +21,9 @@ public class SinglePlayerScreen extends BaseScreen
 	private GameInputModifier my_modifier;
 	
 	// test level
-	public String level_string = null;
-	public int level_R = R.raw.test_level;
+	private String level_string = null;
+	private int level_R = R.raw.test_level;
+	public String level_name = null; // this is actually whatever value is needed to load this level again (through either R or string).
 	private com.kobaj.level.Level the_level;
 	
 	// addons
@@ -33,6 +34,18 @@ public class SinglePlayerScreen extends BaseScreen
 	
 	// wheather to fade and what to fade to.
 	public boolean fade_in = true;
+	
+	public void setLevel(int level_R, String level_name)
+	{
+		this.level_R = level_R;
+		this.level_name = level_name;
+	}
+	
+	public void setLevel(String level_name)
+	{
+		this.level_string = level_name;
+		this.level_name = level_name;
+	}
 	
 	public SinglePlayerScreen()
 	{
@@ -45,6 +58,9 @@ public class SinglePlayerScreen extends BaseScreen
 	@Override
 	public void onLoad()
 	{
+		// set the last level loaded
+		SinglePlayerSave.last_level = this.level_name;
+		
 		// load our addons. Do the loader first
 		loading_addon.onInitialize();
 		
@@ -85,7 +101,7 @@ public class SinglePlayerScreen extends BaseScreen
 		
 		GLBitmapReader.isLoaded();
 		
-		//debug_addon = new LevelDebugScreen(the_level, EnumDebugType.original_aabb);
+		// debug_addon = new LevelDebugScreen(the_level, EnumDebugType.original_aabb);
 		
 		System.gc();
 	}

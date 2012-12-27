@@ -639,6 +639,6 @@ public class Functions
 		Constants.max_speed = Functions.speed(Constants.max_x_velocity, Constants.max_y_velocity);
 		
 		Constants.player_downward_platform_acc = Functions.screenHeightToShaderHeight(Constants.player_downward_platform_acc_default);
-		Constants.player_particle_threshold = Functions.screenWidthToShaderWidth(Constants.player_particle_threshold_default);
+		Constants.player_movement_threshold = Functions.screenWidthToShaderWidth(Constants.player_movement_threshold_default);
 	}
 }
