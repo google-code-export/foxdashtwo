@@ -2,19 +2,19 @@ package com.kobaj.screen.screenaddons.floatingframe;
 
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Constants;
-import com.kobaj.opengldrawable.Button;
 import com.kobaj.opengldrawable.EnumDrawFrom;
+import com.kobaj.opengldrawable.Button.TextButton;
 
 public class BaseError extends BaseFloatingFrame
 {
-	Button ok_button;
+	TextButton ok_button;
 	
 	@Override
 	public void onInitialize()
 	{
 		super.onInitialize();
 		
-		ok_button = new Button(R.string.ok);
+		ok_button = new TextButton(R.string.ok);
 		ok_button.onInitialize();
 		
 		BaseFloatingFrame.alignButtonsAlongXAxis(cancel_shift_y, ok_button);

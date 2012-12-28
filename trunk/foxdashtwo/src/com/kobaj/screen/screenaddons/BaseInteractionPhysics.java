@@ -20,7 +20,7 @@ public class BaseInteractionPhysics
 		
 		Constants.physics.integratePhysics(delta, the_level.player.quad_object);
 		
-		//integrate all other objects
+		// integrate all other objects
 		for (int i = the_level.object_list.size() - 1; i >= 0; i--)
 		{
 			LevelObject reference = the_level.object_list.get(i);
@@ -30,10 +30,10 @@ public class BaseInteractionPhysics
 			collision.right = 0;
 			collision.bottom = 0;
 			
-			if(Constants.physics.checkCollision(collision, the_level.player.quad_object, reference.quad_object, 0))
+			if (Constants.physics.checkCollision(collision, the_level.player.quad_object, reference.quad_object, 0))
 				can_jump = true;
 			
-			if(collision.width() != 0 || collision.height() != 0)
+			if (collision.width() != 0 || collision.height() != 0)
 				the_level.objectInteraction(collision, the_level.player, reference);
 		}
 		
@@ -96,7 +96,7 @@ public class BaseInteractionPhysics
 				the_level.player.quad_object.y_vel = Constants.jump_limiter;
 	}
 	
-	private void setCameraXY(final Level test_level)
+	private void setCameraXYZ(final Level test_level)
 	{
 		// prepare camera
 		double x_camera = test_level.player.quad_object.x_pos;
@@ -116,20 +116,16 @@ public class BaseInteractionPhysics
 		else if (y_camera < test_level.bottom_shader_limit + Constants.z_shader_translation)
 			y_camera = test_level.bottom_shader_limit + Constants.z_shader_translation;
 		
-		// set camera
-		Functions.setCamera(x_camera, y_camera);
-	}
-	
-	private void setCameraZ(final Level test_level)
-	{
 		// update the camera zoom effect
-		double buffer = (float) Functions.linearInterpolate(
-				0, 
-				Constants.max_speed, 
-				Functions.speed(test_level.player.quad_object.x_vel, test_level.player.quad_object.y_vel),
-				Constants.min_zoom,
-				Constants.max_zoom);
-		Functions.setCameraZ(my_camera_average.calculateAverage(buffer));
+		double buffer = (float) Functions.linearInterpolate(//
+				0, //
+				Constants.max_speed, //
+				Functions.speed(test_level.player.quad_object.x_vel, test_level.player.quad_object.y_vel),//
+				Constants.min_zoom,//
+				Constants.max_zoom);//
+		
+		// set camera
+		Functions.setCamera(x_camera, y_camera, my_camera_average.calculateAverage(buffer));
 	}
 	
 	public void onUpdate(final double delta, final GameInputModifier my_modifier, final Level the_level)
@@ -144,7 +140,6 @@ public class BaseInteractionPhysics
 		addForce(is_touched, can_jump, my_modifier, the_level);
 		
 		// set camera positions
-		setCameraXY(the_level);
-		setCameraZ(the_level);
+		setCameraXYZ(the_level);
 	}
 }

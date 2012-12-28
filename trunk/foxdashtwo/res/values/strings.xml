@@ -33,7 +33,8 @@
     <string name="music">Music:</string>
     <string name="sound">Sound:</string>
     <string name="current">Current:</string>
-    <string name="error">Error</string>
+    <string name="error">Error:</string>
+    <string name="play_header">Play:</string>
     <string name="error_message">There was an error somewhere. Sorry.</string>
     <string name="alert_dialog_xml">Ineedtobedeletedlater</string>
 
@@ -51,6 +52,9 @@
     <string name="title_screen">Title Screen</string>
     <string name="controller">Controller</string>
     <string name="halfhalf">HalfHalf</string>
+    <string name="new_game">New Game</string>
+    <string name="continue_game">Continue</string>
+    <string name="download_maps">Download Maps</string>
 
     <!-- annoying, but you have to put your string name here too if you want to draw it in game -->
     <string-array name="my_sa">
@@ -89,6 +93,9 @@
         <item>title_screen</item>
         <item>controller</item>
         <item>halfhalf</item>
+        <item>new_game</item>
+        <item>continue_game</item>
+        <item>download_maps</item>
     </string-array>
     
     <string-array name="my_sa2">
@@ -97,6 +104,7 @@
         <item>audio</item>
         <item>input</item>
         <item>error</item>
+        <item>play_header</item>
     </string-array>
 
 </resources>

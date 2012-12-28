@@ -4,18 +4,18 @@ import com.kobaj.foxdashtwo.R;
 import com.kobaj.foxdashtwo.UserSettings;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
-import com.kobaj.opengldrawable.Button;
 import com.kobaj.opengldrawable.EnumDrawFrom;
+import com.kobaj.opengldrawable.Button.TextButton;
 import com.kobaj.screen.screenaddons.floatingframe.BaseFloatingFrame;
 
 public class BaseAudioSettingsScreen extends BaseFloatingFrame
 {
-	private Button cancel_button;
-	private Button volume_up_button;
-	private Button volume_down_button;
+	private TextButton cancel_button;
+	private TextButton volume_up_button;
+	private TextButton volume_down_button;
 	
-	private Button sound_volume_up_button;
-	private Button sound_volume_down_button;
+	private TextButton sound_volume_up_button;
+	private TextButton sound_volume_down_button;
 	
 	private double sound_label_x;
 	private double sound_label_y;
@@ -27,11 +27,11 @@ public class BaseAudioSettingsScreen extends BaseFloatingFrame
 	{
 		super.onInitialize();
 		
-		cancel_button = new Button(R.string.back);
-		volume_up_button = new Button(R.string.volume_up);
-		volume_down_button = new Button(R.string.volume_down);
-		sound_volume_up_button = new Button(R.string.volume_up);
-		sound_volume_down_button = new Button(R.string.volume_down);
+		cancel_button = new TextButton(R.string.back);
+		volume_up_button = new TextButton(R.string.volume_up);
+		volume_down_button = new TextButton(R.string.volume_down);
+		sound_volume_up_button = new TextButton(R.string.volume_up);
+		sound_volume_down_button = new TextButton(R.string.volume_down);
 		
 		cancel_button.onInitialize();
 		volume_up_button.onInitialize();
@@ -40,7 +40,7 @@ public class BaseAudioSettingsScreen extends BaseFloatingFrame
 		sound_volume_down_button.onInitialize();
 		
 		double shift_y = Functions.screenHeightToShaderHeight(32);
-		double move_y = Functions.screenHeightToShaderHeight(5);
+		double move_y = Functions.screenHeightToShaderHeight(5); // same value is in baseplaytype
 		
 		music_label_y = 2 * shift_y + move_y;
 		sound_label_y = -shift_y + move_y;
@@ -74,7 +74,7 @@ public class BaseAudioSettingsScreen extends BaseFloatingFrame
 			Constants.music_player.setDesiredVolume(UserSettings.desired_music_volume - .1);
 		else if (sound_volume_up_button.isReleased())
 			Constants.sound.setDesiredVolume(UserSettings.desired_sound_volume + .1);
-		else if (sound_volume_down_button.isReleased()) 
+		else if (sound_volume_down_button.isReleased())
 			Constants.sound.setDesiredVolume(UserSettings.desired_sound_volume - .1);
 		else if (cancel_button.isReleased())
 			return false;

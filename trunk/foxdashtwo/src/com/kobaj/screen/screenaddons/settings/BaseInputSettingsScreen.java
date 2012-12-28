@@ -5,15 +5,15 @@ import com.kobaj.foxdashtwo.UserSettings;
 import com.kobaj.input.InputType.EnumInputType;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
-import com.kobaj.opengldrawable.Button;
 import com.kobaj.opengldrawable.EnumDrawFrom;
+import com.kobaj.opengldrawable.Button.TextButton;
 import com.kobaj.screen.screenaddons.floatingframe.BaseFloatingFrame;
 
 public class BaseInputSettingsScreen extends BaseFloatingFrame
 {
-	private Button cancel_button;
-	private Button input_half_half_button;
-	private Button input_nintendo_button; // 'controller'
+	private TextButton cancel_button;
+	private TextButton input_half_half_button;
+	private TextButton input_nintendo_button; // 'controller'
 	
 	private double input_label_x;
 	private double input_label_y;
@@ -23,9 +23,9 @@ public class BaseInputSettingsScreen extends BaseFloatingFrame
 	{
 		super.onInitialize();
 		
-		cancel_button = new Button(R.string.back);
-		input_half_half_button = new Button(R.string.halfhalf);
-		input_nintendo_button = new Button(R.string.controller);
+		cancel_button = new TextButton(R.string.back);
+		input_half_half_button = new TextButton(R.string.halfhalf);
+		input_nintendo_button = new TextButton(R.string.controller);
 		
 		cancel_button.onInitialize();
 		input_half_half_button.onInitialize();

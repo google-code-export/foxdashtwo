@@ -9,6 +9,7 @@ import com.kobaj.level.LevelEventTypes.EnumLevelEvent;
 import com.kobaj.level.LevelEventTypes.LevelEventActive;
 import com.kobaj.level.LevelEventTypes.LevelEventArrows;
 import com.kobaj.level.LevelEventTypes.LevelEventBase;
+import com.kobaj.level.LevelEventTypes.LevelEventCheckPoint;
 import com.kobaj.level.LevelEventTypes.LevelEventNextLevel;
 import com.kobaj.level.LevelEventTypes.LevelEventTransportPlayer;
 import com.kobaj.level.LevelTypeLight.LevelAmbientLight;
@@ -61,11 +62,9 @@ public class LevelEvent
 				 this_event == EnumLevelEvent.active_toggle)
 			my_possible_event = new LevelEventActive(this_event);
 		else if(this_event == EnumLevelEvent.next_level)
-		{
-			LevelEventNextLevel temp = new LevelEventNextLevel(this_event);
-			temp.setNextLevel(id_strings.get(0));
-			my_possible_event = temp;
-		}
+			my_possible_event = new LevelEventNextLevel(this_event);
+		else if(this_event == EnumLevelEvent.checkpoint)
+			my_possible_event = new LevelEventCheckPoint(this_event);
 		
 		if (my_possible_event != null)
 			my_possible_event.onInitialize(player, objects, lights, id_strings);

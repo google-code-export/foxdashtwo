@@ -3,21 +3,21 @@ package com.kobaj.screen.screenaddons.floatingframe;
 import com.kobaj.foxdashtwo.GameActivity;
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Constants;
-import com.kobaj.opengldrawable.Button;
 import com.kobaj.opengldrawable.EnumDrawFrom;
+import com.kobaj.opengldrawable.Button.TextButton;
 
 public class BaseQuit extends BaseFloatingFrame
 {
-	private Button quit_button;
-	private Button cancel_button;
+	private TextButton quit_button;
+	private TextButton cancel_button;
 	
 	@Override
 	public void onInitialize()
 	{
 		super.onInitialize();
 		
-		cancel_button = new Button(R.string.cancel);
-		quit_button = new Button(R.string.quit);
+		cancel_button = new TextButton(R.string.cancel);
+		quit_button = new TextButton(R.string.quit);
 		
 		cancel_button.onInitialize();
 		quit_button.onInitialize();

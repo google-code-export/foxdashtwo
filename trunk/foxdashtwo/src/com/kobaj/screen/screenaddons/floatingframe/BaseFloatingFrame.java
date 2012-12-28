@@ -3,8 +3,8 @@ package com.kobaj.screen.screenaddons.floatingframe;
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
-import com.kobaj.opengldrawable.Button;
 import com.kobaj.opengldrawable.EnumDrawFrom;
+import com.kobaj.opengldrawable.Button.Button;
 import com.kobaj.opengldrawable.Quad.QuadCompressed;
 
 public abstract class BaseFloatingFrame
@@ -55,7 +55,7 @@ public abstract class BaseFloatingFrame
 		return alignButtonsAlongXAxis(y_pos, 0, buttons);
 	}
 	
-	public static Button[] alignButtonsAlongXAxis(double y_pos, int shift_x, Button... buttons)
+	public static <T extends Button> Button[] alignButtonsAlongXAxis(double y_pos, int shift_x, T... buttons)
 	{
 		final int padding = 10;
 		
