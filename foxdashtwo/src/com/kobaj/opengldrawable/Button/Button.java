@@ -1,14 +1,14 @@
-package com.kobaj.opengldrawable;
+package com.kobaj.opengldrawable.Button;
 
-import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.Quad.QuadCompressed;
 
-public class Button
+public abstract class Button
 {
-	private int label;
-	private int padding = 35;
+	private boolean current_touch;
+	private boolean old_touch;
+	
 	public QuadCompressed invisible_outline;
 	
 	public int width;
@@ -16,27 +16,12 @@ public class Button
 	
 	public boolean draw_background = true;
 	
-	// these are shader coordinates of the center of the button
-	public Button(int resource_label)
-	{
-		this.label = resource_label;
-		width = Constants.text.measureTextWidth(label) + padding;
-		height = /* Constants.text.measureTextHeight(label) */23 + padding;
-	}
-	
-	public void onInitialize()
-	{
-		// even if we dont draw this, we will need to instantiate it so we have something to check a bounding box with.
-		invisible_outline = new QuadCompressed(R.raw.black_alpha, R.raw.black_alpha, width, height);
-	}
+	public abstract void onInitialize();
 	
 	public void onUnInitialize()
 	{
 		invisible_outline.onUnInitialize();
 	}
-	
-	private boolean current_touch;
-	private boolean old_touch;
 	
 	public boolean isReleased()
 	{
@@ -50,7 +35,7 @@ public class Button
 		return returned_touch;
 	}
 	
-	private boolean isTouched()
+	protected boolean isTouched()
 	{
 		// get
 		double x = Functions.screenXToShaderX(Constants.input_manager.getX(0));
@@ -80,18 +65,5 @@ public class Button
 		return false;
 	}
 	
-	public void onDrawConstant()
-	{
-		if (draw_background)
-		{
-			int color = Constants.unpressed_color;
-			if (isTouched())
-				color = Constants.pressed_color;
-			
-			invisible_outline.color = color;
-			invisible_outline.onDrawAmbient(Constants.my_ip_matrix, true);
-		}
-		
-		Constants.text.drawText(label, invisible_outline.x_pos, invisible_outline.y_pos, EnumDrawFrom.center, invisible_outline.color, invisible_outline.degree);
-	}
+	public abstract void onDrawConstant();
 }

@@ -4,20 +4,22 @@ import android.graphics.Color;
 
 import com.kobaj.foxdashtwo.GameActivity;
 import com.kobaj.foxdashtwo.R;
-import com.kobaj.foxdashtwo.SinglePlayerSave;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
-import com.kobaj.opengldrawable.Button;
 import com.kobaj.opengldrawable.EnumDrawFrom;
+import com.kobaj.opengldrawable.Button.Button;
+import com.kobaj.opengldrawable.Button.TextButton;
 import com.kobaj.opengldrawable.Tween.EnumTweenEvent;
 import com.kobaj.opengldrawable.Tween.TweenEvent;
 import com.kobaj.opengldrawable.Tween.TweenManager;
 import com.kobaj.screen.screenaddons.floatingframe.BaseError;
+import com.kobaj.screen.screenaddons.floatingframe.BasePlayType;
 import com.kobaj.screen.screenaddons.floatingframe.BaseQuit;
 import com.kobaj.screen.screenaddons.settings.BaseSettingsScreen;
 
 public class TitleScreen extends BaseScreen
 {
+	private BasePlayType base_play;
 	private BaseSettingsScreen base_settings;
 	private BaseQuit base_quit;
 	private BaseError base_error;
@@ -33,13 +35,19 @@ public class TitleScreen extends BaseScreen
 	private boolean ready_to_quit = false;
 	private boolean settings_visible = false;
 	private boolean crash_visible = false;
+	private boolean play_visible = false;
 	
 	// display a popup only once when class is loaded
 	public boolean crashed = false;
 	
 	// wheather to fade and what to fade to.
 	public boolean fade_in = true;
-	public boolean fade_play = false;
+	public static boolean fade_play = false;
+	
+	public TitleScreen()
+	{
+		fade_play = false;
+	}
 	
 	@Override
 	public void onLoad()
@@ -47,7 +55,7 @@ public class TitleScreen extends BaseScreen
 		// availible buttons
 		double x_offset = -.3;
 		
-		play_button = new Button(R.string.play);
+		play_button = new TextButton(R.string.play);
 		play_button.draw_background = false;
 		play_button.onInitialize();
 		play_button.invisible_outline.setXYPos(x_offset, -Constants.shader_height - play_button.invisible_outline.shader_height, EnumDrawFrom.center);
@@ -58,7 +66,7 @@ public class TitleScreen extends BaseScreen
 				400,//
 				new TweenEvent(EnumTweenEvent.rotate, 0 + x_offset, 0, Color.WHITE, 35));//
 		
-		settings_button = new Button(R.string.settings_button);
+		settings_button = new TextButton(R.string.settings_button);
 		settings_button.draw_background = false;
 		settings_button.onInitialize();
 		settings_tween = new TweenManager(settings_button.invisible_outline,//
@@ -70,7 +78,7 @@ public class TitleScreen extends BaseScreen
 				400,//
 				new TweenEvent(EnumTweenEvent.rotate, .1 + x_offset, -settings_button.invisible_outline.shader_height, Color.WHITE, 35));//
 		
-		quit_button = new Button(R.string.quit);
+		quit_button = new TextButton(R.string.quit);
 		quit_button.draw_background = false;
 		quit_button.onInitialize();
 		quit_tween = new TweenManager(quit_button.invisible_outline,//
@@ -88,6 +96,10 @@ public class TitleScreen extends BaseScreen
 		
 		base_quit = new BaseQuit();
 		base_quit.onInitialize();
+		
+		// level selection and such
+		base_play = new BasePlayType();
+		base_play.onInitialize();
 		
 		// if the last screen had a bug, alert the user on this screen
 		if (crashed)
@@ -109,6 +121,7 @@ public class TitleScreen extends BaseScreen
 		play_button.onUnInitialize();
 		settings_button.onUnInitialize();
 		quit_button.onUnInitialize();
+		base_play.onUnInitialize();
 	}
 	
 	@Override
@@ -121,6 +134,8 @@ public class TitleScreen extends BaseScreen
 			ready_to_quit = base_quit.onUpdate(delta);
 		else if (crash_visible)
 			crash_visible = base_error.onUpdate(delta);
+		else if (play_visible)
+			play_visible = base_play.onUpdate(delta);
 		else
 		{
 			// and if nothing is visible, then just update like normal
@@ -146,9 +161,8 @@ public class TitleScreen extends BaseScreen
 			// and buttons
 			if (play_button.isReleased())
 			{
-				// erase the last checkpoint since we are 'starting new';
-				SinglePlayerSave.last_checkpoint = null;
-				fade_play = true;
+				base_play.reset();
+				play_visible = true;
 			}
 			else if (quit_button.isReleased())
 				ready_to_quit = true;
@@ -189,6 +203,8 @@ public class TitleScreen extends BaseScreen
 			base_quit.onDraw();
 		else if (crash_visible)
 			base_error.onDraw();
+		else if (play_visible)
+			base_play.onDraw();
 		else
 		{
 			double x_pos = Functions.screenXToShaderX(500);

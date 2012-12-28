@@ -301,31 +301,23 @@ public class Functions
 		return ++x;
 	}
 	
-	// just one simple place to update all the camera variables
-	// this is in shader coordinates
-	public static final void setCamera(double x_camera, double y_camera)
+	public static final void setCamera(double x_camera, double y_camera, double z_camera)
 	{
-		// nothing has changed
-		if (x_camera == Constants.x_shader_translation && y_camera == Constants.y_shader_translation)
+		final double arbitrary_z = .180;
+		
+		if(z_camera < 0)
+			z_camera = 0;
+		if(z_camera > arbitrary_z)
+			z_camera = arbitrary_z;
+		
+		if (x_camera == Constants.x_shader_translation && y_camera == Constants.y_shader_translation &&
+				z_camera == Constants.z_shader_translation)
 			return;
 		
 		Matrix.setIdentityM(Constants.my_view_matrix, 0);
-		Matrix.translateM(Constants.my_view_matrix, 0, (float) -x_camera, (float) -y_camera, 0);
+		Matrix.translateM(Constants.my_view_matrix, 0, (float) -x_camera, (float) -y_camera, (float) -z_camera);
 		Constants.x_shader_translation = x_camera;
 		Constants.y_shader_translation = y_camera;
-	}
-	
-	// positive values make the camera move away from objects towards player
-	public static final void setCameraZ(double z_camera)
-	{
-		if (z_camera < 0)
-			return;
-		
-		if (Constants.z_shader_translation == z_camera)
-			return;
-		
-		Matrix.setIdentityM(Constants.my_view_matrix, 0);
-		Matrix.translateM(Constants.my_view_matrix, 0, (float) -Constants.x_shader_translation, (float) -Constants.y_shader_translation, (float) -z_camera);
 		Constants.z_shader_translation = z_camera;
 	}
 	

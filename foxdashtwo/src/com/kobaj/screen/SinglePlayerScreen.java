@@ -21,9 +21,6 @@ public class SinglePlayerScreen extends BaseScreen
 	private GameInputModifier my_modifier;
 	
 	// test level
-	private String level_string = null;
-	private int level_R = R.raw.test_level;
-	public String level_name = null; // this is actually whatever value is needed to load this level again (through either R or string).
 	private com.kobaj.level.Level the_level;
 	
 	// addons
@@ -35,18 +32,6 @@ public class SinglePlayerScreen extends BaseScreen
 	// wheather to fade and what to fade to.
 	public boolean fade_in = true;
 	
-	public void setLevel(int level_R, String level_name)
-	{
-		this.level_R = level_R;
-		this.level_name = level_name;
-	}
-	
-	public void setLevel(String level_name)
-	{
-		this.level_string = level_name;
-		this.level_name = level_name;
-	}
-	
 	public SinglePlayerScreen()
 	{
 		// initialize everything
@@ -55,20 +40,42 @@ public class SinglePlayerScreen extends BaseScreen
 		interaction_addon = new BaseInteractionPhysics(); // has no quads
 	}
 	
+	// loads the next level and returns true if successful.
+	private boolean setNextLevel(String level_name)
+	{
+		if (level_name == null)
+		{
+			the_level = FileHandler.readSerialResource(Constants.resources, R.raw.test_level, com.kobaj.level.Level.class);
+			return true;
+		}
+		
+		// if not then try to load from R
+		int level_R = Constants.resources.getIdentifier(level_name, "raw", "com.kobaj.foxdashtwo");
+		if (level_R != 0)
+		{
+			the_level = FileHandler.readSerialResource(Constants.resources, level_R, com.kobaj.level.Level.class);
+			if (the_level != null)
+				return true;
+		}
+		
+		// first see if it is a physical level on disk
+		if (FileHandler.fileExists(level_name))
+		{
+			the_level = FileHandler.readSerialFile(level_name, com.kobaj.level.Level.class);
+			if (the_level != null)
+				return true;
+		}
+		
+		return false;
+	}
+	
 	@Override
 	public void onLoad()
 	{
-		// set the last level loaded
-		SinglePlayerSave.last_level = this.level_name;
-		
 		// load our addons. Do the loader first
 		loading_addon.onInitialize();
 		
-		// level
-		if (level_string != null)
-			the_level = FileHandler.readSerialFile(level_string, com.kobaj.level.Level.class);
-		else
-			the_level = FileHandler.readSerialResource(Constants.resources, level_R, com.kobaj.level.Level.class);
+		this.setNextLevel(SinglePlayerSave.last_level);
 		
 		if (the_level != null)
 			the_level.onInitialize();

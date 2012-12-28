@@ -168,12 +168,26 @@ public class Level
 		player.quad_object = new QuadAnimated(R.raw.fox, R.raw.fox_alpha, R.raw.fox_animation_list, 350, 180, 1024, 1024);
 		player.quad_object.setZPos(player.quad_object.z_pos - (5 /* player.z_plane */* Constants.z_modifier));
 		
-		if(SinglePlayerSave.last_checkpoint == null)
-			player.quad_object.setXYPos(x_player, y_player, player.draw_from);
-		else
+		boolean player_set = false;
+		if(SinglePlayerSave.last_checkpoint != null)
 		{
-			// TODO implement checkpoints
+			for(int i = event_list.size() - 1; i >=0; i--)
+			{
+				LevelEvent event_reference = event_list.get(i);
+				for(int e = event_reference.id_strings.size() - 1; e >=0; e--)
+					if(event_reference.id_strings.get(e).equals(SinglePlayerSave.last_checkpoint))
+					{
+						player_set = true;
+						player.quad_object.setXYPos(
+								Functions.screenXToShaderX(event_reference.x_pos + event_reference.width / 2),
+								Functions.screenYToShaderY(event_reference.y_pos + event_reference.height / 2)
+								, EnumDrawFrom.center);
+					}
+			}
 		}
+		
+		if(!player_set)
+			player.quad_object.setXYPos(x_player, y_player, player.draw_from);
 		
 		// set widths and heights for the camera
 		left_shader_limit = (Functions.screenXToShaderX(left_limit) + Constants.ratio);

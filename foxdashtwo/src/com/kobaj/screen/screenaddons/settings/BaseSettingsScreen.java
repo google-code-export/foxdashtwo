@@ -2,15 +2,15 @@ package com.kobaj.screen.screenaddons.settings;
 
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Constants;
-import com.kobaj.opengldrawable.Button;
 import com.kobaj.opengldrawable.EnumDrawFrom;
+import com.kobaj.opengldrawable.Button.TextButton;
 import com.kobaj.screen.screenaddons.floatingframe.BaseFloatingFrame;
 
 public class BaseSettingsScreen extends BaseFloatingFrame
 {
-	private Button audio_button;
-	private Button cancel_button;
-	private Button input_button;
+	private TextButton audio_button;
+	private TextButton cancel_button;
+	private TextButton input_button;
 	
 	private EnumSettingsShowing current_settings = EnumSettingsShowing.none;
 	
@@ -27,9 +27,9 @@ public class BaseSettingsScreen extends BaseFloatingFrame
 		base_input.onInitialize();
 		
 		// initialize everything else
-		input_button = new Button(R.string.input_button);
-		cancel_button = new Button(R.string.back);
-		audio_button = new Button(R.string.audio_button);
+		input_button = new TextButton(R.string.input_button);
+		cancel_button = new TextButton(R.string.back);
+		audio_button = new TextButton(R.string.audio_button);
 		
 		input_button.onInitialize();
 		cancel_button.onInitialize();
