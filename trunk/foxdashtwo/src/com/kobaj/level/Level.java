@@ -52,7 +52,8 @@ public class Level
 	@ElementList
 	public ArrayList<LevelObject> object_list;
 	
-	public ArrayList<LevelObject> physics_objects = new ArrayList<LevelObject>(); // references for only physics.
+	public ArrayList<LevelObject> physics_objects = new ArrayList<LevelObject>(); // references for only physics (objects that move).
+	public ArrayList<LevelObject> interaction_objects = new ArrayList<LevelObject>(); // references for objects that are on the same z-plane as player.
 	
 	@ElementList
 	public ArrayList<LevelAmbientLight> light_list; // all lights including blooms
@@ -165,29 +166,35 @@ public class Level
 		}
 		
 		// setup player
-		player.quad_object = new QuadAnimated(R.raw.fox, R.raw.fox_alpha, R.raw.fox_animation_list, 350, 180, 1024, 1024);
+		player.quad_object = new QuadAnimated(R.raw.fox2, R.raw.fox2_alpha, R.raw.fox_animation_list, 350, 180, 1024, 1024);
 		player.quad_object.setZPos(player.quad_object.z_pos - (5 /* player.z_plane */* Constants.z_modifier));
 		
 		boolean player_set = false;
-		if(SinglePlayerSave.last_checkpoint != null)
+		if (SinglePlayerSave.last_checkpoint != null)
 		{
-			for(int i = event_list.size() - 1; i >=0; i--)
+			for (int i = event_list.size() - 1; i >= 0; i--)
 			{
 				LevelEvent event_reference = event_list.get(i);
-				for(int e = event_reference.id_strings.size() - 1; e >=0; e--)
-					if(event_reference.id_strings.get(e).equals(SinglePlayerSave.last_checkpoint))
+				for (int e = event_reference.id_strings.size() - 1; e >= 0; e--)
+					if (event_reference.id_strings.get(e).equals(SinglePlayerSave.last_checkpoint))
 					{
 						player_set = true;
-						player.quad_object.setXYPos(
-								Functions.screenXToShaderX(event_reference.x_pos + event_reference.width / 2),
-								Functions.screenYToShaderY(event_reference.y_pos + event_reference.height / 2)
-								, EnumDrawFrom.center);
+						player.quad_object.setXYPos(Functions.screenXToShaderX(event_reference.x_pos + event_reference.width / 2),
+								Functions.screenYToShaderY(event_reference.y_pos + event_reference.height / 2), EnumDrawFrom.center);
 					}
 			}
 		}
 		
-		if(!player_set)
+		if (!player_set)
 			player.quad_object.setXYPos(x_player, y_player, player.draw_from);
+		
+		// optimize which objects to collide against
+		for (int i = object_list.size() - 1; i >= 0; i--)
+		{
+			LevelObject reference = object_list.get(i);
+			if (reference.quad_object.z_pos == player.quad_object.z_pos)
+				this.interaction_objects.add(reference);
+		}
 		
 		// set widths and heights for the camera
 		left_shader_limit = (Functions.screenXToShaderX(left_limit) + Constants.ratio);

@@ -54,17 +54,19 @@ public class QuadCompressed extends Quad
 		one_y -= buffer;
 		two_y += buffer;
 		
-		// S, T (or X, Y)
-		// Texture coordinate data.
-		final float[] cubeTextureCoordinateData = {
-				// Front face
-				one_x, one_y,//
-				one_x, two_y,//
-				two_x, one_y,//
-				
-				one_x, two_y,//
-				two_x, two_y,//
-				two_x, one_y };//
+		cubeTextureCoordinateData[0] = one_x;
+		cubeTextureCoordinateData[1] = one_y;
+		cubeTextureCoordinateData[2] = one_x;
+		cubeTextureCoordinateData[3] = two_y;
+		cubeTextureCoordinateData[4] = two_x;
+		cubeTextureCoordinateData[5] = one_y;
+		
+		cubeTextureCoordinateData[6] = one_x;
+		cubeTextureCoordinateData[7] = two_y;
+		cubeTextureCoordinateData[8] = two_x;
+		cubeTextureCoordinateData[9] = two_y;
+		cubeTextureCoordinateData[10] = two_x;
+		cubeTextureCoordinateData[11] = one_y;
 		
 		if (my_tex_coord == null)
 			my_tex_coord = ByteBuffer.allocateDirect(cubeTextureCoordinateData.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();

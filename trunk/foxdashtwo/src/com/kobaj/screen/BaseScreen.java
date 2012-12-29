@@ -15,14 +15,15 @@ public abstract class BaseScreen implements Runnable
 {
 	public EnumScreenState current_state = EnumScreenState.not_started;
 	
-	// constructor should be used to initialize things, but not load them.
-	
 	protected Quad black_overlay;
 	protected TweenManager tween_fade_in;
 	protected TweenManager tween_fade_out;
 	
+	private EnumScreenState previous_state = EnumScreenState.not_started; 
+	
 	public final void onInitialize()
 	{
+		previous_state = current_state;
 		current_state = EnumScreenState.loading;
 		new Thread(this).start();
 	}
@@ -55,7 +56,11 @@ public abstract class BaseScreen implements Runnable
 		
 		// load everything else.
 		onLoad();
-		current_state = EnumScreenState.running;
+	
+		if(previous_state == EnumScreenState.paused)
+			current_state = EnumScreenState.paused;
+		else
+			current_state = EnumScreenState.running;
 	}
 	
 	// loading things on a seperate thread

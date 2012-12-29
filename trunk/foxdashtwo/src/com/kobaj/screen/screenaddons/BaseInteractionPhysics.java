@@ -21,9 +21,9 @@ public class BaseInteractionPhysics
 		Constants.physics.integratePhysics(delta, the_level.player.quad_object);
 		
 		// integrate all other objects
-		for (int i = the_level.object_list.size() - 1; i >= 0; i--)
+		for (int i = the_level.interaction_objects.size() - 1; i >= 0; i--)
 		{
-			LevelObject reference = the_level.object_list.get(i);
+			LevelObject reference = the_level.interaction_objects.get(i);
 			
 			collision.left = 0;
 			collision.top = 0;
