@@ -26,9 +26,10 @@ public final class QuadRenderShell
 	private static float[] my_position_matrix = new float[18];
 	private static FloatBuffer my_position;
 	private static boolean generated = false;
+	
 	private static final void generateVerts()
 	{
-		if(generated)
+		if (generated)
 			return;
 		
 		float pos_tr_x = 1.0f;
@@ -77,12 +78,13 @@ public final class QuadRenderShell
 	// methods for
 	// drawing stuffs
 	private static int old_program;
+	
 	private static final <T extends BaseLightShader> void onSetupProgram(final T ambient_light)
 	{
-		if(old_program == ambient_light.my_shader && !program_update)
+		if (old_program == ambient_light.my_shader && !program_update)
 			return;
 		
-		//change everything
+		// change everything
 		old_program = ambient_light.my_shader;
 		program_update = true;
 		
@@ -91,10 +93,11 @@ public final class QuadRenderShell
 	}
 	
 	private static int old_color;
+	
 	private static final <T extends BaseLightShader> void onSetupColor(final int color, final T ambient_light)
 	{
 		// quick attempt at optimization
-		if(color == old_color && !program_update)
+		if (color == old_color && !program_update)
 			return;
 		
 		old_color = color;
@@ -112,7 +115,7 @@ public final class QuadRenderShell
 			blue = 0;
 			alpha = 1;
 		}
-		else if(color == Color.TRANSPARENT)
+		else if (color == Color.TRANSPARENT)
 		{
 			red = 0;
 			green = 0;
@@ -133,26 +136,41 @@ public final class QuadRenderShell
 	
 	private static final <T extends BaseLightShader> void onSetupPosition(final T ambient_light)
 	{
-		if(!program_update)
+		if (!program_update)
 			return;
 		
 		// pass in position information
 		GLES20.glVertexAttribPointer(ambient_light.my_position_handle, 3, GLES20.GL_FLOAT, false, 0, my_position);
 	}
 	
+	private static int old_texture_data_handle;
+	
 	private static final <T extends BaseLightShader> void onSetupTexture(final int my_texture_data_handle, final FloatBuffer my_tex_coord, final T ambient_light)
 	{
-		// Set the active texture unit to texture unit 0 and bind necissary handles
-		GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-		GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, my_texture_data_handle);
-		GLES20.glUniform1i(ambient_light.my_texture_uniform_handle, 0);
+		// quick attempt at optimization
+		if (old_texture_data_handle != my_texture_data_handle || program_update)
+		{
+			old_texture_data_handle = my_texture_data_handle;
+		
+			// Set the active texture unit to texture unit 0 and bind necissary handles
+			GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+			GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, my_texture_data_handle);
+			GLES20.glUniform1i(ambient_light.my_texture_uniform_handle, 0);
+		}
 		
 		// Pass in the texture coordinate information
 		GLES20.glVertexAttribPointer(ambient_light.my_tex_coord_handle, 2, GLES20.GL_FLOAT, false, 0, my_tex_coord);
 	}
 	
+	private static int old_alpha_data_handle;
+	
 	private static final void onSetupAlpha(final int my_alpha_data_handle, final CompressedLightShader compressed_light)
 	{
+		if (old_alpha_data_handle == my_alpha_data_handle && !program_update)
+			return;
+		
+		old_alpha_data_handle = my_alpha_data_handle;
+		
 		GLES20.glActiveTexture(GLES20.GL_TEXTURE1);
 		GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, my_alpha_data_handle);
 		GLES20.glUniform1i(compressed_light.my_alpha_uniform_handle, 1);
@@ -189,50 +207,57 @@ public final class QuadRenderShell
 	// not that you pass in all possible quads.
 	// also they are all on the same z layer.
 	// so like...particles.
-	@SuppressWarnings("unchecked")
-	public static final <T extends BaseLightShader> void onDrawQuad(final float[] my_vp_matrix, final boolean skip_draw_check, final T shader, ArrayList<Quad> quads)
+	
+	private static ArrayList<Quad> clones = new ArrayList<Quad>();
+	
+	public static final <T extends BaseLightShader> void onDrawQuad(final float[] my_vp_matrix, final boolean skip_draw_check, final T shader, final ArrayList<Quad> quads)
 	{
-		if (quads.size() <= 0)
+		int quad_size = quads.size();
+		if (quad_size <= 0)
 			return;
 		
-		quads = (ArrayList<Quad>) quads.clone();
+		clones.clear();
+		for (int i = quad_size - 1; i >= 0; i--)
+			clones.add(quads.get(i));
 		
-		//generate some verts
+		// generate some verts
 		generateVerts();
 		
 		// first set our program
 		onSetupProgram(shader);
 		
 		// be sure to draw all of our objects texture handles
-		for(int i = quads.size() - 1; i >= 0; i--)
+		for (int i = clones.size() - 1; i >= 0; i--)
 		{
-			Quad uncompressed = quads.get(i);
+			Quad uncompressed = clones.get(i);
 			boolean removed = false;
 			
-			//see if regular texture is on device yet
-			if (!quads.get(i).setTextureDataHandle())
+			// see if regular texture is on device yet
+			if (!uncompressed.setTextureDataHandle())
 			{
-				quads.remove(i);
+				clones.remove(i);
 				removed = true;
 			}
 			
-			//see if compressed texture is on device
-			if(QuadCompressed.class.isAssignableFrom(uncompressed.getClass()))
+			// see if compressed texture is on device
+			if (QuadCompressed.class.isAssignableFrom(uncompressed.getClass()))
 			{
 				QuadCompressed reference = QuadCompressed.class.cast(uncompressed);
 				if (!reference.setAlphaDataHandle() && !removed)
 				{
-					quads.remove(i);
+					clones.remove(i);
 					removed = true;
 				}
 			}
 		}
 		
-		if (quads.size() <= 0)
+		// new size after removal
+		int clones_size = clones.size();
+		if (clones_size <= 0)
 			return;
 		
-		// then begin passing quads to gpu
-		Quad zero = quads.get(0);
+		// then begin passing clones to gpu
+		Quad zero = clones.get(0);
 		
 		onSetupTexture(zero.my_texture_data_handle, zero.my_tex_coord, shader);
 		onSetupPosition(shader);
@@ -241,17 +266,17 @@ public final class QuadRenderShell
 		{
 			QuadCompressed zero_compressed = QuadCompressed.class.cast(zero);
 			
-			if(CompressedLightShader.class.isAssignableFrom(shader.getClass()))
+			if (CompressedLightShader.class.isAssignableFrom(shader.getClass()))
 				onSetupAlpha(zero_compressed.my_alpha_data_handle, (CompressedLightShader) shader);
 			else
 				Log.e("Compressed Shader Error", "Attempted to draw a compressed object with a non compressed shader.");
 		}
-
-		for (int i = quads.size() - 1; i >= 0; i--)
+		
+		for (int i = clones_size - 1; i >= 0; i--)
 		{
-			Quad reference = quads.get(i);
+			Quad reference = clones.get(i);
 			
-			if(skip_draw_check || com.kobaj.math.Functions.onShader(reference.best_fit_aabb))
+			if (skip_draw_check || com.kobaj.math.Functions.onShader(reference.best_fit_aabb))
 			{
 				onSetupColor(reference.color, shader);
 				onSetupModelMatrix(my_vp_matrix, reference.my_model_matrix, shader);
@@ -259,7 +284,7 @@ public final class QuadRenderShell
 			}
 		}
 		
-		//very last
+		// very last
 		program_update = false;
 	}
 	
@@ -267,11 +292,11 @@ public final class QuadRenderShell
 	
 	public static final <T extends BaseLightShader> void onDrawQuad(final float[] my_vp_matrix, final boolean skip_draw_check, final T shader, final Quad quad)
 	{
-		if(skip_draw_check || com.kobaj.math.Functions.onShader(quad.best_fit_aabb))
+		if (skip_draw_check || com.kobaj.math.Functions.onShader(quad.best_fit_aabb))
 		{
 			single_quad.clear();
 			single_quad.add(quad);
-		
+			
 			onDrawQuad(my_vp_matrix, true, shader, single_quad);
 		}
 	}

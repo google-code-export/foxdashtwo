@@ -240,9 +240,9 @@ public class Functions
 			send_back.top = 0;
 			send_back.right = 0;
 			send_back.bottom = 0;
+			
+			return false;
 		}
-		
-		return false;
 	}
 	
 	// radius stuff.
@@ -314,7 +314,7 @@ public class Functions
 				z_camera == Constants.z_shader_translation)
 			return;
 		
-		Matrix.setIdentityM(Constants.my_view_matrix, 0);
+		setIdentityMatrix(Constants.my_view_matrix);
 		Matrix.translateM(Constants.my_view_matrix, 0, (float) -x_camera, (float) -y_camera, (float) -z_camera);
 		Constants.x_shader_translation = x_camera;
 		Constants.y_shader_translation = y_camera;
@@ -614,6 +614,30 @@ public class Functions
 		bitmap.setPixels(pix, 0, w, 0, 0, w, h);
 		
 		return bitmap;
+	}
+	
+	// honestly this is just a micro-optimization. Totally worthless really...
+	public static final void setIdentityMatrix(final float[] array)
+	{
+		array[0] = 1;
+		array[1] = 0;
+		array[2] = 0;
+		array[3] = 0;
+		
+		array[4] = 0;
+		array[5] = 1;
+		array[6] = 0;
+		array[7] = 0;
+		
+		array[8] = 0;
+		array[9] = 0;
+		array[10] = 1;
+		array[11] = 0;
+		
+		array[12] = 0;
+		array[13] = 0;
+		array[14] = 0;
+		array[15] = 1;
 	}
 	
 	// setup the constants

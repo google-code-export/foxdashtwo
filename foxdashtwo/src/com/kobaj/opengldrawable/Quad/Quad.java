@@ -73,11 +73,12 @@ public class Quad
 	
 	// movement matrixes
 	// transformation matrix to convert from object to world space
-	public float[] my_model_matrix = new float[16];
-	private float[] translation_matrix = new float[16];
-	private float[] rotation_matrix = new float[16];
-	private float[] scale_matrix = new float[16];
-	private float[] my_rs_matrix = new float[16];
+	public final float[] my_model_matrix = new float[16];
+	private final float[] translation_matrix = new float[16];
+	private final float[] rotation_matrix = new float[16];
+	private final float[] scale_matrix = new float[16];
+	private final float[] my_rs_matrix = new float[16];
+	protected final float[] cubeTextureCoordinateData = new float[12];
 	
 	// handle to texture
 	protected int my_texture_data_handle = -1;
@@ -187,15 +188,19 @@ public class Quad
 		
 		// S, T (or X, Y)
 		// Texture coordinate data.
-		final float[] cubeTextureCoordinateData = {
-				// Front face
-				one_x, -one_y,//
-				one_x, -two_y,//
-				two_x, -one_y,//
-				
-				one_x, -two_y,//
-				two_x, -two_y,//
-				two_x, -one_y };//
+		cubeTextureCoordinateData[0] = one_x;
+		cubeTextureCoordinateData[1] = -one_y;
+		cubeTextureCoordinateData[2] = one_x;
+		cubeTextureCoordinateData[3] = -two_y;
+		cubeTextureCoordinateData[4] = two_x;
+		cubeTextureCoordinateData[5] = -one_y;
+		
+		cubeTextureCoordinateData[6] = one_x;
+		cubeTextureCoordinateData[7] = -two_y;
+		cubeTextureCoordinateData[8] = two_x;
+		cubeTextureCoordinateData[9] = -two_y;
+		cubeTextureCoordinateData[10] = two_x;
+		cubeTextureCoordinateData[11] = -one_y;
 		
 		if (my_tex_coord == null)
 			my_tex_coord = ByteBuffer.allocateDirect(cubeTextureCoordinateData.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
@@ -349,34 +354,45 @@ public class Quad
 	{
 		currently_drawn = where;
 		
+		double x_pos;
+		double y_pos;
+		
 		if (where == EnumDrawFrom.top_left)
 		{
 			// positive x
 			// negative y
-			this.x_pos = x + shader_width / 2.0;
-			this.y_pos = y - shader_height / 2.0;
+			x_pos = x + shader_width / 2.0;
+			y_pos = y - shader_height / 2.0;
 		}
 		else if (where == EnumDrawFrom.top_right)
 		{
-			this.x_pos = x - shader_width / 2.0;
-			this.y_pos = y - shader_height / 2.0;
+			x_pos = x - shader_width / 2.0;
+			y_pos = y - shader_height / 2.0;
 		}
 		else if (where == EnumDrawFrom.bottom_left)
 		{
-			this.x_pos = x + shader_width / 2.0;
-			this.y_pos = y + shader_height / 2.0;
+			x_pos = x + shader_width / 2.0;
+			y_pos = y + shader_height / 2.0;
 		}
 		else if (where == EnumDrawFrom.bottom_right)
 		{
 			
-			this.x_pos = x - shader_width / 2.0;
-			this.y_pos = y + shader_height / 2.0;
+			x_pos = x - shader_width / 2.0;
+			y_pos = y + shader_height / 2.0;
 		}
 		else
 		{
 			x_pos = x;
 			y_pos = y;
 		}
+		
+		//nothing has changed
+		if(x_pos == this.x_pos &&
+				y_pos == this.y_pos)
+			return;
+		
+		this.x_pos = x_pos;
+		this.y_pos = y_pos;
 		
 		update_position_matrix(false);
 		
@@ -392,8 +408,8 @@ public class Quad
 		// set the quad up
 		if (also_update_scale_or_rotation)
 		{
-			Matrix.setIdentityM(my_model_matrix, 0);
-			Matrix.setIdentityM(scale_matrix, 0);
+			Functions.setIdentityMatrix(my_model_matrix);
+			Functions.setIdentityMatrix(scale_matrix);
 			Matrix.scaleM(scale_matrix, 0, (float) (this.shader_width / 2.0 * this.scale_value),
 					(float) (this.shader_height / 2.0 *  this.scale_value), (float) this.scale_value);
 			Matrix.setRotateEulerM(rotation_matrix, 0, 0.0f, 0.0f, (float) -degree);
@@ -403,7 +419,7 @@ public class Quad
 			updateBestFitAABB();
 		}
 		
-		Matrix.setIdentityM(translation_matrix, 0);
+		Functions.setIdentityMatrix(translation_matrix);
 		Matrix.translateM(translation_matrix, 0, (float) x_pos, (float) y_pos, (float) z_pos);
 		
 		Matrix.multiplyMM(this.my_model_matrix, 0, translation_matrix, 0, my_rs_matrix, 0);

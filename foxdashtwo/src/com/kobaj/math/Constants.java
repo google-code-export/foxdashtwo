@@ -57,7 +57,7 @@ public class Constants
 	public static final double jump_velocity_default = 0.800;
 	public static final double jump_limiter_default = 0.185;
 	public static final double player_downward_platform_acc_default = -.001;
-	public static final double player_movement_threshold_default = .0001;
+	public static final double player_movement_threshold_default = .001;
 	
 	// physics variables
 	public static double gravity;
