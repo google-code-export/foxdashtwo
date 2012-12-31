@@ -3,38 +3,45 @@ package com.kobaj.opengldrawable.Quad;
 //thank you
 //http://blog.shayanjaved.com/2011/05/13/android-opengl-es-2-0-render-to-texture/
 
-import android.graphics.Bitmap;
 import android.opengl.GLES20;
-import android.opengl.GLUtils;
 
 import com.kobaj.loader.GLBitmapReader;
+import com.kobaj.math.Constants;
+import com.kobaj.math.Functions;
 
 public class QuadRenderTo extends Quad
 {
 	// RENDER TO TEXTURE VARIABLES
 	private int fb = -1, depthRb = -1;
-	private int texW;
-	private int texH;
+	private int scale_factor;
 	
 	public QuadRenderTo()
 	{
+		this(1);
+	}
+	
+	public QuadRenderTo(int scale_factor)
+	{
 		this.width = com.kobaj.math.Constants.width;
 		this.height = com.kobaj.math.Constants.height;
+	
+		//must precompute the square (Even though its computed in the oncreate).
+		int square_width = Functions.nearestPowerOf2(this.width);
+		int square_height = Functions.nearestPowerOf2(this.height);
 		
-		texW = com.kobaj.math.Functions.nearestPowerOf2(this.width);
-		texH = com.kobaj.math.Functions.nearestPowerOf2(this.height);
+		square = Math.max(square_width, square_height);
 		
-		final int square = Math.max(texW, texH);
-		
-		texW = square;
-		texH = square;
-	}
+		this.scale_factor = Functions.nearestPowerOf2(scale_factor);
+	}	
 	
 	public void onInitialize()
 	{
 		setupRenderToTexture();
 		// now my_texture_data_handle is no longer -1
+		
 		onCreate(my_texture_data_handle, this.width, this.height);
+		
+		// dividing this by scale_factor gets the same result...
 		complexUpdateTexCoords(0, (float) com.kobaj.math.Functions.linearInterpolateUnclamped(0, square, this.width, 0, 1),
 				1.0f - (float) com.kobaj.math.Functions.linearInterpolateUnclamped(0, square, this.height, 0, 1), 1);
 	}
@@ -66,17 +73,14 @@ public class QuadRenderTo extends Quad
 		GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_NEAREST);
 		GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_NEAREST);
 		
-		// Push the bitmap onto the GPU
-		Bitmap my_temp = Bitmap.createBitmap(texW, texH, Bitmap.Config.ARGB_8888);
-		GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, my_temp, 0);
-		my_temp.recycle();
-		my_temp = null;
+		int bitmap_size = square / scale_factor;
 		
-		System.gc();
+		// Push the bitmap onto the GPU
+		GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA, bitmap_size, bitmap_size, 0, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, null);
 		
 		// create render buffer and bind 16-bit depth buffer
 		GLES20.glBindRenderbuffer(GLES20.GL_RENDERBUFFER, depthRb[0]);
-		GLES20.glRenderbufferStorage(GLES20.GL_RENDERBUFFER, GLES20.GL_DEPTH_COMPONENT16, texW, texH);
+		GLES20.glRenderbufferStorage(GLES20.GL_RENDERBUFFER, GLES20.GL_DEPTH_COMPONENT16, bitmap_size, bitmap_size);
 		
 		this.depthRb = depthRb[0];
 		this.fb = fb[0];
@@ -95,6 +99,9 @@ public class QuadRenderTo extends Quad
 	
 	public boolean beginRenderToTexture()
 	{
+		//downsize the screen if needed
+		GLES20.glViewport(0, 0, this.width / this.scale_factor, this.height / this.scale_factor);
+		
 		GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, fb);
 		
 		// clear
@@ -111,6 +118,8 @@ public class QuadRenderTo extends Quad
 	
 	public void endRenderToTexture()
 	{
+		GLES20.glViewport(0, 0, Constants.width, Constants.height);
+		
 		GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
 		
 		// Same thing, only different texture is bound now

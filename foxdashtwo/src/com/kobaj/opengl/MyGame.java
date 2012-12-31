@@ -7,6 +7,9 @@ import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.EnumDrawFrom;
+import com.kobaj.opengldrawable.Quad.QuadBlur;
+import com.kobaj.opengldrawable.Quad.QuadColorShape;
+import com.kobaj.opengldrawable.Quad.QuadGodRay;
 import com.kobaj.opengldrawable.Quad.QuadRenderTo;
 import com.kobaj.screen.BaseScreen;
 import com.kobaj.screen.BlankScreen;
@@ -22,6 +25,13 @@ public class MyGame extends MyGLRender
 	// dont touch the variables below this line
 	// final drawable.
 	private QuadRenderTo scene;
+	private QuadGodRay god_ray;
+	
+	private QuadColorShape sun;
+	private QuadRenderTo full_scene;
+	
+	private QuadRenderTo blur_scene;
+	private QuadBlur god_ray_blur;
 	
 	public MyGame()
 	{
@@ -54,6 +64,24 @@ public class MyGame extends MyGLRender
 			scene = new QuadRenderTo();
 		scene.onInitialize();
 		
+		if (god_ray == null)
+			god_ray = new QuadGodRay();
+		
+		sun = new QuadColorShape(15, Color.WHITE, 0);// sun
+		sun.setXYPos(Constants.max_x_velocity, Constants.max_y_velocity, EnumDrawFrom.center);
+		
+		if (full_scene == null)
+			full_scene = new QuadRenderTo();
+		full_scene.onInitialize();
+		god_ray.my_texture_data_handle = full_scene.my_texture_data_handle;
+		
+		if (blur_scene == null)
+			blur_scene = new QuadRenderTo();
+		blur_scene.onInitialize();
+		
+		god_ray_blur = new QuadBlur();
+		god_ray_blur.my_texture_data_handle = blur_scene.my_texture_data_handle;
+		
 		System.gc();
 	}
 	
@@ -63,10 +91,10 @@ public class MyGame extends MyGLRender
 		// screen swap
 		if (next_active_screen != null)
 		{
-			//unload
+			// unload
 			currently_active_screen.onUnInitialize();
 			
-			//load next
+			// load next
 			currently_active_screen = next_active_screen;
 			next_active_screen = null;
 			currently_active_screen.onInitialize();
@@ -102,20 +130,56 @@ public class MyGame extends MyGLRender
 		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA); // no see thru
 		if (scene.beginRenderToTexture())
 		{
+			// draw sun
+			sun.onDrawAmbient();
+			
 			// put opaque items here
 			currently_active_screen.onDrawObject();
 		}
-		scene.endRenderToTexture();
+		// we can skip this end because the immediate next call is a 'begin'
+		// scene.endRenderToTexture();
 		
-		// lights
-		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_SRC_ALPHA); // cheap lights
+		// capture our next thing to draw
+		if (full_scene.beginRenderToTexture())
+		{
+			// lights
+			GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_SRC_ALPHA); // cheap lights
+			
+			// put translucent (lights) here
+			currently_active_screen.onDrawLight();
+			
+			// final scene
+			GLES20.glBlendFunc(GLES20.GL_DST_COLOR, GLES20.GL_ZERO); // masking
+			scene.onDrawAmbient(Constants.my_ip_matrix, true);
+		}
+		full_scene.endRenderToTexture();
 		
-		// put translucent (lights) here
-		currently_active_screen.onDrawLight();
+		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA); // no see thru
 		
-		// final scene
-		GLES20.glBlendFunc(GLES20.GL_DST_COLOR, GLES20.GL_ZERO); // masking
-		scene.onDrawAmbient(Constants.my_ip_matrix, true);
+		// full scene with bloom and thresholds
+		if (blur_scene.beginRenderToTexture())
+			god_ray.onDrawAmbient(Constants.my_ip_matrix, true);
+		blur_scene.endRenderToTexture();
+	
+		GLES20.glBlendFunc(GLES20.GL_ONE, GLES20.GL_ONE);
+		
+		//blur things out
+		if(blur_scene.beginRenderToTexture())
+		{
+			god_ray_blur.setHorizontalBlur();
+			god_ray_blur.onDrawAmbient(Constants.my_ip_matrix, true);
+			god_ray_blur.onDrawAmbient(Constants.my_ip_matrix, true);
+			god_ray_blur.setVerticalBlur();
+			god_ray_blur.onDrawAmbient(Constants.my_ip_matrix, true);
+			god_ray_blur.onDrawAmbient(Constants.my_ip_matrix, true);
+		}
+		blur_scene.endRenderToTexture();
+		
+		// draw the blur
+		blur_scene.onDrawAmbient(Constants.my_ip_matrix, true);
+		
+	    //full scene once
+		//full_scene.onDrawAmbient(Constants.my_ip_matrix, true);
 		
 		// text below this line
 		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA); // no see thru

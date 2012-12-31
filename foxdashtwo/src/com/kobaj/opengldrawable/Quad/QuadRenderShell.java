@@ -13,6 +13,7 @@ import android.util.Log;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 import com.kobaj.openglgraphics.BaseLightShader;
+import com.kobaj.openglgraphics.BlurLightShader;
 import com.kobaj.openglgraphics.CompressedLightShader;
 
 public final class QuadRenderShell
@@ -151,7 +152,7 @@ public final class QuadRenderShell
 		if (old_texture_data_handle != my_texture_data_handle || program_update)
 		{
 			old_texture_data_handle = my_texture_data_handle;
-		
+			
 			// Set the active texture unit to texture unit 0 and bind necissary handles
 			GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
 			GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, my_texture_data_handle);
@@ -200,6 +201,11 @@ public final class QuadRenderShell
 	{
 		Constants.quads_drawn_screen++;
 		GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 6);
+	}
+	
+	private static final void onSetupBlur(final float my_x_offset, final float my_y_offset, final BlurLightShader blur_light)
+	{	
+		GLES20.glUniform2f(blur_light.my_offset_handle, my_x_offset, my_y_offset);
 	}
 	
 	// the idea here is that you pass in quads that all reference
@@ -262,6 +268,18 @@ public final class QuadRenderShell
 		onSetupTexture(zero.my_texture_data_handle, zero.my_tex_coord, shader);
 		onSetupPosition(shader);
 		
+		// blur
+		if (QuadBlur.class.isAssignableFrom(zero.getClass()))
+		{
+			QuadBlur zero_blur = QuadBlur.class.cast(zero);
+			
+			if(BlurLightShader.class.isAssignableFrom(shader.getClass()))
+				onSetupBlur((float) zero_blur.x_blur_offset, (float) zero_blur.y_blur_offset, (BlurLightShader) shader);
+			else
+				Log.e("Blur Shader Error", "Attempted to draw a blur object with a non blur shader.");
+		}
+		
+		// compressed
 		if (QuadCompressed.class.isAssignableFrom(zero.getClass()))
 		{
 			QuadCompressed zero_compressed = QuadCompressed.class.cast(zero);

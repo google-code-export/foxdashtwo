@@ -9,7 +9,9 @@ import com.kobaj.audio.Sound;
 import com.kobaj.input.InputManager;
 import com.kobaj.opengldrawable.Text;
 import com.kobaj.openglgraphics.AmbientLightShader;
+import com.kobaj.openglgraphics.BlurLightShader;
 import com.kobaj.openglgraphics.CompressedLightShader;
+import com.kobaj.openglgraphics.GodRayLightShader;
 
 public class Constants
 {
@@ -61,15 +63,15 @@ public class Constants
 	
 	// physics variables
 	public static double gravity;
-	public static double max_y_velocity; //of all objects
+	public static double max_y_velocity; // of all objects
 	public static double max_x_velocity;
 	public static double normal_acceleration;
 	public static double normal_reverse_acceleration;
 	public static double collision_detection_height;
 	public static double jump_velocity;
 	public static double jump_limiter;
-	public static double max_speed; //this is of all objects
-	public static double player_downward_platform_acc; //player specific
+	public static double max_speed; // this is of all objects
+	public static double player_downward_platform_acc; // player specific
 	public static double player_movement_threshold;
 	
 	// same regardless of screen.
@@ -109,36 +111,38 @@ public class Constants
 	public static final int input_unpress_color = 0xBBBBBBCC;
 	public static final int input_press_color = 0xBB888899;
 	
-	//button constants
+	// button constants
 	public static final int unpressed_color = 0xBBBBBBCC;
 	public static final int pressed_color = 0xBB888899;
 	
-	//floating frame colors
+	// floating frame colors
 	public static final int frame_main_color = 0xCC999999;
 	public static final int frame_sec_color = 0xCCFFAAAA;
 	
-	//text (obviously?)
+	// text (obviously?)
 	public static Text text;
 	public static double text_size = 16.0; // all text is the same size (how lame!)
 	
-	//camera
+	// camera
 	public static float[] my_view_matrix = new float[16];
 	public static float[] my_proj_matrix = new float[16];
 	public static float[] my_vp_matrix = new float[16];
 	public static float[] my_ip_matrix = new float[16];
 	public static final float[] identity_matrix = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 };
 	
-	//lighting
+	// lighting
 	public static AmbientLightShader ambient_light;
 	public static CompressedLightShader compressed_light;
+	public static GodRayLightShader god_ray_light;
+	public static BlurLightShader blur_light;
 	
-	//networking 
+	// networking
 	public static final String main_url = "http://something.com";
 	
-	//metrics
-	public static boolean draw_fps= true;
+	// metrics
+	public static boolean draw_fps = true;
 	public static int quads_drawn_screen = 0;
 	
-	//errors
-	public static int exception_timeout = 300; //ms
+	// errors
+	public static int exception_timeout = 300; // ms
 }
