@@ -81,7 +81,7 @@ public class Quad
 	protected final float[] cubeTextureCoordinateData = new float[12];
 	
 	// handle to texture
-	protected int my_texture_data_handle = -1;
+	public int my_texture_data_handle = -1;
 	protected int texture_resource = -1;
 	
 	// this is a temporary bitmap that holds onto a bitmap that is passed in
