@@ -22,14 +22,12 @@ public class QuadRenderTo extends Quad
 	
 	public QuadRenderTo(int scale_factor)
 	{
-		this.width = com.kobaj.math.Constants.width;
-		this.height = com.kobaj.math.Constants.height;
+		width = com.kobaj.math.Constants.width;
+		height = com.kobaj.math.Constants.height;
 	
 		//must precompute the square (Even though its computed in the oncreate).
-		int square_width = Functions.nearestPowerOf2(this.width);
-		int square_height = Functions.nearestPowerOf2(this.height);
-		
-		square = Math.max(square_width, square_height);
+		square_width = Functions.nearestPowerOf2(this.width);
+		square_height = Functions.nearestPowerOf2(this.height);
 		
 		this.scale_factor = Functions.nearestPowerOf2(scale_factor);
 	}	
@@ -42,8 +40,8 @@ public class QuadRenderTo extends Quad
 		onCreate(my_texture_data_handle, this.width, this.height);
 		
 		// dividing this by scale_factor gets the same result...
-		complexUpdateTexCoords(0, (float) com.kobaj.math.Functions.linearInterpolateUnclamped(0, square, this.width, 0, 1),
-				1.0f - (float) com.kobaj.math.Functions.linearInterpolateUnclamped(0, square, this.height, 0, 1), 1);
+		complexUpdateTexCoords(0, (float) com.kobaj.math.Functions.linearInterpolateUnclamped(0, square_width, this.width, 0, 1),
+				1.0f - (float) com.kobaj.math.Functions.linearInterpolateUnclamped(0, square_height, this.height, 0, 1), 1);
 	}
 	
 	private void setupRenderToTexture()
@@ -73,14 +71,15 @@ public class QuadRenderTo extends Quad
 		GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_NEAREST);
 		GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_NEAREST);
 		
-		int bitmap_size = square / scale_factor;
+		int bitmap_size_x = square_width / scale_factor;
+		int bitmap_size_y = square_height / scale_factor;
 		
 		// Push the bitmap onto the GPU
-		GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA, bitmap_size, bitmap_size, 0, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, null);
+		GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA, bitmap_size_x, bitmap_size_y, 0, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, null);
 		
 		// create render buffer and bind 16-bit depth buffer
 		GLES20.glBindRenderbuffer(GLES20.GL_RENDERBUFFER, depthRb[0]);
-		GLES20.glRenderbufferStorage(GLES20.GL_RENDERBUFFER, GLES20.GL_DEPTH_COMPONENT16, bitmap_size, bitmap_size);
+		GLES20.glRenderbufferStorage(GLES20.GL_RENDERBUFFER, GLES20.GL_DEPTH_COMPONENT16, bitmap_size_x, bitmap_size_y);
 		
 		this.depthRb = depthRb[0];
 		this.fb = fb[0];

@@ -79,7 +79,7 @@ public class Level
 		// dont worry about it.
 		if (backdrop_color != Color.TRANSPARENT)
 		{
-			my_backdrop = new QuadCompressed(R.raw.black_alpha, R.raw.black_alpha, Constants.width, Constants.height);
+			my_backdrop = new QuadCompressed(R.raw.white, R.raw.white, Constants.width, Constants.height);
 			my_backdrop.color = backdrop_color;
 			my_backdrop.setZPos(my_backdrop.z_pos - (10.0 * Constants.z_modifier));
 		}
@@ -97,7 +97,7 @@ public class Level
 			reference.onInitialize();
 			
 			// do some particles
-			if (reference.this_object == EnumLevelObject.floating1)
+			if (reference.this_object == EnumLevelObject.l2_floating_platform)
 			{
 				RectF emitt_from = new RectF((float) (reference.quad_object.best_fit_aabb.main_rect.left + Functions.screenWidthToShaderWidth(45)),
 						(float) (reference.quad_object.best_fit_aabb.main_rect.top - Functions.screenHeightToShaderHeight(85)),
@@ -313,7 +313,7 @@ public class Level
 		if (collision.width() == 0)
 		{
 			// floating platforms
-			if (reference.this_object == EnumLevelObject.floating1)
+			if (reference.this_object == EnumLevelObject.l2_floating_platform)
 				if (player.quad_object.y_pos > reference.quad_object.y_pos) // remember this is the center of the object
 				{
 					player.quad_object.setXYPos(player.quad_object.x_pos, player.quad_object.y_pos - Constants.collision_detection_height, EnumDrawFrom.center);

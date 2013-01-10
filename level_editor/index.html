@@ -47,42 +47,42 @@ html,body {
 	cursor: pointer;
 }
 
-.tab_hideable{
+.tab_hideable {
 	width: 275px;
 }
 
 .central_div {
-	margin-left: auto; 
-	margin-right: auto; 
-	margin-top: 10px; 
-	width: 1575px; 
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 10px;
+	width: 1575px;
 	overflow: auto;
 }
 
-h1, h2, h3, h4, h5, h6, h7{
+h1,h2,h3,h4,h5,h6,h7 {
 	margin-top: 0px;
 	margin-bottom: 0px;
 }
 
-label{
+label {
 	display: inline-block;
-    padding-right: 5px;
-    text-align: right;
-    width: 95px;
-    margin-top: 5px;
+	padding-right: 5px;
+	text-align: right;
+	width: 95px;
+	margin-top: 5px;
 }
 
-.control_scheme{
+.control_scheme {
 	width: 50px;
 	height: 20p;
 	display: inline-block;
 }
 
-.control_scheme_button{
+.control_scheme_button {
 	width: 50px;
 }
 
-.vertical_divider{
+.vertical_divider {
 	border-left: 1px solid black;
 	float: left;
 	height: 72px;
@@ -97,251 +97,288 @@ label{
 
 <!-- didload is in gameMechanics.js and init's the variables for the game and the canvas -->
 <body onLoad="didload(); interfaceload();">
-<div align="center" class="central_div">
+	<div align="center" class="central_div">
 		<div style="float: left;" id="canvas"></div>
 		<div style="display: inline-block; float: right; overflow: hidden; width: 287px;" id="tabholder">
 			<div id="tablist" style="text-align: left; margin-top: 1px;">
-				<span number="1" name="level" class="taboption">Level</span> 
-				<span number="2" name="player" class="taboption">Player</span> 
-				<span number="3" name="objects" class="taboption">Objects</span> 
-				<span number="4" name="lights" class="taboption">Lights</span> 
-				<span number="5" name="events" class="taboption">Events</span>
+				<span number="1" name="level" class="taboption">Level</span> <span number="2" name="player"
+					class="taboption">Player</span> <span number="3" name="objects" class="taboption">Objects</span>
+				<span number="4" name="lights" class="taboption">Lights</span> <span number="5" name="events"
+					class="taboption">Events</span>
 			</div>
 			<div id="tabcontent">
-				<span class="tab_hideable">Hi! Welcome to the level editor for Fox Dash Two. Click
-					a tab to begin.</span>
-					
-						<!-- divs that go in tab content -->
-	<div class="tab_hideable" style="display: none;" id="tab_level">
-		<h4>Level Limits: </h4>
-		<label>left-limit: </label><input type="text" id="left-limit" value="0" /><br />
-		<label>top-limit: </label><input type="text" id="top-limit" value="750" /><br />
-		<label>right-limit: </label><input type="text" id="right-limit" value="1600" /><br />
-		<label>bottom-limit: </label><input type="text" id="bottom-limit" value="0" /><br />
-		<hr />
-		<h4>Background: </h4>
-		<div style="overflow: auto;">
-			<select id="backdrop_color" style="float: right;">
-			<option value="0">Transparent</option>
-			<option value="-16777216">Black</option>
-			<option value="-16776961">Blue</option>
-			<option value="-16711681">Cyan</option>
-			<option value="-12303292">Dark Gray</option>
-			<option value="-7829368">Gray</option>
-			<option value="-16711936">Green</option>
-			<option value="-3355444">Light Gray</option>
-			<option value="-65281">Magenta</option>
-			<option value="-65536">Red</option>
-			<option value="-1">White</option>
-			<option value="-256">Yellow</option>
-			</select>
-		</div>
-		<hr />
-	</div>
+				<span class="tab_hideable">Hi! Welcome to the level editor for Fox Dash Two. Click a tab
+					to begin.</span>
 
-	<div class="tab_hideable" style="display: none;" id="tab_player">
-		<h4>Player Position: </h4>
-		<label>X:</label><input type="text" id="player_x" value="25" /><br />
-		<label>Y:</label><input type="text" id="player_y" value="25" /><br />
-		<hr />
-	</div>
+				<!-- divs that go in tab content -->
+				<div class="tab_hideable" style="display: none;" id="tab_level">
+					<h4>Level Limits:</h4>
+					<label>left-limit: </label><input type="text" id="left-limit" value="0" /><br /> <label>top-limit:
+					</label><input type="text" id="top-limit" value="750" /><br /> <label>right-limit: </label><input
+						type="text" id="right-limit" value="1600" /><br /> <label>bottom-limit: </label><input
+						type="text" id="bottom-limit" value="0" /><br />
+					<hr />
+					<h4>Background:</h4>
+					<div style="overflow: auto;">
+						<select id="backdrop_color" style="float: right;">
+							<option value="0">Transparent</option>
+							<option value="-16777216">Black</option>
+							<option value="-16776961">Blue</option>
+							<option value="-16711681">Cyan</option>
+							<option value="-12303292">Dark Gray</option>
+							<option value="-7829368">Gray</option>
+							<option value="-16711936">Green</option>
+							<option value="-3355444">Light Gray</option>
+							<option value="-65281">Magenta</option>
+							<option value="-65536">Red</option>
+							<option value="-1">White</option>
+							<option value="-256">Yellow</option>
+						</select>
+					</div>
+					<hr />
+				</div>
 
-	<div class="tab_hideable" style="display: none;" id="tab_objects">
-		<h4>Selected Object:</h4>
-		<div style="overflow: auto;">
-		<select style="float: right;" id="object_drop_down"><option value="">None</option></select><br/>
-		<label>Name/ID:</label><input type="text" id="object_name_id" value="000x0" /><br />
-		</div>
-		<hr />
-		<h4>Object Type:</h4>
-		<div style="overflow: auto;">
-		<select style="float: right;" id="type_drop_down">
-			<option value="test" my_width="200" my_height="200">test</option>
-			<option value="bg1" my_width="1659" my_height="1064">Background 1 (Level 1)</option>
-			<option value="bg2" my_width="1551" my_height="1080">Background 2</option>
-			<option value="floor1" my_width="465" my_height="284">Floor 1</option>
-			<option value="floor2" my_width="309" my_height="237">Floor 2</option>
-			<option value="floor3" my_width="443" my_height="217">Floor 3</option>
-			<option value="fungus1" my_width="73" my_height="354">Fungus 1</option>
-			<option value="fungus2" my_width="299" my_height="278">Fungus 2</option>
-			<option value="fungus3" my_width="57" my_height="50">Fungus 3</option>
-			<option value="fungus4" my_width="82" my_height="78">Fungus 4</option>
-			<option value="layer14" my_width="247" my_height="226">Layer 14</option>
-			<option value="layer17" my_width="696" my_height="347">Layer 17</option>
-			<option value="layer18" my_width="676" my_height="280">Layer 18</option>
-			<option value="shroom1" my_width="256" my_height="367">Shroom 1</option>
-			<option value="shroom2" my_width="107" my_height="111">Shroom 2</option>
-			<option value="shroom3" my_width="111" my_height="113">Shroom 3</option>
-			<option value="shroom4" my_width="183" my_height="229">Shroom 4</option>
-			<option value="floating1" my_width="391" my_height="198">Floating Platform 1</option>
-		</select>
-		
-		<span style="display: none;" id="images_objects">
-		<!-- PUT IMAGES HERE -->
-			<img id="bg1" src="objects/bg1.png" />
-			<img id="bg2" src="objects/bg2.png" />
-			<img id="floor1" src="objects/floor1.png" />
-			<img id="floor2" src="objects/floor2.png" />
-			<img id="floor3" src="objects/floor3.png" />
-			<img id="fungus1" src="objects/fungus1.png" />
-			<img id="fungus2" src="objects/fungus2.png" />
-			<img id="fungus3" src="objects/fungus3.png" />
-			<img id="fungus4" src="objects/fungus4.png" />
-			<img id="layer14" src="objects/layer14.png" />
-			<img id="layer17" src="objects/layer17.png" />
-			<img id="layer18" src="objects/layer18.png" />
-			<img id="shroom1" src="objects/shroom1.png" />
-			<img id="shroom2" src="objects/shroom2.png" />
-			<img id="shroom3" src="objects/shroom3.png" />
-			<img id="shroom4" src="objects/shroom4.png" />
-			<img id="floating1" src="objects/floating1.png" />
-		</span>
-		
-		</div>
-		<hr />
-		<h4>Object Position: </h4>
-		<label>X:</label><input type="text" id="object_x" value="0" /><br />
-		<label>Y:</label><input type="text" id="object_y" value="0" /><br />
-		<label>Z-layer:</label><select id="object_z"><option value="1">1 Closest to Camera</option> <option value="2">2</option> <option value="3">3</option> <option value="4">4</option>
-													 <option value="5">5 Player/Interaction</option> <option value="6">6</option> <option value="7">7</option> <option value="8">8</option> <option value="9">9 Farthest From Camera</option></select><br />
-		<hr />
-		<h4>Attributes</h4>
-		<label>Degree:</label><input type="text" id="object_degree" value="0" /><br />
-		<label>Scale:</label><select id="object_scale"><option value="1.0">1.0</option>
-														<option value="0.9">0.9</option>
-														<option value="0.8">0.8</option>
-														<option value="0.7">0.7</option>
-														<option value="0.6">0.6</option>
-														<option value="0.5">0.5</option>
-														<option value="0.4">0.4</option>
-														<option value="0.3">0.3</option>
-														<option value="0.2">0.2</option>
-														<option value="0.1">0.1</option></select><br />
-		<hr />
-	</div>
+				<div class="tab_hideable" style="display: none;" id="tab_player">
+					<h4>Player Position:</h4>
+					<label>X:</label><input type="text" id="player_x" value="25" /><br /> <label>Y:</label><input
+						type="text" id="player_y" value="25" /><br />
+					<hr />
+				</div>
 
-	<div class="tab_hideable" style="display: none;" id="tab_lights">
-		<h4>Selected Light:</h4>
-		<div style="overflow: auto;">
-		<select style="float: right;" id="light_drop_down"><option value="">None</option></select><br/>
-		<label>Name/ID:</label><input type="text" id="light_name_id" value="000x0" /><br />
-		</div>
-		<hr />
-		<h4>Light Type:</h4>
-		<div style="overflow: auto;">
-		<select style="float: right;" id="light_type_drop_down">
-			<option selected="selected" value="ambient">Ambient</option>
-			<option value="point">Point</option>
-			<option value="spot">Spot</option>
-			<option value="custom">Custom</option>
-		</select>
-		</div>
-		<hr />
-		<h4>Light Position: </h4>
-		<label>X:</label><input type="text" id="light_x" value="0" /><br />
-		<label>Y:</label><input type="text" id="light_y" value="0" /><br />
-		<hr />
-		<h4>Attributes</h4>
-		<label>Color:</label><input type="text" id="light_color" value="rgba(100,100,100,1)" /><br />
-		<label>Active:</label><input type="checkbox" id="light_active" /><br />
-		
-		<span class="light_custom_wrap">
-		<label>LightObject</label>
-		<select id="light_custom_object_drop_down">
-		<option my_width="413" my_height="125" my_image="test_light" value="test">Test</option>
-		</select><br />
-		</span>
-		
-		<span style="display: none;" id="images">
-		<!-- PUT IMAGES HERE -->
-		<img id="test_light" src="lights/test_light.png" />
-		</span>
-		
-		<span class="light_spot_show_wrap"><label>closewidth:</label><input type="text" id="light_closewidth" value="10" /><br />
-		<label>farwidth:</label><input type="text" id="light_farwidth" value="100" /><br />
-		<label>Degree:</label><input type="text" id="light_degree" value="90" /><br /></span>
-		
-		<span class="light_throw_wrap">
-		<label>Throw:</label><input type="text" id="light_throw" value="100" /><br />
-		<label>Bloom:</label><input type="checkbox" id="light_bloom" /><br />
-		<label>Effect:</label><select id="light_effect_drop_down">
-			<option selected="selected" value="none">none</option>
-			<option value="rotate">Rotate</option>
-			<option value="pulse">Pulse</option>
-			<option value="flicker">Flicker</option>
-		</select><br />
-		</span>
-		<hr />
-	</div>
+				<div class="tab_hideable" style="display: none;" id="tab_objects">
+					<h4>Selected Object:</h4>
+					<div style="overflow: auto;">
+						<select style="float: right;" id="object_drop_down"><option value="">None</option></select><br />
+						<label>Name/ID:</label><input type="text" id="object_name_id" value="000x0" /><br />
+					</div>
+					<hr />
+					<h4>Object Type:</h4>
+					<div style="overflow: auto;">
+						<select style="float: right;" id="type_drop_down">
 
-	<div class="tab_hideable" style="display: none;" id="tab_events">
-		<h4>Selected Event:</h4>
-		<div style="overflow: auto;">
-		<select style="float: right;" id="event_drop_down"><option value="">None</option></select><br/>
-		<label>Name/ID:</label><input type="text" id="event_name_id" value="000x0" /><br />
-		</div>
-		<hr />
-		<h4>Event Type:</h4>
-		<div style="overflow: auto;">
-		<select style="float: right;" id="event_type_drop_down">
-		<option value="right_arrow">Right Arrow</option>
-		<option value="left_arrow">Left Arrow</option>
-		<option value="up_arrow">Up Arrow</option>
-		<option value="send_to_start">Send To Start</option>
-		<option value="invisible_wall">Invisible Wall</option>
-		<option value="active_toggle">Toggle Active(draw)</option>
-		<option value="active_on">Active on</option>
-		<option value="active_off">Active off</option>
-		<option value="active_touch">Active when collision</option>
-		<option value="active_anti_touch">Active when not collision</option>
-		<option value="next_level">Load Next Level</option>
-		<option value="checkpoint">Check Point</option>
-		</select>
-		</div>
-		<hr />
-		<h4>Event Position: </h4>
-		<label>X:</label><input type="text" id="event_x" value="0" /><br />
-		<label>Y:</label><input type="text" id="event_y" value="0" /><br />
-		<label>Width:</label><input type="text" id="event_width" value="200" /><br />
-		<label>Height:</label><input type="text" id="event_height" value="200" /><br />
-		<label>Affects (,):</label><input type="text" id="event_affects" value="" /><br />
-		<hr />
-	</div>
-					
+							<option value="test" my_width="200" my_height="200">test</option>
+							<option value='l1_bg1' my_width='1659' my_height='1064'>l1_bg1</option>
+							<option value='l1_bg2' my_width='1551' my_height='1080'>l1_bg2</option>
+							<option value='l1_fungus1' my_width='73' my_height='354'>l1_fungus1</option>
+							<option value='l1_fungus2' my_width='299' my_height='278'>l1_fungus2</option>
+							<option value='l1_fungus3' my_width='57' my_height='50'>l1_fungus3</option>
+							<option value='l1_fungus4' my_width='82' my_height='78'>l1_fungus4</option>
+							<option value='l1_layer14' my_width='247' my_height='226'>l1_layer14</option>
+							<option value='l1_layer17' my_width='696' my_height='347'>l1_layer17</option>
+							<option value='l1_layer18' my_width='676' my_height='280'>l1_layer18</option>
+							<option value='l1_new_platform' my_width='749' my_height='301'>l1_new_platform</option>
+							<option value='l1_new_platform_2' my_width='679' my_height='366'>l1_new_platform_2</option>
+							<option value='l1_new_platform_3' my_width='600' my_height='359'>l1_new_platform_3</option>
+							<option value='l1_new_platform_4' my_width='385' my_height='220'>l1_new_platform_4</option>
+							<option value='l1_new_platform_5' my_width='254' my_height='223'>l1_new_platform_5</option>
+							<option value='l1_new_platform_6' my_width='408' my_height='265'>l1_new_platform_6</option>
+							<option value='l1_prot_rock' my_width='469' my_height='181'>l1_prot_rock</option>
+							<option value='l1_prot_rock_2' my_width='530' my_height='173'>l1_prot_rock_2</option>
+							<option value='l1_prot_rock_3' my_width='326' my_height='195'>l1_prot_rock_3</option>
+							<option value='l1_shroom1' my_width='256' my_height='367'>l1_shroom1</option>
+							<option value='l1_shroom2' my_width='107' my_height='111'>l1_shroom2</option>
+							<option value='l1_shroom3' my_width='111' my_height='113'>l1_shroom3</option>
+							<option value='l1_shroom4' my_width='183' my_height='229'>l1_shroom4</option>
+							<option value='l2_accent_grass' my_width='130' my_height='84'>l2_accent_grass</option>
+							<option value='l2_background_rocks' my_width='592' my_height='264'>l2_background_rocks</option>
+							<option value='l2_background_rocks_big' my_width='652' my_height='226'>l2_background_rocks_big</option>
+							<option value='l2_big_platform' my_width='411' my_height='216'>l2_big_platform</option>
+							<option value='l2_big_tall_platform' my_width='281' my_height='218'>l2_big_tall_platform</option>
+							<option value='l2_big_wide_platform' my_width='437' my_height='231'>l2_big_wide_platform</option>
+							<option value='l2_dead_grass' my_width='438' my_height='198'>l2_dead_grass</option>
+							<option value='l2_end_platform' my_width='66' my_height='256'>l2_end_platform</option>
+							<option value='l2_floating_platform' my_width='391' my_height='198'>l2_floating_platform</option>
+							<option value='l2_medium_platform' my_width='350' my_height='255'>l2_medium_platform</option>
+							<option value='l2_more_dead_grass' my_width='314' my_height='334'>l2_more_dead_grass</option>
+							<option value='l2_small_platform' my_width='193' my_height='178'>l2_small_platform</option>
+							<option value='l2_small_right' my_width='168' my_height='179'>l2_small_right</option>
+
+						</select> <span style="display: none;" id="images_objects"> <!-- PUT IMAGES HERE --> <img
+							id='big_popup' src='objects/big_popup.png' /> <img id='black' src='objects/black.png' /> <img
+							id='fox2' src='objects/fox2.png' /> <img id='l1_bg1' src='objects/l1_bg1.png' /> <img
+							id='l1_bg2' src='objects/l1_bg2.png' /> <img id='l1_fungus1' src='objects/l1_fungus1.png' />
+							<img id='l1_fungus2' src='objects/l1_fungus2.png' /> <img id='l1_fungus3'
+							src='objects/l1_fungus3.png' /> <img id='l1_fungus4' src='objects/l1_fungus4.png' /> <img
+							id='l1_layer14' src='objects/l1_layer14.png' /> <img id='l1_layer17'
+							src='objects/l1_layer17.png' /> <img id='l1_layer18' src='objects/l1_layer18.png' /> <img
+							id='l1_new_platform' src='objects/l1_new_platform.png' /> <img id='l1_new_platform_2'
+							src='objects/l1_new_platform_2.png' /> <img id='l1_new_platform_3'
+							src='objects/l1_new_platform_3.png' /> <img id='l1_new_platform_4'
+							src='objects/l1_new_platform_4.png' /> <img id='l1_new_platform_5'
+							src='objects/l1_new_platform_5.png' /> <img id='l1_new_platform_6'
+							src='objects/l1_new_platform_6.png' /> <img id='l1_prot_rock' src='objects/l1_prot_rock.png' />
+							<img id='l1_prot_rock_2' src='objects/l1_prot_rock_2.png' /> <img id='l1_prot_rock_3'
+							src='objects/l1_prot_rock_3.png' /> <img id='l1_shroom1' src='objects/l1_shroom1.png' /> <img
+							id='l1_shroom2' src='objects/l1_shroom2.png' /> <img id='l1_shroom3'
+							src='objects/l1_shroom3.png' /> <img id='l1_shroom4' src='objects/l1_shroom4.png' /> <img
+							id='l2_accent_grass' src='objects/l2_accent_grass.png' /> <img id='l2_background_gradient'
+							src='objects/l2_background_gradient.png' /> <img id='l2_background_rocks'
+							src='objects/l2_background_rocks.png' /> <img id='l2_background_rocks_big'
+							src='objects/l2_background_rocks_big.png' /> <img id='l2_big_platform'
+							src='objects/l2_big_platform.png' /> <img id='l2_big_tall_platform'
+							src='objects/l2_big_tall_platform.png' /> <img id='l2_big_wide_platform'
+							src='objects/l2_big_wide_platform.png' /> <img id='l2_dead_grass'
+							src='objects/l2_dead_grass.png' /> <img id='l2_end_platform'
+							src='objects/l2_end_platform.png' /> <img id='l2_floating_platform'
+							src='objects/l2_floating_platform.png' /> <img id='l2_medium_platform'
+							src='objects/l2_medium_platform.png' /> <img id='l2_more_dead_grass'
+							src='objects/l2_more_dead_grass.png' /> <img id='l2_small_platform'
+							src='objects/l2_small_platform.png' /> <img id='l2_small_right'
+							src='objects/l2_small_right.png' /> <img id='right_arrow' src='objects/right_arrow.png' />
+							<img id='test_light' src='objects/test_light.png' /> <img id='transparent'
+							src='objects/transparent.png' />
+
+						</span>
+
+					</div>
+					<hr />
+					<h4>Object Position:</h4>
+					<label>X:</label><input type="text" id="object_x" value="0" /><br /> <label>Y:</label><input
+						type="text" id="object_y" value="0" /><br /> <label>Z-layer:</label><select id="object_z"><option
+							value="1">1 Closest to Camera</option>
+						<option value="2">2</option>
+						<option value="3">3</option>
+						<option value="4">4</option>
+						<option value="5">5 Player/Interaction</option>
+						<option value="6">6</option>
+						<option value="7">7</option>
+						<option value="8">8</option>
+						<option value="9">9 Farthest From Camera</option></select><br />
+					<hr />
+					<h4>Attributes</h4>
+					<label>Degree:</label><input type="text" id="object_degree" value="0" /><br /> <label>Scale:</label><select
+						id="object_scale"><option value="1.0">1.0</option>
+						<option value="0.9">0.9</option>
+						<option value="0.8">0.8</option>
+						<option value="0.7">0.7</option>
+						<option value="0.6">0.6</option>
+						<option value="0.5">0.5</option>
+						<option value="0.4">0.4</option>
+						<option value="0.3">0.3</option>
+						<option value="0.2">0.2</option>
+						<option value="0.1">0.1</option></select><br />
+					<hr />
+				</div>
+
+				<div class="tab_hideable" style="display: none;" id="tab_lights">
+					<h4>Selected Light:</h4>
+					<div style="overflow: auto;">
+						<select style="float: right;" id="light_drop_down"><option value="">None</option></select><br />
+						<label>Name/ID:</label><input type="text" id="light_name_id" value="000x0" /><br />
+					</div>
+					<hr />
+					<h4>Light Type:</h4>
+					<div style="overflow: auto;">
+						<select style="float: right;" id="light_type_drop_down">
+							<option selected="selected" value="ambient">Ambient</option>
+							<option value="point">Point</option>
+							<option value="spot">Spot</option>
+							<option value="custom">Custom</option>
+						</select>
+					</div>
+					<hr />
+					<h4>Light Position:</h4>
+					<label>X:</label><input type="text" id="light_x" value="0" /><br /> <label>Y:</label><input
+						type="text" id="light_y" value="0" /><br />
+					<hr />
+					<h4>Attributes</h4>
+					<label>Color:</label><input type="text" id="light_color" value="rgba(100,100,100,1)" /><br />
+					<label>Active:</label><input type="checkbox" id="light_active" /><br /> <span
+						class="light_custom_wrap"> <label>LightObject</label> <select
+						id="light_custom_object_drop_down">
+							<option my_width="413" my_height="125" my_image="test_light" value="test">Test</option>
+					</select><br />
+					</span> <span style="display: none;" id="images"> <!-- PUT IMAGES HERE --> <img id="test_light"
+						src="lights/test_light.png" />
+					</span> <span class="light_spot_show_wrap"><label>closewidth:</label><input type="text"
+						id="light_closewidth" value="10" /><br /> <label>farwidth:</label><input type="text"
+						id="light_farwidth" value="100" /><br /> <label>Degree:</label><input type="text"
+						id="light_degree" value="90" /><br /></span> <span class="light_throw_wrap"> <label>Throw:</label><input
+						type="text" id="light_throw" value="100" /><br /> <label>Bloom:</label><input
+						type="checkbox" id="light_bloom" /><br /> <label>Effect:</label><select
+						id="light_effect_drop_down">
+							<option selected="selected" value="none">none</option>
+							<option value="rotate">Rotate</option>
+							<option value="pulse">Pulse</option>
+							<option value="flicker">Flicker</option>
+					</select><br />
+					</span>
+					<hr />
+				</div>
+
+				<div class="tab_hideable" style="display: none;" id="tab_events">
+					<h4>Selected Event:</h4>
+					<div style="overflow: auto;">
+						<select style="float: right;" id="event_drop_down"><option value="">None</option></select><br />
+						<label>Name/ID:</label><input type="text" id="event_name_id" value="000x0" /><br />
+					</div>
+					<hr />
+					<h4>Event Type:</h4>
+					<div style="overflow: auto;">
+						<select style="float: right;" id="event_type_drop_down">
+							<option value="right_arrow">Right Arrow</option>
+							<option value="left_arrow">Left Arrow</option>
+							<option value="up_arrow">Up Arrow</option>
+							<option value="send_to_start">Send To Start</option>
+							<option value="invisible_wall">Invisible Wall</option>
+							<option value="active_toggle">Toggle Active(draw)</option>
+							<option value="active_on">Active on</option>
+							<option value="active_off">Active off</option>
+							<option value="active_touch">Active when collision</option>
+							<option value="active_anti_touch">Active when not collision</option>
+							<option value="next_level">Load Next Level</option>
+							<option value="checkpoint">Check Point</option>
+						</select>
+					</div>
+					<hr />
+					<h4>Event Position:</h4>
+					<label>X:</label><input type="text" id="event_x" value="0" /><br /> <label>Y:</label><input
+						type="text" id="event_y" value="0" /><br /> <label>Width:</label><input type="text"
+						id="event_width" value="200" /><br /> <label>Height:</label><input type="text"
+						id="event_height" value="200" /><br /> <label>Affects (,):</label><input type="text"
+						id="event_affects" value="" /><br />
+					<hr />
+				</div>
+
 			</div>
 		</div>
-		<button style="margin-top: 10px;" onClick="openLevelCode(false);">View/Edit
-			Level Code</button>
+		<button style="margin-top: 10px;" onClick="openLevelCode(false);">View/Edit Level Code</button>
 	</div>
-	
+
 	<div class="central_div" style="background-color: white; border: 1px solid black;">
-	<div style="padding: 10px; overflow: auto;" >
-	
-	<div style="float: left; width: 200px;">
-		<span class="control_scheme"></span><span class="control_scheme"><input class="control_scheme_button" e="38" type="button" id="go_up" value="up" /></span> <br />
-		<span class="control_scheme"><input e="37" class="control_scheme_button" type="button" id="go_left" value="left" /></span><span class="control_scheme">&nbsp</span><span class="control_scheme"><input e="39" class="control_scheme_button" type="button" id="go_right" value="right" /></span> <br />
-		<span class="control_scheme"></span><span class="control_scheme"><input class="control_scheme_button" type="button" e="40" id="go_down" value="down" /></span><span class="control_scheme"></span><span class="control_scheme"><input class="control_scheme_button" type="button" e="46" id="delete" value="delete" /></span> <br />
-	</div>
-	<div class="vertical_divider"></div>
-	<div style="float: left; margin-left: 10px;">
-		<label>Overlay Phone:</label><input type="checkbox" id="phonecheck" /><br />
-		<label>FPS:</label><input checked="checked" type="checkbox" id="fpscheck" /><br />
-		<label>Labels:</label><input checked="checked" type="checkbox" id="labelcheck" /><br />
-	</div>
-	<div class="vertical_divider" style="border: none;"></div>
-	<div style="float: left; margin-left: 10px;">
-		<label>MouseCoords:</label><input checked="checked" type="checkbox" id="mousecheck" /><br />
-		<label>Outlines:</label><input checked="checked" type="checkbox" id="outlines" /><br />
-	</div>
-	<div class="vertical_divider" style="border: none;"></div>
-	<div style="float: left; margin-left: 10px;">
-		<label>Draw Lights:</label><input checked="checked" type="checkbox" id="light_check" /><br />
-		<label>Draw Objects:</label><input checked="checked" type="checkbox" id="object_check" /><br />
-		<label>Draw Events:</label><input checked="checked" type="checkbox" id="event_check" /><br />
-	</div>
-		<div class="vertical_divider"></div>
-	<div style="float:right;"></div>	
-	</div>
+		<div style="padding: 10px; overflow: auto;">
+
+			<div style="float: left; width: 200px;">
+				<span class="control_scheme"></span><span class="control_scheme"><input
+					class="control_scheme_button" e="38" type="button" id="go_up" value="up" /></span> <br /> <span
+					class="control_scheme"><input e="37" class="control_scheme_button" type="button"
+					id="go_left" value="left" /></span><span class="control_scheme">&nbsp</span><span
+					class="control_scheme"><input e="39" class="control_scheme_button" type="button"
+					id="go_right" value="right" /></span> <br /> <span class="control_scheme"></span><span
+					class="control_scheme"><input class="control_scheme_button" type="button" e="40"
+					id="go_down" value="down" /></span><span class="control_scheme"></span><span class="control_scheme"><input
+					class="control_scheme_button" type="button" e="46" id="delete" value="delete" /></span> <br />
+			</div>
+			<div class="vertical_divider"></div>
+			<div style="float: left; margin-left: 10px;">
+				<label>Overlay Phone:</label><input type="checkbox" id="phonecheck" /><br /> <label>FPS:</label><input
+					checked="checked" type="checkbox" id="fpscheck" /><br /> <label>Labels:</label><input
+					checked="checked" type="checkbox" id="labelcheck" /><br />
+			</div>
+			<div class="vertical_divider" style="border: none;"></div>
+			<div style="float: left; margin-left: 10px;">
+				<label>MouseCoords:</label><input checked="checked" type="checkbox" id="mousecheck" /><br /> <label>Outlines:</label><input
+					checked="checked" type="checkbox" id="outlines" /><br />
+			</div>
+			<div class="vertical_divider" style="border: none;"></div>
+			<div style="float: left; margin-left: 10px;">
+				<label>Draw Lights:</label><input checked="checked" type="checkbox" id="light_check" /><br />
+				<label>Draw Objects:</label><input checked="checked" type="checkbox" id="object_check" /><br />
+				<label>Draw Events:</label><input checked="checked" type="checkbox" id="event_check" /><br />
+			</div>
+			<div class="vertical_divider"></div>
+			<div style="float: right;"></div>
+		</div>
 	</div>
 </body>
 </html>

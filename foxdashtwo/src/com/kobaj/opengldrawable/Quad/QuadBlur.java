@@ -17,17 +17,18 @@ public class QuadBlur extends QuadGodRay
 	public void setHorizontalBlur()
 	{
 		y_blur_offset = 0;
-		x_blur_offset = blur_offset / (double) square;
+		x_blur_offset = blur_offset / (double) square_width;
 	}
 	
 	public void setVerticalBlur()
 	{
-		y_blur_offset = 0;
-		x_blur_offset = blur_offset / (double) square;
+		y_blur_offset = blur_offset / (double) square_height;
+		x_blur_offset = 0;
 	}
 	
 	public void setFullBlur()
 	{
-		y_blur_offset = x_blur_offset = blur_offset / (double) square;
+		x_blur_offset = blur_offset / (double) square_width;
+		y_blur_offset = blur_offset / (double) square_height;
 	}
 }

@@ -36,24 +36,25 @@ public class LevelEventArrows extends LevelEventBase
 	{
 		super.onInitialize(player, objects, lights, id_strings);
 		
+		my_draw = new QuadCompressed(R.raw.right_arrow, R.raw.right_arrow_alpha, 112, 200);
+		secondary_draw = new QuadCompressed(R.raw.right_arrow, R.raw.right_arrow_alpha, 112, 200);
+		
 		// drawable
 		// all the different types of level events
 		if (this_event == EnumLevelEvent.left_arrow || this_event == EnumLevelEvent.right_arrow)
 		{
+			secondary_draw = null;
+			
 			double x_pos = 0;
 			double y_pos = 0;
 			
 			if (this_event == EnumLevelEvent.left_arrow)
 			{
 				x_pos = Functions.screenXToShaderX(100);
-				my_draw = new Quad(R.drawable.left_arrow, 112, 200);
-				
+				my_draw.setRotationZ(180);
 			}
 			else if (this_event == EnumLevelEvent.right_arrow)
-			{
 				x_pos = Functions.screenXToShaderX(Constants.width - 100);
-				my_draw = new QuadCompressed(R.raw.right_arrow, R.raw.right_arrow_alpha, 112, 200);
-			}
 			
 			my_draw.setXYPos(x_pos, y_pos, EnumDrawFrom.center);
 			
@@ -65,11 +66,11 @@ public class LevelEventArrows extends LevelEventBase
 			double y_pos = 0;
 			
 			double x_pos_1 = Functions.screenXToShaderX(100);
-			my_draw = new Quad(R.drawable.up_arrow, 200, 112);
+			my_draw.setRotationZ(90);
 			my_draw.setXYPos(x_pos_1, y_pos, EnumDrawFrom.center);
 			
 			double x_pos_2 = Functions.screenXToShaderX(Constants.width - 100);
-			secondary_draw = new Quad(R.drawable.up_arrow, 200, 112);
+			secondary_draw.setRotationZ(90);
 			secondary_draw.setXYPos(x_pos_2, y_pos, EnumDrawFrom.center);
 			
 			x_poss.add(x_pos_1);

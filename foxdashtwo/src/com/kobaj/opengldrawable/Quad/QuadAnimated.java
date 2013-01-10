@@ -36,21 +36,19 @@ public class QuadAnimated extends QuadCompressed
 		this.setAnimation(EnumGlobalAnimationList.stop, 0, -1);
 	
 		// texture data
-		final int tr_square_x = com.kobaj.math.Functions.nearestPowerOf2(texture_width);
-		final int tr_square_y = com.kobaj.math.Functions.nearestPowerOf2(texture_height);
-		
-		square = Math.max(tr_square_x, tr_square_y);
+		square_width = com.kobaj.math.Functions.nearestPowerOf2(texture_width);
+		square_height = com.kobaj.math.Functions.nearestPowerOf2(texture_height);
 	}
 	
 	// called to find the text coords
 	private void updateTexCoords()
 	{
 		// translate the frames coordinates
-		float tr_start_x = (float) com.kobaj.math.Functions.linearInterpolate(0.0, square, currently_playing_frameset_reference.current_frame_reference.x_start, 0.0, 1.0);
-		float tr_start_y = (float) com.kobaj.math.Functions.linearInterpolate(0.0, square, currently_playing_frameset_reference.current_frame_reference.y_start, 0.0, 1.0);
+		float tr_start_x = (float) com.kobaj.math.Functions.linearInterpolate(0.0, square_width, currently_playing_frameset_reference.current_frame_reference.x_start, 0.0, 1.0);
+		float tr_start_y = (float) com.kobaj.math.Functions.linearInterpolate(0.0, square_height, currently_playing_frameset_reference.current_frame_reference.y_start, 0.0, 1.0);
 		
-		float tr_end_x = (float) com.kobaj.math.Functions.linearInterpolate(0.0, square, currently_playing_frameset_reference.current_frame_reference.x_end, 0.0, 1.0);
-		float tr_end_y = (float) com.kobaj.math.Functions.linearInterpolate(0.0, square, currently_playing_frameset_reference.current_frame_reference.y_end, 0.0, 1.0);
+		float tr_end_x = (float) com.kobaj.math.Functions.linearInterpolate(0.0, square_width, currently_playing_frameset_reference.current_frame_reference.x_end, 0.0, 1.0);
+		float tr_end_y = (float) com.kobaj.math.Functions.linearInterpolate(0.0, square_height, currently_playing_frameset_reference.current_frame_reference.y_end, 0.0, 1.0);
 		
 		if(reverse_left_right)
 		{

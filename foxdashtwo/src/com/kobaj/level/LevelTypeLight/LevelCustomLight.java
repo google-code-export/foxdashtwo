@@ -30,7 +30,7 @@ public class LevelCustomLight extends LevelBloomLight
 		
 		if (main != -1 && alpha != -1)
 		{
-			quad_light = new QuadCompressed(main, R.raw.black_alpha, width, height);
+			quad_light = new QuadCompressed(main, R.raw.white, width, height);
 			if (is_bloom)
 				quad_bloom = new QuadCompressed(main, alpha, width, height);
 		}

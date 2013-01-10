@@ -16,8 +16,8 @@ public class InputTypeHalfHalf extends InputTypeBase
 	public void onInitialize()
 	{
 		// make
-		my_quad_left = new QuadCompressed(R.raw.black_alpha, R.raw.black_alpha, 2, Constants.height);
-		my_quad_right = new QuadCompressed(R.raw.black_alpha, R.raw.black_alpha, 2, Constants.height);
+		my_quad_left = new QuadCompressed(R.raw.white, R.raw.white, 2, Constants.height);
+		my_quad_right = new QuadCompressed(R.raw.white, R.raw.white, 2, Constants.height);
 		
 		// move
 		my_quad_left.setXYPos(Functions.screenXToShaderX(2), Functions.screenYToShaderY(0), EnumDrawFrom.bottom_left);

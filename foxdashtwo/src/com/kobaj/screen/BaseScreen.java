@@ -42,7 +42,7 @@ public abstract class BaseScreen implements Runnable
 	public void run()
 	{
 		// nice overlay for fade in and out
-		black_overlay = new QuadCompressed(R.raw.black_alpha, R.raw.black_alpha, Constants.width, Constants.height);
+		black_overlay = new QuadCompressed(R.raw.white, R.raw.white, Constants.width, Constants.height);
 		black_overlay.setXYPos(0, 0, EnumDrawFrom.center);
 		black_overlay.color = Color.BLACK;
 		
