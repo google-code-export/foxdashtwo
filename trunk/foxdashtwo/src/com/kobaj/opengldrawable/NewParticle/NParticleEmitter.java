@@ -98,7 +98,7 @@ public class NParticleEmitter
 			if (particle_type == EnumParticleType.floating_dust)
 				temp.quad_reference = new QuadColorShape(8, 0x99000099, true, 0);
 			else if(particle_type == EnumParticleType.snow)
-				temp.quad_reference = new QuadCompressed(R.raw.black_alpha, R.raw.black_alpha, 8, 8);
+				temp.quad_reference = new QuadCompressed(R.raw.white, R.raw.white, 8, 8);
 			
 			temp.onInitialize();
 			unused_pool.push(temp);

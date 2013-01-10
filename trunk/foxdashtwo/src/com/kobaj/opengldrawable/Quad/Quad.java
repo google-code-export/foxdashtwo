@@ -64,7 +64,8 @@ public class Quad
 	public int height;
 	public double shader_width;
 	public double shader_height;
-	public int square;
+	public int square_width;
+	public int square_height;
 	
 	// data about the quad
 	private float[] my_position_matrix = new float[18];
@@ -148,13 +149,11 @@ public class Quad
 		setWidthHeight(width, height);
 		
 		// texture data
-		final int tr_square_x = com.kobaj.math.Functions.nearestPowerOf2(width);
-		final int tr_square_y = com.kobaj.math.Functions.nearestPowerOf2(height);
+	    square_width = com.kobaj.math.Functions.nearestPowerOf2(width);
+		square_height = com.kobaj.math.Functions.nearestPowerOf2(height);
 		
-		square = Math.max(tr_square_x, tr_square_y);
-		
-		final float tex_y = (float) com.kobaj.math.Functions.linearInterpolateUnclamped(0, square, height, 0, 1);
-		final float tex_x = (float) com.kobaj.math.Functions.linearInterpolateUnclamped(0, square, width, 0, 1);
+		final float tex_y = (float) com.kobaj.math.Functions.linearInterpolateUnclamped(0, square_height, height, 0, 1);
+		final float tex_x = (float) com.kobaj.math.Functions.linearInterpolateUnclamped(0, square_width, width, 0, 1);
 		
 		simpleUpdateTexCoords(tex_x, tex_y);
 		

@@ -10,14 +10,12 @@ public class QuadGodRay extends Quad
 		this.width = Constants.width;
 		this.height = Constants.height;
 		
-		int texW = com.kobaj.math.Functions.nearestPowerOf2(this.width);
-		int texH = com.kobaj.math.Functions.nearestPowerOf2(this.height);
-		
-		final int square = Math.max(texW, texH);
+		square_width = com.kobaj.math.Functions.nearestPowerOf2(this.width);
+		square_height = com.kobaj.math.Functions.nearestPowerOf2(this.height);
 		
 		onCreate(1, this.width, this.height);
-		complexUpdateTexCoords(0, (float) com.kobaj.math.Functions.linearInterpolateUnclamped(0, square, this.width, 0, 1),
-				1.0f - (float) com.kobaj.math.Functions.linearInterpolateUnclamped(0, square, this.height, 0, 1), 1);
+		complexUpdateTexCoords(0, (float) com.kobaj.math.Functions.linearInterpolateUnclamped(0, square_width, this.width, 0, 1),
+				1.0f - (float) com.kobaj.math.Functions.linearInterpolateUnclamped(0, square_height, this.height, 0, 1), 1);
 	}
 	
 	@Override

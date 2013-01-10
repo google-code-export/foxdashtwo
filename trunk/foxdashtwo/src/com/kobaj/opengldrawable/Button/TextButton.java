@@ -21,7 +21,7 @@ public class TextButton extends Button
 	public void onInitialize()
 	{
 		// even if we dont draw this, we will need to instantiate it so we have something to check a bounding box with.
-		invisible_outline = new QuadCompressed(R.raw.black_alpha, R.raw.black_alpha, width, height);
+		invisible_outline = new QuadCompressed(R.raw.white, R.raw.white, width, height);
 	}
 	
 	public void onDrawConstant()
