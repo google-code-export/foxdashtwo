@@ -16,9 +16,6 @@ public class QuadAnimated extends QuadCompressed
 	// is playing?
 	public boolean playing = true;
 	
-	public boolean reverse_left_right = false;
-	public boolean reverse_up_down = false;
-	
 	// screen coordinates
 	public QuadAnimated(int texture_resource, int alpha_resource, int animation_resource, int width, int height)
 	{
@@ -34,7 +31,7 @@ public class QuadAnimated extends QuadCompressed
 		
 		// every animation must have stop
 		this.setAnimation(EnumGlobalAnimationList.stop, 0, -1);
-	
+		
 		// texture data
 		square_width = com.kobaj.math.Functions.nearestPowerOf2(texture_width);
 		square_height = com.kobaj.math.Functions.nearestPowerOf2(texture_height);
@@ -49,20 +46,6 @@ public class QuadAnimated extends QuadCompressed
 		
 		float tr_end_x = (float) com.kobaj.math.Functions.linearInterpolate(0.0, square_width, currently_playing_frameset_reference.current_frame_reference.x_end, 0.0, 1.0);
 		float tr_end_y = (float) com.kobaj.math.Functions.linearInterpolate(0.0, square_height, currently_playing_frameset_reference.current_frame_reference.y_end, 0.0, 1.0);
-		
-		if(reverse_left_right)
-		{
-			float temp = tr_start_x;
-			tr_start_x = tr_end_x;
-			tr_end_x = temp;
-		}
-		
-		if(reverse_up_down)
-		{
-			float temp = tr_start_y;
-			tr_start_y = tr_end_y;
-			tr_end_y = temp;
-		}
 		
 		complexUpdateTexCoords(tr_start_x, tr_end_x, tr_start_y, tr_end_y);
 	}
@@ -100,11 +83,11 @@ public class QuadAnimated extends QuadCompressed
 		
 		if (setAnimation(id))
 		{
-			if(frame >= 0)
+			if (frame >= 0)
 				if (currently_playing_frameset_reference.setCurrentFrame(frame))
 					success = true;
 			
-			if(fps >= 0)
+			if (fps >= 0)
 				currently_playing_frameset_reference.rec_fps = fps;
 		}
 		
