@@ -1,8 +1,5 @@
 package com.kobaj.opengldrawable.Quad;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-
 import android.opengl.GLES20;
 
 import com.kobaj.loader.GLBitmapReader;
@@ -28,6 +25,7 @@ public class QuadCompressed extends Quad
 		com.kobaj.loader.GLBitmapReader.loadTextureFromResource(texture_resource, true);
 		GLES20.glActiveTexture(GLES20.GL_TEXTURE1);
 		com.kobaj.loader.GLBitmapReader.loadTextureFromResource(alpha_resource, true);
+		reverse_texture_y = false;
 		
 		// create rest of data
 		onCreate(texture_resource, width, height);
@@ -40,40 +38,6 @@ public class QuadCompressed extends Quad
 	{
 		super.onUnInitialize();
 		GLBitmapReader.unloadTexture(alpha_resource);
-	}
-	
-	// these are in shader coordinates. start_x, end_x, start_y, end_y
-	// THIS METHOD IS DIFFERENT THAN THE REGULAR QUAD, DO NOT DELETE
-	@Override
-	protected void complexUpdateTexCoords(float one_x, float two_x, float one_y, float two_y)
-	{
-		// only time I use floats...
-		float buffer = -0.005f;
-		one_x -= buffer;
-		two_x += buffer;
-		one_y -= buffer;
-		two_y += buffer;
-		
-		cubeTextureCoordinateData[0] = one_x;
-		cubeTextureCoordinateData[1] = one_y;
-		cubeTextureCoordinateData[2] = one_x;
-		cubeTextureCoordinateData[3] = two_y;
-		cubeTextureCoordinateData[4] = two_x;
-		cubeTextureCoordinateData[5] = one_y;
-		
-		cubeTextureCoordinateData[6] = one_x;
-		cubeTextureCoordinateData[7] = two_y;
-		cubeTextureCoordinateData[8] = two_x;
-		cubeTextureCoordinateData[9] = two_y;
-		cubeTextureCoordinateData[10] = two_x;
-		cubeTextureCoordinateData[11] = one_y;
-		
-		if (my_tex_coord == null)
-			my_tex_coord = ByteBuffer.allocateDirect(cubeTextureCoordinateData.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
-		else
-			my_tex_coord.clear();
-		
-		my_tex_coord.put(cubeTextureCoordinateData).position(0);
 	}
 	
 	public boolean setAlphaDataHandle()

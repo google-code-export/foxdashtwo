@@ -261,10 +261,7 @@ public class Level
 				reference.setAnimation(EnumGlobalAnimationList.running);
 				
 				// current direction
-				if (player.quad_object.x_vel > 0)
-					reference.reverse_left_right = true;
-				else
-					reference.reverse_left_right = false;
+				reference.reverseLeftRight((player.quad_object.x_vel > 0));
 			}
 			
 			reference.onUpdate(delta);

@@ -72,6 +72,11 @@ public class Quad
 	protected FloatBuffer my_position;
 	protected FloatBuffer my_tex_coord;
 	
+	protected boolean reverse_texture_y = true;
+	protected boolean reverse_left_right = false;
+	protected boolean reverse_up_down = false;
+	private final float[] unfiltered_texture_data = new float[4]; // indicies are each corner for complexupdatetexcoordinate
+	
 	// movement matrixes
 	// transformation matrix to convert from object to world space
 	public final float[] my_model_matrix = new float[16];
@@ -79,7 +84,7 @@ public class Quad
 	private final float[] rotation_matrix = new float[16];
 	private final float[] scale_matrix = new float[16];
 	private final float[] my_rs_matrix = new float[16];
-	protected final float[] cubeTextureCoordinateData = new float[12];
+	protected final float[] cube_texture_coordinate_data = new float[12];
 	
 	// handle to texture
 	public int my_texture_data_handle = -1;
@@ -149,7 +154,7 @@ public class Quad
 		setWidthHeight(width, height);
 		
 		// texture data
-	    square_width = com.kobaj.math.Functions.nearestPowerOf2(width);
+		square_width = com.kobaj.math.Functions.nearestPowerOf2(width);
 		square_height = com.kobaj.math.Functions.nearestPowerOf2(height);
 		
 		final float tex_y = (float) com.kobaj.math.Functions.linearInterpolateUnclamped(0, square_height, height, 0, 1);
@@ -164,9 +169,15 @@ public class Quad
 		// set/add/remove more rectangles as needed.
 		if (phys_rect_list.isEmpty())
 			phys_rect_list.add(new RectFExtended(-tr_x, tr_y, tr_x, -tr_y));
-	
+		
 		// finally
 		update_position_matrix(true);
+	}
+	
+	// only meant to 'refresh' the current tex coords in the buffer
+	private void updateTexCoords()
+	{
+		complexUpdateTexCoords(unfiltered_texture_data[0], unfiltered_texture_data[1], unfiltered_texture_data[2], unfiltered_texture_data[3]);
 	}
 	
 	// methods for calculating stuffs
@@ -176,8 +187,15 @@ public class Quad
 	}
 	
 	// these are in shader coordinates. start_x, end_x, start_y, end_y
+	// reverse y is true for regular quad, and false for compressed quad
 	protected void complexUpdateTexCoords(float one_x, float two_x, float one_y, float two_y)
 	{
+		// keep a memory
+		unfiltered_texture_data[0] = one_x;
+		unfiltered_texture_data[1] = two_x;
+		unfiltered_texture_data[2] = one_y;
+		unfiltered_texture_data[3] = two_y;
+		
 		// only time I use floats...
 		float buffer = -0.005f;
 		one_x -= buffer;
@@ -185,28 +203,67 @@ public class Quad
 		one_y -= buffer;
 		two_y += buffer;
 		
+		// manipulations to turn the texture around correctly.
+		if (reverse_left_right)
+		{
+			float temp = one_x;
+			one_x = two_x;
+			two_x = temp;
+		}
+		
+		if (reverse_up_down)
+		{
+			float temp = one_y;
+			one_y = two_y;
+			two_y = temp;
+		}
+		
+		if (reverse_texture_y)
+		{
+			one_y = -one_y;
+			two_y = -two_y;
+		}
+		
 		// S, T (or X, Y)
 		// Texture coordinate data.
-		cubeTextureCoordinateData[0] = one_x;
-		cubeTextureCoordinateData[1] = -one_y;
-		cubeTextureCoordinateData[2] = one_x;
-		cubeTextureCoordinateData[3] = -two_y;
-		cubeTextureCoordinateData[4] = two_x;
-		cubeTextureCoordinateData[5] = -one_y;
+		cube_texture_coordinate_data[0] = one_x;
+		cube_texture_coordinate_data[1] = one_y;
+		cube_texture_coordinate_data[2] = one_x;
+		cube_texture_coordinate_data[3] = two_y;
+		cube_texture_coordinate_data[4] = two_x;
+		cube_texture_coordinate_data[5] = one_y;
 		
-		cubeTextureCoordinateData[6] = one_x;
-		cubeTextureCoordinateData[7] = -two_y;
-		cubeTextureCoordinateData[8] = two_x;
-		cubeTextureCoordinateData[9] = -two_y;
-		cubeTextureCoordinateData[10] = two_x;
-		cubeTextureCoordinateData[11] = -one_y;
+		cube_texture_coordinate_data[6] = one_x;
+		cube_texture_coordinate_data[7] = two_y;
+		cube_texture_coordinate_data[8] = two_x;
+		cube_texture_coordinate_data[9] = two_y;
+		cube_texture_coordinate_data[10] = two_x;
+		cube_texture_coordinate_data[11] = one_y;
 		
 		if (my_tex_coord == null)
-			my_tex_coord = ByteBuffer.allocateDirect(cubeTextureCoordinateData.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
+			my_tex_coord = ByteBuffer.allocateDirect(cube_texture_coordinate_data.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
 		else
 			my_tex_coord.clear();
 		
-		my_tex_coord.put(cubeTextureCoordinateData).position(0);
+		my_tex_coord.put(cube_texture_coordinate_data).position(0);
+	}
+	
+	public void reverseLeftRight(boolean reverse)
+	{
+		if (reverse_left_right != reverse)
+		{
+			reverse_left_right = reverse;
+			updateTexCoords();
+		}
+	}
+	
+	public void reverseUpDown(boolean reverse)
+	{
+		if (reverse_up_down != reverse)
+		{
+			reverse_up_down = reverse;
+			updateTexCoords();
+		}
 	}
 	
 	// this is a value between 1.0 and
@@ -385,9 +442,8 @@ public class Quad
 			y_pos = y;
 		}
 		
-		//nothing has changed
-		if(x_pos == this.x_pos &&
-				y_pos == this.y_pos)
+		// nothing has changed
+		if (x_pos == this.x_pos && y_pos == this.y_pos)
 			return;
 		
 		this.x_pos = x_pos;
@@ -409,8 +465,7 @@ public class Quad
 		{
 			Functions.setIdentityMatrix(my_model_matrix);
 			Functions.setIdentityMatrix(scale_matrix);
-			Matrix.scaleM(scale_matrix, 0, (float) (this.shader_width / 2.0 * this.scale_value),
-					(float) (this.shader_height / 2.0 *  this.scale_value), (float) this.scale_value);
+			Matrix.scaleM(scale_matrix, 0, (float) (this.shader_width / 2.0 * this.scale_value), (float) (this.shader_height / 2.0 * this.scale_value), 1.0f);
 			Matrix.setRotateEulerM(rotation_matrix, 0, 0.0f, 0.0f, (float) -degree);
 			Matrix.multiplyMM(my_rs_matrix, 0, rotation_matrix, 0, scale_matrix, 0);
 			
