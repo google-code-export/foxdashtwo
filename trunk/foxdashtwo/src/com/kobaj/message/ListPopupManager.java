@@ -10,20 +10,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.kobaj.foxdashtwo.R;
+import com.kobaj.math.Constants;
 
 // Thanks to Google/Android for this.
 // https://developer.android.com/guide/topics/ui/dialogs.html
-public class PopupManager extends DialogFragment
+public class ListPopupManager extends DialogFragment
 {
-	public static final String implement_error = " must implement NoticedialogListener";
-	
 	/*
 	 * The activity that creates an instance of this dialog fragment must implement this interface in order to receive event callbacks. Each method passes the DialogFragment in case the host needs to
 	 * query it.
 	 */
 	public interface NoticeDialogListener
 	{
-		public void onDialogPositiveClick(PopupManager dialog);
+		public void onDialogListSelect(int id);
 	}
 	
 	// Use this instance of the interface to deliver action events
@@ -43,39 +42,33 @@ public class PopupManager extends DialogFragment
 		catch (ClassCastException e)
 		{
 			// The activity doesn't implement the interface, throw exception
-			throw new ClassCastException(activity.toString() + implement_error);
+			throw new ClassCastException(activity.toString() + PopupManager.implement_error);
 		}
 	}
 	
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState)
 	{
+		// get all the accounts
+		final String[] accounts = Constants.accounts.get_accounts();
+		
 		// Build the dialog and set up the button click handlers
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		// Get the layout inflater
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 		
-		View mView = inflater.inflate(R.layout.alert_dialog_text_entry, null);
+		View mView = inflater.inflate(R.layout.alert_list_dialog, null);
 		
 		// Inflate and set the layout for the dialog
 		// Pass null as the parent view because its going in the dialog layout
-		// builder.setTitle();
-		builder.setView(mView)
-		.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener()
+		builder.setTitle(R.string.account_list).setCancelable(false).setView(mView).setItems(accounts, new DialogInterface.OnClickListener()
 		{
 			public void onClick(DialogInterface dialog, int id)
 			{
-				// Send the positive button event back to the host activity
-				mListener.onDialogPositiveClick(PopupManager.this);
-			}
-		})
-		.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener()
-		{
-			public void onClick(DialogInterface dialog, int id)
-			{
-				// do nothing
+				mListener.onDialogListSelect(id);
 			}
 		});
+		
 		return builder.create();
 	}
 	

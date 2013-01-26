@@ -36,8 +36,8 @@
     <string name="error">Error:</string>
     <string name="play_header">Play:</string>
     <string name="error_message">There was an error somewhere. Sorry.</string>
-    <string name="alert_dialog_xml">Ineedtobedeletedlater</string>
-
+	<string name="account_list">Which account would you like to login with?</string>
+    
     <!-- buttons!!!! Squee -->
     <string name="quit">Quit</string>
     <string name="ok">OK</string>

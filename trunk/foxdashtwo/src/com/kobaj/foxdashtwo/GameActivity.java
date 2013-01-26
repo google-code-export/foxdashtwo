@@ -13,11 +13,12 @@ import android.view.Display;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 
+import com.kobaj.account_settings.AccountBackup;
 import com.kobaj.loader.FileHandler;
 import com.kobaj.math.Constants;
-import com.kobaj.networking.EnumNetworkAction;
+import com.kobaj.message.ToastManager;
 
-public class GameActivity extends FragmentActivity implements com.kobaj.networking.NetworkManager.FinishedURLListener
+public class GameActivity extends FragmentActivity
 {
 	/** Called when the activity is first created. */
 	
@@ -32,9 +33,8 @@ public class GameActivity extends FragmentActivity implements com.kobaj.networki
 	public static com.kobaj.opengl.MyGLSurfaceView mGLView;
 	
 	// saving state
-	protected String shared_prefs_name = "com.kobaj.foxdashtwo_prefs";
-	public static SharedPreferences mPrefs;
 	public static SharedPreferences.Editor ed;
+	public static SharedPreferences mPrefs;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -48,7 +48,7 @@ public class GameActivity extends FragmentActivity implements com.kobaj.networki
 		Constants.resources = this.getResources();
 		
 		// grabbing save states
-		mPrefs = getSharedPreferences(shared_prefs_name, 0);
+		mPrefs = getSharedPreferences(AccountBackup.MY_PREFS_KEY, MODE_PRIVATE);
 		ed = mPrefs.edit();
 		
 		// keeping the screen on
@@ -71,7 +71,7 @@ public class GameActivity extends FragmentActivity implements com.kobaj.networki
 		Constants.sd_scale = metrics.scaledDensity;
 		
 		// touchy
-		com.kobaj.math.Constants.input_manager = new com.kobaj.input.InputManager();
+		Constants.input_manager = new com.kobaj.input.InputManager();
 		
 		// Create a GLSurfaceView instance and set it
 		// as the ContentView for this Activity
@@ -95,7 +95,9 @@ public class GameActivity extends FragmentActivity implements com.kobaj.networki
 		Constants.music_player.stop();
 		
 		// save any prefs
+		//ed.putString("test", "tesssst");
 		ed.commit();
+		AccountBackup.requestBackup();
 		
 		mGLView.onScreenPause();
 	}
@@ -105,6 +107,11 @@ public class GameActivity extends FragmentActivity implements com.kobaj.networki
 	{
 		super.onResume();
 		wl.acquire();
+		
+		//resume
+		//AccountBackup.requestRestore();
+		String whatisit = mPrefs.getString("test", "failed");
+		ToastManager.makeLongToast(whatisit);
 		
 		mGLView.onResume();
 	}
@@ -133,11 +140,5 @@ public class GameActivity extends FragmentActivity implements com.kobaj.networki
 	{
 		com.kobaj.math.Constants.input_manager.eventUpdate(e);
 		return true;
-	}
-	
-	public void onFinishedURL(String value, EnumNetworkAction action)
-	{
-		// TODO Auto-generated method stub
-		
 	}
 }

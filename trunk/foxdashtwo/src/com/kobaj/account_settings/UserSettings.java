@@ -1,4 +1,4 @@
-package com.kobaj.foxdashtwo;
+package com.kobaj.account_settings;
 
 import org.simpleframework.xml.Element;
 
@@ -14,4 +14,7 @@ public class UserSettings
 	
 	@Element
 	public static double desired_sound_volume = 1.0;
+	
+	@Element
+	public static int selected_account_login = -1;
 }

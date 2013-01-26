@@ -1,7 +1,7 @@
 package com.kobaj.screen.screenaddons.settings;
 
+import com.kobaj.account_settings.UserSettings;
 import com.kobaj.foxdashtwo.R;
-import com.kobaj.foxdashtwo.UserSettings;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.EnumDrawFrom;

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.support.v4.app.FragmentManager;
 
+import com.kobaj.account_settings.Accounts;
 import com.kobaj.audio.MusicPlayer;
 import com.kobaj.audio.Sound;
 import com.kobaj.input.InputManager;
@@ -128,7 +129,11 @@ public class Constants
 	public static float[] my_proj_matrix = new float[16];
 	public static float[] my_vp_matrix = new float[16];
 	public static float[] my_ip_matrix = new float[16];
-	public static final float[] identity_matrix = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 };
+	public static final float[] identity_matrix = { //
+	1, 0, 0, 0, //
+			0, 1, 0, 0, //
+			0, 0, 1, 0, //
+			0, 0, 0, 1 }; //
 	
 	// lighting
 	public static AmbientLightShader ambient_light;
@@ -145,4 +150,7 @@ public class Constants
 	
 	// errors
 	public static int exception_timeout = 300; // ms
+	
+	// accounts
+	public static Accounts accounts;
 }

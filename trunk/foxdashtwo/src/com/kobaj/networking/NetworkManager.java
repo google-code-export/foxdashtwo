@@ -19,6 +19,7 @@ public class NetworkManager implements Runnable
 	private final String error_tag = "Network Error";
 	private String the_url;
 	private EnumNetworkAction action;
+	private final static String implement_error = " must implement FinishedURLListener";
 	
 	public interface FinishedURLListener
 	{
@@ -34,7 +35,7 @@ public class NetworkManager implements Runnable
 		}
 		catch (ClassCastException e)
 		{
-			throw new ClassCastException(activity.toString() + " must implement FinishedURLListener");
+			throw new ClassCastException(activity.toString() + implement_error);
 		}
 	}
 	
