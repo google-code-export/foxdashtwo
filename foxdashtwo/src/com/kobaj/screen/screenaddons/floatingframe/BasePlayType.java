@@ -1,7 +1,7 @@
 package com.kobaj.screen.screenaddons.floatingframe;
 
+import com.kobaj.account_settings.SinglePlayerSave;
 import com.kobaj.foxdashtwo.R;
-import com.kobaj.foxdashtwo.SinglePlayerSave;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.EnumDrawFrom;
@@ -76,7 +76,7 @@ public class BasePlayType extends BaseFloatingFrame
 	public void reset()
 	{
 		
-	}	
+	}
 	
 	@Override
 	public void onDraw()

@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.kobaj.foxdashtwo.UserSettings;
+import com.kobaj.account_settings.UserSettings;
 import com.kobaj.input.InputType.EnumInputType;
 import com.kobaj.input.InputType.InputTypeBase;
 import com.kobaj.input.InputType.InputTypeHalfHalf;

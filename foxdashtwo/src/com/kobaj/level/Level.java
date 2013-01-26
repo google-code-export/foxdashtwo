@@ -8,8 +8,8 @@ import org.simpleframework.xml.ElementList;
 
 import android.graphics.Color;
 
+import com.kobaj.account_settings.SinglePlayerSave;
 import com.kobaj.foxdashtwo.R;
-import com.kobaj.foxdashtwo.SinglePlayerSave;
 import com.kobaj.level.LevelEventTypes.EnumLevelEvent;
 import com.kobaj.level.LevelEventTypes.LevelEventTransportPlayer;
 import com.kobaj.level.LevelTypeLight.LevelAmbientLight;

@@ -1,6 +1,6 @@
 package com.kobaj.audio;
 
-import com.kobaj.foxdashtwo.UserSettings;
+import com.kobaj.account_settings.UserSettings;
 
 public class MusicPlayer
 {
@@ -26,7 +26,7 @@ public class MusicPlayer
 	
 	public void onUpdate()
 	{
-		if(!music_player.loaded)
+		if (!music_player.loaded)
 			return;
 		
 		if (current_state == EnumMusicStates.fade_in)
@@ -42,13 +42,13 @@ public class MusicPlayer
 		
 		if (current_state == EnumMusicStates.playing)
 		{
-			if(!music_player.media_player.isLooping())
+			if (!music_player.media_player.isLooping())
 			{
 				final int fade_length = fade_end - fade_start;
 				final int current_position = music_player.media_player.getCurrentPosition();
 				final int song_duration = music_player.media_player.getDuration();
 				
-				if(current_position >= (song_duration - fade_length))
+				if (current_position >= (song_duration - fade_length))
 					current_state = EnumMusicStates.fade_out;
 			}
 		}
@@ -63,7 +63,7 @@ public class MusicPlayer
 			// should we fade in next song?
 			if (current_position >= fade_end && next_song != -1)
 				start(next_song, fade_end - fade_start, music_player.media_player.isLooping());
-			else if(current_position >= fade_end && next_song == -1)
+			else if (current_position >= fade_end && next_song == -1)
 			{
 				music_player.media_player.stop();
 				current_state = EnumMusicStates.stopped;
@@ -89,15 +89,15 @@ public class MusicPlayer
 	
 	public int getCurrentPosition()
 	{
-		if(!music_player.loaded)
+		if (!music_player.loaded)
 			return 0;
 		
 		return music_player.media_player.getCurrentPosition();
 	}
 	
 	public int getDuration()
-	{		
-		if(!music_player.loaded)
+	{
+		if (!music_player.loaded)
 			return 0;
 		
 		return music_player.media_player.getDuration();
@@ -108,7 +108,7 @@ public class MusicPlayer
 		return current_state;
 	}
 	
-	//assume want loop with zero fade in
+	// assume want loop with zero fade in
 	public void start(int song)
 	{
 		start(song, 0, true);
@@ -137,13 +137,13 @@ public class MusicPlayer
 		next_song = -1;
 	}
 	
-	//assume zero fade
+	// assume zero fade
 	public void changeSong(int song)
 	{
 		changeSong(song, 0);
 	}
 	
-	//assume we want previous loop strategy
+	// assume we want previous loop strategy
 	public void changeSong(int song, int fade_length)
 	{
 		changeSong(song, fade_length, music_player.media_player.isLooping());
@@ -170,17 +170,17 @@ public class MusicPlayer
 	}
 	
 	public void stop(int fade_length)
-	{	
+	{
 		fade_start = music_player.media_player.getCurrentPosition();
 		fade_end = fade_start + fade_length;
 		checkFadeEnd();
 		current_state = EnumMusicStates.fade_out;
 		
 		next_song = -1;
-	
-		// something to note, if fade_length is zero, we must shut it down NOW 
+		
+		// something to note, if fade_length is zero, we must shut it down NOW
 		// cant wait for update thread, as it may never come.
-		if(fade_length == 0)
+		if (fade_length == 0)
 		{
 			music_player.media_player.stop();
 			current_state = EnumMusicStates.stopped;
@@ -189,9 +189,9 @@ public class MusicPlayer
 	
 	private void checkFadeEnd()
 	{
-		if(!music_player.loaded)
+		if (!music_player.loaded)
 			return;
-			
+		
 		if (fade_end < 0)
 			fade_end = 0;
 		

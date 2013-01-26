@@ -2,8 +2,8 @@ package com.kobaj.level.LevelEventTypes;
 
 import java.util.ArrayList;
 
+import com.kobaj.account_settings.UserSettings;
 import com.kobaj.foxdashtwo.R;
-import com.kobaj.foxdashtwo.UserSettings;
 import com.kobaj.input.InputType.EnumInputType;
 import com.kobaj.level.LevelObject;
 import com.kobaj.level.LevelTypeLight.LevelAmbientLight;
@@ -117,7 +117,7 @@ public class LevelEventArrows extends LevelEventBase
 			
 			if (secondary_draw != null)
 			{
-				secondary_draw.color =  first_color;
+				secondary_draw.color = first_color;
 				secondary_draw.onDrawAmbient(Constants.my_ip_matrix, true);
 			}
 		}

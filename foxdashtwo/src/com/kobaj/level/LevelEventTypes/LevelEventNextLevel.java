@@ -1,7 +1,7 @@
 package com.kobaj.level.LevelEventTypes;
 
+import com.kobaj.account_settings.SinglePlayerSave;
 import com.kobaj.foxdashtwo.GameActivity;
-import com.kobaj.foxdashtwo.SinglePlayerSave;
 import com.kobaj.screen.SinglePlayerScreen;
 
 public class LevelEventNextLevel extends LevelEventBase

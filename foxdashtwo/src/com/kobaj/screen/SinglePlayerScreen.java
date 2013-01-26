@@ -2,9 +2,9 @@ package com.kobaj.screen;
 
 import android.util.Log;
 
+import com.kobaj.account_settings.SinglePlayerSave;
 import com.kobaj.foxdashtwo.GameActivity;
 import com.kobaj.foxdashtwo.R;
-import com.kobaj.foxdashtwo.SinglePlayerSave;
 import com.kobaj.input.EnumKeyCodes;
 import com.kobaj.input.GameInputModifier;
 import com.kobaj.loader.FileHandler;

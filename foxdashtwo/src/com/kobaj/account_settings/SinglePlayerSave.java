@@ -1,4 +1,4 @@
-package com.kobaj.foxdashtwo;
+package com.kobaj.account_settings;
 
 import java.util.HashSet;
 
