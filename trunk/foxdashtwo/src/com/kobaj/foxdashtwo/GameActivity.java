@@ -2,7 +2,6 @@ package com.kobaj.foxdashtwo;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
@@ -13,10 +12,8 @@ import android.view.Display;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 
-import com.kobaj.account_settings.AccountBackup;
 import com.kobaj.loader.FileHandler;
 import com.kobaj.math.Constants;
-import com.kobaj.message.ToastManager;
 
 public class GameActivity extends FragmentActivity
 {
@@ -32,10 +29,6 @@ public class GameActivity extends FragmentActivity
 	// drawing
 	public static com.kobaj.opengl.MyGLSurfaceView mGLView;
 	
-	// saving state
-	public static SharedPreferences.Editor ed;
-	public static SharedPreferences mPrefs;
-	
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
@@ -46,10 +39,6 @@ public class GameActivity extends FragmentActivity
 		Constants.fragment_manager = getSupportFragmentManager();
 		
 		Constants.resources = this.getResources();
-		
-		// grabbing save states
-		mPrefs = getSharedPreferences(AccountBackup.MY_PREFS_KEY, MODE_PRIVATE);
-		ed = mPrefs.edit();
 		
 		// keeping the screen on
 		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
@@ -94,11 +83,6 @@ public class GameActivity extends FragmentActivity
 		// shut down the music
 		Constants.music_player.stop();
 		
-		// save any prefs
-		//ed.putString("test", "tesssst");
-		ed.commit();
-		AccountBackup.requestBackup();
-		
 		mGLView.onScreenPause();
 	}
 	
@@ -107,11 +91,6 @@ public class GameActivity extends FragmentActivity
 	{
 		super.onResume();
 		wl.acquire();
-		
-		//resume
-		//AccountBackup.requestRestore();
-		String whatisit = mPrefs.getString("test", "failed");
-		ToastManager.makeLongToast(whatisit);
 		
 		mGLView.onResume();
 	}

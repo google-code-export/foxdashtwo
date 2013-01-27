@@ -2,6 +2,7 @@ package com.kobaj.screen;
 
 import android.graphics.Color;
 
+import com.kobaj.account_settings.UserSettings;
 import com.kobaj.foxdashtwo.GameActivity;
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Constants;
@@ -12,6 +13,7 @@ import com.kobaj.opengldrawable.Button.TextButton;
 import com.kobaj.opengldrawable.Tween.EnumTweenEvent;
 import com.kobaj.opengldrawable.Tween.TweenEvent;
 import com.kobaj.opengldrawable.Tween.TweenManager;
+import com.kobaj.screen.screenaddons.RotationLoadingJig;
 import com.kobaj.screen.screenaddons.floatingframe.BaseError;
 import com.kobaj.screen.screenaddons.floatingframe.BasePlayType;
 import com.kobaj.screen.screenaddons.floatingframe.BaseQuit;
@@ -27,9 +29,14 @@ public class TitleScreen extends BaseScreen
 	private Button play_button;
 	private Button settings_button;
 	private Button quit_button;
+	private Button login_button;
 	private TweenManager play_tween;
 	private TweenManager settings_tween;
 	private TweenManager quit_tween;
+	private TweenManager login_tween;
+	
+	private RotationLoadingJig network_loader;
+	private boolean logged_in = false;
 	
 	// not the /best/ way of doing things, but it works and is efficient
 	private boolean ready_to_quit = false;
@@ -52,9 +59,10 @@ public class TitleScreen extends BaseScreen
 	@Override
 	public void onLoad()
 	{
-		// availible buttons
+		// Available buttons
 		double x_offset = -.3;
 		
+		// TODO change all these to look the same regardless of screen size,
 		play_button = new TextButton(R.string.play);
 		play_button.draw_background = false;
 		play_button.onInitialize();
@@ -90,6 +98,18 @@ public class TitleScreen extends BaseScreen
 				400,//
 				new TweenEvent(EnumTweenEvent.rotate, .2 + x_offset, 2.0 * -quit_button.invisible_outline.shader_height, Color.WHITE, 35));//
 		
+		login_button = new TextButton(R.string.login);
+		login_button.draw_background = false;
+		login_button.onInitialize();
+		login_tween = new TweenManager(login_button.invisible_outline, //
+				new TweenEvent(EnumTweenEvent.delay, Constants.shader_width, Constants.shader_height / 2.0 - login_button.invisible_outline.shader_height), //
+				1000, //
+				new TweenEvent(EnumTweenEvent.move, Constants.shader_width / 2.0 - login_button.invisible_outline.shader_width * 1.5, Constants.shader_height / 2.0 - login_button.invisible_outline.shader_height)); //
+		
+		network_loader = new RotationLoadingJig();
+		network_loader.onInitialize();
+		network_loader.radius = Functions.screenWidthToShaderWidth(25);
+		
 		// and allow the user to set some settings
 		base_settings = new BaseSettingsScreen();
 		base_settings.onInitialize();
@@ -122,6 +142,7 @@ public class TitleScreen extends BaseScreen
 		settings_button.onUnInitialize();
 		quit_button.onUnInitialize();
 		base_play.onUnInitialize();
+		login_button.onUnInitialize();
 	}
 	
 	@Override
@@ -157,6 +178,9 @@ public class TitleScreen extends BaseScreen
 			play_tween.onUpdate(delta);
 			settings_tween.onUpdate(delta);
 			quit_tween.onUpdate(delta);
+			login_tween.onUpdate(delta);
+			
+			network_loader.onUpdate(delta);
 			
 			// and buttons
 			if (play_button.isReleased())
@@ -170,6 +194,29 @@ public class TitleScreen extends BaseScreen
 			{
 				base_settings.reset();
 				settings_visible = true;
+			}
+			else if (login_button.isReleased() || (UserSettings.selected_account_login != 1 && !logged_in && UserSettings.auto_login))
+			{
+				login_tween.finish();
+				
+				//set the rotator
+				network_loader.x_pos = login_button.invisible_outline.x_pos;
+				network_loader.y_pos = login_button.invisible_outline.y_pos;
+				
+				//hide this
+				logged_in = true;
+				
+				// log the user in
+				if (UserSettings.selected_account_login == -1)
+					if (Constants.accounts.count_accounts() > 1)
+						Constants.accounts.account_popup();
+					else
+					{
+						UserSettings.selected_account_login = 0;
+						Constants.accounts.account_login();
+					}
+				else
+					Constants.accounts.account_login();
 			}
 		}
 		
@@ -214,6 +261,12 @@ public class TitleScreen extends BaseScreen
 			play_button.onDrawConstant();
 			settings_button.onDrawConstant();
 			quit_button.onDrawConstant();
+			
+			if(!logged_in)
+				login_button.onDrawConstant();
+			
+			if(Constants.network_activity > 0)
+				network_loader.onDrawLoading();
 		}
 		
 		if (fade_in || fade_play)

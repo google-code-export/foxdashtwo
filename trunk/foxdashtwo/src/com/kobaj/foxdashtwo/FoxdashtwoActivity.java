@@ -1,5 +1,8 @@
 package com.kobaj.foxdashtwo;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.os.Bundle;
 
 import com.kobaj.account_settings.Accounts;
@@ -7,6 +10,7 @@ import com.kobaj.account_settings.SinglePlayerSave;
 import com.kobaj.account_settings.UserSettings;
 import com.kobaj.loader.FileHandler;
 import com.kobaj.math.Constants;
+import com.kobaj.message.ToastManager;
 import com.kobaj.networking.EnumNetworkAction;
 import com.kobaj.screen.TitleScreen;
 
@@ -45,25 +49,35 @@ public final class FoxdashtwoActivity extends GameActivity implements com.kobaj.
 		@SuppressWarnings("unused")
 		SinglePlayerSave saved_game = FileHandler.readSerialFile(single_player_name, SinglePlayerSave.class);
 		
-		// log the user in
-		if (UserSettings.selected_account_login == -1)
-			if (Constants.accounts.count_accounts() > 1)
-				Constants.accounts.account_popup();
-			else
-			{
-				UserSettings.selected_account_login = 0;
-				Constants.accounts.account_login();
-			}
-		else
-			Constants.accounts.account_login();
-		
 		super.onResume();
 	}
 	
 	public void onFinishedURL(String value, EnumNetworkAction action)
-	{
-		// TODO Auto-generated method stub
-		
+	{	
+		// get that json
+		try
+		{
+			JSONObject json = new JSONObject(value);
+			boolean success = json.getBoolean("success");
+	
+			Constants.network_activity--;
+			
+			// parse it
+			if (action == EnumNetworkAction.login)
+			{
+				if(success)
+					ToastManager.makeShortToast(R.string.logged_in);
+				else
+				{
+					ToastManager.makeShortToast(R.string.login_fail);
+				}
+			}
+		}
+		catch (JSONException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public void onDialogListSelect(int id)

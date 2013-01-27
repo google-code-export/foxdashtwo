@@ -12,6 +12,8 @@ import android.os.Bundle;
 import com.kobaj.foxdashtwo.GameActivity;
 import com.kobaj.math.Constants;
 import com.kobaj.message.ListPopupManager;
+import com.kobaj.networking.EnumNetworkAction;
+import com.kobaj.networking.NetworkManager;
 
 public class Accounts implements Runnable
 {
@@ -61,11 +63,17 @@ public class Accounts implements Runnable
 		new Thread(this).start();
 	}
 	
+	// one way of authorizing a user
 	private String get_token(boolean invalidateToken)
 	{
 		Account[] accounts = accounts_array();
 		AccountManagerFuture<Bundle> accountManagerFuture;
-		accountManagerFuture = am.getAuthToken(accounts[UserSettings.selected_account_login], "oauth2:https://www.googleapis.com/auth/userinfo.profile", null, GameActivity.activity, null, null);
+		accountManagerFuture = am.getAuthToken(accounts[UserSettings.selected_account_login], // account
+				"oauth2:https://www.googleapis.com/auth/userinfo.email", // scope
+				null, // options
+				GameActivity.activity, // activity
+				null, // call back
+				null); // handler
 		Bundle authTokenBundle;
 		try
 		{
@@ -99,10 +107,15 @@ public class Accounts implements Runnable
 	
 	public void run()
 	{
-		// networking
-		String test = get_token(true);
+		// grab token
+		String token = get_token(true);
 		
-		int x = 5;
-		// this will simply get the gid to login with
+		// send it to server with email for a test login
+		if (token != null)
+		{
+			// we give everything is own network manager
+			NetworkManager nm = new NetworkManager(GameActivity.activity);
+			nm.accessNetwork(EnumNetworkAction.login, get_accounts()[UserSettings.selected_account_login], token);
+		}
 	}
 }

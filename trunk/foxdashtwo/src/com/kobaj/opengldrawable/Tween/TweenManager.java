@@ -45,6 +45,13 @@ public class TweenManager
 		current_time = 0;
 	}
 	
+	public void finish()
+	{
+		current_tween_index = tween_events.size() - 2;
+		current_time = tween_times.get(current_tween_index) + 1.0;
+		onUpdate(current_time);
+	}
+	
 	// returns true when there are tween events still going on
 	public boolean onUpdate(double delta)
 	{
