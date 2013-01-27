@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
@@ -66,20 +67,47 @@ public class Accounts implements Runnable
 	// one way of authorizing a user
 	private String get_token(boolean invalidateToken)
 	{
+		UserSettings.auto_login = false;
 		Account[] accounts = accounts_array();
 		AccountManagerFuture<Bundle> accountManagerFuture;
 		accountManagerFuture = am.getAuthToken(accounts[UserSettings.selected_account_login], // account
 				"oauth2:https://www.googleapis.com/auth/userinfo.email", // scope
 				null, // options
 				GameActivity.activity, // activity
-				null, // call back
+				new AccountManagerCallback<Bundle>()
+				{
+					public void run(AccountManagerFuture<Bundle> future)
+					{
+						Bundle bundle;
+						try
+						{
+							bundle = future.getResult();
+						}
+						catch (OperationCanceledException e)
+						{
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						catch (AuthenticatorException e)
+						{
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						catch (IOException e)
+						{
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+					
+				}, // call back
 				null); // handler
 		Bundle authTokenBundle;
 		try
 		{
 			authTokenBundle = accountManagerFuture.getResult();
 			String authToken = authTokenBundle.getString(AccountManager.KEY_AUTHTOKEN).toString();
-			if (invalidateToken)
+			if (invalidateToken && authToken != null)
 			{
 				am.invalidateAuthToken("com.google", authToken);
 				return authToken = get_token(false);

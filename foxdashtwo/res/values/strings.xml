@@ -25,6 +25,7 @@
     <string name="touch_here">Touch Here</string>
 
     <!-- popup -->
+    <string name="login">Login</string>
     <string name="paused">Paused</string>
     <string name="are_you_sure">Are you sure?</string>
     <string name="settings">Settings</string>
@@ -59,7 +60,10 @@
     <string name="new_game">New Game</string>
     <string name="continue_game">Continue</string>
     <string name="download_maps">Download Maps</string>
-    <string name="login">Login</string>
+    <string name="login_button">Login</string>
+    
+    <!-- blurbs -->
+	<string name="login_blurb">Logging into Fox Dash 2 lets you save \nyour achievements and stats online.\nTo make this process simple we \nwould like to use your google account.\nClick yes on the next popup!</string>
 
     <!-- annoying, but you have to put your string name here too if you want to draw it in game -->
     <string-array name="my_sa">
@@ -101,10 +105,13 @@
         <item>new_game</item>
         <item>continue_game</item>
         <item>download_maps</item>
-        <item>login</item>
+        <item>login_button</item>
+        
+        <item>login_blurb</item>
     </string-array>
     
     <string-array name="my_sa2">
+        <item>login</item>
         <item>paused</item>
         <item>settings</item>
         <item>audio</item>

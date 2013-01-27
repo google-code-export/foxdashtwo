@@ -44,7 +44,7 @@ public class BaseQuit extends BaseFloatingFrame
 		else if (cancel_button.isReleased())
 			return false;
 		
-		return true;
+		return super.onUpdate(delta);
 	}
 	
 	@Override

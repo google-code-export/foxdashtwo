@@ -80,7 +80,7 @@ public class BaseSettingsScreen extends BaseFloatingFrame
 				return false;
 		}
 		
-		return true;
+		return super.onUpdate(delta);
 	}
 	
 	@Override

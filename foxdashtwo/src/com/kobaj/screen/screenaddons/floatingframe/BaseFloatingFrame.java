@@ -1,6 +1,7 @@
 package com.kobaj.screen.screenaddons.floatingframe;
 
 import com.kobaj.foxdashtwo.R;
+import com.kobaj.input.EnumKeyCodes;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.EnumDrawFrom;
@@ -45,7 +46,13 @@ public abstract class BaseFloatingFrame
 		secondary_popup.onUnInitialize();
 	}
 	
-	public abstract boolean onUpdate(double delta); // true it shows, false it doesn't show.
+	public boolean onUpdate(double delta)
+	{
+		if (Constants.input_manager.getKeyPressed(EnumKeyCodes.back))
+			return false;
+		
+		return true;
+	}// true it shows, false it doesn't show.
 	
 	public abstract void onDraw();
 	

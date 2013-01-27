@@ -72,7 +72,7 @@ public class BasePauseScreen extends BaseFloatingFrame
 	public boolean onUpdate(double delta)
 	{
 		onUpdateNoBoolean(delta);
-		return true;
+		return super.onUpdate(delta);
 	}
 	
 	private void onUpdateNoBoolean(double delta)

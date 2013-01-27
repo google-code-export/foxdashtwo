@@ -70,7 +70,7 @@ public class BasePlayType extends BaseFloatingFrame
 		else if (back_button.isReleased())
 			return false;
 		
-		return true;
+		return super.onUpdate(delta);
 	}
 	
 	public void reset()

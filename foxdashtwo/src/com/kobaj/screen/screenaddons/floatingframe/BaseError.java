@@ -30,11 +30,11 @@ public class BaseError extends BaseFloatingFrame
 	
 	@Override
 	public boolean onUpdate(double delta)
-	{
+	{	
 		if(ok_button.isReleased())
 			return false;
 		
-		return true;
+		return super.onUpdate(delta);
 	}
 	
 	@Override
