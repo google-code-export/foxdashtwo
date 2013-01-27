@@ -5,6 +5,7 @@ import java.net.URL;
 
 import android.app.Activity;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.util.Log;
 
 import com.kobaj.foxdashtwo.GameActivity;
@@ -15,16 +16,19 @@ import com.kobaj.math.Constants;
 
 public class NetworkManager implements Runnable
 {
-	private final String empty = "";
+	public static final String empty = "";
 	private final String error_tag = "Network Error";
 	private String the_url;
 	private EnumNetworkAction action;
 	private final static String implement_error = " must implement FinishedURLListener";
 	
+	private static final String server = "http://normannexus.com:8080/";
+	
 	public interface FinishedURLListener
 	{
 		public void onFinishedURL(String value, EnumNetworkAction action);
 	}
+	
 	private FinishedURLListener mListener;
 	
 	public NetworkManager(Activity activity)
@@ -39,23 +43,34 @@ public class NetworkManager implements Runnable
 		}
 	}
 	
-	public void accessNetwork(EnumNetworkAction action)
+	public void accessNetwork(EnumNetworkAction action, String... attributes)
 	{
 		the_url = empty;
+		this.action = action;
 		
-		if(action == EnumNetworkAction.get_level)
-		{
-			//do something to the url
-			the_url = Constants.main_url;
-		}
+		// modify the url
+		if (action == EnumNetworkAction.login)
+			if (attributes.length == 2)
+			{
+				Uri.Builder b = Uri.parse(server).buildUpon();
+				
+				b.path("new_level_editor/php/game.php");
+				
+				b.appendQueryParameter("action", "check_user");
+				b.appendQueryParameter("username", attributes[0]);
+				b.appendQueryParameter("token", attributes[1]);
+				
+				the_url = b.build().toString();
+			}
 		
 		new Thread(this).start();
 	}
 	
 	public void run()
 	{
-		if(isNetworkAvailable() && !the_url.equals(empty))
+		if (isNetworkAvailable() && !the_url.equals(empty))
 		{
+			Constants.network_activity++;
 			executeURL();
 		}
 	}

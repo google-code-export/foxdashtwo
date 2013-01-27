@@ -84,8 +84,8 @@ public class Constants
 	// loading screen pretties
 	public static final int loading_radius = 4;
 	public static final int loading_max_shapes = 8;
-	public static final int loading_primary_color = 0xFFFF0000;
-	public static final int loading_secondary_color = 0xFF00FF00;
+	public static final int loading_primary_color = 0xFFDD550C;
+	public static final int loading_secondary_color = 0xFF03244D;
 	
 	// While the below are not really constant and don't belong here
 	// this is a convenient way of being able to see all objects a game screen can see and use
@@ -141,9 +141,6 @@ public class Constants
 	public static GodRayLightShader god_ray_light;
 	public static BlurLightShader blur_light;
 	
-	// networking
-	public static final String main_url = "http://something.com";
-	
 	// metrics
 	public static boolean draw_fps = true;
 	public static int quads_drawn_screen = 0;
@@ -153,4 +150,9 @@ public class Constants
 	
 	// accounts
 	public static Accounts accounts;
+	
+	// network +1 when activity,
+	// -1 when activity ends
+	// if 0, then no activity
+	public static int network_activity = 0;
 }

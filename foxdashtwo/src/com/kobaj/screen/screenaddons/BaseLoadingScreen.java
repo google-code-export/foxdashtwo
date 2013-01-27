@@ -9,9 +9,9 @@ import com.kobaj.opengldrawable.Quad.QuadColorShape;
 public class BaseLoadingScreen
 {
 	// this will not be moved to constants (obviously XP)
-	private QuadColorShape[] my_shapes = new QuadColorShape[Constants.loading_max_shapes];
-	private double total_delta = 0;
-	private double loading_delta_shift = Math.PI / Constants.loading_max_shapes;
+	protected QuadColorShape[] my_shapes = new QuadColorShape[Constants.loading_max_shapes];
+	protected double total_delta = 0;
+	protected double loading_delta_shift = Math.PI / Constants.loading_max_shapes;
 	
 	public void onInitialize()
 	{
@@ -33,7 +33,7 @@ public class BaseLoadingScreen
 	
 	public void onDrawLoading(double delta)
 	{
-		total_delta += (Math.PI / 8.0) * delta / 250.0;
+		total_delta += (Math.PI / Constants.loading_max_shapes) * delta / 250.0;
 		
 		if (total_delta >= Math.PI * 4.0)
 			total_delta = 0;
@@ -51,7 +51,7 @@ public class BaseLoadingScreen
 		Constants.text.drawText(R.string.loading, 0, 0, EnumDrawFrom.center);
 	}
 	
-	private void setPosition(QuadColorShape my_quad, double ith_pos)
+	protected void setPosition(QuadColorShape my_quad, double ith_pos)
 	{
 		double local_total_delta = total_delta - loading_delta_shift * ith_pos;
 		
@@ -60,7 +60,7 @@ public class BaseLoadingScreen
 		// double r = Math.cos(.5 * local_total_delta); //2 smaller circles in 2 bigger circles
 		double r = Math.cos(.5 * local_total_delta) * 2.0 * Math.sin(local_total_delta); // jumpy one.
 		
-		// these are purposly flipped to make it 'look cooler'
+		// these are purposely flipped to make it 'look cooler'
 		// calculate x;
 		double y = Functions.polarRadToX(local_total_delta, r);
 		
