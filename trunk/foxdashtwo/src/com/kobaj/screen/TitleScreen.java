@@ -5,6 +5,7 @@ import android.graphics.Color;
 import com.kobaj.account_settings.UserSettings;
 import com.kobaj.foxdashtwo.GameActivity;
 import com.kobaj.foxdashtwo.R;
+import com.kobaj.input.EnumKeyCodes;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.EnumDrawFrom;
@@ -15,6 +16,7 @@ import com.kobaj.opengldrawable.Tween.TweenEvent;
 import com.kobaj.opengldrawable.Tween.TweenManager;
 import com.kobaj.screen.screenaddons.RotationLoadingJig;
 import com.kobaj.screen.screenaddons.floatingframe.BaseError;
+import com.kobaj.screen.screenaddons.floatingframe.BaseLoginInfo;
 import com.kobaj.screen.screenaddons.floatingframe.BasePlayType;
 import com.kobaj.screen.screenaddons.floatingframe.BaseQuit;
 import com.kobaj.screen.screenaddons.settings.BaseSettingsScreen;
@@ -25,6 +27,7 @@ public class TitleScreen extends BaseScreen
 	private BaseSettingsScreen base_settings;
 	private BaseQuit base_quit;
 	private BaseError base_error;
+	private BaseLoginInfo base_login;
 	
 	private Button play_button;
 	private Button settings_button;
@@ -36,13 +39,13 @@ public class TitleScreen extends BaseScreen
 	private TweenManager login_tween;
 	
 	private RotationLoadingJig network_loader;
-	private boolean logged_in = false;
 	
 	// not the /best/ way of doing things, but it works and is efficient
 	private boolean ready_to_quit = false;
 	private boolean settings_visible = false;
 	private boolean crash_visible = false;
 	private boolean play_visible = false;
+	private boolean login_visible = false;
 	
 	// display a popup only once when class is loaded
 	public boolean crashed = false;
@@ -98,13 +101,14 @@ public class TitleScreen extends BaseScreen
 				400,//
 				new TweenEvent(EnumTweenEvent.rotate, .2 + x_offset, 2.0 * -quit_button.invisible_outline.shader_height, Color.WHITE, 35));//
 		
-		login_button = new TextButton(R.string.login);
+		login_button = new TextButton(R.string.login_button);
 		login_button.draw_background = false;
 		login_button.onInitialize();
 		login_tween = new TweenManager(login_button.invisible_outline, //
 				new TweenEvent(EnumTweenEvent.delay, Constants.shader_width, Constants.shader_height / 2.0 - login_button.invisible_outline.shader_height), //
 				1000, //
-				new TweenEvent(EnumTweenEvent.move, Constants.shader_width / 2.0 - login_button.invisible_outline.shader_width * 1.5, Constants.shader_height / 2.0 - login_button.invisible_outline.shader_height)); //
+				new TweenEvent(EnumTweenEvent.move, Constants.shader_width / 2.0 - login_button.invisible_outline.shader_width * 1.5, Constants.shader_height / 2.0
+						- login_button.invisible_outline.shader_height)); //
 		
 		network_loader = new RotationLoadingJig();
 		network_loader.onInitialize();
@@ -120,6 +124,10 @@ public class TitleScreen extends BaseScreen
 		// level selection and such
 		base_play = new BasePlayType();
 		base_play.onInitialize();
+		
+		//login box
+		base_login = new BaseLoginInfo();
+		base_login.onInitialize();
 		
 		// if the last screen had a bug, alert the user on this screen
 		if (crashed)
@@ -143,11 +151,12 @@ public class TitleScreen extends BaseScreen
 		quit_button.onUnInitialize();
 		base_play.onUnInitialize();
 		login_button.onUnInitialize();
+		base_login.onUnInitialize();
 	}
 	
 	@Override
 	public void onUpdate(double delta)
-	{
+	{		
 		// these are all the different possible poups that can be visible
 		if (settings_visible)
 			settings_visible = base_settings.onUpdate(delta);
@@ -157,9 +166,13 @@ public class TitleScreen extends BaseScreen
 			crash_visible = base_error.onUpdate(delta);
 		else if (play_visible)
 			play_visible = base_play.onUpdate(delta);
+		else if(login_visible)
+			login_visible = base_login.onUpdate(delta);
 		else
-		{
+		{		
 			// and if nothing is visible, then just update like normal
+			if (Constants.input_manager.getKeyPressed(EnumKeyCodes.back))
+				ready_to_quit = true;
 			
 			// testing spring
 			double y_pos_shader = 0;
@@ -195,7 +208,10 @@ public class TitleScreen extends BaseScreen
 				base_settings.reset();
 				settings_visible = true;
 			}
-			else if (login_button.isReleased() || (UserSettings.selected_account_login != 1 && !logged_in && UserSettings.auto_login))
+			else if (login_button.isReleased())
+				login_visible = true;
+			
+			if(UserSettings.selected_account_login != -1 && !Constants.logged_in && UserSettings.auto_login)
 			{
 				login_tween.finish();
 				
@@ -204,19 +220,10 @@ public class TitleScreen extends BaseScreen
 				network_loader.y_pos = login_button.invisible_outline.y_pos;
 				
 				//hide this
-				logged_in = true;
+				Constants.logged_in = true;
 				
 				// log the user in
-				if (UserSettings.selected_account_login == -1)
-					if (Constants.accounts.count_accounts() > 1)
-						Constants.accounts.account_popup();
-					else
-					{
-						UserSettings.selected_account_login = 0;
-						Constants.accounts.account_login();
-					}
-				else
-					Constants.accounts.account_login();
+				Constants.accounts.account_login();
 			}
 		}
 		
@@ -252,6 +259,8 @@ public class TitleScreen extends BaseScreen
 			base_error.onDraw();
 		else if (play_visible)
 			base_play.onDraw();
+		else if (login_visible)
+			base_login.onDraw();
 		else
 		{
 			double x_pos = Functions.screenXToShaderX(500);
@@ -262,10 +271,10 @@ public class TitleScreen extends BaseScreen
 			settings_button.onDrawConstant();
 			quit_button.onDrawConstant();
 			
-			if(!logged_in)
+			if (!Constants.logged_in)
 				login_button.onDrawConstant();
 			
-			if(Constants.network_activity > 0)
+			if (Constants.network_activity > 0)
 				network_loader.onDrawLoading();
 		}
 		

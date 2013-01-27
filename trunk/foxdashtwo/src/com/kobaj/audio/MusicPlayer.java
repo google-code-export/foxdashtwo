@@ -14,6 +14,8 @@ public class MusicPlayer
 	
 	public double actual_volume = 0.0;
 	
+	private boolean isLooping = false;
+	
 	public MusicPlayer(Music music_player)
 	{
 		this.music_player = music_player;
@@ -42,7 +44,7 @@ public class MusicPlayer
 		
 		if (current_state == EnumMusicStates.playing)
 		{
-			if (!music_player.media_player.isLooping())
+			if (!isLooping)
 			{
 				final int fade_length = fade_end - fade_start;
 				final int current_position = music_player.media_player.getCurrentPosition();
@@ -133,6 +135,7 @@ public class MusicPlayer
 		
 		music_player.play(song, 0.0);
 		music_player.media_player.setLooping(loop);
+		isLooping = loop;
 		
 		next_song = -1;
 	}
@@ -160,6 +163,7 @@ public class MusicPlayer
 		current_state = EnumMusicStates.fade_out;
 		
 		music_player.media_player.setLooping(loop);
+		isLooping = loop;
 		
 		next_song = song;
 	}

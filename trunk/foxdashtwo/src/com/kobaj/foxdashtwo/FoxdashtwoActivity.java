@@ -66,11 +66,12 @@ public final class FoxdashtwoActivity extends GameActivity implements com.kobaj.
 			if (action == EnumNetworkAction.login)
 			{
 				if(success)
-					ToastManager.makeShortToast(R.string.logged_in);
-				else
 				{
-					ToastManager.makeShortToast(R.string.login_fail);
+					UserSettings.auto_login = true;
+					ToastManager.makeShortToast(R.string.logged_in);
 				}
+				else
+					ToastManager.makeShortToast(R.string.login_fail);
 			}
 		}
 		catch (JSONException e)
