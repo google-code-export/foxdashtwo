@@ -153,7 +153,7 @@ public class MyGame extends MyGLRender
 		Constants.quads_drawn_screen = 0;
 		
 		// music metrics
-		y_pos = Functions.screenYToShaderY((int) Functions.fix_y(100));
+		y_pos = Functions.screenYToShaderY((int) Functions.fix_y(125));
 		
 		Constants.text.drawText(R.string.volume, x_pos, y_pos, EnumDrawFrom.bottom_right);
 		Constants.text.drawNumber((int) (Constants.music_player.actual_volume * 100.0), x_pos, y_pos, EnumDrawFrom.bottom_left);

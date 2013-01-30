@@ -54,13 +54,13 @@ public final class FoxdashtwoActivity extends GameActivity implements com.kobaj.
 	
 	public void onFinishedURL(String value, EnumNetworkAction action)
 	{	
+		Constants.network_activity--;
+		
 		// get that json
 		try
 		{
 			JSONObject json = new JSONObject(value);
 			boolean success = json.getBoolean("success");
-	
-			Constants.network_activity--;
 			
 			// parse it
 			if (action == EnumNetworkAction.login)
@@ -76,8 +76,7 @@ public final class FoxdashtwoActivity extends GameActivity implements com.kobaj.
 		}
 		catch (JSONException e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// do nothing
 		}
 	}
 	

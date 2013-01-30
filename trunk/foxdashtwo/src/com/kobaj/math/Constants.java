@@ -156,4 +156,7 @@ public class Constants
 	// -1 when activity ends
 	// if 0, then no activity
 	public static int network_activity = 0;
+	
+	// strings
+	public static final String empty = "";
 }

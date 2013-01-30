@@ -208,7 +208,7 @@ public class TitleScreen extends BaseScreen
 				base_settings.reset();
 				settings_visible = true;
 			}
-			else if (login_button.isReleased())
+			else if (login_button.isReleased() && !Constants.logged_in)
 				login_visible = true;
 			
 			if(UserSettings.selected_account_login != -1 && !Constants.logged_in && UserSettings.auto_login)

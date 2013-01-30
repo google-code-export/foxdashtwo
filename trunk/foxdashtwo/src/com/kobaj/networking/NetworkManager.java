@@ -16,7 +16,6 @@ import com.kobaj.math.Constants;
 
 public class NetworkManager implements Runnable
 {
-	public static final String empty = "";
 	private final String error_tag = "Network Error";
 	private String the_url;
 	private EnumNetworkAction action;
@@ -45,7 +44,7 @@ public class NetworkManager implements Runnable
 	
 	public void accessNetwork(EnumNetworkAction action, String... attributes)
 	{
-		the_url = empty;
+		the_url = Constants.empty;
 		this.action = action;
 		
 		// modify the url
@@ -68,7 +67,7 @@ public class NetworkManager implements Runnable
 	
 	public void run()
 	{
-		if (isNetworkAvailable() && !the_url.equals(empty))
+		if (isNetworkAvailable() && !the_url.equals(Constants.empty))
 		{
 			Constants.network_activity++;
 			executeURL();
