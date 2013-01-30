@@ -43,7 +43,10 @@ public class SinglePlayerScreen extends BaseScreen
 	// loads the next level and returns true if successful.
 	private boolean setNextLevel(String level_name)
 	{
-		if (level_name == null)
+		if (level_name != null)
+			level_name = level_name.trim();
+		
+		if (level_name == null || level_name.equals(Constants.empty))
 		{
 			the_level = FileHandler.readSerialResource(Constants.resources, R.raw.test_level, com.kobaj.level.Level.class);
 			return true;

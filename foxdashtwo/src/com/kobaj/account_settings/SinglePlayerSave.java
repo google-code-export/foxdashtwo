@@ -7,12 +7,12 @@ import org.simpleframework.xml.ElementList;
 
 public class SinglePlayerSave
 {
+	@Element
+	public static String last_level = "";
+	
+	@Element
+	public static String last_checkpoint = "";
+	
 	@ElementList
 	public static HashSet<String> finished_levels = new HashSet<String>();
-	
-	@Element
-	public static String last_level;
-	
-	@Element
-	public static String last_checkpoint;
 }

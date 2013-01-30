@@ -49,9 +49,9 @@ public class LevelObject extends LevelEntityActive
 	{
 		/* Level 1 (l1) objects */
 		if (this_object == EnumLevelObject.l1_bg1)
-			quad_object = new QuadCompressed(R.raw.l1_bg1, R.raw.l1_bg1_alpha, 1659, 1064);
+			quad_object = new QuadCompressed(R.raw.l1_bg1, R.raw.l1_bg1_alpha, 1597, 1024);
 		else if (this_object == EnumLevelObject.l1_bg2)
-			quad_object = new QuadCompressed(R.raw.l1_bg2, R.raw.l1_bg2_alpha, 1551, 1080);
+			quad_object = new QuadCompressed(R.raw.l1_bg2, R.raw.l1_bg2_alpha, 1471, 1024);
 		else if (this_object == EnumLevelObject.l1_fungus1)
 			quad_object = new QuadCompressed(R.raw.l1_fungus1, R.raw.l1_fungus1_alpha, 73, 354);
 		else if (this_object == EnumLevelObject.l1_fungus2)

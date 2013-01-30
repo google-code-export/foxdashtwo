@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
-import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
@@ -35,7 +34,7 @@ public class Accounts implements Runnable
 	
 	public int count_accounts()
 	{
-		// we dont want to needlsly allocate strings unless we absolutely have to.
+		// we dont want to needlessly allocate strings unless we absolutely have to.
 		return accounts_array().length;
 	}
 	
@@ -74,33 +73,7 @@ public class Accounts implements Runnable
 				"oauth2:https://www.googleapis.com/auth/userinfo.email", // scope
 				null, // options
 				GameActivity.activity, // activity
-				new AccountManagerCallback<Bundle>()
-				{
-					public void run(AccountManagerFuture<Bundle> future)
-					{
-						Bundle bundle;
-						try
-						{
-							bundle = future.getResult();
-						}
-						catch (OperationCanceledException e)
-						{
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						catch (AuthenticatorException e)
-						{
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						catch (IOException e)
-						{
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
-					
-				}, // call back
+				null, // call back
 				null); // handler
 		Bundle authTokenBundle;
 		try
@@ -116,18 +89,15 @@ public class Accounts implements Runnable
 		}
 		catch (OperationCanceledException e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// do nothing
 		}
 		catch (AuthenticatorException e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// do nothing
 		}
 		catch (IOException e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// do nothing
 		}
 		
 		return null;
