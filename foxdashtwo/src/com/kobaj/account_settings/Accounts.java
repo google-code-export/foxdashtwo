@@ -7,15 +7,16 @@ import android.accounts.AccountManager;
 import android.accounts.AccountManagerFuture;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.kobaj.foxdashtwo.GameActivity;
 import com.kobaj.math.Constants;
 import com.kobaj.message.ListPopupManager;
 import com.kobaj.networking.EnumNetworkAction;
-import com.kobaj.networking.NetworkManager;
+import com.kobaj.networking.TaskLogin;
 
-public class Accounts implements Runnable
+public class Accounts
 {
 	public final String account_type = "com.google";
 	public final String popup_tag = "Fox_Dash_Two_Accounts";
@@ -50,24 +51,30 @@ public class Accounts implements Runnable
 		return string_names;
 	}
 	
-	public void account_popup()
+	private void account_popup()
 	{
 		// first get accounts
-		ListPopupManager popup = new ListPopupManager();
-		popup.show(Constants.fragment_manager, popup_tag);
-		
+		if(UserSettings.selected_account_login == -1)
+		{
+			ListPopupManager popup = new ListPopupManager();
+			popup.show(Constants.fragment_manager, popup_tag);
+		}
 	}
 	
 	public void account_login()
 	{
-		new Thread(this).start();
+		//popup
+		account_popup();
+		
+		//rest of stuff
+		Constants.logged_in = true;
+		TaskToken get_token = new TaskToken();
+		get_token.execute(EnumNetworkAction.login);
 	}
 	
-	// one way of authorizing a user
-	private String get_token(boolean invalidateToken)
+	public String get_token(boolean invalidateToken)
 	{
-		UserSettings.auto_login = false;
-		Account[] accounts = accounts_array();
+		Account[] accounts = Constants.accounts.accounts_array();
 		AccountManagerFuture<Bundle> accountManagerFuture;
 		accountManagerFuture = am.getAuthToken(accounts[UserSettings.selected_account_login], // account
 				"oauth2:https://www.googleapis.com/auth/userinfo.email", // scope
@@ -103,17 +110,31 @@ public class Accounts implements Runnable
 		return null;
 	}
 	
-	public void run()
+	public void tokenReceivedFromTask(String token, EnumNetworkAction action)
 	{
-		// grab token
-		String token = get_token(true);
-		
-		// send it to server with email for a test login
-		if (token != null)
+		if (action == EnumNetworkAction.login && token != null)
 		{
-			// we give everything is own network manager
-			NetworkManager nm = new NetworkManager(GameActivity.activity);
-			nm.accessNetwork(EnumNetworkAction.login, get_accounts()[UserSettings.selected_account_login], token);
+			// start a task to talk to our server
+			TaskLogin network_login = new TaskLogin();
+			network_login.execute();
 		}
+	}
+}
+
+class TaskToken extends AsyncTask<EnumNetworkAction, Void, String>
+{
+	private EnumNetworkAction action;
+	
+	@Override
+	protected String doInBackground(EnumNetworkAction... action)
+	{
+		this.action = action[0];
+		return Constants.accounts.get_token(true);
+	}
+	
+	@Override
+	protected void onPostExecute(String token)
+	{
+		Constants.accounts.tokenReceivedFromTask(token, action);
 	}
 }
