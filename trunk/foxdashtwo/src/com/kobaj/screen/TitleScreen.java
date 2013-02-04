@@ -2,7 +2,6 @@ package com.kobaj.screen;
 
 import android.graphics.Color;
 
-import com.kobaj.account_settings.UserSettings;
 import com.kobaj.foxdashtwo.GameActivity;
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.input.EnumKeyCodes;
@@ -125,7 +124,7 @@ public class TitleScreen extends BaseScreen
 		base_play = new BasePlayType();
 		base_play.onInitialize();
 		
-		//login box
+		// login box
 		base_login = new BaseLoginInfo();
 		base_login.onInitialize();
 		
@@ -156,7 +155,7 @@ public class TitleScreen extends BaseScreen
 	
 	@Override
 	public void onUpdate(double delta)
-	{		
+	{
 		// these are all the different possible poups that can be visible
 		if (settings_visible)
 			settings_visible = base_settings.onUpdate(delta);
@@ -166,10 +165,10 @@ public class TitleScreen extends BaseScreen
 			crash_visible = base_error.onUpdate(delta);
 		else if (play_visible)
 			play_visible = base_play.onUpdate(delta);
-		else if(login_visible)
+		else if (login_visible)
 			login_visible = base_login.onUpdate(delta);
 		else
-		{		
+		{
 			// and if nothing is visible, then just update like normal
 			if (Constants.input_manager.getKeyPressed(EnumKeyCodes.back))
 				ready_to_quit = true;
@@ -211,19 +210,13 @@ public class TitleScreen extends BaseScreen
 			else if (login_button.isReleased() && !Constants.logged_in)
 				login_visible = true;
 			
-			if(UserSettings.selected_account_login != -1 && !Constants.logged_in && UserSettings.auto_login)
+			if (Constants.logged_in)
 			{
 				login_tween.finish();
 				
-				//set the rotator
+				// set the rotator
 				network_loader.x_pos = login_button.invisible_outline.x_pos;
 				network_loader.y_pos = login_button.invisible_outline.y_pos;
-				
-				//hide this
-				Constants.logged_in = true;
-				
-				// log the user in
-				Constants.accounts.account_login();
 			}
 		}
 		
