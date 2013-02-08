@@ -134,9 +134,9 @@ public class SinglePlayerScreen extends BaseScreen
 		
 		if (current_state != EnumScreenState.paused)
 			onRunningUpdate(delta);
-		else if(!pause_addon.onUpdate(delta))
+		else if (!pause_addon.onUpdate(delta))
 			current_state = EnumScreenState.running;
-			
+		
 		// go into pause mode by hitting menu, search, back...
 		if (Constants.input_manager.getKeyPressed(EnumKeyCodes.back) || //
 				Constants.input_manager.getKeyPressed(EnumKeyCodes.menu) || //

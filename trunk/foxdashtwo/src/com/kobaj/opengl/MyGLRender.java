@@ -109,7 +109,7 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 	
 	public void onSurfaceDestroyed()
 	{
-		// empty for now
+		Constants.text.onUnInitialize();
 	}
 	
 	public void onDrawFrame(GL10 unused)

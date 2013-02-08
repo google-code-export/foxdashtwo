@@ -19,5 +19,5 @@ public class UserSettings
 	public static int selected_account_login = -1;
 	
 	@Element
-	public static boolean auto_login = true;
+	public static boolean auto_login = false;
 }
