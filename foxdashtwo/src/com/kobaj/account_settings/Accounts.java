@@ -10,6 +10,7 @@ import android.accounts.OperationCanceledException;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
+import com.kobaj.foxdashtwo.FoxdashtwoActivity;
 import com.kobaj.foxdashtwo.GameActivity;
 import com.kobaj.math.Constants;
 import com.kobaj.message.ListPopupManager;
@@ -19,7 +20,7 @@ import com.kobaj.networking.TaskLogin;
 public class Accounts
 {
 	public final String account_type = "com.google";
-	public final String popup_tag = "Fox_Dash_Two_Accounts";
+	public final String popup_tag = "FoxDashTwoAccounts";
 	
 	private AccountManager am;
 	
@@ -51,29 +52,41 @@ public class Accounts
 		return string_names;
 	}
 	
-	private void account_popup()
+	public void account_popup()
 	{
 		// first get accounts
-		if(UserSettings.selected_account_login == -1)
+		if(accounts_array().length == 1)
+			UserSettings.selected_account_login = 0;
+		
+		if (UserSettings.selected_account_login == -1)
 		{
 			ListPopupManager popup = new ListPopupManager();
 			popup.show(Constants.fragment_manager, popup_tag);
 		}
+		else
+			login_step_two();
+	}
+	
+	// call after account popup
+	public void login_step_two()
+	{
+		// rest of stuff
+		TaskToken get_token = new TaskToken();
+		get_token.execute(EnumNetworkAction.login);
+		
 	}
 	
 	public void account_login()
 	{
-		//popup
+		Constants.logging_in = true;
 		account_popup();
-		
-		//rest of stuff
-		Constants.logged_in = true;
-		TaskToken get_token = new TaskToken();
-		get_token.execute(EnumNetworkAction.login);
 	}
 	
 	public String get_token(boolean invalidateToken)
 	{
+		if(UserSettings.selected_account_login == -1)
+			return Constants.empty;
+		
 		Account[] accounts = Constants.accounts.accounts_array();
 		AccountManagerFuture<Bundle> accountManagerFuture;
 		accountManagerFuture = am.getAuthToken(accounts[UserSettings.selected_account_login], // account
@@ -107,16 +120,29 @@ public class Accounts
 			// do nothing
 		}
 		
-		return null;
+		return Constants.empty;
 	}
 	
 	public void tokenReceivedFromTask(String token, EnumNetworkAction action)
 	{
-		if (action == EnumNetworkAction.login && token != null)
+		if (action == EnumNetworkAction.login)
 		{
+			if (token.equals(Constants.empty))
+			{
+				UserSettings.auto_login = false;
+				Constants.logging_in = false;
+				return;
+			}
+			else
+			{
+				UserSettings.auto_login = true;
+			}
+			
+			FoxdashtwoActivity.onSave();
+			
 			// start a task to talk to our server
 			TaskLogin network_login = new TaskLogin();
-			network_login.execute();
+			network_login.execute(get_accounts()[UserSettings.selected_account_login], token);
 		}
 	}
 }

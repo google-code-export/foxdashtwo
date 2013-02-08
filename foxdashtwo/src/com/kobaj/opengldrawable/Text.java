@@ -290,4 +290,10 @@ public class Text
 		
 		return 0;
 	}
+	
+	public void onUnInitialize()
+	{
+		for (int i = bitmap_buffer.size() - 1; i >= 0; i--)
+			bitmap_buffer.get(i).onUnInitialize();
+	}
 }

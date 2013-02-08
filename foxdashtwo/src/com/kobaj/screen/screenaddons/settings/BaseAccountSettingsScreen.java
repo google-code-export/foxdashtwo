@@ -2,7 +2,6 @@ package com.kobaj.screen.screenaddons.settings;
 
 import com.kobaj.account_settings.UserSettings;
 import com.kobaj.foxdashtwo.R;
-import com.kobaj.input.InputType.EnumInputType;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.EnumDrawFrom;
@@ -10,7 +9,7 @@ import com.kobaj.opengldrawable.Button.TextButton;
 import com.kobaj.opengldrawable.Button.ToggleTextButton;
 import com.kobaj.screen.screenaddons.floatingframe.BaseFloatingFrame;
 
-public class BaseInputSettingsScreen extends BaseFloatingFrame
+public class BaseAccountSettingsScreen extends BaseFloatingFrame
 {
 	private TextButton cancel_button;
 	private ToggleTextButton switch_button;
@@ -24,7 +23,7 @@ public class BaseInputSettingsScreen extends BaseFloatingFrame
 		super.onInitialize();
 		
 		cancel_button = new TextButton(R.string.back);
-		switch_button = new ToggleTextButton(R.string.halfhalf, R.string.controller);
+		switch_button = new ToggleTextButton(R.string.yes_button, R.string.no_button);
 		
 		cancel_button.onInitialize();
 		switch_button.onInitialize();
@@ -48,12 +47,17 @@ public class BaseInputSettingsScreen extends BaseFloatingFrame
 	@Override
 	public boolean onUpdate(double delta)
 	{
-		if(switch_button.isReleased())
+		if (UserSettings.auto_login)
+			switch_button.label_pointer = 0;
+		else
+			switch_button.label_pointer = 1;
+		
+		if (switch_button.isReleased())
 		{
-			if(switch_button.label_pointer == 0)
-				UserSettings.active_input_type = EnumInputType.halfhalf;
+			if (switch_button.label_pointer == 0)
+				UserSettings.auto_login = true;
 			else
-				UserSettings.active_input_type = EnumInputType.nintendo;
+				UserSettings.auto_login = false;
 		}
 		else if (cancel_button.isReleased())
 			return false;
@@ -65,12 +69,11 @@ public class BaseInputSettingsScreen extends BaseFloatingFrame
 	public void onDraw()
 	{
 		main_popup.onDrawAmbient(Constants.my_ip_matrix, true);
-		Constants.text.drawText(R.string.input, label_x, label_y, EnumDrawFrom.center);
+		Constants.text.drawText(R.string.account, label_x, label_y, EnumDrawFrom.center);
 		
-		Constants.text.drawText(R.string.current, input_label_x, input_label_y, EnumDrawFrom.bottom_left);
+		Constants.text.drawText(R.string.account_auto_login, input_label_x, input_label_y, EnumDrawFrom.bottom_left);
 		
 		switch_button.onDrawConstant();
 		cancel_button.onDrawConstant();
 	}
-	
 }

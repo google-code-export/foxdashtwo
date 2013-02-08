@@ -18,7 +18,7 @@ public class NetworkManager
 	
 	public static final String server = "http://normannexus.com:8080/";
 	
-	public String accessNetwork(EnumNetworkAction action, String the_url)
+	public String accessNetwork(String the_url)
 	{
 		if (isNetworkAvailable() && !the_url.equals(Constants.empty))
 		{

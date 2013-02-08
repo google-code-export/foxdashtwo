@@ -151,6 +151,7 @@ public class Constants
 	// accounts
 	public static Accounts accounts;
 	public static boolean logged_in = false;
+	public static boolean logging_in = false;
 	
 	// network +1 when activity,
 	// -1 when activity ends

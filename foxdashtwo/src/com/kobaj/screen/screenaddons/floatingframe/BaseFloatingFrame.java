@@ -19,6 +19,7 @@ public abstract class BaseFloatingFrame
 	protected double shift_y;
 	protected double cancel_shift_y;
 	protected int default_label_left = 175;
+	protected int default_label_left_shift = 275;
 	protected final double center_x = 0; // heh
 	protected final double center_y = 0;
 	

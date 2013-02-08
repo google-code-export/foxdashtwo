@@ -15,6 +15,8 @@ public class TweenManager
 	private int current_tween_index = 0;
 	private double current_time = 0;
 	
+	private boolean finished = false;
+	
 	/*
 	 * intended use TweenHolder(myObject.quad, new TweenEvent(0, 0, Color.white), 1000 //one second new TweenEvent(10,10, Color.white), 1000 new TweenEvent(10,10, Color.blue));
 	 */
@@ -41,12 +43,16 @@ public class TweenManager
 	
 	public void reset()
 	{
+		finished = false;
 		current_tween_index = 0;
 		current_time = 0;
 	}
 	
 	public void finish()
 	{
+		if(finished)
+			return;
+		
 		current_tween_index = tween_events.size() - 2;
 		current_time = tween_times.get(current_tween_index) + 1.0;
 		onUpdate(current_time);
@@ -56,7 +62,10 @@ public class TweenManager
 	public boolean onUpdate(double delta)
 	{
 		if (current_tween_index >= tween_events.size() - 1)
+		{
+			finished = true;
 			return false;
+		}
 		
 		TweenEvent current_event = tween_events.get(current_tween_index);
 		TweenEvent next_event = tween_events.get(current_tween_index + 1);

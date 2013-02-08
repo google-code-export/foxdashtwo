@@ -8,14 +8,14 @@ import com.kobaj.opengldrawable.Quad.QuadCompressed;
 public class TextButton extends Button
 {
 	private int label;
-	private int padding = 35;
+	protected int padding = 35;
+	protected int height = 23 + padding;
 	
 	// these are shader coordinates of the center of the button
 	public TextButton(int resource_label)
 	{
 		this.label = resource_label;
 		width = Constants.text.measureTextWidth(label) + padding;
-		height = /* Constants.text.measureTextHeight(label) */23 + padding;
 	}
 	
 	public void onInitialize()

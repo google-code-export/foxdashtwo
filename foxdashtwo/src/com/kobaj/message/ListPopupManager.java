@@ -9,6 +9,7 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.kobaj.account_settings.UserSettings;
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Constants;
 
@@ -20,30 +21,12 @@ public class ListPopupManager extends DialogFragment
 	 * The activity that creates an instance of this dialog fragment must implement this interface in order to receive event callbacks. Each method passes the DialogFragment in case the host needs to
 	 * query it.
 	 */
-	public interface NoticeDialogListener
-	{
-		public void onDialogListSelect(int id);
-	}
 	
-	// Use this instance of the interface to deliver action events
-	private NoticeDialogListener mListener;
 	
-	// Override the Fragment.onAttach() method to instantiate the NoticeDialogListener
 	@Override
 	public void onAttach(Activity activity)
 	{
 		super.onAttach(activity);
-		// Verify that the host activity implements the callback interface
-		try
-		{
-			// Instantiate the NoticeDialogListener so we can send events to the host
-			mListener = (NoticeDialogListener) activity;
-		}
-		catch (ClassCastException e)
-		{
-			// The activity doesn't implement the interface, throw exception
-			throw new ClassCastException(activity.toString() + PopupManager.implement_error);
-		}
 	}
 	
 	@Override
@@ -65,7 +48,8 @@ public class ListPopupManager extends DialogFragment
 		{
 			public void onClick(DialogInterface dialog, int id)
 			{
-				mListener.onDialogListSelect(id);
+				UserSettings.selected_account_login = id;
+				Constants.accounts.login_step_two();
 			}
 		});
 		

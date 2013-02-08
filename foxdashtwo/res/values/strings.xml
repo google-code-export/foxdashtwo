@@ -24,18 +24,24 @@
     <!-- level event arrows -->
     <string name="touch_here">Touch Here</string>
 
+    <!-- popup labels -->
+    <string name="are_you_sure">Are you sure?</string>
+    <string name="music">Music:</string>
+    <string name="sound">Sound:</string>
+    <string name="account_auto_login">Automatically login:</string>
+        
     <!-- popup -->
     <string name="login">Login</string>
     <string name="paused">Paused</string>
-    <string name="are_you_sure">Are you sure?</string>
     <string name="settings">Settings</string>
     <string name="audio">Audio</string>
     <string name="input">Input</string>
-    <string name="music">Music:</string>
-    <string name="sound">Sound:</string>
-    <string name="current">Current:</string>
+    <string name="current">Current Input Style:</string>
     <string name="error">Error:</string>
     <string name="play_header">Play:</string>
+    <string name="account">Account</string>
+
+    <!-- long messages -->
     <string name="error_message">There was an error somewhere. Sorry.</string>
 	<string name="account_list">Which account would you like to login with?</string>
     
@@ -61,6 +67,9 @@
     <string name="continue_game">Continue</string>
     <string name="download_maps">Download Maps</string>
     <string name="login_button">Login</string>
+    <string name="account_button">Account</string>
+    <string name="yes_button">Yes</string>
+    <string name="no_button">No</string>
     
     <!-- blurbs -->
 	<string name="login_blurb">Logging into Fox Dash 2 lets you save \nyour achievements and stats online.\nTo make this process simple we \nwould like to use your google account.\nClick yes on the next popup!</string>
@@ -87,6 +96,8 @@
         <item>music</item>
         <item>sound</item>
         <item>current</item>
+        <item>account_auto_login</item>
+        
         <item>error_message</item>
         
         <item>quit</item>
@@ -106,6 +117,9 @@
         <item>continue_game</item>
         <item>download_maps</item>
         <item>login_button</item>
+        <item>account_button</item>
+        <item>yes_button</item>
+        <item>no_button</item>
         
         <item>login_blurb</item>
     </string-array>
@@ -118,6 +132,7 @@
         <item>input</item>
         <item>error</item>
         <item>play_header</item>
+        <item>account</item>
     </string-array>
 
 </resources>

@@ -207,10 +207,10 @@ public class TitleScreen extends BaseScreen
 				base_settings.reset();
 				settings_visible = true;
 			}
-			else if (login_button.isReleased() && !Constants.logged_in)
+			else if (login_button.isReleased() && !Constants.logged_in && !Constants.logging_in)
 				login_visible = true;
 			
-			if (Constants.logged_in)
+			if (Constants.logging_in)
 			{
 				login_tween.finish();
 				
@@ -264,10 +264,10 @@ public class TitleScreen extends BaseScreen
 			settings_button.onDrawConstant();
 			quit_button.onDrawConstant();
 			
-			if (!Constants.logged_in)
+			if (!Constants.logged_in && !Constants.logging_in)
 				login_button.onDrawConstant();
 			
-			if (Constants.network_activity > 0)
+			if (Constants.network_activity > 0 || Constants.logging_in)
 				network_loader.onDrawLoading();
 		}
 		

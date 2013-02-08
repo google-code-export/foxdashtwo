@@ -7,10 +7,9 @@ import com.kobaj.account_settings.SinglePlayerSave;
 import com.kobaj.account_settings.UserSettings;
 import com.kobaj.loader.FileHandler;
 import com.kobaj.math.Constants;
-import com.kobaj.networking.EnumNetworkAction;
 import com.kobaj.screen.TitleScreen;
 
-public final class FoxdashtwoActivity extends GameActivity implements com.kobaj.message.ListPopupManager.NoticeDialogListener
+public final class FoxdashtwoActivity extends GameActivity
 {
 	private static final String settings_name = "user_settings";
 	private static final String single_player_name = "single_player";
@@ -28,9 +27,7 @@ public final class FoxdashtwoActivity extends GameActivity implements com.kobaj.
 	@Override
 	public void onPause()
 	{
-		// save user settings
-		FileHandler.writeSerialFile(new UserSettings(), settings_name);
-		FileHandler.writeSerialFile(new SinglePlayerSave(), single_player_name);
+		onSave();
 		
 		super.onPause();
 	}
@@ -45,17 +42,17 @@ public final class FoxdashtwoActivity extends GameActivity implements com.kobaj.
 		@SuppressWarnings("unused")
 		SinglePlayerSave saved_game = FileHandler.readSerialFile(single_player_name, SinglePlayerSave.class);
 		
+		//lets try to login
+		if(Constants.logged_in == false && UserSettings.auto_login == true)
+			Constants.accounts.account_login();
+		
 		super.onResume();
 	}
 	
-	public void onFinishedURL(String value, EnumNetworkAction action)
+	public static void onSave()
 	{
-		
-	}
-	
-	public void onDialogListSelect(int id)
-	{
-		UserSettings.selected_account_login = id;
-		Constants.accounts.account_login();
+		// save user settings
+		FileHandler.writeSerialFile(new UserSettings(), settings_name);
+		FileHandler.writeSerialFile(new SinglePlayerSave(), single_player_name);
 	}
 }

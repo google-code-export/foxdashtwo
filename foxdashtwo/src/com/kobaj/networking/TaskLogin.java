@@ -12,7 +12,14 @@ import com.kobaj.message.ToastManager;
 
 public class TaskLogin extends AsyncTask<String, Void, String>
 {
-	public String get_url(String... attributes)
+	private NetworkManager my_connection_manager;
+	
+	public TaskLogin()
+	{
+		my_connection_manager = new NetworkManager();
+	}
+	
+	protected String get_url(String... attributes)
 	{
 		String the_url = Constants.empty;
 		
@@ -44,23 +51,28 @@ public class TaskLogin extends AsyncTask<String, Void, String>
 			
 			if (success)
 			{
+				Constants.logged_in = true;
 				ToastManager.makeShortToast(R.string.logged_in);
 			}
 			else
+			{
+				Constants.logged_in = false;
 				ToastManager.makeShortToast(R.string.login_fail);
+			}
 			
 		}
 		catch (JSONException e)
 		{
 			// do nothing
+			ToastManager.makeShortToast(R.string.error_message);
 		}
+		
+		Constants.logging_in = false;
 	}
 	
 	@Override
 	protected String doInBackground(String... attributes)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return my_connection_manager.accessNetwork(get_url(attributes));
 	}
-	
 }
