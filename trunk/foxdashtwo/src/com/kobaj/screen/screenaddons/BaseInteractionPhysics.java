@@ -120,9 +120,9 @@ public class BaseInteractionPhysics
 		double buffer = (float) Functions.linearInterpolate(//
 				0, //
 				Constants.max_speed, //
-				Functions.speed(test_level.player.quad_object.x_vel, test_level.player.quad_object.y_vel),//
-				Constants.min_zoom,//
-				Constants.max_zoom);//
+				Functions.speed(test_level.player.quad_object.x_vel, test_level.player.quad_object.y_vel), //
+				Constants.min_zoom, //
+				Constants.max_zoom); //
 		
 		// set camera
 		Functions.setCamera(x_camera, y_camera, my_camera_average.calculateAverage(buffer));

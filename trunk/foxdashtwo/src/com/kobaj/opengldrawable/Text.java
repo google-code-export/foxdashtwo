@@ -22,25 +22,27 @@ public class Text
 {
 	// has set of quads
 	private SparseArray<Quad> bitmap_buffer;
+	private SparseArray<String> string_container;
 	
 	// nice constants
 	private final int line_height = 4;
 	private final int padding = 4;
 	
+	public double size = 0;
+	private int count = 0;
+	
 	public Text()
-	{
-		// set default size
-		double size = Constants.text_size * Constants.sd_scale;
+	{	
+		size = Constants.text_size * Constants.sd_scale;
 		
 		// new bitmap_buffer!
-		// bitmap_buffer = new SparseArray<Quad>();
 		bitmap_buffer = new SparseArray<Quad>();
+		string_container = new SparseArray<String>();
 		
 		// begin by getting all our strings
 		String m_test_array[];
 		m_test_array = Constants.resources.getStringArray(R.array.my_sa);
 		
-		// add additional 0-9
 		ArrayList<String> my_string_array = new ArrayList<String>();
 		
 		// fill in our array list
@@ -50,10 +52,12 @@ public class Text
 		for (String s : m_test_array)
 			my_string_array.add(s);
 		
-		int count = 0;
 		// where it starts to get brilliant.
-		for (String s : my_string_array)
+		int buffer_size = my_string_array.size();
+		for (int i = 0; i < buffer_size; i++)
 		{
+			String s = my_string_array.get(i);
+		
 			int key = count;
 			
 			// grab the id
@@ -79,12 +83,13 @@ public class Text
 		for (String s : m_test_array)
 			my_string_array.add(s);
 		
-		for (String s : my_string_array)
+		buffer_size = my_string_array.size();
+		for (int i = 0; i < buffer_size; i++)
 		{
-			int key = count;
+			String s = my_string_array.get(i);
 			
 			// grab the id
-			key = Constants.resources.getIdentifier(s, "string", "com.kobaj.foxdashtwo");
+			int key = Constants.resources.getIdentifier(s, "string", "com.kobaj.foxdashtwo");
 			if (key != 0)
 				s = Constants.resources.getString(key);
 			else
@@ -97,6 +102,36 @@ public class Text
 		}
 		
 		System.gc();
+	}
+	
+	// generate a string and return a key that will get that string.
+	// note, you probably shouldn't call this except at loading time, 
+	// and never call this during game play
+	public int generateString(String s, double size)
+	{
+		//see if already contained
+		int checked_key = string_container.indexOfValue(s);
+		if(checked_key > 0)
+			return checked_key;
+		
+		// find a key
+		// not the most efficient.
+		// but 'shouldnt' have collision problems.
+		int key = 0;
+		boolean key_found = false;
+		while(!key_found)
+		{
+			key = count;
+			count++;
+			
+			if(bitmap_buffer.get(key) == null)
+				key_found = true;		
+		}
+		
+		//generate
+		generateString(s, size, key);
+		
+		return key;
 	}
 	
 	private void generateString(String s, double size, int key)
@@ -294,6 +329,6 @@ public class Text
 	public void onUnInitialize()
 	{
 		for (int i = bitmap_buffer.size() - 1; i >= 0; i--)
-			bitmap_buffer.get(i).onUnInitialize();
+			bitmap_buffer.get(bitmap_buffer.keyAt(i)).onUnInitialize();
 	}
 }

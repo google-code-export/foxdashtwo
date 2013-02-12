@@ -3,6 +3,7 @@ package com.kobaj.account_settings;
 import org.simpleframework.xml.Element;
 
 import com.kobaj.input.InputType.EnumInputType;
+import com.kobaj.math.Constants;
 
 public class UserSettings
 {
@@ -20,4 +21,17 @@ public class UserSettings
 	
 	@Element
 	public static boolean auto_login = false;
+	
+	@Element
+	public static double zoom_value = 0;
+	
+	public static void zoom(double value)
+	{
+		if(value > Constants.user_zoom_max)
+			value = Constants.user_zoom_max;
+		else if(value < Constants.user_zoom_min)
+			value = Constants.user_zoom_min;
+		
+		zoom_value = value;
+	}
 }
