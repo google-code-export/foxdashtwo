@@ -29,6 +29,7 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 	protected FPSManager fps;
 	
 	private int exception_count = 0;
+	final private int exception_limit = 10;
 	
 	public void onSurfaceCreated(GL10 unused, EGLConfig config)
 	{
@@ -70,12 +71,13 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		// gotta reset
 		exception_count = 0;
 		
-		//clear out the memory
+		// clear out the memory
 		com.kobaj.loader.GLBitmapReader.resetLoadedTextures();
 		QuadRenderShell.program_update = true;
 		
-		//set our window
+		// set our window
 		GLES20.glViewport(0, 0, width, height);
+		
 		Constants.width = width;
 		Constants.height = height;
 		
@@ -86,11 +88,13 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		// this projection matrix is applied to object coodinates
 		// in the onDrawFrame() method
 		
-		//we use a frustrum because the game utilizes 'zoom' effects via the camera
+		// we use a frustrum because the game utilizes 'zoom' effects via the camera
 		Matrix.frustumM(Constants.my_proj_matrix, 0, -ratio, ratio, -1, 1, .9999999999f, 2);
-		//Matrix.orthoM(Constants.my_proj_matrix, 0, -ratio, ratio, -1, 1, .99999999f, 2);
+		// Matrix.orthoM(Constants.my_proj_matrix, 0, -ratio, ratio, -1, 1, .99999999f, 2);
 		Matrix.setLookAtM(Constants.my_view_matrix, 0, // this is the identity...
-				0, 0, 0, 0f, 0f, -5.0f, 0f, 1.0f, 0.0f);
+				0, 0, 0, // eye position/look at
+				0f, 0f, -5.0f, // center/camera position
+				0f, 1.0f, 0.0f); // up vector
 		
 		// multiply
 		Matrix.multiplyMM(Constants.my_ip_matrix, 0, Constants.my_proj_matrix, 0, Constants.identity_matrix, 0);
@@ -148,7 +152,7 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 				Log.e("Draw Frame Timeout", e1.toString());
 			}
 			
-			if (exception_count > 10)
+			if (exception_count > exception_limit)
 				throw e;
 		}
 	}

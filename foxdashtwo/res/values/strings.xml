@@ -26,28 +26,23 @@
 
     <!-- popup labels -->
     <string name="are_you_sure">Are you sure?</string>
-    <string name="music">Music:</string>
-    <string name="sound">Sound:</string>
-    <string name="account_auto_login">Automatically login:</string>
         
     <!-- popup -->
+    <string name="zoom">Zoom:</string>
+    <string name="music">Music:</string>
+    <string name="sound">Sound:</string>
+    <string name="current">Input:</string>
+    <string name="account_auto_login">Automatically login:</string>
+    
+    <!-- headers -->
+    <string name="error">Error</string>
+    <string name="play_header">Play</string>
     <string name="login">Login</string>
     <string name="paused">Paused</string>
     <string name="settings">Settings</string>
     <string name="audio">Audio</string>
     <string name="input">Input</string>
-    <string name="current">Current Input Style:</string>
-    <string name="error">Error:</string>
-    <string name="play_header">Play:</string>
     <string name="account">Account</string>
-
-    <!-- long messages -->
-    <string name="error_message">There was an error somewhere. Sorry.</string>
-	<string name="account_list">Which account would you like to login with?</string>
-    
-	<!-- url success -->
-	<string name="logged_in">Logged in Successfully.</string>
-	<string name="login_fail">Login Failed.</string>
 	
     <!-- buttons!!!! Squee -->
     <string name="quit">Quit</string>
@@ -56,6 +51,8 @@
     <string name="back">Back</string>
     <string name="volume_up">Volume Up</string>
     <string name="volume_down">Volume Down</string>
+    <string name="zoom_in">Zoom In</string>
+    <string name="zoom_out">Zoom Out</string>
     <string name="play">Play</string>
     <string name="settings_button">Settings</string>
     <string name="audio_button">Audio</string>
@@ -70,6 +67,14 @@
     <string name="account_button">Account</string>
     <string name="yes_button">Yes</string>
     <string name="no_button">No</string>
+    
+    <!-- long messages -->
+    <string name="error_message">There was an error somewhere. Sorry.</string>
+	<string name="account_list">Which account would you like to login with?</string>
+    
+	<!-- url success -->
+	<string name="logged_in">Logged in Successfully.</string>
+	<string name="login_fail">Login Failed.</string>
     
     <!-- blurbs -->
 	<string name="login_blurb">Logging into Fox Dash 2 lets you save \nyour achievements and stats online.\nTo make this process simple we \nwould like to use your google account.\nClick yes on the next popup!</string>
@@ -93,12 +98,12 @@
         <item>touch_here</item>
         
         <item>are_you_sure</item>
+        
+        <item>zoom</item>
         <item>music</item>
         <item>sound</item>
         <item>current</item>
         <item>account_auto_login</item>
-        
-        <item>error_message</item>
         
         <item>quit</item>
         <item>ok</item>
@@ -106,6 +111,8 @@
         <item>back</item>
         <item>volume_up</item>
         <item>volume_down</item>
+        <item>zoom_in</item>
+        <item>zoom_out</item>
         <item>play</item>
         <item>settings_button</item>
         <item>audio_button</item>
@@ -121,17 +128,19 @@
         <item>yes_button</item>
         <item>no_button</item>
         
+        <item>error_message</item>
+        
         <item>login_blurb</item>
     </string-array>
     
     <string-array name="my_sa2">
+      	<item>error</item>
+        <item>play_header</item>
         <item>login</item>
         <item>paused</item>
         <item>settings</item>
         <item>audio</item>
         <item>input</item>
-        <item>error</item>
-        <item>play_header</item>
         <item>account</item>
     </string-array>
 

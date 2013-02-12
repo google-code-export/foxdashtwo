@@ -15,8 +15,13 @@ public class BaseInputSettingsScreen extends BaseFloatingFrame
 	private TextButton cancel_button;
 	private ToggleTextButton switch_button;
 	
+	private TextButton in_button;
+	private TextButton out_button;
+	
 	private double input_label_x;
 	private double input_label_y;
+	private double zoom_label_x;
+	private double zoom_label_y;
 	
 	@Override
 	public void onInitialize()
@@ -25,14 +30,25 @@ public class BaseInputSettingsScreen extends BaseFloatingFrame
 		
 		cancel_button = new TextButton(R.string.back);
 		switch_button = new ToggleTextButton(R.string.halfhalf, R.string.controller);
+		in_button = new TextButton(R.string.zoom_in);
+		out_button = new TextButton(R.string.zoom_out);
 		
 		cancel_button.onInitialize();
 		switch_button.onInitialize();
+		in_button.onInitialize();
+		out_button.onInitialize();
 		
-		input_label_x = -Functions.screenWidthToShaderWidth(default_label_left_shift);
-		input_label_y = shift_y;
+		double shift_y = Functions.screenHeightToShaderHeight(32);
+		double move_y = Functions.screenHeightToShaderHeight(5); // same value is in baseplaytype
 		
-		BaseFloatingFrame.alignButtonsAlongXAxis(center_y, switch_button);
+		zoom_label_y = 2 * shift_y + move_y;
+		input_label_y = -shift_y + move_y;
+		
+		input_label_x = -Functions.screenWidthToShaderWidth(default_label_left);
+		zoom_label_x = input_label_x;
+		
+		BaseFloatingFrame.alignButtonsAlongXAxis(center_y + shift_y + move_y, in_button, out_button);
+		BaseFloatingFrame.alignButtonsAlongXAxis(center_y - 2.0 * shift_y + move_y, switch_button);
 		BaseFloatingFrame.alignButtonsAlongXAxis(cancel_shift_y, cancel_button);
 	}
 	
@@ -55,6 +71,16 @@ public class BaseInputSettingsScreen extends BaseFloatingFrame
 			else
 				UserSettings.active_input_type = EnumInputType.nintendo;
 		}
+		else if(in_button.isReleased())
+		{
+			UserSettings.zoom(UserSettings.zoom_value - .1);
+			Functions.setCamera(Constants.x_shader_translation, Constants.y_shader_translation, Constants.z_shader_translation);
+		}
+		else if(out_button.isReleased())
+		{
+			UserSettings.zoom(UserSettings.zoom_value += .1);
+			Functions.setCamera(Constants.x_shader_translation, Constants.y_shader_translation, Constants.z_shader_translation);
+		}
 		else if (cancel_button.isReleased())
 			return false;
 		
@@ -67,8 +93,12 @@ public class BaseInputSettingsScreen extends BaseFloatingFrame
 		main_popup.onDrawAmbient(Constants.my_ip_matrix, true);
 		Constants.text.drawText(R.string.input, label_x, label_y, EnumDrawFrom.center);
 		
-		Constants.text.drawText(R.string.current, input_label_x, input_label_y, EnumDrawFrom.bottom_left);
+		Constants.text.drawText(R.string.zoom, zoom_label_x, zoom_label_y, EnumDrawFrom.bottom_right);
+		Constants.text.drawNumber((int) (UserSettings.zoom_value * 10.0), zoom_label_x, zoom_label_y, EnumDrawFrom.bottom_left);
+		Constants.text.drawText(R.string.current, input_label_x, input_label_y, EnumDrawFrom.bottom_right);
 		
+		in_button.onDrawConstant();
+		out_button.onDrawConstant();
 		switch_button.onDrawConstant();
 		cancel_button.onDrawConstant();
 	}
