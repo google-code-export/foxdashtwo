@@ -1,13 +1,11 @@
 package com.kobaj.networking;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.json.JSONObject;
 
 import android.net.Uri;
 
 import com.kobaj.loader.FileHandler;
+import com.kobaj.loader.RawTextReader;
 import com.kobaj.math.Constants;
 
 public class TaskDownloadMap extends MyTask
@@ -37,10 +35,7 @@ public class TaskDownloadMap extends MyTask
 	@Override
 	protected void onPostExecute(String value)
 	{
-		final Pattern pattern = Pattern.compile("<lid>(.+?)</lid>");
-		final Matcher matcher = pattern.matcher(value);
-		matcher.find();
-		String name = matcher.group(1);
+		String name = RawTextReader.findValueInXML(value, "lid");
 		
 		FileHandler.writeTextFile(FileHandler.download_dir + name, value);
 	}
@@ -48,6 +43,6 @@ public class TaskDownloadMap extends MyTask
 	@Override
 	protected void parseJSON(JSONObject json)
 	{
-		//do nothing
+		// do nothing
 	}
 }

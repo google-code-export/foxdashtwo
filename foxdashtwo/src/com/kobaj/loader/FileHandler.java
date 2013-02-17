@@ -31,7 +31,7 @@ public class FileHandler
 	// thanks to http://blog.mynotiz.de/programmieren/java-text-in-eine-datei-schreiben-450/
 	public static void writeTextFile(String file_name, String file_contents)
 	{
-		if (hasStorage(false))
+		if (hasStorage(true))
 		{
 			try
 			{
@@ -61,6 +61,37 @@ public class FileHandler
 				Log.e(error_tag, e.toString());
 			}
 		}
+	}
+	
+	public static String readTextFile(String external_dir, String file_name)
+	{
+		if(hasStorage(false))
+		{
+			if(!file_name.contains(fullstop))
+				file_name += save_format;
+			
+			try
+			{
+				if(!file_name.contains(fullstop))
+					file_name += save_format;
+					
+				// create file and directory
+				File dir = prepareDirectory(external_dir);
+				File sdcardFile = new File(dir, file_name);
+				
+				if (sdcardFile.exists())
+				{
+					String input_file = ioStreamToString(new FileInputStream(sdcardFile));
+					return input_file;
+				}
+			}
+			catch (IOException e)
+			{
+				Log.e(error_tag, e.toString());
+			}
+		}
+		
+		return Constants.empty;
 	}
 	
 	public static boolean fileExists(String file_name)

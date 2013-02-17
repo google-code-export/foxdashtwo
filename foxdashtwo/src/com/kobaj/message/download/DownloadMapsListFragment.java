@@ -25,8 +25,8 @@ import android.widget.TextView;
 import com.kobaj.account_settings.SinglePlayerSave;
 import com.kobaj.foxdashtwo.GameActivity;
 import com.kobaj.foxdashtwo.R;
-import com.kobaj.level.Level;
 import com.kobaj.loader.FileHandler;
+import com.kobaj.loader.RawTextReader;
 import com.kobaj.math.Constants;
 import com.kobaj.networking.MyTask;
 import com.kobaj.networking.NetworkManager;
@@ -88,22 +88,23 @@ class LoadDiskData
 		String[] files = FileHandler.getFileList(download_directory);
 		
 		ArrayList<LevelItem> levels = new ArrayList<LevelItem>();
-		for(int i = files.length - 1; i >=0 ; i--)
+		for (int i = files.length - 1; i >= 0; i--)
 		{
 			String full_file = files[i];
-			Level the_level = FileHandler.readSerialFile(FileHandler.download_dir, full_file, Level.class);
+			
+			String the_level = FileHandler.readTextFile(FileHandler.download_dir, full_file);
+			
 			if (the_level != null)
 			{
 				LevelItem temp = new LevelItem();
 				temp.downloaded = true;
-				temp.lid = the_level.lid;
-				temp.name = the_level.name;
-				temp.changed_time = the_level.changed;
+				
+				temp.lid = Integer.valueOf(RawTextReader.findValueInXML(the_level, "lid"));
+				temp.name = RawTextReader.findValueInXML(the_level, "name");
+				temp.changed_time = Long.valueOf(RawTextReader.findValueInXML(the_level, "changed"));
 				
 				levels.add(temp);
-			
-				//inefficient as hell haha
-				the_level.onUnInitialize();
+				
 				the_level = null;
 			}
 		}
@@ -194,7 +195,7 @@ class DownloadListAdapter extends BaseAdapter implements ListAdapter
 	
 	public void onUpdateEntries(ArrayList<LevelItem> levels)
 	{
-		if(levels.isEmpty())
+		if (levels.isEmpty())
 		{
 			LevelItem temp = new LevelItem();
 			temp.name = "None";
@@ -249,9 +250,9 @@ class DownloadListAdapter extends BaseAdapter implements ListAdapter
 		button.setOnClickListener(this_item.listener);
 		this_item.button = button;
 		
-		if(this_item.downloaded)
+		if (this_item.downloaded)
 			button.setText(R.string.play);
-		else if(this_item.lid == -1)
+		else if (this_item.lid == -1)
 		{
 			button.setVisibility(View.INVISIBLE);
 			description_text.setVisibility(View.INVISIBLE);
@@ -283,9 +284,9 @@ class LevelItem
 	{
 		public void onClick(View v)
 		{
-			if(downloaded)
+			if (downloaded)
 			{
-				//play time
+				// play time
 				SinglePlayerSave.last_level = FileHandler.download_dir + String.valueOf(lid);
 				SinglePlayerSave.last_checkpoint = null;
 				
@@ -296,7 +297,7 @@ class LevelItem
 			{
 				progressbar.setVisibility(View.VISIBLE);
 				v.setVisibility(View.INVISIBLE);
-			
+				
 				// download the map here.
 				TaskDownloadMap downloader = new TaskDownloadMap();
 				downloader.execute(String.valueOf(lid));
