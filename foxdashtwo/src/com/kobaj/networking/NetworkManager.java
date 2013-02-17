@@ -2,8 +2,13 @@ package com.kobaj.networking;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.util.Log;
 
 import com.kobaj.foxdashtwo.GameActivity;
@@ -18,6 +23,31 @@ public class NetworkManager
 	
 	public static final String server = "http://normannexus.com:8080/";
 	public static final String php_extension = "new_level_editor/php";
+	
+	public static final String url_file = "url_file";
+	public static final String url_action = "action";
+	public static final String slash = "/";
+	
+	public static String genericUrlBuilder(HashMap<String, String> gets)
+	{
+		String the_url = Constants.empty;
+		Uri.Builder b = Uri.parse(NetworkManager.server).buildUpon();
+		
+		Iterator<Entry<String, String>> it = gets.entrySet().iterator();
+		while (it.hasNext())
+		{
+			Map.Entry<String, String> pairs = (Map.Entry<String, String>) it.next();
+			
+			if (pairs.getKey().equals(url_file))
+				b.path(NetworkManager.php_extension + slash + pairs.getValue());
+			else
+				b.appendQueryParameter(pairs.getKey(), pairs.getValue());
+		}
+		
+		the_url = b.build().toString();
+		
+		return the_url;
+	}
 	
 	public String accessNetwork(String the_url)
 	{
