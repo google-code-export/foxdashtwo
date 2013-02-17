@@ -4,6 +4,7 @@ import com.kobaj.account_settings.SinglePlayerSave;
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
+import com.kobaj.message.download.DownloadMapsManager;
 import com.kobaj.opengldrawable.EnumDrawFrom;
 import com.kobaj.opengldrawable.Button.TextButton;
 import com.kobaj.screen.TitleScreen;
@@ -14,6 +15,8 @@ public class BasePlayType extends BaseFloatingFrame
 	TextButton new_game_button;
 	TextButton continue_button;
 	TextButton download_maps_button;
+	
+	public static final String popup_tag = "FoxDashTwoDownload";
 	
 	@Override
 	public void onInitialize()
@@ -65,7 +68,8 @@ public class BasePlayType extends BaseFloatingFrame
 		}
 		else if (download_maps_button.isReleased())
 		{
-			
+			DownloadMapsManager popup = new DownloadMapsManager();
+			popup.show(Constants.fragment_manager, popup_tag);
 		}
 		else if (back_button.isReleased())
 			return false;
