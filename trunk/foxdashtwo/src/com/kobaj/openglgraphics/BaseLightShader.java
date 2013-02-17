@@ -18,8 +18,8 @@ public abstract class BaseLightShader
 	protected BaseLightShader(int r_vertex_shader, int r_fragment_shader)
 	{
 		// initialize shaders
-		String vertex_shader_code = com.kobaj.loader.RawTextReader.readRawTextFile(com.kobaj.math.Constants.context, r_vertex_shader);
-		String fragment_shader_code = com.kobaj.loader.RawTextReader.readRawTextFile(com.kobaj.math.Constants.context, r_fragment_shader);
+		String vertex_shader_code = com.kobaj.loader.RawTextReader.readRawTextResource(com.kobaj.math.Constants.context, r_vertex_shader);
+		String fragment_shader_code = com.kobaj.loader.RawTextReader.readRawTextResource(com.kobaj.math.Constants.context, r_fragment_shader);
 		
 		// shaders
 		int vertex_shader = loadShader(GLES20.GL_VERTEX_SHADER, vertex_shader_code);

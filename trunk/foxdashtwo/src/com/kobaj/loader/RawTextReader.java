@@ -6,13 +6,25 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import android.content.Context;
 import android.util.Log;
 
 public class RawTextReader
 {
-	public static String readRawTextFile(Context ctx, int resId)
+	public static String findValueInXML(String input, String tag)
+	{
+		final Pattern pattern = Pattern.compile("<" + tag + ">(.+?)</" + tag + ">");
+		final Matcher matcher = pattern.matcher(input);
+		matcher.find();
+		String name = matcher.group(1);
+		
+		return name;
+	}
+	
+	public static String readRawTextResource(Context ctx, int resId)
 	{
 		InputStream inputStream = ctx.getResources().openRawResource(resId);
 		

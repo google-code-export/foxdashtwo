@@ -16,7 +16,6 @@ import com.kobaj.level.LevelTypeLight.LevelAmbientLight;
 import com.kobaj.level.LevelTypeLight.LevelBloomLight;
 import com.kobaj.level.LevelTypeLight.LevelCustomLight;
 import com.kobaj.level.LevelTypeLight.LevelPointLight;
-import com.kobaj.level.LevelTypeLight.LevelSpotLight;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 import com.kobaj.math.android.RectF;
