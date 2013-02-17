@@ -5,7 +5,6 @@ import org.simpleframework.xml.Element;
 import android.graphics.Color;
 
 import com.kobaj.foxdashtwo.R;
-import com.kobaj.math.AverageMaker;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 import com.kobaj.math.RectFExtended;
@@ -255,8 +254,6 @@ public class LevelObject extends LevelEntityActive
 		
 	}
 	
-	AverageMaker y_average = new AverageMaker(10);
-	
 	public void onUpdate(double delta)
 	{
 		if (this_object == EnumLevelObject.l2_ground_platform_floating)
@@ -268,7 +265,7 @@ public class LevelObject extends LevelEntityActive
 	
 	public void onDrawObject()
 	{
-		if (active && !(this_object == EnumLevelObject.transparent))
+		if (active && (this_object != EnumLevelObject.transparent))
 			quad_object.onDrawAmbient();
 	}
 }

@@ -13,7 +13,6 @@ import android.support.v4.app.ListFragment;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -22,20 +21,19 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.kobaj.account_settings.SinglePlayerSave;
-import com.kobaj.foxdashtwo.GameActivity;
 import com.kobaj.foxdashtwo.R;
-import com.kobaj.loader.FileHandler;
-import com.kobaj.loader.RawTextReader;
 import com.kobaj.math.Constants;
+import com.kobaj.message.download.LevelItem.EnumButtonStates;
 import com.kobaj.networking.MyTask;
 import com.kobaj.networking.NetworkManager;
-import com.kobaj.networking.TaskDownloadMap;
-import com.kobaj.screen.SinglePlayerScreen;
+import com.kobaj.networking.TaskGetDownloadedMaps;
+import com.kobaj.networking.TaskGetDownloadedMaps.finishedLoading;
 
 public class DownloadMapsListFragment extends ListFragment
 {
-	int current_page;
+	public DownloadMapsFragmentPager parent;
+	
+	private int current_page;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -45,7 +43,6 @@ public class DownloadMapsListFragment extends ListFragment
 		Bundle data = getArguments();
 		
 		current_page = data.getInt("current_page", 0);
-		
 	}
 	
 	@Override
@@ -54,6 +51,7 @@ public class DownloadMapsListFragment extends ListFragment
 		View v = inflater.inflate(R.layout.download_maps_list, container, false);
 		
 		DownloadListAdapter adapter = new DownloadListAdapter();
+		adapter.parent = this;
 		setListAdapter(adapter);
 		
 		// determine what we show the user depending on the tab
@@ -64,8 +62,9 @@ public class DownloadMapsListFragment extends ListFragment
 		}
 		else
 		{
+			// get currently downloaded maps
 			LoadDiskData load_disk_data = new LoadDiskData(adapter);
-			load_disk_data.get_downloaded_levels();
+			load_disk_data.execute();
 		}
 		
 		return v;
@@ -73,43 +72,25 @@ public class DownloadMapsListFragment extends ListFragment
 	
 }
 
-class LoadDiskData
+class LoadDiskData implements finishedLoading
 {
 	private final DownloadListAdapter my_adapter;
-	private static final String download_directory = "/download";
 	
 	public LoadDiskData(DownloadListAdapter adapter)
 	{
 		my_adapter = adapter;
 	}
 	
-	public void get_downloaded_levels()
+	public void execute()
 	{
-		String[] files = FileHandler.getFileList(download_directory);
-		
-		ArrayList<LevelItem> levels = new ArrayList<LevelItem>();
-		for (int i = files.length - 1; i >= 0; i--)
-		{
-			String full_file = files[i];
-			
-			String the_level = FileHandler.readTextFile(FileHandler.download_dir, full_file);
-			
-			if (the_level != null)
-			{
-				LevelItem temp = new LevelItem();
-				temp.downloaded = true;
-				
-				temp.lid = Integer.valueOf(RawTextReader.findValueInXML(the_level, "lid"));
-				temp.name = RawTextReader.findValueInXML(the_level, "name");
-				temp.changed_time = Long.valueOf(RawTextReader.findValueInXML(the_level, "changed"));
-				
-				levels.add(temp);
-				
-				the_level = null;
-			}
-		}
-		
-		my_adapter.onUpdateEntries(levels);
+		TaskGetDownloadedMaps maps = new TaskGetDownloadedMaps();
+		maps.setFinishedLoading(this);
+		maps.execute();
+	}
+	
+	public void onTaskComplete(ArrayList<LevelItem> levels)
+	{
+		my_adapter.onUpdateEntries(levels, true);
 	}
 }
 
@@ -165,15 +146,20 @@ class LoadFeedData extends MyTask
 				for (int i = 0; i < level_count; i++)
 				{
 					JSONObject json_data = levels.getJSONObject(i);
+					
 					LevelItem temp = new LevelItem();
 					temp.name = json_data.getString("name");
 					temp.lid = json_data.getInt("lid");
 					temp.changed_time = json_data.getInt("changed_time");
 					
+					EnumButtonStates this_button_state = my_adapter.parent.parent.parent.downloaded_maps.get(temp.lid);
+					if (this_button_state != null)
+						temp.this_state = this_button_state;
+					
 					level_items.add(temp);
 				}
 				
-				my_adapter.onUpdateEntries(level_items);
+				my_adapter.onUpdateEntries(level_items, false);
 			}
 		}
 		catch (JSONException e)
@@ -185,6 +171,8 @@ class LoadFeedData extends MyTask
 
 class DownloadListAdapter extends BaseAdapter implements ListAdapter
 {
+	public DownloadMapsListFragment parent;
+	
 	private ArrayList<LevelItem> level_names = new ArrayList<LevelItem>();
 	private LayoutInflater mLayoutInflator;
 	
@@ -193,7 +181,7 @@ class DownloadListAdapter extends BaseAdapter implements ListAdapter
 		mLayoutInflator = (LayoutInflater) Constants.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 	
-	public void onUpdateEntries(ArrayList<LevelItem> levels)
+	public void onUpdateEntries(ArrayList<LevelItem> levels, boolean clear)
 	{
 		if (levels.isEmpty())
 		{
@@ -205,7 +193,18 @@ class DownloadListAdapter extends BaseAdapter implements ListAdapter
 			levels.add(temp);
 		}
 		
-		level_names.addAll(levels);
+		if (clear)
+			level_names.clear();
+		
+		// and then walk through adding and updating
+		int level_count = levels.size();
+		for (int i = 0; i < level_count; i++)
+		{
+			LevelItem reference = levels.get(i);
+			reference.setDownloadListAdapter(this);
+			level_names.add(reference);
+		}
+		
 		notifyDataSetChanged();
 	}
 	
@@ -250,8 +249,12 @@ class DownloadListAdapter extends BaseAdapter implements ListAdapter
 		button.setOnClickListener(this_item.listener);
 		this_item.button = button;
 		
-		if (this_item.downloaded)
+		if (this_item.this_state == LevelItem.EnumButtonStates.play)
 			button.setText(R.string.play);
+		else if (this_item.this_state == LevelItem.EnumButtonStates.update)
+			button.setText(R.string.update);
+		else if (this_item.this_state == LevelItem.EnumButtonStates.download)
+			button.setText(R.string.download);
 		else if (this_item.lid == -1)
 		{
 			button.setVisibility(View.INVISIBLE);
@@ -267,41 +270,4 @@ class DownloadListAdapter extends BaseAdapter implements ListAdapter
 		
 		return item_view;
 	}
-}
-
-class LevelItem
-{
-	public boolean downloaded = false;
-	
-	public String name;
-	public int lid;
-	public long changed_time;
-	
-	public Button button;
-	public ProgressBar progressbar;
-	
-	OnClickListener listener = new OnClickListener()
-	{
-		public void onClick(View v)
-		{
-			if (downloaded)
-			{
-				// play time
-				SinglePlayerSave.last_level = FileHandler.download_dir + String.valueOf(lid);
-				SinglePlayerSave.last_checkpoint = null;
-				
-				// load the next level
-				GameActivity.mGLView.my_game.onChangeScreen(new SinglePlayerScreen());
-			}
-			else
-			{
-				progressbar.setVisibility(View.VISIBLE);
-				v.setVisibility(View.INVISIBLE);
-				
-				// download the map here.
-				TaskDownloadMap downloader = new TaskDownloadMap();
-				downloader.execute(String.valueOf(lid));
-			}
-		}
-	};
 }

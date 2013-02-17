@@ -10,7 +10,9 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 public class DownloadMapsFragmentPager extends FragmentPagerAdapter
 {
-	public final static String[] pages = { "New Maps", "Highest Rated", "Downloaded" };
+	public final static String[] pages = { "New Maps", "Latest Updates", "Highest Rated", "Downloaded" };
+	
+	public DownloadMapsManager parent;
 	
 	/** Constructor of the class */
 	public DownloadMapsFragmentPager(FragmentManager fm)
@@ -23,6 +25,7 @@ public class DownloadMapsFragmentPager extends FragmentPagerAdapter
 	public Fragment getItem(int arg0)
 	{
 		DownloadMapsListFragment myFragment = new DownloadMapsListFragment();
+		myFragment.parent = this;
 		Bundle data = new Bundle();
 		data.putInt("current_page", arg0);
 		myFragment.setArguments(data);

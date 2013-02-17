@@ -69,6 +69,7 @@
     <string name="yes_button">Yes</string>
     <string name="no_button">No</string>
     <string name="download">Download</string>
+    <string name="update">Update</string>
     
     <!-- long messages -->
     <string name="error_message">There was an error somewhere. Sorry.</string>
