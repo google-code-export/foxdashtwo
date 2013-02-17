@@ -2,15 +2,22 @@ package com.kobaj.level;
 
 public enum EnumLevelObject
 {
-	/*stuff*/
-	test, player, transparent, 
+	/* stuff */
+	test, player, transparent,
 	
-	/*thematic 1*/
-	l1_bg1, l1_bg2, l1_fungus1, l1_fungus2, l1_fungus3, l1_fungus4, l1_layer14, l1_layer17, l1_layer18,
-	l1_new_platform, l1_new_platform_2, l1_new_platform_3, l1_new_platform_4, l1_new_platform_5, l1_new_platform_6,
-	l1_prot_rock, l1_prot_rock_2, l1_prot_rock_3, l1_shroom1, l1_shroom2, l1_shroom3, l1_shroom4,
-	
-	/*thematic 2*/
-	l2_accent_grass, l2_background_gradient, l2_background_rocks, l2_background_rocks_big, l2_big_platform, l2_big_tall_platform, l2_big_wide_platform,
-	l2_dead_grass, l2_end_platform, l2_floating_platform, l2_medium_platform, l2_more_dead_grass, l2_small_platform, l2_small_right
+	/* thematic 1 */
+	big_popup, black, fox2, l1_background_cave_1, l1_background_cave_2, l1_ceiling_rocks_1, l1_ceiling_rocks_2, l1_ceiling_rocks_3,
+	l1_decoration_fungus_1, l1_decoration_fungus_2, l1_decoration_fungus_3, l1_decoration_fungus_4,
+	l1_decoration_shroom_1, l1_decoration_shroom_2, l1_decoration_shroom_3, l1_decoration_shroom_4, l1_ground_platform_1,
+	l1_ground_platform_2, l1_ground_platform_3, l1_ground_platform_4, l1_ground_platform_5, l1_ground_platform_6, l1_ground_platform_small_1, l1_ground_platform_small_2,
+	l1_ground_platform_small_3, l2_background_rocks_1, l2_background_rocks_2, l2_decoration_accent_grass, l2_decoration_dead_grass_1, l2_decoration_dead_grass_2, l2_ground_platform_1,
+	l2_ground_platform_2, l2_ground_platform_3, l2_ground_platform_end, l2_ground_platform_floating, l2_ground_platform_medium, l2_ground_platform_small_1, l2_ground_platform_small_2,
+	l3_background_swamp, l3_decoration_bones_hand, l3_decoration_bones_skull, l3_decoration_bones_smallbone, l3_decoration_bones_totem, l3_decoration_bush, l3_decoration_sticks,
+	l3_decoration_tree, l3_ground_platform_connector, l3_ground_platform_long, l3_ground_platform_small, l3_ground_platform_very_small, l4_background_sky, l4_decoration_rocks_1,
+	l4_decoration_rocks_2, l4_decoration_rocks_3, l4_decoration_rocks_4, l4_ground_platform_connector, l4_ground_platform_large_1, l4_ground_platform_large_2, l4_ground_platform_small,
+	l4_ground_platform_very_small, l5_background_coast, l5_background_sky, l5_decoration_branch_bridge_left_end, l5_decoration_left_curl, l5_decoration_right_curl,
+	l5_decoration_right_sag, l5_decoration_right_upright, l5_decoration_smog, l5_ground_branch_bridge, l5_ground_branch_bridge_connector, l5_ground_branch_bridge_right_end,
+	l5_ground_branch_bridge_support, l5_ground_platform_puddle, l5_ground_platform_small, l6_background_canyon, l6_background_canyon_cave, l6_background_canyon_crack,
+	l6_background_clouds, l6_decoration_brush_1, l6_decoration_brush_2, l6_decoration_rock, l6_decoration_tree_dead, l6_ground_platform_flat, l6_ground_platform_huge,
+	right_arrow, test_light
 }

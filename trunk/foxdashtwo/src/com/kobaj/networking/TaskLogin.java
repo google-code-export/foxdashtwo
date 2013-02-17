@@ -4,23 +4,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.util.Log;
 
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Constants;
 import com.kobaj.message.ToastManager;
 
-public class TaskLogin extends AsyncTask<String, Void, String>
+public class TaskLogin extends MyTask
 {
-	private NetworkManager my_connection_manager;
-	
-	public TaskLogin()
-	{
-		my_connection_manager = new NetworkManager();
-	}
-	
-	protected String get_url(String... attributes)
+	protected String getUrl(String... attributes)
 	{
 		String the_url = Constants.empty;
 		
@@ -29,7 +20,7 @@ public class TaskLogin extends AsyncTask<String, Void, String>
 		{
 			Uri.Builder b = Uri.parse(NetworkManager.server).buildUpon();
 			
-			b.path("new_level_editor/php/game.php");
+			b.path(NetworkManager.php_extension + "/game.php");
 			
 			b.appendQueryParameter("action", "check_user");
 			b.appendQueryParameter("username", attributes[0]);
@@ -42,14 +33,12 @@ public class TaskLogin extends AsyncTask<String, Void, String>
 	}
 	
 	@Override
-	protected void onPostExecute(String value)
+	protected void parseJSON(JSONObject json)
 	{
-		// get that json
+		boolean success;
 		try
 		{
-			JSONObject json = new JSONObject(value);
-			boolean success = json.getBoolean("success");
-			
+			success = json.getBoolean("success");
 			if (success)
 			{
 				Constants.logged_in = true;
@@ -60,20 +49,12 @@ public class TaskLogin extends AsyncTask<String, Void, String>
 				Constants.logged_in = false;
 				ToastManager.makeShortToast(R.string.login_fail);
 			}
-			
 		}
 		catch (JSONException e)
 		{
-			// do nothing
-			ToastManager.makeShortToast(R.string.error_message);
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		
-		Constants.logging_in = false;
 	}
 	
-	@Override
-	protected String doInBackground(String... attributes)
-	{
-		return my_connection_manager.accessNetwork(get_url(attributes));
-	}
 }

@@ -17,6 +17,7 @@ public class NetworkManager
 	private final String error_tag = "Network Error";
 	
 	public static final String server = "http://normannexus.com:8080/";
+	public static final String php_extension = "new_level_editor/php";
 	
 	public String accessNetwork(String the_url)
 	{
