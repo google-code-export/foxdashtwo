@@ -5,6 +5,7 @@ import org.json.JSONObject;
 
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Constants;

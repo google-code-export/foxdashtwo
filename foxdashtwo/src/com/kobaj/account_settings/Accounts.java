@@ -20,10 +20,11 @@ import com.kobaj.networking.TaskLogin;
 public class Accounts
 {
 	public final String account_type = "com.google";
-	public final String popup_tag = "FoxDashTwoAccounts";
+	public static final String popup_tag = "FoxDashTwoAccounts";
 	
 	private AccountManager am;
 	
+	// helpful methods
 	public Accounts()
 	{
 		am = AccountManager.get(Constants.context);
@@ -52,10 +53,18 @@ public class Accounts
 		return string_names;
 	}
 	
+	// outside world calls this
+	public void account_login()
+	{
+		Constants.logging_in = true;
+		account_popup();
+	}
+	
+	// real action starts here
 	public void account_popup()
 	{
 		// first get accounts
-		if(accounts_array().length == 1)
+		if (accounts_array().length == 1)
 			UserSettings.selected_account_login = 0;
 		
 		if (UserSettings.selected_account_login == -1)
@@ -76,15 +85,10 @@ public class Accounts
 		
 	}
 	
-	public void account_login()
-	{
-		Constants.logging_in = true;
-		account_popup();
-	}
-	
+	// async task calls this
 	public String get_token(boolean invalidateToken)
 	{
-		if(UserSettings.selected_account_login == -1)
+		if (UserSettings.selected_account_login == -1)
 			return Constants.empty;
 		
 		Account[] accounts = Constants.accounts.accounts_array();
@@ -123,6 +127,7 @@ public class Accounts
 		return Constants.empty;
 	}
 	
+	// async task calls this too
 	public void tokenReceivedFromTask(String token, EnumNetworkAction action)
 	{
 		if (action == EnumNetworkAction.login)

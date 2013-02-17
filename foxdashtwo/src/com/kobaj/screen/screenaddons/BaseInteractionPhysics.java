@@ -25,16 +25,20 @@ public class BaseInteractionPhysics
 		{
 			LevelObject reference = the_level.interaction_objects.get(i);
 			
-			collision.left = 0;
-			collision.top = 0;
-			collision.right = 0;
-			collision.bottom = 0;
-			
-			if (Constants.physics.checkCollision(collision, the_level.player.quad_object, reference.quad_object, 0))
-				can_jump = true;
-			
-			if (collision.width() != 0 || collision.height() != 0)
-				the_level.objectInteraction(collision, the_level.player, reference);
+			if (reference.active)
+			{
+				collision.left = 0;
+				collision.top = 0;
+				collision.right = 0;
+				collision.bottom = 0;
+				
+				if (Constants.physics.checkCollision(collision, the_level.player.quad_object, reference.quad_object, 0))
+					can_jump = true;
+				
+				if (collision.width() != 0 || collision.height() != 0)
+					the_level.objectInteraction(collision, the_level.player, reference);
+				
+			}
 		}
 		
 		return can_jump;
