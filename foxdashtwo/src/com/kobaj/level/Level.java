@@ -36,6 +36,15 @@ public class Level
 	private Quad my_backdrop;
 	
 	@Element
+	public String name;
+	
+	@Element
+	public long changed;
+	
+	@Element
+	public int lid;
+	
+	@Element
 	public int left_limit;
 	@Element
 	public int top_limit;
@@ -97,7 +106,7 @@ public class Level
 			reference.onInitialize();
 			
 			// do some particles
-			if (reference.this_object == EnumLevelObject.l2_floating_platform)
+			if (reference.this_object == EnumLevelObject.l2_ground_platform_floating)
 			{
 				RectF emitt_from = new RectF((float) (reference.quad_object.best_fit_aabb.main_rect.left + Functions.screenWidthToShaderWidth(45)),
 						(float) (reference.quad_object.best_fit_aabb.main_rect.top - Functions.screenHeightToShaderHeight(85)),
@@ -147,15 +156,15 @@ public class Level
 				LevelEvent original = event_list.get(i);
 				
 				LevelObject temp = new LevelObject();
-				temp.active = false;
+				temp.active = true;
 				temp.degree = 0;
 				temp.scale = 1;
 				temp.this_object = EnumLevelObject.transparent;
 				temp.id = original.id;
 				temp.x_pos = original.x_pos;
 				temp.y_pos = original.y_pos;
-				temp.width = original.width;
-				temp.height = original.height;
+				temp.my_width = original.width;
+				temp.my_height = original.height;
 				temp.z_plane = 5;
 				
 				temp.onInitialize();
@@ -310,7 +319,7 @@ public class Level
 		if (collision.width() == 0)
 		{
 			// floating platforms
-			if (reference.this_object == EnumLevelObject.l2_floating_platform)
+			if (reference.this_object == EnumLevelObject.l2_ground_platform_floating)
 				if (player.quad_object.y_pos > reference.quad_object.y_pos) // remember this is the center of the object
 				{
 					player.quad_object.setXYPos(player.quad_object.x_pos, player.quad_object.y_pos - Constants.collision_detection_height, EnumDrawFrom.center);
@@ -318,69 +327,5 @@ public class Level
 					reference.quad_object.y_acc += Constants.player_downward_platform_acc;
 				}
 		}
-	}
-	
-	// this method will be deleted.
-	public void writeOut()
-	{
-		player = new LevelObject();
-		player.this_object = EnumLevelObject.test;
-		player.x_pos = 0;
-		player.y_pos = 100;
-		player.z_plane = 5;
-		player.active = true;
-		
-		// initialize everything
-		object_list = new ArrayList<LevelObject>();
-		light_list = new ArrayList<LevelAmbientLight>();
-		event_list = new ArrayList<LevelEvent>();
-		
-		// make everything
-		LevelObject temp = new LevelObject();
-		temp.this_object = EnumLevelObject.test;
-		temp.x_pos = 200;
-		temp.y_pos = 200;
-		temp.z_plane = 5;
-		temp.active = true;
-		
-		LevelSpotLight templ = new LevelSpotLight();
-		templ.is_bloom = false;
-		templ.radius = 100;
-		templ.color = Color.WHITE;
-		templ.degree = 0;
-		templ.x_pos = 0;
-		templ.y_pos = 0;
-		templ.blur_amount = 0;
-		templ.close_width = 10;
-		templ.far_width = 100;
-		templ.active = true;
-		
-		LevelPointLight templ2 = new LevelPointLight();
-		templ2.is_bloom = false;
-		templ2.radius = 100;
-		templ2.color = Color.WHITE;
-		templ2.x_pos = 0;
-		templ2.y_pos = 0;
-		templ2.blur_amount = 0;
-		templ2.active = true;
-		
-		LevelAmbientLight templ3 = new LevelAmbientLight();
-		templ3.color = Color.WHITE;
-		templ3.active = true;
-		
-		LevelEvent tempe = new LevelEvent();
-		tempe.height = 200;
-		tempe.width = 600;
-		tempe.id_strings = new ArrayList<String>();
-		tempe.id_strings.add("empty");
-		tempe.x_pos = 0;
-		tempe.y_pos = 0;
-		
-		// fill everything in
-		object_list.add(temp);
-		light_list.add(templ);
-		light_list.add(templ2);
-		light_list.add(templ3);
-		event_list.add(tempe);
 	}
 }

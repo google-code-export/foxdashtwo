@@ -11,12 +11,15 @@ import java.io.InputStreamReader;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
+import com.kobaj.math.Constants;
+
 import android.content.res.Resources;
 import android.os.Environment;
 import android.util.Log;
 
 public class FileHandler
 {
+	public final static String download_dir = "/download/";
 	private final static String file_directory = "/foxdashtwo";
 	private final static String error_tag = "XML Serial Error";
 	private final static String save_format = ".xml";
@@ -75,12 +78,12 @@ public class FileHandler
 		return false;
 	}	
 	
-	public static String[] getFileList()
+	public static String[] getFileList(String directory_extension)
 	{
 		// I'm not 100% sure if this implementation is truly recursive.
 		if (hasStorage(false))
 		{
-			File dir = prepareDirectory();
+			File dir = prepareDirectory(directory_extension);
 			
 			File[] sdDirList = dir.listFiles();
 			
@@ -136,12 +139,17 @@ public class FileHandler
 	// read in a file to a class
 	public static <T> T readSerialFile(String file_name, Class<? extends T> type)
 	{
+		return readSerialFile(Constants.empty, file_name, type);
+	}
+	
+	public static <T> T readSerialFile(String external_dir, String file_name, Class<? extends T> type)
+	{
 		T finalReturn = null;
 		Serializer serial = new Persister();
 		
 		if (hasStorage(false))
 		{
-			File dir = prepareDirectory();
+			File dir = prepareDirectory(external_dir);
 			
 			if(!file_name.contains(fullstop))
 				file_name += save_format;
@@ -204,13 +212,18 @@ public class FileHandler
 	}
 	
 	//build our folder structure
-	private static File prepareDirectory()
+	private static File prepareDirectory(String directory_extension)
 	{
 		File sdCard = Environment.getExternalStorageDirectory();
-		File dir = new File(sdCard.getAbsolutePath() + file_directory);
+		File dir = new File(sdCard.getAbsolutePath() + file_directory + directory_extension);
 		dir.mkdirs();
 		
 		return dir;
+	}
+	
+	private static File prepareDirectory()
+	{
+		return prepareDirectory(Constants.empty);
 	}
 	
 	// check to see if we can read and or write to sd card

@@ -9,8 +9,9 @@ public class LevelPointLight extends LevelBloomLight
 {
 	@Element
 	public double radius;
-	@Element
-	public int blur_amount;
+	
+	protected int blur_amount = 0;
+	
 	@Element
 	public EnumLightEffect light_effect;
 	private double light_effect_timer = 0;

@@ -123,7 +123,8 @@ public class SinglePlayerScreen extends BaseScreen
 		loading_addon.onUnInitialize();
 		pause_addon.onUnInitialize();
 		
-		the_level.onUnInitialize();
+		if(the_level != null)
+			the_level.onUnInitialize();
 	}
 	
 	@Override

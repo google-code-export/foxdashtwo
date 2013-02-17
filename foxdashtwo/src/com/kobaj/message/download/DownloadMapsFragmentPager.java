@@ -5,10 +5,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+// thanks to 
+// http://wptrafficanalyzer.in/blog/implementing-horizontal-view-swiping-using-viewpager-and-fragmentpageradapter-in-android/
+
 public class DownloadMapsFragmentPager extends FragmentPagerAdapter
 {
-	
-	final int PAGE_COUNT = 5;
+	public final static String[] pages = { "New Maps", "Highest Rated", "Downloaded" };
 	
 	/** Constructor of the class */
 	public DownloadMapsFragmentPager(FragmentManager fm)
@@ -22,7 +24,7 @@ public class DownloadMapsFragmentPager extends FragmentPagerAdapter
 	{
 		DownloadMapsListFragment myFragment = new DownloadMapsListFragment();
 		Bundle data = new Bundle();
-		data.putInt("current_page", arg0 + 1);
+		data.putInt("current_page", arg0);
 		myFragment.setArguments(data);
 		return myFragment;
 	}
@@ -31,12 +33,12 @@ public class DownloadMapsFragmentPager extends FragmentPagerAdapter
 	@Override
 	public int getCount()
 	{
-		return PAGE_COUNT;
+		return pages.length;
 	}
 	
 	@Override
 	public CharSequence getPageTitle(int position)
 	{
-		return "Page #" + (position + 1);
+		return pages[position];
 	}
 }
