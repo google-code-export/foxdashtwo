@@ -34,9 +34,11 @@ public class LevelObject extends LevelEntityActive
 	public double scale = 1.0;
 	
 	@Element
-	public String layer;
+	public int eid;
 	@Element
-	public int width;
+	public EnumLayerTypes layer;
+	@Element
+	public int width; //desired width and height
 	@Element
 	public int height;
 	@Element
@@ -247,6 +249,14 @@ public class LevelObject extends LevelEntityActive
 		my_width = quad_object.width;
 		my_height = quad_object.height;
 		
+		scale = ((double)width) / ((double)my_width);
+		if(scale <= 0)
+			scale = 1;
+		
+		quad_object.reverseLeftRight(this.mirror_left_right);
+		quad_object.reverseUpDown(this.mirror_up_down);
+		
+		//modifications to the quad
 		if (degree != 0)
 			quad_object.setRotationZ(degree);
 		if (scale != 1)

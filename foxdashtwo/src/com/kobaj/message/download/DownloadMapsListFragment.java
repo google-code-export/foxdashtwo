@@ -145,18 +145,26 @@ class LoadFeedData extends MyTask
 				int level_count = levels.length();
 				for (int i = 0; i < level_count; i++)
 				{
-					JSONObject json_data = levels.getJSONObject(i);
+					try
+					{
+						JSONObject json_data = levels.getJSONObject(i);
+						
+						LevelItem temp = new LevelItem();
+						temp.name = json_data.getString("name");
+						temp.lid = json_data.getInt("lid");
+						temp.changed_time = json_data.getInt("changed_time");
+						
+						EnumButtonStates this_button_state = my_adapter.parent.parent.parent.downloaded_maps.get(temp.lid);
+						if (this_button_state != null)
+							temp.this_state = this_button_state;
+						
+						level_items.add(temp);
+					}
+					catch (JSONException e)
+					{
+						// do nothing
+					}
 					
-					LevelItem temp = new LevelItem();
-					temp.name = json_data.getString("name");
-					temp.lid = json_data.getInt("lid");
-					temp.changed_time = json_data.getInt("changed_time");
-					
-					EnumButtonStates this_button_state = my_adapter.parent.parent.parent.downloaded_maps.get(temp.lid);
-					if (this_button_state != null)
-						temp.this_state = this_button_state;
-					
-					level_items.add(temp);
 				}
 				
 				my_adapter.onUpdateEntries(level_items, false);
@@ -236,18 +244,18 @@ class DownloadListAdapter extends BaseAdapter implements ListAdapter
 			item_view = (RelativeLayout) convertView;
 		}
 		
-		LevelItem this_item = level_names.get(position);
-		
 		// get the elements
 		TextView title_text = (TextView) item_view.findViewById(R.id.title_text);
 		TextView description_text = (TextView) item_view.findViewById(R.id.description_text);
 		
 		ProgressBar progressbar = (ProgressBar) item_view.findViewById(R.id.progressbar_download);
-		this_item.progressbar = progressbar;
 		
 		Button button = (Button) item_view.findViewById(R.id.button_download);
+		
+		LevelItem this_item = level_names.get(position);
 		button.setOnClickListener(this_item.listener);
 		this_item.button = button;
+		this_item.progressbar = progressbar;
 		
 		if (this_item.this_state == LevelItem.EnumButtonStates.play)
 			button.setText(R.string.play);
@@ -255,7 +263,8 @@ class DownloadListAdapter extends BaseAdapter implements ListAdapter
 			button.setText(R.string.update);
 		else if (this_item.this_state == LevelItem.EnumButtonStates.download)
 			button.setText(R.string.download);
-		else if (this_item.lid == -1)
+		
+		if (this_item.lid < 1)
 		{
 			button.setVisibility(View.INVISIBLE);
 			description_text.setVisibility(View.INVISIBLE);

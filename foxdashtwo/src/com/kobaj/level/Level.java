@@ -200,7 +200,7 @@ public class Level
 		for (int i = object_list.size() - 1; i >= 0; i--)
 		{
 			LevelObject reference = object_list.get(i);
-			if (reference.quad_object.z_pos == player.quad_object.z_pos)
+			if (reference.layer == EnumLayerTypes.Interaction)
 				this.interaction_objects.add(reference);
 		}
 		

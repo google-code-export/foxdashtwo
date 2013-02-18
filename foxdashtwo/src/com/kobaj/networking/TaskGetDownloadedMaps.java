@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 
 import com.kobaj.loader.FileHandler;
 import com.kobaj.loader.RawTextReader;
+import com.kobaj.math.Constants;
 import com.kobaj.message.download.LevelItem;
 
 public class TaskGetDownloadedMaps extends AsyncTask<Void, Void, ArrayList<LevelItem>>
@@ -45,21 +46,30 @@ public class TaskGetDownloadedMaps extends AsyncTask<Void, Void, ArrayList<Level
 			
 			String the_level = FileHandler.readTextFile(FileHandler.download_dir, full_file);
 			
+			if(the_level == null || the_level.equals(Constants.empty))
+				continue;
+			
 			if (the_level != null)
 			{
 				LevelItem temp = new LevelItem();
 				
-				temp.lid = Integer.valueOf(RawTextReader.findValueInXML(the_level, "lid"));
-				temp.name = RawTextReader.findValueInXML(the_level, "name");
-				temp.changed_time = Long.valueOf(RawTextReader.findValueInXML(the_level, "changed"));
+				try
+				{
+					temp.lid = Integer.valueOf(RawTextReader.findValueInXML(the_level, "lid"));
+					temp.name = RawTextReader.findValueInXML(the_level, "name");
+					temp.changed_time = Long.valueOf(RawTextReader.findValueInXML(the_level, "changed"));
 				
-				temp.this_state = LevelItem.EnumButtonStates.play;
+					temp.this_state = LevelItem.EnumButtonStates.play;
 				
-				// finally add and commit
+					// finally add and commit
+					levels.add(temp);
 				
-				levels.add(temp);
-				
-				the_level = null;
+					the_level = null;
+				}
+				catch(java.lang.IllegalStateException e)
+				{
+					//bad download, do nothing.
+				}
 			}
 		}
 		
@@ -70,6 +80,9 @@ public class TaskGetDownloadedMaps extends AsyncTask<Void, Void, ArrayList<Level
 	
 	private void checkUpdates(ArrayList<LevelItem> levels)
 	{
+		if(levels.size() == 0)
+			return;
+		
 		// here we check if it needs to be updated.
 		// because this is already in async mode, we dont need another task :D!
 		
@@ -105,11 +118,18 @@ public class TaskGetDownloadedMaps extends AsyncTask<Void, Void, ArrayList<Level
 				{
 					LevelItem temp = levels.get(i);
 					
-					JSONObject lids_n_values = json.getJSONObject(String.valueOf(temp.lid));
-					
-					if (lids_n_values.getBoolean("needs_update"))
+					try
 					{
-						temp.this_state = LevelItem.EnumButtonStates.update;
+						JSONObject lids_n_values = json.getJSONObject(String.valueOf(temp.lid));
+					
+						if (lids_n_values.getBoolean("needs_update"))
+						{
+							temp.this_state = LevelItem.EnumButtonStates.update;
+						}
+					}
+					catch(JSONException e)
+					{
+						//do nothing
 					}
 				}
 			}

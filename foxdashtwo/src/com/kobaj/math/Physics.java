@@ -74,11 +74,7 @@ public class Physics
 	// otherwise return false
 	// zero based index. 0 = first quad, 1 = second_quad
 	public <T extends Quad> boolean checkCollision(RectF collision, T first_quad, T second_quad, int quad_to_move)
-	{
-		// see if in the same z_plane
-		if (first_quad.z_pos != second_quad.z_pos)
-			return false;
-		
+	{	
 		// quick check to even see if its possible for two quads to touch
 		double first_x = first_quad.x_pos;
 		double first_y = first_quad.y_pos;
