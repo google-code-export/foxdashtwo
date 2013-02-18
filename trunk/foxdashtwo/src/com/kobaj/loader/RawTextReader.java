@@ -14,7 +14,7 @@ import android.util.Log;
 
 public class RawTextReader
 {
-	public static String findValueInXML(String input, String tag)
+	public static String findValueInXML(String input, String tag) throws IllegalStateException
 	{
 		final Pattern pattern = Pattern.compile("<" + tag + ">(.+?)</" + tag + ">");
 		final Matcher matcher = pattern.matcher(input);

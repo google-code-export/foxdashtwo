@@ -50,13 +50,23 @@ public class TaskDownloadMap extends MyTask
 	@Override
 	protected void onPostExecute(String value)
 	{
-		String name = RawTextReader.findValueInXML(value, "lid");
-		if (lid == Integer.valueOf(name))
+		if (value == null || value.equals(Constants.empty))
+			return;
+		
+		try
 		{
-			FileHandler.writeTextFile(FileHandler.download_dir + name, value);
-			
-			if (local_callback != null)
-				local_callback.onTaskCompleted(lid);
+			String name = RawTextReader.findValueInXML(value, "lid");
+			if (lid == Integer.valueOf(name))
+			{
+				FileHandler.writeTextFile(FileHandler.download_dir + name, value);
+				
+				if (local_callback != null)
+					local_callback.onTaskCompleted(lid);
+			}
+		}
+		catch (IllegalStateException e)
+		{
+			// do nothing bad download
 		}
 	}
 	
