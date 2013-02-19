@@ -14,6 +14,8 @@ import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListAdapter;
@@ -34,6 +36,7 @@ public class DownloadMapsListFragment extends ListFragment
 	public DownloadMapsFragmentPager parent;
 	
 	private int current_page;
+	private DownloadListAdapter adapter = new DownloadListAdapter();
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -41,19 +44,32 @@ public class DownloadMapsListFragment extends ListFragment
 		super.onCreate(savedInstanceState);
 		
 		Bundle data = getArguments();
-		
 		current_page = data.getInt("current_page", 0);
+		
+		// set all these wonderful references
+		adapter.parent = this;
+	}
+	
+	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState)
+	{
+		this.getListView().setOnScrollListener(new ScrollHelper(this));
 	}
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
 		View v = inflater.inflate(R.layout.download_maps_list, container, false);
+
+		tabUpdate();
 		
-		DownloadListAdapter adapter = new DownloadListAdapter();
-		adapter.parent = this;
 		setListAdapter(adapter);
 		
+		return v;
+	}
+	
+	public void tabUpdate()
+	{
 		// determine what we show the user depending on the tab
 		if (current_page != DownloadMapsFragmentPager.pages.length - 1)
 		{
@@ -66,10 +82,47 @@ public class DownloadMapsListFragment extends ListFragment
 			LoadDiskData load_disk_data = new LoadDiskData(adapter);
 			load_disk_data.execute();
 		}
-		
-		return v;
+	}
+}
+
+// thanks http://benjii.me/2010/08/endless-scrolling-listview-in-android/
+
+class ScrollHelper implements OnScrollListener
+{
+	private int visibleThreshold = 1;
+	private int previousTotal = 0;
+	private boolean loading = true;
+	
+	private DownloadMapsListFragment fragment_reference;
+	
+	public ScrollHelper(DownloadMapsListFragment frag)
+	{
+		this.fragment_reference = frag;
 	}
 	
+	public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount)
+	{
+		if (loading)
+		{
+			if (totalItemCount > previousTotal)
+			{
+				loading = false;
+				previousTotal = totalItemCount;
+			}
+		}
+		if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold))
+		{
+			// I load the next page of gigs using a background task,
+			// but you can call any function here.
+			// new LoadGigsTask().execute(currentPage + 1);
+			fragment_reference.tabUpdate();
+			loading = true;
+		}
+	}
+	
+	public void onScrollStateChanged(AbsListView view, int scrollState)
+	{
+	}
 }
 
 class LoadDiskData implements finishedLoading
@@ -190,8 +243,11 @@ class DownloadListAdapter extends BaseAdapter implements ListAdapter
 	}
 	
 	public void onUpdateEntries(ArrayList<LevelItem> levels, boolean clear)
-	{
-		if (levels.isEmpty())
+	{		
+		if (clear)
+			level_names.clear();
+	
+		if (levels.isEmpty() && level_names.isEmpty())
 		{
 			LevelItem temp = new LevelItem();
 			temp.name = "None";
@@ -200,9 +256,6 @@ class DownloadListAdapter extends BaseAdapter implements ListAdapter
 			
 			levels.add(temp);
 		}
-		
-		if (clear)
-			level_names.clear();
 		
 		// and then walk through adding and updating
 		int level_count = levels.size();
