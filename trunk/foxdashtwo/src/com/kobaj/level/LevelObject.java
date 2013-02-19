@@ -19,7 +19,7 @@ public class LevelObject extends LevelEntityActive
 	@Element
 	public EnumLevelObject this_object;
 	
-	public final EnumDrawFrom draw_from = EnumDrawFrom.bottom_left;
+	public final EnumDrawFrom draw_from = EnumDrawFrom.top_left;
 	@Element
 	public double x_pos; // screen coordinates
 	@Element
@@ -38,9 +38,9 @@ public class LevelObject extends LevelEntityActive
 	@Element
 	public EnumLayerTypes layer;
 	@Element
-	public int width; // desired width and height
+	public double width; // desired width and height
 	@Element
-	public int height;
+	public double height;
 	@Element
 	public boolean mirror_up_down = false;
 	@Element
@@ -239,7 +239,6 @@ public class LevelObject extends LevelEntityActive
 			quad_object = new QuadColorShape(0, 200, 200, 0, Color.RED, 0);
 		
 		quad_object.setZPos(quad_object.z_pos - (z_plane * Constants.z_modifier));
-		quad_object.setXYPos(Functions.screenXToShaderX(x_pos), Functions.screenYToShaderY(y_pos), draw_from);
 		
 		// note how these are set AFTER
 		this.x_pos_shader = quad_object.x_pos;
@@ -248,6 +247,11 @@ public class LevelObject extends LevelEntityActive
 		my_width = quad_object.width;
 		my_height = quad_object.height;
 		
+		// crazy translation to account for scale discrepencies between editor and game
+		double translate_scale_x = (my_width - width) / 2.0;
+		double translate_scale_y = (my_height - height) / 2.0;
+		
+		quad_object.setXYPos(Functions.screenXToShaderX(x_pos - translate_scale_x), Functions.screenYToShaderY(y_pos + translate_scale_y), draw_from);
 		scale = ((double) width) / ((double) my_width);
 		if (scale <= 0)
 			scale = 1;

@@ -20,8 +20,6 @@ public class LevelEvent
 {
 	@Element
 	public EnumLevelEvent this_event;
-	// @Element
-	// public com.kobaj.opengldrawable.EnumDrawFrom draw_from;
 	@Element
 	public double x_pos; // screen coordinates
 	@Element

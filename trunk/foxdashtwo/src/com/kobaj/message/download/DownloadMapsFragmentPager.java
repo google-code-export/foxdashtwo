@@ -10,7 +10,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 public class DownloadMapsFragmentPager extends FragmentPagerAdapter
 {
-	public final static String[] pages = { "New Maps", "Latest Updates", "Highest Rated", "Downloaded" };
+	public final static String[] pages = { "New Maps", "Latest Updates", "Highest Rated", "Most Downloads", "My Maps", "Downloaded" };
 	
 	public DownloadMapsManager parent;
 	
