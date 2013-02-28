@@ -2,6 +2,7 @@ package com.kobaj.level.LevelTypeLight;
 
 import org.simpleframework.xml.Element;
 
+import com.kobaj.opengldrawable.EnumDrawFrom;
 import com.kobaj.opengldrawable.Quad.Quad;
 
 public abstract class LevelBloomLight extends LevelAmbientLight
@@ -15,6 +16,8 @@ public abstract class LevelBloomLight extends LevelAmbientLight
 	
 	public Quad quad_bloom;
 	
+	protected EnumDrawFrom draw_from = com.kobaj.opengldrawable.EnumDrawFrom.top_left;
+	
 	@Override
 	public void onUnInitialize()
 	{
@@ -26,9 +29,9 @@ public abstract class LevelBloomLight extends LevelAmbientLight
 	
 	protected void setupPositions()
 	{
-		quad_light.setXYPos(com.kobaj.math.Functions.screenXToShaderX(x_pos), com.kobaj.math.Functions.screenYToShaderY(y_pos), com.kobaj.opengldrawable.EnumDrawFrom.bottom_left);
+		quad_light.setXYPos(com.kobaj.math.Functions.screenXToShaderX(x_pos), com.kobaj.math.Functions.screenYToShaderY(y_pos), draw_from);
 		if(is_bloom)
-			quad_bloom.setXYPos(com.kobaj.math.Functions.screenXToShaderX(x_pos), com.kobaj.math.Functions.screenYToShaderY(y_pos), com.kobaj.opengldrawable.EnumDrawFrom.bottom_left);	
+			quad_bloom.setXYPos(com.kobaj.math.Functions.screenXToShaderX(x_pos), com.kobaj.math.Functions.screenYToShaderY(y_pos), draw_from);	
 	}
 	
 	@Override

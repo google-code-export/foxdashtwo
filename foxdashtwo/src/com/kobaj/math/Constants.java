@@ -51,7 +51,7 @@ public class Constants
 	public static final double arbitrary_z = .180;
 	
 	// and for when a level loads
-	public static final double z_modifier = 0.00001;
+	public static final double z_modifier = 0.0000001;
 	
 	// physics constants
 	public static final double gravity_default = 0.000800;

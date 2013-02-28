@@ -30,6 +30,16 @@ public class LevelPointLight extends LevelBloomLight
 	}
 	
 	@Override
+	protected void setupPositions()
+	{
+		double buffer = radius / 2.0;
+		
+		quad_light.setXYPos(Functions.screenXToShaderX(x_pos - buffer), Functions.screenYToShaderY(y_pos + buffer), draw_from);
+		if(is_bloom)
+			quad_bloom.setXYPos(Functions.screenXToShaderX(x_pos - buffer), Functions.screenYToShaderY(y_pos + buffer), draw_from);
+	}
+	
+	@Override
 	public void onUpdate(double delta)
 	{
 		if (light_effect == EnumLightEffect.none)

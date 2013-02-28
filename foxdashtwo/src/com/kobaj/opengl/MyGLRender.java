@@ -19,9 +19,7 @@ import com.kobaj.math.Physics;
 import com.kobaj.opengldrawable.Text;
 import com.kobaj.opengldrawable.Quad.QuadRenderShell;
 import com.kobaj.openglgraphics.AmbientLightShader;
-import com.kobaj.openglgraphics.BlurLightShader;
 import com.kobaj.openglgraphics.CompressedLightShader;
-import com.kobaj.openglgraphics.GodRayLightShader;
 
 public abstract class MyGLRender implements GLSurfaceView.Renderer
 {
@@ -50,8 +48,8 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		// shaders
 		Constants.ambient_light = new AmbientLightShader();
 		Constants.compressed_light = new CompressedLightShader();
-		Constants.god_ray_light = new GodRayLightShader();
-		Constants.blur_light = new BlurLightShader();
+		// Constants.god_ray_light = new GodRayLightShader();
+		// Constants.blur_light = new BlurLightShader();
 		
 		// fps
 		fps = new FPSManager();

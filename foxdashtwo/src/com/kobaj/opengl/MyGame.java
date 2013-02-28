@@ -2,6 +2,7 @@ package com.kobaj.opengl;
 
 import android.graphics.Color;
 import android.opengl.GLES20;
+import android.opengl.Matrix;
 
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Constants;
@@ -22,6 +23,10 @@ public class MyGame extends MyGLRender
 	// dont touch the variables below this line
 	// final drawable.
 	private QuadRenderTo scene;
+	private QuadRenderTo lights;
+	
+	private float[] my_local_projection = new float[16];
+	private float[] my_local_ip_matrix = new float[16];
 	
 	public MyGame()
 	{
@@ -53,7 +58,15 @@ public class MyGame extends MyGLRender
 		if (scene == null)
 			scene = new QuadRenderTo();
 		scene.onInitialize();
+		
+		if(lights == null)
+			lights = new QuadRenderTo();
+		lights.onInitialize();
 
+		//change the camera
+		Matrix.orthoM(my_local_projection, 0, (float)-Constants.ratio, (float)Constants.ratio, -1, 1, .9999999999f, 2);
+		Matrix.multiplyMM(my_local_ip_matrix, 0, my_local_projection, 0, Constants.identity_matrix, 0);
+		
 		System.gc();
 	}
 	
@@ -106,20 +119,28 @@ public class MyGame extends MyGLRender
 			currently_active_screen.onDrawObject();
 		}
 		scene.endRenderToTexture();
-		
-		// lights
+
 		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_SRC_ALPHA); // cheap lights
 		
 		// put translucent (lights) here
-		currently_active_screen.onDrawLight();
+		if(lights.beginRenderToTexture())
+			currently_active_screen.onDrawLight();
+		lights.endRenderToTexture();
+		
+		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA); // no see thru
+		
+		//draw lights
+		lights.onDrawAmbient(my_local_ip_matrix, true);
 		
 		// final scene
 		GLES20.glBlendFunc(GLES20.GL_DST_COLOR, GLES20.GL_ZERO); // masking
-		scene.onDrawAmbient(Constants.my_ip_matrix, true);
+		scene.onDrawAmbient(my_local_ip_matrix, true);
 		
 		// text below this line
 		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA); // no see thru
 		currently_active_screen.onDrawConstant();
+	
+		//change the camera back
 	}
 	
 	private void onDrawMetrics()

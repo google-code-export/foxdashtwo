@@ -38,9 +38,8 @@ public class Quad
 	public int color = Color.WHITE;
 	
 	// z index doesnt have to specially be set.
-	// objects will only collide if on the same z index plane.
 	// this shouldn't really change much actually.
-	public double z_pos = -1.0f;
+	private double z_pos = -1.0;
 	
 	// other values
 	public double scale_value = 1.0;
@@ -399,11 +398,11 @@ public class Quad
 		unrotated_aabb.setPositionWithOffset(x_pos, y_pos);
 	}
 	
-	public void setZPos(double z)
-	{
-		this.z_pos = z;
-		update_position_matrix(false);
-	}
+    public void setZPos(double z)
+    {
+            this.z_pos = z;
+            update_position_matrix(false);
+    }
 	
 	// these x and y are in shader space 0 to 1
 	public void setXYPos(double x, double y, EnumDrawFrom where)
