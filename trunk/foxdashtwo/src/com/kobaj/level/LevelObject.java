@@ -238,7 +238,7 @@ public class LevelObject extends LevelEntityActive
 		else
 			quad_object = new QuadColorShape(0, 200, 200, 0, Color.RED, 0);
 		
-		quad_object.setZPos(quad_object.z_pos - (z_plane * Constants.z_modifier));
+		//quad_object.setZPos(quad_object.z_pos - (z_plane * Constants.z_modifier));
 		
 		// note how these are set AFTER
 		this.x_pos_shader = quad_object.x_pos;
@@ -258,6 +258,9 @@ public class LevelObject extends LevelEntityActive
 		
 		quad_object.reverseLeftRight(this.mirror_left_right);
 		quad_object.reverseUpDown(this.mirror_up_down);
+		
+		// get things within range
+		degree = ((degree % 360.0) + 360.0) % 360.0;
 		
 		// modifications to the quad
 		if (degree != 0)

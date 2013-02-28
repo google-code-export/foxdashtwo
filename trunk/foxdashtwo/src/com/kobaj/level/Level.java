@@ -89,7 +89,6 @@ public class Level
 		{
 			my_backdrop = new QuadCompressed(R.raw.white, R.raw.white, Constants.width, Constants.height);
 			my_backdrop.color = backdrop_color;
-			my_backdrop.setZPos(my_backdrop.z_pos - (10.0 * Constants.z_modifier));
 		}
 		
 		// pre-player
@@ -120,9 +119,6 @@ public class Level
 				physics_objects.add(reference);
 			}
 		}
-		
-		// sort the objects
-		Collections.sort(object_list, new ObjectDrawSort());
 		
 		// setup lights
 		bloom_light_list.clear();
@@ -160,11 +156,12 @@ public class Level
 				temp.scale = 1;
 				temp.this_object = EnumLevelObject.transparent;
 				temp.id = original.id;
-				temp.x_pos = original.x_pos;
-				temp.y_pos = original.y_pos;
+				temp.x_pos = original.x_pos + original.width / 2.0;
+				temp.y_pos = original.y_pos - original.height / 2.0;
 				temp.my_width = original.width;
 				temp.my_height = original.height;
 				temp.z_plane = 5;
+				temp.layer = EnumLayerTypes.Interaction;
 				
 				temp.onInitialize();
 				
@@ -175,7 +172,13 @@ public class Level
 		
 		// setup player
 		player.quad_object = new QuadAnimated(R.raw.fox2, R.raw.fox2_alpha, R.raw.fox_animation_list, 350, 180, 1024, 1024);
-		player.quad_object.setZPos(player.quad_object.z_pos - (5 /* player.z_plane */* Constants.z_modifier));
+		player.eid = -1;
+		player.layer = EnumLayerTypes.Pre_interaction;
+		player.z_plane = -1;
+		object_list.add(player);
+		
+		// sort the objects
+		Collections.sort(object_list, new ObjectDrawSort());
 		
 		boolean player_set = false;
 		if (SinglePlayerSave.last_checkpoint != null)
@@ -227,9 +230,6 @@ public class Level
 		// draw sorted objects
 		for (int i = object_list.size() - 1; i >= 0; i--)
 			object_list.get(i).quad_object.onUnInitialize();
-		
-		// player
-		player.quad_object.onUnInitialize();
 		
 		// particles
 		for (int i = local_np_emitter.size() - 1; i >= 0; i--)
@@ -285,9 +285,6 @@ public class Level
 		// draw sorted objects
 		for (int i = object_list.size() - 1; i >= 0; i--)
 			object_list.get(i).onDrawObject();
-		
-		// player
-		player.quad_object.onDrawAmbient();
 		
 		// particles
 		for (int i = local_np_emitter.size() - 1; i >= 0; i--)

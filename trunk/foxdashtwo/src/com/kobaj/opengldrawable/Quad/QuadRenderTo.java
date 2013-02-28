@@ -24,13 +24,13 @@ public class QuadRenderTo extends Quad
 	{
 		width = com.kobaj.math.Constants.width;
 		height = com.kobaj.math.Constants.height;
-	
-		//must precompute the square (Even though its computed in the oncreate).
+		
+		// must precompute the square (Even though its computed in the oncreate).
 		square_width = Functions.nearestPowerOf2(this.width);
 		square_height = Functions.nearestPowerOf2(this.height);
 		
 		this.scale_factor = Functions.nearestPowerOf2(scale_factor);
-	}	
+	}
 	
 	public void onInitialize()
 	{
@@ -83,8 +83,8 @@ public class QuadRenderTo extends Quad
 		
 		this.depthRb = depthRb[0];
 		this.fb = fb[0];
-	
-		//bind our attachments really quick
+		
+		// bind our attachments really quick
 		GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, fb[0]);
 		
 		// specify texture as color attachment
@@ -92,13 +92,13 @@ public class QuadRenderTo extends Quad
 		
 		// attach render buffer as depth buffer
 		GLES20.glFramebufferRenderbuffer(GLES20.GL_FRAMEBUFFER, GLES20.GL_DEPTH_ATTACHMENT, GLES20.GL_RENDERBUFFER, depthRb[0]);
-	
+		
 		GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
 	}
 	
 	public boolean beginRenderToTexture()
 	{
-		//downsize the screen if needed
+		// downsize the screen if needed
 		GLES20.glViewport(0, 0, this.width / this.scale_factor, this.height / this.scale_factor);
 		
 		GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, fb);

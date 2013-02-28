@@ -1,6 +1,5 @@
 package com.kobaj.level.LevelEventTypes;
 
-import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.EnumDrawFrom;
 import com.kobaj.opengldrawable.Quad.Quad;
@@ -54,12 +53,10 @@ public class LevelEventTransportPlayer extends LevelEventBase
 			player.x_vel = 0;
 			player.y_vel = 0;
 			
-			player.setZPos(-(1 + 0 * Constants.z_modifier));
 			player.setXYPos(x_current, y_current, EnumDrawFrom.center);
 			
 			if (time_elapsed >= time_total)
 			{
-				player.setZPos(-(1 + 5 * Constants.z_modifier));
 				time_elapsed = 0;
 				teleporting = false;
 			}

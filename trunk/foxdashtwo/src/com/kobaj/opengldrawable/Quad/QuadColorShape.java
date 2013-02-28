@@ -52,9 +52,9 @@ public class QuadColorShape extends Quad
 	
 	// gradient circle with mask (aka, think a flashlight).
 	// this is in screen coordinates 0-800
-	public QuadColorShape(double radius, int color, int close_width, int far_width, double degree, boolean is_bloom, int blur_amount)
+	public QuadColorShape(double radius, int color, int close_width, int far_width, boolean is_bloom, int blur_amount)
 	{
-		super(GLBitmapReader.newResourceID(), Functions.fastBlur(makeCircleGradientWithMask(radius, color, close_width, far_width, degree, is_bloom), blur_amount), (int) radius * 2, (int) radius * 2);
+		super(GLBitmapReader.newResourceID(), Functions.fastBlur(makeCircleGradientWithMask(radius, color, close_width, far_width, is_bloom), blur_amount), (int) radius * 2, (int) radius * 2);
 	}
 	
 	private static Bitmap makeSquare(int left, int top, int right, int bottom, int color)
@@ -123,7 +123,7 @@ public class QuadColorShape extends Quad
 		return bitmap_temp;
 	}
 	
-	private static Bitmap makeCircleGradientWithMask(double radius, int color, double close_width, double far_width, double degree, boolean is_bloom)
+	private static Bitmap makeCircleGradientWithMask(double radius, int color, double close_width, double far_width, boolean is_bloom)
 	{
 		// begin by grabbing a full circle gradient
 		Bitmap light = makeCircleGradient(radius, color, is_bloom);
@@ -177,7 +177,7 @@ public class QuadColorShape extends Quad
 		Canvas canvas_temp = new Canvas(bitmap_temp);
 		
 		// rotate and draw
-		canvas_temp.rotate((float) degree - 90.0f, (float) radius, (float) radius);
+		canvas_temp.rotate(-90.0f, (float) radius, (float) radius);
 		if (!is_bloom)
 			canvas_temp.drawColor(Color.BLACK);
 		canvas_temp.drawBitmap(light, 0, 0, new Paint()); // may have to use a different paint here.
