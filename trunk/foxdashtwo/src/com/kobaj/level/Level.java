@@ -32,7 +32,7 @@ public class Level
 {
 	@Element
 	public int backdrop_color;
-	private Quad my_backdrop;
+	private Quad my_backdrop = null;
 	
 	@Element
 	public String name;
@@ -85,7 +85,7 @@ public class Level
 		// hey, you, the one about to optimize this out
 		// the backdrop is never not transparent (at least it shouldnt be).
 		// dont worry about it.
-		if (backdrop_color != Color.TRANSPARENT)
+		if (backdrop_color != Color.TRANSPARENT || backdrop_color != Color.BLACK)
 		{
 			my_backdrop = new QuadCompressed(R.raw.white, R.raw.white, Constants.width, Constants.height);
 			my_backdrop.color = backdrop_color;
@@ -276,11 +276,17 @@ public class Level
 		}
 	}
 	
+	public void onDrawBackgroundObjects()
+	{
+		if (my_backdrop != null)
+			my_backdrop.onDrawAmbient(Constants.my_ip_matrix, true);
+	}
+	
 	public void onDrawObject()
 	{
 		// backdrop
-		if (backdrop_color != Color.TRANSPARENT)
-			my_backdrop.onDrawAmbient(Constants.my_ip_matrix, true);
+		// if (backdrop_color != Color.TRANSPARENT)
+		// my_backdrop.onDrawAmbient(Constants.my_ip_matrix, true);
 		
 		// draw sorted objects
 		for (int i = object_list.size() - 1; i >= 0; i--)
