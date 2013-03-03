@@ -96,7 +96,7 @@ public class QuadRenderTo extends Quad
 		GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
 	}
 	
-	public boolean beginRenderToTexture()
+	public boolean beginRenderToTexture(boolean clear)
 	{
 		// downsize the screen if needed
 		GLES20.glViewport(0, 0, this.width / this.scale_factor, this.height / this.scale_factor);
@@ -104,7 +104,8 @@ public class QuadRenderTo extends Quad
 		GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, fb);
 		
 		// clear
-		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+		if(clear)
+			GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 		
 		// check status
 		int status = GLES20.glCheckFramebufferStatus(GLES20.GL_FRAMEBUFFER);

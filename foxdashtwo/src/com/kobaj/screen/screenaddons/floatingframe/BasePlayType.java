@@ -36,7 +36,13 @@ public class BasePlayType extends BaseFloatingFrame
 		double shift_y = Functions.screenHeightToShaderHeight(32);
 		double move_y = Functions.screenHeightToShaderHeight(5); // same value is in base audio settings
 		
-		BaseFloatingFrame.alignButtonsAlongXAxis(center_y + shift_y + move_y, new_game_button, continue_button);
+		if (SinglePlayerSave.last_checkpoint != null && SinglePlayerSave.last_level != null)
+			BaseFloatingFrame.alignButtonsAlongXAxis(center_y + shift_y + move_y, new_game_button, continue_button);
+		else
+		{
+			continue_button.invisible_outline.setXYPos(10, 10, EnumDrawFrom.center);
+			BaseFloatingFrame.alignButtonsAlongXAxis(center_y + shift_y + move_y, new_game_button);
+		}
 		BaseFloatingFrame.alignButtonsAlongXAxis(center_y - 2.0 * shift_y + move_y, download_maps_button);
 		BaseFloatingFrame.alignButtonsAlongXAxis(cancel_shift_y, back_button);
 	}

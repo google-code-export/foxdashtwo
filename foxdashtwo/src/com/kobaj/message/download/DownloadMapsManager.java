@@ -3,6 +3,7 @@ package com.kobaj.message.download;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.view.ViewPager;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 
 import com.kobaj.foxdashtwo.R;
+import com.kobaj.math.Constants;
 import com.kobaj.message.download.LevelItem.EnumButtonStates;
 import com.kobaj.networking.TaskGetDownloadedMaps;
 import com.kobaj.networking.TaskGetDownloadedMaps.finishedLoading;
@@ -41,7 +43,16 @@ public class DownloadMapsManager extends DialogFragment implements finishedLoadi
 		adapter.parent = this;
 		pager.setAdapter(adapter);
 		
+		Constants.global_draw = false;
+		
 		return view;
+	}
+	
+	@Override
+	public void onDismiss(DialogInterface dialog)
+	{
+		super.onDismiss(dialog);
+		Constants.global_draw = true;
 	}
 	
 	public void update_downloaded_maps()

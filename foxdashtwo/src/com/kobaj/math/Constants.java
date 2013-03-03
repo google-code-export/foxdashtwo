@@ -13,6 +13,7 @@ import com.kobaj.openglgraphics.AmbientLightShader;
 import com.kobaj.openglgraphics.BlurLightShader;
 import com.kobaj.openglgraphics.CompressedLightShader;
 import com.kobaj.openglgraphics.GodRayLightShader;
+import com.kobaj.openglgraphics.ShadowLightShader;
 
 public class Constants
 {
@@ -143,6 +144,7 @@ public class Constants
 	public static CompressedLightShader compressed_light;
 	public static GodRayLightShader god_ray_light;
 	public static BlurLightShader blur_light;
+	public static ShadowLightShader shadow_light;
 	
 	// metrics
 	public static boolean draw_fps = true;
@@ -163,4 +165,6 @@ public class Constants
 	
 	// strings
 	public static final String empty = "";
+	
+	public static boolean global_draw = true; // true = draw, false = draw absolutely nothing.
 }

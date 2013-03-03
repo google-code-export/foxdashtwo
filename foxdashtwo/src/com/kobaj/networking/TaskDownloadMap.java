@@ -4,6 +4,7 @@ import org.json.JSONObject;
 
 import android.net.Uri;
 
+import com.kobaj.account_settings.UserSettings;
 import com.kobaj.loader.FileHandler;
 import com.kobaj.loader.RawTextReader;
 import com.kobaj.math.Constants;
@@ -38,6 +39,9 @@ public class TaskDownloadMap extends MyTask
 			
 			b.appendQueryParameter("action", "download_xml");
 			b.appendQueryParameter("lid", attributes[0]);
+			
+			if(UserSettings.send_statistics)
+				b.appendQueryParameter("iso3", Constants.resources.getConfiguration().locale.getISO3Country());
 			
 			this.lid = Integer.valueOf(attributes[0]);
 			

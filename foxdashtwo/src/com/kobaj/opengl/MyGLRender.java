@@ -19,7 +19,10 @@ import com.kobaj.math.Physics;
 import com.kobaj.opengldrawable.Text;
 import com.kobaj.opengldrawable.Quad.QuadRenderShell;
 import com.kobaj.openglgraphics.AmbientLightShader;
+import com.kobaj.openglgraphics.BlurLightShader;
 import com.kobaj.openglgraphics.CompressedLightShader;
+import com.kobaj.openglgraphics.GodRayLightShader;
+import com.kobaj.openglgraphics.ShadowLightShader;
 
 public abstract class MyGLRender implements GLSurfaceView.Renderer
 {
@@ -32,7 +35,7 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 	public void onSurfaceCreated(GL10 unused, EGLConfig config)
 	{
 		// Set the background frame color
-		GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		GLES20.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		
 		// Use culling to remove back faces.
 		GLES20.glEnable(GLES20.GL_CULL_FACE);
@@ -48,8 +51,9 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		// shaders
 		Constants.ambient_light = new AmbientLightShader();
 		Constants.compressed_light = new CompressedLightShader();
-		// Constants.god_ray_light = new GodRayLightShader();
-		// Constants.blur_light = new BlurLightShader();
+		Constants.god_ray_light = new GodRayLightShader();
+		Constants.blur_light = new BlurLightShader();
+		Constants.shadow_light = new ShadowLightShader();
 		
 		// fps
 		fps = new FPSManager();
@@ -116,6 +120,19 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 	
 	public void onDrawFrame(GL10 unused)
 	{
+		if (!Constants.global_draw)
+		{
+			try
+			{
+				Thread.sleep(100);
+			}
+			catch (InterruptedException e)
+			{
+				// do nothing.
+			}
+			return;
+		}
+		
 		// a very interesting bug requires this try catch. Allow me to explain.
 		// when the app resumes from a non application.finish() state
 		// it crashes with a NullPointerException. No stack trace

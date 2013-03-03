@@ -8,7 +8,9 @@ import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.EnumDrawFrom;
+import com.kobaj.opengldrawable.Quad.QuadCompressed;
 import com.kobaj.opengldrawable.Quad.QuadRenderTo;
+import com.kobaj.opengldrawable.Quad.QuadShadow;
 import com.kobaj.screen.BaseScreen;
 import com.kobaj.screen.BlankScreen;
 import com.kobaj.screen.EnumScreenState;
@@ -27,6 +29,10 @@ public class MyGame extends MyGLRender
 	
 	private float[] my_local_projection = new float[16];
 	private float[] my_local_ip_matrix = new float[16];
+	
+	private QuadCompressed shadow;
+	private QuadRenderTo shadow_scene;
+	private QuadShadow shadow_generator;
 	
 	public MyGame()
 	{
@@ -59,13 +65,26 @@ public class MyGame extends MyGLRender
 			scene = new QuadRenderTo();
 		scene.onInitialize();
 		
-		if(lights == null)
+		if (lights == null)
 			lights = new QuadRenderTo();
 		lights.onInitialize();
-
-		//change the camera
-		Matrix.orthoM(my_local_projection, 0, (float)-Constants.ratio, (float)Constants.ratio, -1, 1, .9999999999f, 2);
+		
+		// change the camera
+		Matrix.orthoM(my_local_projection, 0, (float) -Constants.ratio, (float) Constants.ratio, -1, 1, .9999999999f, 2);
 		Matrix.multiplyMM(my_local_ip_matrix, 0, my_local_projection, 0, Constants.identity_matrix, 0);
+		
+		// old shadows
+		shadow = new QuadCompressed(R.raw.black_shadow, R.raw.black_shadow_alpha, 200, 100);
+		shadow.setXYPos(Functions.screenXToShaderX(400), Functions.screenYToShaderY(200), EnumDrawFrom.center);
+		if (shadow_scene == null)
+			shadow_scene = new QuadRenderTo();
+		shadow_scene.onInitialize();
+		// end old shadows
+		
+		if(shadow_generator == null)
+			shadow_generator = new QuadShadow();
+		shadow_generator.my_texture_data_handle = scene.my_texture_data_handle;
+		shadow_generator.my_light_data_handle = lights.my_texture_data_handle;
 		
 		System.gc();
 	}
@@ -113,34 +132,22 @@ public class MyGame extends MyGLRender
 	{
 		// regular objects
 		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA); // no see thru
-		if (scene.beginRenderToTexture())
-		{
-			// put opaque items here
+		if (scene.beginRenderToTexture(true))
 			currently_active_screen.onDrawObject();
-		}
-		scene.endRenderToTexture();
-
-		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_SRC_ALPHA); // cheap lights
+		//scene.endRenderToTexture();
 		
-		// put translucent (lights) here
-		if(lights.beginRenderToTexture())
+		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_SRC_ALPHA); // // put translucent and cheap (lights) here
+		if (lights.beginRenderToTexture(true))
 			currently_active_screen.onDrawLight();
 		lights.endRenderToTexture();
 		
+		//draw everything 
 		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA); // no see thru
-		
-		//draw lights
-		lights.onDrawAmbient(my_local_ip_matrix, true);
-		
-		// final scene
-		GLES20.glBlendFunc(GLES20.GL_DST_COLOR, GLES20.GL_ZERO); // masking
-		scene.onDrawAmbient(my_local_ip_matrix, true);
+		shadow_generator.onDrawAmbient(my_local_ip_matrix, true);
 		
 		// text below this line
 		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA); // no see thru
 		currently_active_screen.onDrawConstant();
-	
-		//change the camera back
 	}
 	
 	private void onDrawMetrics()

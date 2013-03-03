@@ -25,6 +25,9 @@ public class UserSettings
 	@Element
 	public static double zoom_value = 0;
 	
+	@Element
+	public static boolean send_statistics = true;
+	
 	public static void zoom(double value)
 	{
 		if(value > Constants.user_zoom_max)
