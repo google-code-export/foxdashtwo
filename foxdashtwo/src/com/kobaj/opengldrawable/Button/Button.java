@@ -42,8 +42,8 @@ public abstract class Button
 		double y = Functions.screenYToShaderY(Functions.fix_y(Constants.input_manager.getY(0)));
 		
 		// shift
-		x -= invisible_outline.x_pos;
-		y -= invisible_outline.y_pos;
+		x -= invisible_outline.x_pos_shader;
+		y -= invisible_outline.y_pos_shader;
 		
 		// rotate
 		final double rads = (float) Math.toRadians(-invisible_outline.degree);
@@ -53,8 +53,8 @@ public abstract class Button
 		double ny = (y * cos_rads + x * sin_rads);
 		
 		// shift back
-		nx += invisible_outline.x_pos;
-		ny += invisible_outline.y_pos;
+		nx += invisible_outline.x_pos_shader;
+		ny += invisible_outline.y_pos_shader;
 		
 		// check
 		for (int i = 0; i < Constants.input_manager.fingerCount; i++)

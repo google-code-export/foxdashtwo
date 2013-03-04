@@ -259,7 +259,7 @@ public class Level
 		{
 			QuadAnimated reference = QuadAnimated.class.cast(player.quad_object);
 			
-			double current_x_speed = Math.abs(player.quad_object.x_vel);
+			double current_x_speed = Math.abs(player.quad_object.x_vel_shader);
 			
 			// currently playing animation
 			if (current_x_speed < Constants.player_movement_threshold)
@@ -269,7 +269,7 @@ public class Level
 				reference.setAnimation(EnumGlobalAnimationList.running);
 				
 				// current direction
-				reference.reverseLeftRight((player.quad_object.x_vel > 0));
+				reference.reverseLeftRight((player.quad_object.x_vel_shader > 0));
 			}
 			
 			reference.onUpdate(delta);
@@ -322,11 +322,11 @@ public class Level
 		{
 			// floating platforms
 			if (reference.this_object == EnumLevelObject.l2_ground_platform_floating)
-				if (player.quad_object.y_pos > reference.quad_object.y_pos) // remember this is the center of the object
+				if (player.quad_object.y_pos_shader > reference.quad_object.y_pos_shader) // remember this is the center of the object
 				{
-					player.quad_object.setXYPos(player.quad_object.x_pos, player.quad_object.y_pos - Constants.collision_detection_height, EnumDrawFrom.center);
+					player.quad_object.setXYPos(player.quad_object.x_pos_shader, player.quad_object.y_pos_shader - Constants.collision_detection_height, EnumDrawFrom.center);
 					// it would be neat to have the players velocity affect this downward push. but since we zero out the velocity upon collision, at this point, it would do nothing.
-					reference.quad_object.y_acc += Constants.player_downward_platform_acc;
+					reference.quad_object.y_acc_shader += Constants.player_downward_platform_acc;
 				}
 		}
 	}

@@ -3,6 +3,7 @@ package com.kobaj.math;
 
 public class FPSManager
 {
+	
 	public int fps = 0;
 	private long last_time = 0;
 	private long now_time = 0;

@@ -7,9 +7,13 @@ import com.kobaj.foxdashtwo.GameActivity;
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.input.EnumKeyCodes;
 import com.kobaj.input.GameInputModifier;
+import com.kobaj.level.LevelObject;
 import com.kobaj.loader.FileHandler;
 import com.kobaj.loader.GLBitmapReader;
 import com.kobaj.math.Constants;
+import com.kobaj.math.Functions;
+import com.kobaj.math.Physics;
+import com.kobaj.math.android.RectF;
 import com.kobaj.screen.screenaddons.BaseInteractionPhysics;
 import com.kobaj.screen.screenaddons.BaseLoadingScreen;
 import com.kobaj.screen.screenaddons.LevelDebugScreen;
@@ -123,7 +127,7 @@ public class SinglePlayerScreen extends BaseScreen
 		loading_addon.onUnInitialize();
 		pause_addon.onUnInitialize();
 		
-		if(the_level != null)
+		if (the_level != null)
 			the_level.onUnInitialize();
 	}
 	
@@ -160,11 +164,77 @@ public class SinglePlayerScreen extends BaseScreen
 		// interaction
 		interaction_addon.onUpdate(delta, my_modifier, the_level);
 		
+		getPlayerPosition();
+		
 		// debug_addon.onUpdate(delta, test_level);
 		
 		// regardless we fade in
 		if (fade_in)
 			fade_in = tween_fade_in.onUpdate(delta);
+	}
+	
+	private final RectF collision = new RectF();
+	private final RectF player_extended = new RectF();
+	
+	private void getPlayerPosition()
+	{
+		// radius
+		double radius = Constants.ratio * Constants.shadow_radius;
+		radius = radius - Constants.z_shader_translation * 100.0;
+		double radius_shader = Functions.screenWidthToShaderWidth(radius);
+		this.player_stats[2] = radius;
+		
+		// first do x
+		double player_x = the_level.player.quad_object.x_pos_shader;
+		double screen_x = Constants.x_shader_translation;
+		double shift_x = Functions.shaderXToScreenX(player_x - screen_x); // will be zero if in the middle of the screen.
+		
+		this.player_stats[0] = shift_x;
+		this.player_stats[1] = -200; // initialize to off screen.
+		
+		// then do y
+		
+		// make something to collide with beneath the fox.
+		player_extended.left = (float) (the_level.player.quad_object.x_pos_shader - the_level.player.quad_object.shader_width / 2.0);
+		player_extended.right = (float) (player_extended.left + the_level.player.quad_object.shader_width);
+		player_extended.top = (float) (the_level.player.quad_object.y_pos_shader - the_level.player.quad_object.shader_height / 2.0);
+		player_extended.bottom = (float) (player_extended.top - Functions.screenHeightToShaderHeight(Constants.shadow_height));
+		
+		double collision_y = 0;
+		
+		for (int i = the_level.interaction_objects.size() - 1; i >= 0; i--)
+		{
+			LevelObject reference = the_level.interaction_objects.get(i);
+			
+			if (reference.active)
+			{
+				collision.left = 0;
+				collision.top = 0;
+				collision.right = 0;
+				collision.bottom = 0;
+				
+				for (int e = reference.quad_object.phys_rect_list.size() - 1; e >= 0; e--)
+				{
+					Functions.setEqualIntersects(collision, player_extended, reference.quad_object.phys_rect_list.get(e).main_rect);
+					if (Physics.cleanCollision(collision))
+						if (collision.height() != 0)
+						{
+							// collision, find the shadow
+							double player_y = collision_y = collision.bottom;
+							double screen_y = Constants.y_shader_translation;
+							
+							double shift_y = Functions.shaderYToScreenY(player_y - screen_y);
+							this.player_stats[1] = shift_y;
+							break;
+						}
+				}
+			}
+		}
+		
+		// finally recalculate radius to account for distance between fox and ground
+		double distance = Functions.distanceSquared(0, player_extended.top, 0, collision_y);
+		double multiplier = Functions.linearInterpolate(0, Functions.screenHeightToShaderHeight(Constants.shadow_height), distance, 1, 0) + .01;
+		this.player_stats[2] *= multiplier;
 	}
 	
 	@Override

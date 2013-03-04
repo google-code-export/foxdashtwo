@@ -175,15 +175,15 @@ public class TitleScreen extends BaseScreen
 			
 			// testing spring
 			double y_pos_shader = 0;
-			Constants.physics.addSpringY(.00003, .007, 0, play_button.invisible_outline.y_pos - y_pos_shader, play_button.invisible_outline);
+			Constants.physics.addSpringY(.00003, .007, 0, play_button.invisible_outline.y_pos_shader - y_pos_shader, play_button.invisible_outline);
 			Constants.physics.integratePhysics(delta, play_button.invisible_outline);
 			
 			y_pos_shader = -settings_button.invisible_outline.shader_height;
-			Constants.physics.addSpringY(.00003, .007, 0, settings_button.invisible_outline.y_pos - y_pos_shader, settings_button.invisible_outline);
+			Constants.physics.addSpringY(.00003, .007, 0, settings_button.invisible_outline.y_pos_shader - y_pos_shader, settings_button.invisible_outline);
 			Constants.physics.integratePhysics(delta, settings_button.invisible_outline);
 			
 			y_pos_shader = 2.0 * -quit_button.invisible_outline.shader_height;
-			Constants.physics.addSpringY(.00003, .007, 0, quit_button.invisible_outline.y_pos - y_pos_shader, quit_button.invisible_outline);
+			Constants.physics.addSpringY(.00003, .007, 0, quit_button.invisible_outline.y_pos_shader - y_pos_shader, quit_button.invisible_outline);
 			Constants.physics.integratePhysics(delta, quit_button.invisible_outline);
 			
 			// tween
@@ -215,8 +215,8 @@ public class TitleScreen extends BaseScreen
 				login_tween.finish();
 				
 				// set the rotator
-				network_loader.x_pos = login_button.invisible_outline.x_pos;
-				network_loader.y_pos = login_button.invisible_outline.y_pos;
+				network_loader.x_pos = login_button.invisible_outline.x_pos_shader;
+				network_loader.y_pos = login_button.invisible_outline.y_pos_shader;
 			}
 		}
 		

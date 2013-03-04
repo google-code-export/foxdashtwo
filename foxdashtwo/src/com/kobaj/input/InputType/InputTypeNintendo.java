@@ -129,8 +129,8 @@ public class InputTypeNintendo extends InputTypeBase
 		my_quad_jump.onDrawAmbient(Constants.my_ip_matrix, true);
 		
 		// text
-		Constants.text.drawText(R.string.left, my_quad_left.x_pos, my_quad_left.y_pos, EnumDrawFrom.center);
-		Constants.text.drawText(R.string.right, my_quad_right.x_pos, my_quad_right.y_pos, EnumDrawFrom.center);
-		Constants.text.drawText(R.string.jump, my_quad_jump.x_pos, my_quad_jump.y_pos, EnumDrawFrom.center);
+		Constants.text.drawText(R.string.left, my_quad_left.x_pos_shader, my_quad_left.y_pos_shader, EnumDrawFrom.center);
+		Constants.text.drawText(R.string.right, my_quad_right.x_pos_shader, my_quad_right.y_pos_shader, EnumDrawFrom.center);
+		Constants.text.drawText(R.string.jump, my_quad_jump.x_pos_shader, my_quad_jump.y_pos_shader, EnumDrawFrom.center);
 	}
 }

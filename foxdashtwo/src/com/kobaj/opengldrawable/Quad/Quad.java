@@ -27,12 +27,12 @@ public class Quad
 	
 	// these are in shader coordinates 0 to 1
 	// anyway, dont be fooled, these are public to READ but not public to SET
-	public double x_pos = 0.0;
-	public double y_pos = 0.0;
-	public double x_acc = 0.0;
-	public double y_acc = 0.0;
-	public double x_vel = 0.0;
-	public double y_vel = 0.0;
+	public double x_pos_shader = 0.0;
+	public double y_pos_shader = 0.0;
+	public double x_acc_shader = 0.0;
+	public double y_acc_shader = 0.0;
+	public double x_vel_shader = 0.0;
+	public double y_vel_shader = 0.0;
 	
 	// this is new
 	public int color = Color.WHITE;
@@ -392,10 +392,10 @@ public class Quad
 		
 		// set our maximul aabb
 		best_fit_aabb.setExtendedRectF(x_minimul, y_maximul, x_maximul, y_minimul);
-		best_fit_aabb.setPositionWithOffset(x_pos, y_pos);
+		best_fit_aabb.setPositionWithOffset(x_pos_shader, y_pos_shader);
 		
 		unrotated_aabb.setExtendedRectF(un_x_min, un_y_max, un_x_max, un_y_min);
-		unrotated_aabb.setPositionWithOffset(x_pos, y_pos);
+		unrotated_aabb.setPositionWithOffset(x_pos_shader, y_pos_shader);
 	}
 	
     public void setZPos(double z)
@@ -442,11 +442,11 @@ public class Quad
 		}
 		
 		// nothing has changed
-		if (x_pos == this.x_pos && y_pos == this.y_pos)
+		if (x_pos == this.x_pos_shader && y_pos == this.y_pos_shader)
 			return;
 		
-		this.x_pos = x_pos;
-		this.y_pos = y_pos;
+		this.x_pos_shader = x_pos;
+		this.y_pos_shader = y_pos;
 		
 		update_position_matrix(false);
 		
@@ -473,7 +473,7 @@ public class Quad
 		}
 		
 		Functions.setIdentityMatrix(translation_matrix);
-		Matrix.translateM(translation_matrix, 0, (float) x_pos, (float) y_pos, (float) z_pos);
+		Matrix.translateM(translation_matrix, 0, (float) x_pos_shader, (float) y_pos_shader, (float) z_pos);
 		
 		Matrix.multiplyMM(this.my_model_matrix, 0, translation_matrix, 0, my_rs_matrix, 0);
 	}

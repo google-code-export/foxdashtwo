@@ -102,14 +102,14 @@ public class LevelDebugScreen
 				Quad temp = test_level.object_list.get(i).quad_object;
 				Quad relative = outline_quads.get(i);
 
-				relative.setXYPos(temp.x_pos, temp.y_pos, EnumDrawFrom.center);
+				relative.setXYPos(temp.x_pos_shader, temp.y_pos_shader, EnumDrawFrom.center);
 			}
 		else if (type == EnumDebugType.physics)
 			for (int i = test_level.object_list.size() - 1; i >= 0; i--)
 			{
 				Quad temp = test_level.object_list.get(i).quad_object;
 				for (int e = temp.phys_rect_list.size() - 1; e >= 0; e--)
-					outline_quads.get(e).setXYPos(temp.x_pos, temp.y_pos, EnumDrawFrom.center);
+					outline_quads.get(e).setXYPos(temp.x_pos_shader, temp.y_pos_shader, EnumDrawFrom.center);
 			}
 		else if (type == EnumDebugType.player_physics)
 			for (int i = test_level.player.quad_object.phys_rect_list.size() - 1; i >= 0; i--)

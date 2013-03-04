@@ -36,6 +36,6 @@ public class TextButton extends Button
 			invisible_outline.onDrawAmbient(Constants.my_ip_matrix, true);
 		}
 		
-		Constants.text.drawText(label, invisible_outline.x_pos, invisible_outline.y_pos, EnumDrawFrom.center, invisible_outline.color, invisible_outline.degree);
+		Constants.text.drawText(label, invisible_outline.x_pos_shader, invisible_outline.y_pos_shader, EnumDrawFrom.center, invisible_outline.color, invisible_outline.degree);
 	}
 }

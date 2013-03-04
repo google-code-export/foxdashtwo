@@ -54,6 +54,11 @@ public class Constants
 	// and for when a level loads
 	public static final double z_modifier = 0.0000001;
 	
+	// other pretty constants
+	public static final double shadow_radius = 45.0;
+	public static final double u_ymodifier = 3.0; // NOTE this is the same value as is in the shader BUT must be set in shader as well as here.
+	public static final double shadow_height = 450;
+	
 	// physics constants
 	public static final double gravity_default = 0.000800;
 	public static final double max_y_velocity_default = 1.0;

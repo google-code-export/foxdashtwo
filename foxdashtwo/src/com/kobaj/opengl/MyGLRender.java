@@ -9,6 +9,7 @@ import android.opengl.Matrix;
 import android.os.SystemClock;
 import android.util.Log;
 
+import com.kobaj.account_settings.UserSettings;
 import com.kobaj.audio.Music;
 import com.kobaj.audio.MusicPlayer;
 import com.kobaj.audio.Sound;
@@ -120,6 +121,8 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 	
 	public void onDrawFrame(GL10 unused)
 	{
+		long start_time = System.currentTimeMillis();
+		
 		if (!Constants.global_draw)
 		{
 			try
@@ -169,6 +172,25 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 			
 			if (exception_count > exception_limit)
 				throw e;
+		}
+		
+		long end_time = System.currentTimeMillis();
+		
+		if(UserSettings.max_fps <= 0)
+			return; // do nothing
+			
+		double max_ms = 1.0 / UserSettings.max_fps * 1000.0;
+		double wait_time = max_ms - (end_time - start_time);
+		if (wait_time > 0.0)
+		{
+			try
+			{
+				Thread.sleep((long) wait_time);
+			}
+			catch (InterruptedException e)
+			{
+				// do nothing.
+			}
 		}
 	}
 	

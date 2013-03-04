@@ -36,8 +36,8 @@ public class LevelEventTransportPlayer extends LevelEventBase
 		if (active && !teleporting)
 		{
 			teleporting = true;
-			x_start = player.x_pos;
-			y_start = player.y_pos;
+			x_start = player.x_pos_shader;
+			y_start = player.y_pos_shader;
 		}
 		
 		if (teleporting)
@@ -47,11 +47,11 @@ public class LevelEventTransportPlayer extends LevelEventBase
 			double x_current = Functions.linearInterpolate(0, time_total, time_elapsed, x_start, x_destination);
 			double y_current = Functions.linearInterpolate(0, time_total, time_elapsed, y_start, y_destination);
 			
-			player.x_acc = 0;
-			player.y_acc = 0;
+			player.x_acc_shader = 0;
+			player.y_acc_shader = 0;
 			
-			player.x_vel = 0;
-			player.y_vel = 0;
+			player.x_vel_shader = 0;
+			player.y_vel_shader = 0;
 			
 			player.setXYPos(x_current, y_current, EnumDrawFrom.center);
 			

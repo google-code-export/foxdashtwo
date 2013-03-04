@@ -145,7 +145,7 @@ public class NParticleEmitter
 			
 			// if its snow check and see if it has traveled outside of the spawn area
 			if (particle_type == EnumParticleType.snow)
-				if (!Functions.inRectF(emit_location, reference.quad_reference.x_pos, reference.quad_reference.y_pos))
+				if (!Functions.inRectF(emit_location, reference.quad_reference.x_pos_shader, reference.quad_reference.y_pos_shader))
 					reference.kill();
 			
 			if (reference.is_dead)
@@ -186,8 +186,8 @@ public class NParticleEmitter
 			double x_vel = velocity * Math.cos(Math.toRadians(degree));
 			double y_vel = velocity * Math.sin(Math.toRadians(degree));
 			
-			reference.quad_reference.x_vel = x_vel;
-			reference.quad_reference.y_vel = y_vel;
+			reference.quad_reference.x_vel_shader = x_vel;
+			reference.quad_reference.y_vel_shader = y_vel;
 			
 			used_pool.add(reference);
 			update_quads = true;
