@@ -5,9 +5,9 @@ import com.kobaj.math.Constants;
 public class QuadShadow extends QuadGodRay
 {	
 	//pixel coordinates
-	public float radius = 100;
-	public float x_pos = 100;
-	public float y_pos = 100;
+	public float shadow_radius = 100;
+	public float shadow_x_pos = 100;
+	public float shadow_y_pos = 100;
 	
 	public int my_light_data_handle;
 	

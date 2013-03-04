@@ -11,8 +11,8 @@ import com.kobaj.math.android.RectF;
 public class BaseInteractionPhysics
 {
 	// camera zoom
-	private AverageMaker my_camera_average = new AverageMaker(20);
-	public RectF collision = new RectF();
+	private final AverageMaker my_camera_average = new AverageMaker(20);
+	private final RectF collision = new RectF();
 	
 	private final boolean integratePhysics(final double delta, final Level the_level)
 	{
@@ -37,7 +37,6 @@ public class BaseInteractionPhysics
 				
 				if (collision.width() != 0 || collision.height() != 0)
 					the_level.objectInteraction(collision, the_level.player, reference);
-				
 			}
 		}
 		
@@ -55,7 +54,7 @@ public class BaseInteractionPhysics
 			if (my_modifier.getInputType().getTouchedRight())
 			{
 				// if we are on the ground
-				if (can_jump && the_level.player.quad_object.x_vel < 0)
+				if (can_jump && the_level.player.quad_object.x_vel_shader < 0)
 					move_amount += Constants.normal_reverse_acceleration;
 				else
 					move_amount += Constants.normal_acceleration;
@@ -64,7 +63,7 @@ public class BaseInteractionPhysics
 			// if touch left
 			else if (my_modifier.getInputType().getTouchedLeft())
 			{
-				if (can_jump && the_level.player.quad_object.x_vel > 0)
+				if (can_jump && the_level.player.quad_object.x_vel_shader > 0)
 					move_amount += -Constants.normal_reverse_acceleration;
 				else
 					move_amount += -Constants.normal_acceleration;
@@ -75,7 +74,7 @@ public class BaseInteractionPhysics
 				move_amount *= Constants.normal_air_damping;
 			
 			// add the key press (force) to the player acceleration
-			the_level.player.quad_object.x_acc += move_amount;
+			the_level.player.quad_object.x_acc_shader += move_amount;
 			
 			return true;
 		}
@@ -90,21 +89,21 @@ public class BaseInteractionPhysics
 		
 		// add friction
 		if (!is_touched && can_jump)
-			the_level.player.quad_object.x_acc -= Constants.normal_friction * the_level.player.quad_object.x_vel;
+			the_level.player.quad_object.x_acc_shader -= Constants.normal_friction * the_level.player.quad_object.x_vel_shader;
 		
 		// add jump
 		if (my_modifier.getInputType().getPressedJump() && can_jump)
-			the_level.player.quad_object.y_vel = Constants.jump_velocity;
+			the_level.player.quad_object.y_vel_shader = Constants.jump_velocity;
 		else if (my_modifier.getInputType().getReleasedJump())
-			if (the_level.player.quad_object.y_vel > Constants.jump_limiter)
-				the_level.player.quad_object.y_vel = Constants.jump_limiter;
+			if (the_level.player.quad_object.y_vel_shader > Constants.jump_limiter)
+				the_level.player.quad_object.y_vel_shader = Constants.jump_limiter;
 	}
 	
 	private void setCameraXYZ(final Level test_level)
 	{
 		// prepare camera
-		double x_camera = test_level.player.quad_object.x_pos;
-		double y_camera = test_level.player.quad_object.y_pos;
+		double x_camera = test_level.player.quad_object.x_pos_shader;
+		double y_camera = test_level.player.quad_object.y_pos_shader;
 		
 		// restrict camera movement
 		double x_buffer = Constants.ratio * Constants.z_shader_translation;
@@ -124,7 +123,7 @@ public class BaseInteractionPhysics
 		double buffer = (float) Functions.linearInterpolate(//
 				0, //
 				Constants.max_speed, //
-				Functions.speed(test_level.player.quad_object.x_vel, test_level.player.quad_object.y_vel), //
+				Functions.speed(test_level.player.quad_object.x_vel_shader, test_level.player.quad_object.y_vel_shader), //
 				Constants.min_zoom, //
 				Constants.max_zoom); //
 		

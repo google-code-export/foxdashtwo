@@ -28,6 +28,9 @@ public class UserSettings
 	@Element
 	public static boolean send_statistics = true;
 	
+	@Element
+	public static int max_fps = 45;
+	
 	public static void zoom(double value)
 	{
 		if(value > Constants.user_zoom_max)

@@ -12,7 +12,7 @@ public class Physics
 	//applies gravity
 	public <T extends Quad> void addGravity(T the_quad)
 	{
-		the_quad.y_acc += Constants.gravity;
+		the_quad.y_acc_shader += Constants.gravity;
 	}
 	
 	// screen coordinates 0-1
@@ -27,18 +27,18 @@ public class Physics
 		// F = -k(|x|-d)(x/|x|) - bv
 		
 		double abs_distance = Math.abs(distance);
-		double force = (-k * (abs_distance - desired_distance) * (distance / abs_distance)) - (b * the_quad.x_vel);
-		the_quad.x_acc += force;
+		double force = (-k * (abs_distance - desired_distance) * (distance / abs_distance)) - (b * the_quad.x_vel_shader);
+		the_quad.x_acc_shader += force;
 	}
 	
 	public <T extends Quad> void addSpringY(double k, double b, double desired_distance, double distance, T the_quad)
 	{	
 		double abs_distance = Math.abs(distance);
-		double force = (-k * (abs_distance - desired_distance) * (distance / abs_distance)) - (b * the_quad.y_vel);
+		double force = (-k * (abs_distance - desired_distance) * (distance / abs_distance)) - (b * the_quad.y_vel_shader);
 		if(Double.isNaN(force))
 			force = 0;
 		
-		the_quad.y_acc += force;
+		the_quad.y_acc_shader += force;
 	}	
 	
 	public <T extends Quad> void integratePhysics(double delta, T the_quad)
@@ -46,27 +46,27 @@ public class Physics
 		// the below is in shader coordinates
 		
 		// add velocity
-		the_quad.y_vel += the_quad.y_acc * delta;
-		the_quad.x_vel += the_quad.x_acc * delta;
+		the_quad.y_vel_shader += the_quad.y_acc_shader * delta;
+		the_quad.x_vel_shader += the_quad.x_acc_shader * delta;
 		
 		// set acceleration
-		the_quad.y_acc = 0;
-		the_quad.x_acc = 0;
+		the_quad.y_acc_shader = 0;
+		the_quad.x_acc_shader = 0;
 		
 		// clamp velocities
-		if (the_quad.y_vel > Constants.max_y_velocity)
-			the_quad.y_vel = Constants.max_y_velocity;
-		else if (the_quad.y_vel < -Constants.max_y_velocity)
-			the_quad.y_vel = -Constants.max_y_velocity;
+		if (the_quad.y_vel_shader > Constants.max_y_velocity)
+			the_quad.y_vel_shader = Constants.max_y_velocity;
+		else if (the_quad.y_vel_shader < -Constants.max_y_velocity)
+			the_quad.y_vel_shader = -Constants.max_y_velocity;
 		
-		if (the_quad.x_vel > Constants.max_x_velocity)
-			the_quad.x_vel = Constants.max_x_velocity;
-		else if (the_quad.x_vel < -Constants.max_x_velocity)
-			the_quad.x_vel = -Constants.max_x_velocity;
+		if (the_quad.x_vel_shader > Constants.max_x_velocity)
+			the_quad.x_vel_shader = Constants.max_x_velocity;
+		else if (the_quad.x_vel_shader < -Constants.max_x_velocity)
+			the_quad.x_vel_shader = -Constants.max_x_velocity;
 		
 		// add position
-		double x_pos = the_quad.x_pos + the_quad.x_vel * delta;
-		double y_pos = the_quad.y_pos + the_quad.y_vel * delta;
+		double x_pos = the_quad.x_pos_shader + the_quad.x_vel_shader * delta;
+		double y_pos = the_quad.y_pos_shader + the_quad.y_vel_shader * delta;
 		the_quad.setXYPos(x_pos, y_pos, com.kobaj.opengldrawable.EnumDrawFrom.center);
 	}
 	
@@ -76,11 +76,11 @@ public class Physics
 	public <T extends Quad> boolean checkCollision(RectF collision, T first_quad, T second_quad, int quad_to_move)
 	{	
 		// quick check to even see if its possible for two quads to touch
-		double first_x = first_quad.x_pos;
-		double first_y = first_quad.y_pos;
+		double first_x = first_quad.x_pos_shader;
+		double first_y = first_quad.y_pos_shader;
 		
-		double second_x = second_quad.x_pos;
-		double second_y = second_quad.y_pos;
+		double second_x = second_quad.x_pos_shader;
+		double second_y = second_quad.y_pos_shader;
 		
 		// reposition
 		first_x = first_x - first_quad.shader_width / 2.0;
@@ -105,38 +105,11 @@ public class Physics
 					// based on how the object should react (bounce, fly through, stick, etc
 					
 					// then decide normal
-					if (collision.width() < 0)
-					{
-						float temp = collision.left;
-						collision.left = collision.right;
-						collision.right = temp;
-					}
-					
-					if (collision.height() < 0)
-					{
-						float temp = collision.bottom;
-						collision.bottom = collision.top;
-						collision.top = temp;
-					}
-					double width = collision.width();
-					double height = collision.height();
-					
-					if (width >= height)
-					{
-						collision.left = collision.right;
-						width = 0;
-					}
-					else if (height > Constants.collision_detection_height)
-					{
-						collision.top = collision.bottom;
-						height = 0;
-					}
-					else
-					{
-						collision.left = collision.right;
-						collision.top = collision.bottom;
+					if(!cleanCollision(collision))
 						return false;
-					}
+						
+					//double width = collision.width();
+					double height = collision.height();
 					
 					// and move the user specified quad
 					if (quad_to_move == 0)
@@ -169,17 +142,49 @@ public class Physics
 		
 		if (width != 0)
 		{
-			if (my_collision.centerX() > the_quad.x_pos) // push object to the right
+			if (my_collision.centerX() > the_quad.x_pos_shader) // push object to the right
 				width = -width;
-			the_quad.setXYPos(the_quad.x_pos + width, the_quad.y_pos, com.kobaj.opengldrawable.EnumDrawFrom.center);
-			the_quad.x_vel = 0;
+			the_quad.setXYPos(the_quad.x_pos_shader + width, the_quad.y_pos_shader, com.kobaj.opengldrawable.EnumDrawFrom.center);
+			the_quad.x_vel_shader = 0;
 		}
 		else
 		{
-			if (my_collision.centerY() > the_quad.y_pos)
+			if (my_collision.centerY() > the_quad.y_pos_shader)
 				height = -height;
-			the_quad.setXYPos(the_quad.x_pos, the_quad.y_pos + height, com.kobaj.opengldrawable.EnumDrawFrom.center);
-			the_quad.y_vel = 0;
+			the_quad.setXYPos(the_quad.x_pos_shader, the_quad.y_pos_shader + height, com.kobaj.opengldrawable.EnumDrawFrom.center);
+			the_quad.y_vel_shader = 0;
 		}
+	}
+	
+	public static boolean cleanCollision(RectF collision)
+	{
+		if (collision.left > collision.right)
+		{
+			float temp = collision.left;
+			collision.left = collision.right;
+			collision.right = temp;
+		}
+		
+		if (collision.bottom < collision.top)
+		{
+			float temp = collision.bottom;
+			collision.bottom = collision.top;
+			collision.top = temp;
+		}
+		
+		double width = collision.width();
+		double height = collision.height();
+		
+		if (width > height)
+			collision.left = collision.right = 0;
+		else if (height > Constants.collision_detection_height)
+			collision.top = collision.bottom = 0;
+		else
+		{
+			collision.left = collision.right = collision.top = collision.bottom = 0;
+			return false;
+		}
+		
+		return true;
 	}
 }

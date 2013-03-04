@@ -9,11 +9,43 @@ import org.junit.runner.RunWith;
 import tests.runner.SampleTestRunner;
 import android.opengl.Matrix;
 
+import com.kobaj.math.Constants;
+import com.kobaj.math.Physics;
 import com.kobaj.math.RectFExtended;
+import com.kobaj.math.android.RectF;
 
 @RunWith(SampleTestRunner.class)
 public class MoreTest
 {
+	@Test
+	public void testPhysicsCleanCollision() throws Exception
+	{
+		RectF rectangle = new RectF();
+		Constants.collision_detection_height = 0;
+		
+		rectangle.top = -1;
+		rectangle.bottom = 1;
+		rectangle.left = 5;
+		rectangle.right = -5;
+		
+		Physics.cleanCollision(rectangle);
+		
+		// RectFs are UPSIDE DOWN
+		assertThat(rectangle.top, equalTo(-1f));
+		assertThat(rectangle.bottom, equalTo(1f));
+		assertThat(rectangle.width(), equalTo(0f));
+		
+		rectangle.top = -5;
+		rectangle.bottom = 5;
+		rectangle.left = 1;
+		rectangle.right = -1;
+
+		Physics.cleanCollision(rectangle);
+		assertThat(rectangle.left, equalTo(-1f));
+		assertThat(rectangle.right, equalTo(1f));
+		assertThat(rectangle.height(), equalTo(0f));
+	}
+	
 	@Test
 	public void testSanityCheck() throws Exception
 	{

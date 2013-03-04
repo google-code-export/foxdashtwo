@@ -292,7 +292,7 @@ public final class QuadRenderShell
 			QuadShadow zero_shadow = QuadShadow.class.cast(zero);
 			
 			if (ShadowLightShader.class.isAssignableFrom(shader.getClass()))
-				onSetupShadow(zero_shadow.radius, zero_shadow.x_pos, zero_shadow.y_pos, zero_shadow.my_light_data_handle, (ShadowLightShader) shader);
+				onSetupShadow(zero_shadow.shadow_radius, zero_shadow.shadow_x_pos, zero_shadow.shadow_y_pos, zero_shadow.my_light_data_handle, (ShadowLightShader) shader);
 			else
 				Log.e("Shadow Shader Error", "Attempted to draw a shadow object with a non shadow shader.");
 		}

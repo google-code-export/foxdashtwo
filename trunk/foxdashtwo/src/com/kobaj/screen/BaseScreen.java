@@ -19,7 +19,10 @@ public abstract class BaseScreen implements Runnable
 	protected TweenManager tween_fade_in;
 	protected TweenManager tween_fade_out;
 	
-	private EnumScreenState previous_state = EnumScreenState.not_started; 
+	private EnumScreenState previous_state = EnumScreenState.not_started;
+	
+	//if a screen has a player
+	public double[] player_stats = new double[3]; //x, y, radius;
 	
 	public final void onInitialize()
 	{
@@ -56,8 +59,8 @@ public abstract class BaseScreen implements Runnable
 		
 		// load everything else.
 		onLoad();
-	
-		if(previous_state == EnumScreenState.paused)
+		
+		if (previous_state == EnumScreenState.paused)
 			current_state = EnumScreenState.paused;
 		else
 			current_state = EnumScreenState.running;

@@ -6,21 +6,14 @@ package com.kobaj.opengldrawable.Quad;
 import android.opengl.GLES20;
 
 import com.kobaj.loader.GLBitmapReader;
-import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 
 public class QuadRenderTo extends Quad
 {
 	// RENDER TO TEXTURE VARIABLES
 	private int fb = -1, depthRb = -1;
-	private int scale_factor;
 	
 	public QuadRenderTo()
-	{
-		this(1);
-	}
-	
-	public QuadRenderTo(int scale_factor)
 	{
 		width = com.kobaj.math.Constants.width;
 		height = com.kobaj.math.Constants.height;
@@ -28,8 +21,6 @@ public class QuadRenderTo extends Quad
 		// must precompute the square (Even though its computed in the oncreate).
 		square_width = Functions.nearestPowerOf2(this.width);
 		square_height = Functions.nearestPowerOf2(this.height);
-		
-		this.scale_factor = Functions.nearestPowerOf2(scale_factor);
 	}
 	
 	public void onInitialize()
@@ -71,8 +62,8 @@ public class QuadRenderTo extends Quad
 		GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_NEAREST);
 		GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_NEAREST);
 		
-		int bitmap_size_x = square_width / scale_factor;
-		int bitmap_size_y = square_height / scale_factor;
+		int bitmap_size_x = square_width;
+		int bitmap_size_y = square_height;
 		
 		// Push the bitmap onto the GPU
 		GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA, bitmap_size_x, bitmap_size_y, 0, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, null);
@@ -98,13 +89,10 @@ public class QuadRenderTo extends Quad
 	
 	public boolean beginRenderToTexture(boolean clear)
 	{
-		// downsize the screen if needed
-		GLES20.glViewport(0, 0, this.width / this.scale_factor, this.height / this.scale_factor);
-		
 		GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, fb);
 		
 		// clear
-		if(clear)
+		if (clear)
 			GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 		
 		// check status
@@ -116,13 +104,12 @@ public class QuadRenderTo extends Quad
 		return true;
 	}
 	
-	public void endRenderToTexture()
+	public void endRenderToTexture(boolean clear)
 	{
-		GLES20.glViewport(0, 0, Constants.width, Constants.height);
-		
 		GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
 		
 		// Same thing, only different texture is bound now
-		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+		if (clear)
+			GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 	}
 }
