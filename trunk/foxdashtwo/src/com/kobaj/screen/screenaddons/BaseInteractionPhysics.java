@@ -1,6 +1,9 @@
 package com.kobaj.screen.screenaddons;
 
+import java.util.ArrayList;
+
 import com.kobaj.input.GameInputModifier;
+import com.kobaj.level.EnumLayerTypes;
 import com.kobaj.level.Level;
 import com.kobaj.level.LevelObject;
 import com.kobaj.math.AverageMaker;
@@ -21,9 +24,10 @@ public class BaseInteractionPhysics
 		Constants.physics.integratePhysics(delta, the_level.player.quad_object);
 		
 		// integrate all other objects
-		for (int i = the_level.interaction_objects.size() - 1; i >= 0; i--)
+		ArrayList<LevelObject> temp = the_level.object_hash.get(EnumLayerTypes.Interaction);
+		for (int i = temp.size() - 1; i >= 0; i--)
 		{
-			LevelObject reference = the_level.interaction_objects.get(i);
+			LevelObject reference = temp.get(i);
 			
 			if (reference.active)
 			{

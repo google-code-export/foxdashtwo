@@ -5,6 +5,7 @@ import android.opengl.GLES20;
 import android.opengl.Matrix;
 
 import com.kobaj.foxdashtwo.R;
+import com.kobaj.level.EnumLayerTypes;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.EnumDrawFrom;
@@ -25,11 +26,17 @@ public class MyGame extends MyGLRender
 	// final drawable.
 	private QuadRenderTo scene;
 	private QuadRenderTo lights;
+	private QuadRenderTo backgroup;
+	private QuadRenderTo foregroup;
 	
 	private float[] my_local_projection = new float[16];
 	private float[] my_local_ip_matrix = new float[16];
 	
 	private QuadShadow shadow_generator;
+	
+	private final EnumLayerTypes[] backgroup_enums = {EnumLayerTypes.Background, EnumLayerTypes.Background_Aux};
+	private final EnumLayerTypes[] interaction_group_enums = {EnumLayerTypes.Post_interaction, EnumLayerTypes.Interaction, EnumLayerTypes.Pre_interaction};
+	private final EnumLayerTypes[] foregroup_enums = {EnumLayerTypes.Foreground_Aux, EnumLayerTypes.Foreground, EnumLayerTypes.Top};
 	
 	public MyGame()
 	{
@@ -66,6 +73,14 @@ public class MyGame extends MyGLRender
 			lights = new QuadRenderTo();
 		lights.onInitialize();
 		
+		if(backgroup == null)
+			backgroup = new QuadRenderTo();
+		backgroup.onInitialize();
+		
+		if(foregroup == null)
+			foregroup = new QuadRenderTo();
+		foregroup.onInitialize();
+		
 		// change the camera
 		Matrix.orthoM(my_local_projection, 0, (float) -Constants.ratio, (float) Constants.ratio, -1, 1, .9999999999f, 2);
 		Matrix.multiplyMM(my_local_ip_matrix, 0, my_local_projection, 0, Constants.identity_matrix, 0);
@@ -74,6 +89,8 @@ public class MyGame extends MyGLRender
 			shadow_generator = new QuadShadow();
 		shadow_generator.my_texture_data_handle = scene.my_texture_data_handle;
 		shadow_generator.my_light_data_handle = lights.my_texture_data_handle;
+		shadow_generator.my_backgroup_data_handle = backgroup.my_texture_data_handle;
+		shadow_generator.my_foregroup_data_handle = foregroup.my_texture_data_handle;
 		
 		System.gc();
 	}
@@ -127,8 +144,14 @@ public class MyGame extends MyGLRender
 		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA); // no see thru
 		
 		if (scene.beginRenderToTexture(true))
-			currently_active_screen.onDrawObject();
-		scene.endRenderToTexture(false);
+			currently_active_screen.onDrawObject(interaction_group_enums);
+		
+		if(backgroup.beginRenderToTexture(true))
+			currently_active_screen.onDrawObject(backgroup_enums);
+		
+		if(foregroup.beginRenderToTexture(true))
+			currently_active_screen.onDrawObject(foregroup_enums);
+		foregroup.endRenderToTexture(false);
 		
 		// draw everything
 		shadow_generator.shadow_radius = (float)currently_active_screen.player_stats[2];
