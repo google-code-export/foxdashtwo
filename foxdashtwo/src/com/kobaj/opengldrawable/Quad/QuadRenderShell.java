@@ -203,8 +203,6 @@ public final class QuadRenderShell
 		Constants.quads_drawn_screen++;
 		GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 6);
 	}
-
-	//private static int old_light_data_handle;
 	
 	private static final void onSetupShadow(final float radius, final float x, final float y, final int my_light_data_handle, final ShadowLightShader shadow_light)
 	{
@@ -219,6 +217,30 @@ public final class QuadRenderShell
 		GLES20.glActiveTexture(GLES20.GL_TEXTURE1);
 		GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, my_light_data_handle);
 		GLES20.glUniform1i(shadow_light.my_light_uniform_handle, 1);
+	}
+	
+	private static int old_backgroup_data_handle;
+	private static int old_foregroup_data_handle;
+	
+	private static final void onSetupShadowBF(final int my_backgroup_data_handle, final int my_foregroup_data_handle, final ShadowLightShader shadow_light)
+	{
+		if (old_backgroup_data_handle != my_backgroup_data_handle || program_update)
+		{
+			old_backgroup_data_handle = my_backgroup_data_handle;
+			
+			GLES20.glActiveTexture(GLES20.GL_TEXTURE2);
+			GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, my_backgroup_data_handle);
+			GLES20.glUniform1i(shadow_light.my_backgroup_uniform_handle, 2);
+		}
+		
+		if (old_foregroup_data_handle != my_foregroup_data_handle || program_update)
+		{
+			old_foregroup_data_handle = my_foregroup_data_handle;
+			
+			GLES20.glActiveTexture(GLES20.GL_TEXTURE3);
+			GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, my_foregroup_data_handle);
+			GLES20.glUniform1i(shadow_light.my_foregroup_uniform_handle, 3);
+		}
 	}
 	
 	private static final void onSetupBlur(final float my_x_offset, final float my_y_offset, final BlurLightShader blur_light)
@@ -292,7 +314,10 @@ public final class QuadRenderShell
 			QuadShadow zero_shadow = QuadShadow.class.cast(zero);
 			
 			if (ShadowLightShader.class.isAssignableFrom(shader.getClass()))
+			{
 				onSetupShadow(zero_shadow.shadow_radius, zero_shadow.shadow_x_pos, zero_shadow.shadow_y_pos, zero_shadow.my_light_data_handle, (ShadowLightShader) shader);
+				onSetupShadowBF(zero_shadow.my_backgroup_data_handle, zero_shadow.my_foregroup_data_handle, (ShadowLightShader) shader);
+			}
 			else
 				Log.e("Shadow Shader Error", "Attempted to draw a shadow object with a non shadow shader.");
 		}

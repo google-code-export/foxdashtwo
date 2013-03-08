@@ -1,5 +1,7 @@
 package com.kobaj.screen;
 
+import java.util.ArrayList;
+
 import android.util.Log;
 
 import com.kobaj.account_settings.SinglePlayerSave;
@@ -7,6 +9,7 @@ import com.kobaj.foxdashtwo.GameActivity;
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.input.EnumKeyCodes;
 import com.kobaj.input.GameInputModifier;
+import com.kobaj.level.EnumLayerTypes;
 import com.kobaj.level.LevelObject;
 import com.kobaj.loader.FileHandler;
 import com.kobaj.loader.GLBitmapReader;
@@ -200,11 +203,12 @@ public class SinglePlayerScreen extends BaseScreen
 		player_extended.top = (float) (the_level.player.quad_object.y_pos_shader - the_level.player.quad_object.shader_height / 2.0);
 		player_extended.bottom = (float) (player_extended.top - Functions.screenHeightToShaderHeight(Constants.shadow_height));
 		
-		double collision_y = 0;
+		double collision_y = player_extended.bottom;
 		
-		for (int i = the_level.interaction_objects.size() - 1; i >= 0; i--)
+		ArrayList<LevelObject> temp = the_level.object_hash.get(EnumLayerTypes.Interaction);
+		for (int i = temp.size() - 1; i >= 0; i--)
 		{
-			LevelObject reference = the_level.interaction_objects.get(i);
+			LevelObject reference = temp.get(i);
 			
 			if (reference.active)
 			{
@@ -216,17 +220,25 @@ public class SinglePlayerScreen extends BaseScreen
 				for (int e = reference.quad_object.phys_rect_list.size() - 1; e >= 0; e--)
 				{
 					Functions.setEqualIntersects(collision, player_extended, reference.quad_object.phys_rect_list.get(e).main_rect);
+					
+					// force this to be an up-down collision
+					if (collision.height() != 0)
+					{
+						collision.left = (float) -Constants.shadow_height;
+						collision.right = (float) Constants.shadow_height;
+					}
+					
 					if (Physics.cleanCollision(collision))
 						if (collision.height() != 0)
-						{
-							// collision, find the shadow
-							double player_y = collision_y = collision.bottom;
-							double screen_y = Constants.y_shader_translation;
-							
-							double shift_y = Functions.shaderYToScreenY(player_y - screen_y);
-							this.player_stats[1] = shift_y;
-							break;
-						}
+							if (collision.bottom > collision_y)
+							{
+								// collision, find the shadow
+								double player_y = collision_y = collision.bottom;
+								double screen_y = Constants.y_shader_translation;
+								
+								double shift_y = Functions.shaderYToScreenY(player_y - screen_y);
+								this.player_stats[1] = shift_y;
+							}
 				}
 			}
 		}
@@ -238,9 +250,9 @@ public class SinglePlayerScreen extends BaseScreen
 	}
 	
 	@Override
-	public void onDrawObject()
+	public void onDrawObject(EnumLayerTypes... types)
 	{
-		the_level.onDrawObject();
+		the_level.onDrawObject(types);
 		
 		// debug_addon.onDrawObject();
 	}

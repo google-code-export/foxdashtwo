@@ -2,6 +2,7 @@ package com.kobaj.level;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
@@ -61,7 +62,8 @@ public class Level
 	public ArrayList<LevelObject> object_list;
 	
 	public ArrayList<LevelObject> physics_objects = new ArrayList<LevelObject>(); // references for only physics (objects that move).
-	public ArrayList<LevelObject> interaction_objects = new ArrayList<LevelObject>(); // references for objects that are on the same z-plane as player.
+	public HashMap<EnumLayerTypes, ArrayList<LevelObject>> object_hash;
+	// public ArrayList<LevelObject> interaction_objects = new ArrayList<LevelObject>(); // references for objects that are on the interaction layer
 	
 	@ElementList
 	public ArrayList<LevelAmbientLight> light_list; // all lights including blooms
@@ -199,12 +201,22 @@ public class Level
 		if (!player_set)
 			player.quad_object.setXYPos(x_player, y_player, player.draw_from);
 		
+		// build our hashmap (garbage?)
+		object_hash = new HashMap<EnumLayerTypes, ArrayList<LevelObject>>();
+		
 		// optimize which objects to collide against
-		for (int i = object_list.size() - 1; i >= 0; i--)
+		for (EnumLayerTypes t : EnumLayerTypes.values())
 		{
-			LevelObject reference = object_list.get(i);
-			if (reference.layer == EnumLayerTypes.Interaction)
-				this.interaction_objects.add(reference);
+			ArrayList<LevelObject> layer_temp = new ArrayList<LevelObject>();
+			int object_list_size = object_list.size();
+			for (int i = 0; i < object_list_size; i++)
+			{
+				LevelObject reference = object_list.get(i);
+				if (reference.layer == t)
+					layer_temp.add(reference);
+			}
+			object_hash.put(t, layer_temp);
+			
 		}
 		
 		// set widths and heights for the camera
@@ -276,29 +288,32 @@ public class Level
 		}
 	}
 	
-	public void onDrawBackgroundObjects()
+	public void onDrawObject(EnumLayerTypes... types)
 	{
-		if (my_backdrop != null)
-			my_backdrop.onDrawAmbient(Constants.my_ip_matrix, true);
-	}
-	
-	public void onDrawObject()
-	{
-		// backdrop
-		// if (backdrop_color != Color.TRANSPARENT)
-		// my_backdrop.onDrawAmbient(Constants.my_ip_matrix, true);
-		
-		// draw sorted objects
-		for (int i = object_list.size() - 1; i >= 0; i--)
-			object_list.get(i).onDrawObject();
-		
-		// particles
-		for (int i = local_np_emitter.size() - 1; i >= 0; i--)
-			local_np_emitter.get(i).onDraw();
-		
-		// bloom lights
-		for (int i = bloom_light_list.size() - 1; i >= 0; i--)
-			bloom_light_list.get(i).onDrawObject();
+		// is ok, is array
+		for (EnumLayerTypes type : types)
+		{	
+			// backdrop (looped in with background)
+			if (type == EnumLayerTypes.Background)
+				if (my_backdrop != null)
+					my_backdrop.onDrawAmbient(Constants.my_ip_matrix, true);
+			
+			ArrayList<LevelObject> objects = object_hash.get(type);		
+			
+			// draw sorted objects
+			for (int i = objects.size() - 1; i >= 0; i--)
+				objects.get(i).onDrawObject();
+			
+			// particles (looped in with top)
+			if (type == EnumLayerTypes.Top)
+				for (int i = local_np_emitter.size() - 1; i >= 0; i--)
+					local_np_emitter.get(i).onDraw();
+			
+			// bloom lights
+			if (type == EnumLayerTypes.Top)
+				for (int i = bloom_light_list.size() - 1; i >= 0; i--)
+					bloom_light_list.get(i).onDrawObject();
+		}
 	}
 	
 	public void onDrawLight()

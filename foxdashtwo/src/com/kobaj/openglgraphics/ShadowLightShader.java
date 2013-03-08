@@ -9,7 +9,10 @@ public class ShadowLightShader extends BaseLightShader
 {
 	final public int my_radius_handle;
 	final public int my_shadow_position_handle;
+	
 	final public int my_light_uniform_handle;
+	final public int my_foregroup_uniform_handle;
+	final public int my_backgroup_uniform_handle;
 	
 	public ShadowLightShader()
 	{
@@ -17,6 +20,10 @@ public class ShadowLightShader extends BaseLightShader
 		
 		my_radius_handle = GLES20.glGetUniformLocation(my_shader, "u_radius");
 		my_shadow_position_handle = GLES20.glGetUniformLocation(my_shader, "u_shadowPosition");
+		
+		// textures
 		my_light_uniform_handle = GLES20.glGetUniformLocation(my_shader, "u_lights");
+		my_backgroup_uniform_handle = GLES20.glGetUniformLocation(my_shader, "u_backgroup");
+		my_foregroup_uniform_handle = GLES20.glGetUniformLocation(my_shader, "u_foregroup");
 	}
 }

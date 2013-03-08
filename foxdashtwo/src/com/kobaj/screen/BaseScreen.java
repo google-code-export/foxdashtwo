@@ -3,6 +3,7 @@ package com.kobaj.screen;
 import android.graphics.Color;
 
 import com.kobaj.foxdashtwo.R;
+import com.kobaj.level.EnumLayerTypes;
 import com.kobaj.math.Constants;
 import com.kobaj.opengldrawable.EnumDrawFrom;
 import com.kobaj.opengldrawable.Quad.Quad;
@@ -21,8 +22,8 @@ public abstract class BaseScreen implements Runnable
 	
 	private EnumScreenState previous_state = EnumScreenState.not_started;
 	
-	//if a screen has a player
-	public double[] player_stats = new double[3]; //x, y, radius;
+	// if a screen has a player
+	public double[] player_stats = new double[3]; // x, y, radius;
 	
 	public final void onInitialize()
 	{
@@ -75,7 +76,7 @@ public abstract class BaseScreen implements Runnable
 	public abstract void onUpdate(double delta);
 	
 	// draw most everything
-	public abstract void onDrawObject();
+	public abstract void onDrawObject(EnumLayerTypes... types);
 	
 	public abstract void onDrawLight();
 	

@@ -5,6 +5,7 @@ import android.graphics.Color;
 import com.kobaj.foxdashtwo.GameActivity;
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.input.EnumKeyCodes;
+import com.kobaj.level.EnumLayerTypes;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.EnumDrawFrom;
@@ -229,7 +230,7 @@ public class TitleScreen extends BaseScreen
 	}
 	
 	@Override
-	public void onDrawObject()
+	public void onDrawObject(EnumLayerTypes... types)
 	{
 		// TODO Auto-generated method stub
 	}

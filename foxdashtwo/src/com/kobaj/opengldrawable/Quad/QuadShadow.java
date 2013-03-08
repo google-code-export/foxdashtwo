@@ -10,6 +10,8 @@ public class QuadShadow extends QuadGodRay
 	public float shadow_y_pos = 100;
 	
 	public int my_light_data_handle;
+	public int my_backgroup_data_handle;
+	public int my_foregroup_data_handle;
 	
 	@Override
 	public void onDrawAmbient(float[] my_vp_matrix, boolean skip_draw_check)
