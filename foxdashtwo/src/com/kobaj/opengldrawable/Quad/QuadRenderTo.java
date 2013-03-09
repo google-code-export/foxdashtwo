@@ -11,7 +11,7 @@ import com.kobaj.math.Functions;
 public class QuadRenderTo extends Quad
 {
 	// RENDER TO TEXTURE VARIABLES
-	private int fb = -1, depthRb = -1;
+	private int fb = -1;
 	
 	public QuadRenderTo()
 	{
@@ -38,16 +38,11 @@ public class QuadRenderTo extends Quad
 	private void setupRenderToTexture()
 	{
 		int[] fb = new int[1];
-		int[] depthRb = new int[1];
 		
 		// generate
 		if (this.fb != -1)
 			GLES20.glDeleteFramebuffers(1, new int[] { this.fb }, 0);
 		GLES20.glGenFramebuffers(1, fb, 0);
-		
-		if (this.depthRb != -1)
-			GLES20.glDeleteRenderbuffers(1, new int[] { this.depthRb }, 0);
-		GLES20.glGenRenderbuffers(1, depthRb, 0);
 		
 		if (this.my_texture_data_handle != -1)
 			GLES20.glDeleteTextures(1, new int[] { this.my_texture_data_handle }, 0);
@@ -68,11 +63,6 @@ public class QuadRenderTo extends Quad
 		// Push the bitmap onto the GPU
 		GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA, bitmap_size_x, bitmap_size_y, 0, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, null);
 		
-		// create render buffer and bind 16-bit depth buffer
-		GLES20.glBindRenderbuffer(GLES20.GL_RENDERBUFFER, depthRb[0]);
-		GLES20.glRenderbufferStorage(GLES20.GL_RENDERBUFFER, GLES20.GL_DEPTH_COMPONENT16, bitmap_size_x, bitmap_size_y);
-		
-		this.depthRb = depthRb[0];
 		this.fb = fb[0];
 		
 		// bind our attachments really quick
@@ -80,9 +70,6 @@ public class QuadRenderTo extends Quad
 		
 		// specify texture as color attachment
 		GLES20.glFramebufferTexture2D(GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0, GLES20.GL_TEXTURE_2D, my_texture_data_handle, 0);
-		
-		// attach render buffer as depth buffer
-		GLES20.glFramebufferRenderbuffer(GLES20.GL_FRAMEBUFFER, GLES20.GL_DEPTH_ATTACHMENT, GLES20.GL_RENDERBUFFER, depthRb[0]);
 		
 		GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
 	}
@@ -93,7 +80,7 @@ public class QuadRenderTo extends Quad
 		
 		// clear
 		if (clear)
-			GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+			GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
 		
 		// check status
 		int status = GLES20.glCheckFramebufferStatus(GLES20.GL_FRAMEBUFFER);

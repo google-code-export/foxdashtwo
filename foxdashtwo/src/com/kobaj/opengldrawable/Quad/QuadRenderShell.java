@@ -25,7 +25,7 @@ public final class QuadRenderShell
 	public static boolean program_update = true;
 	
 	// methods for generating verticies
-	private static float[] my_position_matrix = new float[18];
+	private static float[] my_position_matrix = new float[12];
 	private static FloatBuffer my_position;
 	private static boolean generated = false;
 	
@@ -43,29 +43,22 @@ public final class QuadRenderShell
 		final float z_buffer = 0.0f;
 		
 		// X, Y, Z
-		my_position_matrix[0] = neg_tr_x;
+		my_position_matrix[0] = neg_tr_x; // top left
 		my_position_matrix[1] = pos_tr_y;
 		my_position_matrix[2] = z_buffer;
 		
-		my_position_matrix[3] = neg_tr_x;
+		my_position_matrix[3] = neg_tr_x; // bottom left
 		my_position_matrix[4] = neg_tr_y;
 		my_position_matrix[5] = z_buffer;
 		
-		my_position_matrix[6] = pos_tr_x;
-		my_position_matrix[7] = pos_tr_y;
+		// modified
+		my_position_matrix[6] = pos_tr_x; // bottom right
+		my_position_matrix[7] = neg_tr_y;
 		my_position_matrix[8] = z_buffer;
 		
-		my_position_matrix[9] = neg_tr_x;
-		my_position_matrix[10] = neg_tr_y;
+		my_position_matrix[9] = pos_tr_x; // top right
+		my_position_matrix[10] = pos_tr_y;
 		my_position_matrix[11] = z_buffer;
-		
-		my_position_matrix[12] = pos_tr_x;
-		my_position_matrix[13] = neg_tr_y;
-		my_position_matrix[14] = z_buffer;
-		
-		my_position_matrix[15] = pos_tr_x;
-		my_position_matrix[16] = pos_tr_y;
-		my_position_matrix[17] = z_buffer;
 		
 		// Initialize the buffers. and store the new coords
 		if (my_position == null)
@@ -146,6 +139,7 @@ public final class QuadRenderShell
 	}
 	
 	private static int old_texture_data_handle;
+	private static boolean texture_set = false;
 	
 	private static final <T extends BaseLightShader> void onSetupTexture(final int my_texture_data_handle, final FloatBuffer my_tex_coord, final T ambient_light)
 	{
@@ -156,8 +150,12 @@ public final class QuadRenderShell
 			
 			// Set the active texture unit to texture unit 0 and bind necissary handles
 			GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+			if (!texture_set)
+			{
+				GLES20.glUniform1i(ambient_light.my_texture_uniform_handle, 0);
+				texture_set = true;
+			}
 			GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, my_texture_data_handle);
-			GLES20.glUniform1i(ambient_light.my_texture_uniform_handle, 0);
 		}
 		
 		// Pass in the texture coordinate information
@@ -165,6 +163,7 @@ public final class QuadRenderShell
 	}
 	
 	private static int old_alpha_data_handle;
+	private static boolean alpha_set = false;
 	
 	private static final void onSetupAlpha(final int my_alpha_data_handle, final CompressedLightShader compressed_light)
 	{
@@ -174,8 +173,12 @@ public final class QuadRenderShell
 		old_alpha_data_handle = my_alpha_data_handle;
 		
 		GLES20.glActiveTexture(GLES20.GL_TEXTURE1);
+		if (!alpha_set)
+		{
+			GLES20.glUniform1i(compressed_light.my_alpha_uniform_handle, 1);
+			alpha_set = true;
+		}
 		GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, my_alpha_data_handle);
-		GLES20.glUniform1i(compressed_light.my_alpha_uniform_handle, 1);
 	}
 	
 	private static final <T extends BaseLightShader> void onSetupModelMatrix(final float[] my_vp_matrix, final float[] my_model_matrix, final T ambient_light)
@@ -201,22 +204,24 @@ public final class QuadRenderShell
 	private static final void onDraw()
 	{
 		Constants.quads_drawn_screen++;
-		GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 6);
+		GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, my_position_matrix.length / 3); // 3 values per vertex
 	}
+	
+	private static int old_light_data_handle;
 	
 	private static final void onSetupShadow(final float radius, final float x, final float y, final int my_light_data_handle, final ShadowLightShader shadow_light)
 	{
 		GLES20.glUniform1f(shadow_light.my_radius_handle, radius);
 		GLES20.glUniform2f(shadow_light.my_shadow_position_handle, x, y);
 		
-		if (old_alpha_data_handle == my_light_data_handle && !program_update)
+		if (old_light_data_handle == my_light_data_handle)
 			return;
 		
-		old_alpha_data_handle = my_light_data_handle;
+		old_light_data_handle = my_light_data_handle;
 		
-		GLES20.glActiveTexture(GLES20.GL_TEXTURE1);
+		GLES20.glActiveTexture(GLES20.GL_TEXTURE4);
 		GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, my_light_data_handle);
-		GLES20.glUniform1i(shadow_light.my_light_uniform_handle, 1);
+		GLES20.glUniform1i(shadow_light.my_light_uniform_handle, 4);
 	}
 	
 	private static int old_backgroup_data_handle;
@@ -224,7 +229,7 @@ public final class QuadRenderShell
 	
 	private static final void onSetupShadowBF(final int my_backgroup_data_handle, final int my_foregroup_data_handle, final ShadowLightShader shadow_light)
 	{
-		if (old_backgroup_data_handle != my_backgroup_data_handle || program_update)
+		if (old_backgroup_data_handle != my_backgroup_data_handle)
 		{
 			old_backgroup_data_handle = my_backgroup_data_handle;
 			
@@ -233,7 +238,7 @@ public final class QuadRenderShell
 			GLES20.glUniform1i(shadow_light.my_backgroup_uniform_handle, 2);
 		}
 		
-		if (old_foregroup_data_handle != my_foregroup_data_handle || program_update)
+		if (old_foregroup_data_handle != my_foregroup_data_handle)
 		{
 			old_foregroup_data_handle = my_foregroup_data_handle;
 			
@@ -255,7 +260,7 @@ public final class QuadRenderShell
 	// so like...particles.
 	
 	private static ArrayList<Quad> clones = new ArrayList<Quad>();
-	
+
 	public static final <T extends BaseLightShader> void onDrawQuad(final float[] my_vp_matrix, final boolean skip_draw_check, final T shader, final ArrayList<Quad> quads)
 	{
 		int quad_size = quads.size();
@@ -320,6 +325,7 @@ public final class QuadRenderShell
 			}
 			else
 				Log.e("Shadow Shader Error", "Attempted to draw a shadow object with a non shadow shader.");
+			
 		}
 		
 		// blur
