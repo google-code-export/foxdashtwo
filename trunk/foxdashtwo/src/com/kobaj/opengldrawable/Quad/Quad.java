@@ -83,7 +83,7 @@ public class Quad
 	private final float[] rotation_matrix = new float[16];
 	private final float[] scale_matrix = new float[16];
 	private final float[] my_rs_matrix = new float[16];
-	protected final float[] cube_texture_coordinate_data = new float[12];
+	protected final float[] cube_texture_coordinate_data = new float[8];
 	
 	// handle to texture
 	public int my_texture_data_handle = -1;
@@ -225,19 +225,18 @@ public class Quad
 		
 		// S, T (or X, Y)
 		// Texture coordinate data.
-		cube_texture_coordinate_data[0] = one_x;
+		cube_texture_coordinate_data[0] = one_x; // top left
 		cube_texture_coordinate_data[1] = one_y;
-		cube_texture_coordinate_data[2] = one_x;
-		cube_texture_coordinate_data[3] = two_y;
-		cube_texture_coordinate_data[4] = two_x;
-		cube_texture_coordinate_data[5] = one_y;
 		
-		cube_texture_coordinate_data[6] = one_x;
-		cube_texture_coordinate_data[7] = two_y;
-		cube_texture_coordinate_data[8] = two_x;
-		cube_texture_coordinate_data[9] = two_y;
-		cube_texture_coordinate_data[10] = two_x;
-		cube_texture_coordinate_data[11] = one_y;
+		cube_texture_coordinate_data[2] = one_x; // bottom left
+		cube_texture_coordinate_data[3] = two_y;
+		
+		// modified
+		cube_texture_coordinate_data[4] = two_x; // bottom right
+		cube_texture_coordinate_data[5] = two_y;
+		
+		cube_texture_coordinate_data[6] = two_x; // top right
+		cube_texture_coordinate_data[7] = one_y;
 		
 		if (my_tex_coord == null)
 			my_tex_coord = ByteBuffer.allocateDirect(cube_texture_coordinate_data.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
@@ -398,11 +397,11 @@ public class Quad
 		unrotated_aabb.setPositionWithOffset(x_pos_shader, y_pos_shader);
 	}
 	
-    public void setZPos(double z)
-    {
-            this.z_pos = z;
-            update_position_matrix(false);
-    }
+	public void setZPos(double z)
+	{
+		this.z_pos = z;
+		update_position_matrix(false);
+	}
 	
 	// these x and y are in shader space 0 to 1
 	public void setXYPos(double x, double y, EnumDrawFrom where)

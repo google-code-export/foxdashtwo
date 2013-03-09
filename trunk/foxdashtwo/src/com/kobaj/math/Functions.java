@@ -303,19 +303,18 @@ public class Functions
 	}
 	
 	public static final void setCamera(double x_camera, double y_camera, double z_camera)
-	{		
+	{
 		double user_set_buffer = Functions.clamp(Constants.user_zoom_max, UserSettings.zoom_value, Constants.user_zoom_min);
 		z_camera += user_set_buffer;
 		double min_z_value = 0 + user_set_buffer;
 		double max_z_value = Constants.arbitrary_z + user_set_buffer;
 		
-		if(z_camera < min_z_value)
+		if (z_camera < min_z_value)
 			z_camera = min_z_value;
-		if(z_camera > max_z_value)
+		if (z_camera > max_z_value)
 			z_camera = max_z_value;
 		
-		if (x_camera == Constants.x_shader_translation && y_camera == Constants.y_shader_translation &&
-				z_camera == Constants.z_shader_translation)
+		if (x_camera == Constants.x_shader_translation && y_camera == Constants.y_shader_translation && z_camera == Constants.z_shader_translation)
 			return;
 		
 		setIdentityMatrix(Constants.my_view_matrix);

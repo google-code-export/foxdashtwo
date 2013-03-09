@@ -34,9 +34,9 @@ public class MyGame extends MyGLRender
 	
 	private QuadShadow shadow_generator;
 	
-	private final EnumLayerTypes[] backgroup_enums = {EnumLayerTypes.Background, EnumLayerTypes.Background_Aux};
-	private final EnumLayerTypes[] interaction_group_enums = {EnumLayerTypes.Post_interaction, EnumLayerTypes.Interaction, EnumLayerTypes.Pre_interaction};
-	private final EnumLayerTypes[] foregroup_enums = {EnumLayerTypes.Foreground_Aux, EnumLayerTypes.Foreground, EnumLayerTypes.Top};
+	private final EnumLayerTypes[] backgroup_enums = { EnumLayerTypes.Background, EnumLayerTypes.Background_Aux };
+	private final EnumLayerTypes[] interaction_group_enums = { EnumLayerTypes.Post_interaction, EnumLayerTypes.Interaction, EnumLayerTypes.Pre_interaction };
+	private final EnumLayerTypes[] foregroup_enums = { EnumLayerTypes.Foreground_Aux, EnumLayerTypes.Foreground, EnumLayerTypes.Top };
 	
 	public MyGame()
 	{
@@ -73,11 +73,11 @@ public class MyGame extends MyGLRender
 			lights = new QuadRenderTo();
 		lights.onInitialize();
 		
-		if(backgroup == null)
+		if (backgroup == null)
 			backgroup = new QuadRenderTo();
 		backgroup.onInitialize();
 		
-		if(foregroup == null)
+		if (foregroup == null)
 			foregroup = new QuadRenderTo();
 		foregroup.onInitialize();
 		
@@ -146,17 +146,17 @@ public class MyGame extends MyGLRender
 		if (scene.beginRenderToTexture(true))
 			currently_active_screen.onDrawObject(interaction_group_enums);
 		
-		if(backgroup.beginRenderToTexture(true))
+		if (backgroup.beginRenderToTexture(true))
 			currently_active_screen.onDrawObject(backgroup_enums);
 		
-		if(foregroup.beginRenderToTexture(true))
+		if (foregroup.beginRenderToTexture(true))
 			currently_active_screen.onDrawObject(foregroup_enums);
 		foregroup.endRenderToTexture(false);
 		
 		// draw everything
-		shadow_generator.shadow_radius = (float)currently_active_screen.player_stats[2];
-		shadow_generator.shadow_x_pos = (float)currently_active_screen.player_stats[0];
-		shadow_generator.shadow_y_pos = (float)currently_active_screen.player_stats[1];
+		shadow_generator.shadow_radius = (float) currently_active_screen.player_stats[2];
+		shadow_generator.shadow_x_pos = (float) currently_active_screen.player_stats[0];
+		shadow_generator.shadow_y_pos = (float) currently_active_screen.player_stats[1];
 		shadow_generator.onDrawAmbient(my_local_ip_matrix, true);
 		
 		// text below this line

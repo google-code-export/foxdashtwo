@@ -41,6 +41,9 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		// Use culling to remove back faces.
 		GLES20.glEnable(GLES20.GL_CULL_FACE);
 		
+		// and performance increases
+		GLES20.glDisable(GLES20.GL_DITHER);
+		
 		// disable depth testing
 		GLES20.glDisable(GLES20.GL_DEPTH_TEST);
 		// GLES20.glEnable(GLES20.GL_DEPTH_TEST);
@@ -148,7 +151,7 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 			onUpdateFrame();
 			
 			// Redraw background color
-			GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+			GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
 			
 			// calculate vp matrix
 			Matrix.multiplyMM(Constants.my_vp_matrix, 0, Constants.my_proj_matrix, 0, Constants.my_view_matrix, 0);
@@ -176,7 +179,7 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		
 		long end_time = System.currentTimeMillis();
 		
-		if(UserSettings.max_fps <= 0)
+		if (UserSettings.max_fps <= 0)
 			return; // do nothing
 			
 		double max_ms = 1.0 / UserSettings.max_fps * 1000.0;
