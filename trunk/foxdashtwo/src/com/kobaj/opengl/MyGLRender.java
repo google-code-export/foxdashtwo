@@ -112,7 +112,7 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		Constants.text = new Text();
 		
 		onInitialize();
-		
+		QuadRenderShell.reset();
 		// after all that, see if we have any opengl errors
 		Functions.checkGlError();
 	}
