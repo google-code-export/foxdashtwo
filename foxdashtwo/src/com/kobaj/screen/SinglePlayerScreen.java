@@ -219,26 +219,35 @@ public class SinglePlayerScreen extends BaseScreen
 				
 				for (int e = reference.quad_object.phys_rect_list.size() - 1; e >= 0; e--)
 				{
-					Functions.setEqualIntersects(collision, player_extended, reference.quad_object.phys_rect_list.get(e).main_rect);
+					RectF second = reference.quad_object.phys_rect_list.get(e).main_rect;
 					
-					// force this to be an up-down collision
-					if (collision.height() != 0)
+					if (player_extended.left > second.right || player_extended.right < second.left || player_extended.top < second.bottom || player_extended.bottom > second.top)
 					{
-						collision.left = (float) -Constants.shadow_height;
-						collision.right = (float) Constants.shadow_height;
+						// no possible collision
 					}
-					
-					if (Physics.cleanCollision(collision))
+					else
+					{
+						Functions.setEqualIntersects(collision, player_extended, second);
+						
+						// force this to be an up-down collision
 						if (collision.height() != 0)
-							if (collision.bottom > collision_y)
-							{
-								// collision, find the shadow
-								double player_y = collision_y = collision.bottom;
-								double screen_y = Constants.y_shader_translation;
-								
-								double shift_y = Functions.shaderYToScreenY(player_y - screen_y);
-								this.player_stats[1] = shift_y;
-							}
+						{
+							collision.left = (float) -Constants.shadow_height;
+							collision.right = (float) Constants.shadow_height;
+						}
+						
+						if (Physics.cleanCollision(collision))
+							if (collision.height() != 0)
+								if (collision.bottom > collision_y)
+								{
+									// collision, find the shadow
+									double player_y = collision_y = collision.bottom;
+									double screen_y = Constants.y_shader_translation;
+									
+									double shift_y = Functions.shaderYToScreenY(player_y - screen_y);
+									this.player_stats[1] = shift_y;
+								}
+					}
 				}
 			}
 		}
