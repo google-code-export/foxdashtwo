@@ -5,12 +5,12 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.os.PowerManager;
 import android.support.v4.app.FragmentActivity;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
+import android.view.WindowManager;
 
 import com.kobaj.loader.FileHandler;
 import com.kobaj.math.Constants;
@@ -23,7 +23,6 @@ public class GameActivity extends FragmentActivity
 	public static Activity activity;
 	
 	// related to permissions mostly
-	private PowerManager.WakeLock wl;
 	public static ConnectivityManager cm;
 	
 	// drawing
@@ -41,8 +40,7 @@ public class GameActivity extends FragmentActivity
 		Constants.resources = this.getResources();
 		
 		// keeping the screen on
-		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-		wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK, "DoNotDimScreen");
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		
 		// networking state
 		cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -78,7 +76,6 @@ public class GameActivity extends FragmentActivity
 	protected void onPause()
 	{
 		super.onPause();
-		wl.release();
 		
 		// shut down the music
 		Constants.music_player.stop();
@@ -90,7 +87,6 @@ public class GameActivity extends FragmentActivity
 	protected void onResume()
 	{
 		super.onResume();
-		wl.acquire();
 		
 		mGLView.onResume();
 	}

@@ -135,7 +135,7 @@ public class InputManager
 		
 		int ptrId = event.getPointerId(0);
 		if (event.getPointerCount() > 1)
-			ptrId = (action & MotionEvent.ACTION_POINTER_ID_MASK) >> MotionEvent.ACTION_POINTER_ID_SHIFT;
+			ptrId = (action & MotionEvent.ACTION_POINTER_INDEX_MASK) >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
 		
 		action = action & MotionEvent.ACTION_MASK;
 		if (action < 7 && action > 4)

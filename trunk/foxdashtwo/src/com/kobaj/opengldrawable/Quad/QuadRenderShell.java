@@ -4,6 +4,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import android.graphics.Color;
 import android.opengl.GLES20;
@@ -39,6 +40,8 @@ public final class QuadRenderShell
 	private static int old_light_data_handle;
 	private static int old_backgroup_data_handle;
 	private static int old_foregroup_data_handle;
+	static private HashMap<BaseLightShader, Boolean> position_set = new HashMap<BaseLightShader, Boolean>();
+	private static FloatBuffer old_tex_coord;
 	
 	private static ArrayList<Quad> clones_two = new ArrayList<Quad>();
 	private static final ArrayList<Quad> single_quad = new ArrayList<Quad>();
@@ -57,6 +60,10 @@ public final class QuadRenderShell
 		old_light_data_handle = 0;
 		old_backgroup_data_handle = 0;
 		old_foregroup_data_handle = 0;
+		position_set.clear();
+		old_tex_coord = null;
+		
+		single_quad.add(null);
 	}
 	
 	private static final void generateVerts()
@@ -162,7 +169,13 @@ public final class QuadRenderShell
 			return;
 		
 		// pass in position information
-		GLES20.glVertexAttribPointer(ambient_light.my_position_handle, 3, GLES20.GL_FLOAT, false, 0, my_position);
+		
+		boolean value = position_set.containsKey(ambient_light);
+		if (!value)
+		{
+			GLES20.glVertexAttribPointer(ambient_light.my_position_handle, 3, GLES20.GL_FLOAT, false, 0, my_position);
+			position_set.put(ambient_light, true);
+		}
 	}
 	
 	private static final <T extends BaseLightShader> void onSetupTexture(final int my_texture_data_handle, final FloatBuffer my_tex_coord, final T ambient_light)
@@ -183,7 +196,11 @@ public final class QuadRenderShell
 		}
 		
 		// Pass in the texture coordinate information
-		GLES20.glVertexAttribPointer(ambient_light.my_tex_coord_handle, 2, GLES20.GL_FLOAT, false, 0, my_tex_coord);
+		if (old_tex_coord != my_tex_coord)
+		{
+			old_tex_coord = my_tex_coord;
+			GLES20.glVertexAttribPointer(ambient_light.my_tex_coord_handle, 2, GLES20.GL_FLOAT, false, 0, my_tex_coord);
+		}
 	}
 	
 	private static final void onSetupAlpha(final int my_alpha_data_handle, final CompressedLightShader compressed_light)
@@ -264,6 +281,7 @@ public final class QuadRenderShell
 		}
 	}
 	
+	@SuppressWarnings("unused")
 	private static final void onSetupBlur(final float my_x_offset, final float my_y_offset, final BlurLightShader blur_light)
 	{
 		GLES20.glUniform2f(blur_light.my_offset_handle, my_x_offset, my_y_offset);
@@ -281,9 +299,13 @@ public final class QuadRenderShell
 		if (quad_size <= 0)
 			return;
 		
-		clones_two.clear();
+		//clones_two.clear();
+		while (clones_two.size() < quad_size) {
+	        clones_two.add(null);
+	    }
+		
 		for (int i = quad_size - 1; i >= 0; i--)
-			clones_two.add(quads.get(i));
+			clones_two.set(i, quads.get(i));
 		
 		// generate some verts
 		generateVerts();
@@ -302,22 +324,24 @@ public final class QuadRenderShell
 			{
 				clones_two.remove(i);
 				removed = true;
+				quad_size--;
 			}
 			
 			// see if compressed texture is on device
-			if (QuadCompressed.class.isAssignableFrom(uncompressed.getClass()))
+			if (uncompressed instanceof QuadCompressed)
 			{
 				QuadCompressed reference = QuadCompressed.class.cast(uncompressed);
 				if ((!reference.setAlphaDataHandle() && !removed) || (!skip_draw_check && !com.kobaj.math.Functions.onShader(reference.best_fit_aabb)))
 				{
 					clones_two.remove(i);
 					removed = true;
+					quad_size--;
 				}
 			}
 		}
 		
 		// new size after removal
-		int clones_size = clones_two.size();
+		int clones_size = quad_size;
 		if (clones_size <= 0)
 			return;
 		
@@ -328,12 +352,23 @@ public final class QuadRenderShell
 		onSetupTexture(zero.my_texture_data_handle, zero.my_tex_coord, shader);
 		onSetupPosition(shader);
 		
+		// compressed
+		if (zero instanceof QuadCompressed)
+		{
+			QuadCompressed zero_compressed = QuadCompressed.class.cast(zero);
+			
+			if (shader instanceof CompressedLightShader)
+				onSetupAlpha(zero_compressed.my_alpha_data_handle, (CompressedLightShader) shader);
+			else
+				Log.e("Compressed Shader Error", "Attempted to draw a compressed object with a non compressed shader.");
+		}
+		
 		// shadow
-		if (QuadShadow.class.isAssignableFrom(zero.getClass()))
+		else if (zero instanceof QuadShadow)
 		{
 			QuadShadow zero_shadow = QuadShadow.class.cast(zero);
 			
-			if (ShadowLightShader.class.isAssignableFrom(shader.getClass()))
+			if (shader instanceof ShadowLightShader)
 			{
 				onSetupShadow(zero_shadow.shadow_radius, zero_shadow.shadow_x_pos, zero_shadow.shadow_y_pos, zero_shadow.my_light_data_handle, (ShadowLightShader) shader);
 				onSetupShadowBF(zero_shadow.my_backgroup_data_handle, zero_shadow.my_foregroup_data_handle, (ShadowLightShader) shader);
@@ -344,26 +379,12 @@ public final class QuadRenderShell
 		}
 		
 		// blur
-		if (QuadBlur.class.isAssignableFrom(zero.getClass()))
-		{
-			QuadBlur zero_blur = QuadBlur.class.cast(zero);
-			
-			if (BlurLightShader.class.isAssignableFrom(shader.getClass()))
-				onSetupBlur((float) zero_blur.x_blur_offset, (float) zero_blur.y_blur_offset, (BlurLightShader) shader);
-			else
-				Log.e("Blur Shader Error", "Attempted to draw a blur object with a non blur shader.");
-		}
-		
-		// compressed
-		if (QuadCompressed.class.isAssignableFrom(zero.getClass()))
-		{
-			QuadCompressed zero_compressed = QuadCompressed.class.cast(zero);
-			
-			if (CompressedLightShader.class.isAssignableFrom(shader.getClass()))
-				onSetupAlpha(zero_compressed.my_alpha_data_handle, (CompressedLightShader) shader);
-			else
-				Log.e("Compressed Shader Error", "Attempted to draw a compressed object with a non compressed shader.");
-		}
+		/*
+		 * else if (QuadBlur.class.isAssignableFrom(zero.getClass())); { QuadBlur zero_blur = QuadBlur.class.cast(zero);
+		 * 
+		 * if (BlurLightShader.class.isAssignableFrom(shader.getClass())) onSetupBlur((float) zero_blur.x_blur_offset, (float) zero_blur.y_blur_offset, (BlurLightShader) shader); else
+		 * Log.e("Blur Shader Error", "Attempted to draw a blur object with a non blur shader."); }
+		 */
 		
 		for (int i = clones_size - 1; i >= 0; i--)
 		{
@@ -381,8 +402,7 @@ public final class QuadRenderShell
 	{
 		if (skip_draw_check || com.kobaj.math.Functions.onShader(quad.best_fit_aabb))
 		{
-			single_quad.clear();
-			single_quad.add(quad);
+			single_quad.set(0, quad);
 			
 			onDrawQuad(my_vp_matrix, true, shader, single_quad);
 		}
