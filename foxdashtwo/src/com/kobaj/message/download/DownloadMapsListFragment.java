@@ -23,6 +23,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.kobaj.account_settings.UserSettings;
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Constants;
 import com.kobaj.message.download.LevelItem.EnumButtonStates;
@@ -175,6 +176,9 @@ class LoadFeedData extends MyTask
 			b.appendQueryParameter("action", "get_map_list");
 			b.appendQueryParameter("count", attributes[0]); // how many are currently grabbed
 			b.appendQueryParameter("page_type", attributes[1]); // what type to grab
+			
+			if(Constants.logged_in && UserSettings.selected_account_login != -1)
+				b.appendQueryParameter("user_email", Constants.accounts.get_accounts()[UserSettings.selected_account_login]);
 			
 			the_url = b.build().toString();
 		}

@@ -197,12 +197,18 @@ public class Functions
 	
 	protected static final void updateShaderRectFView()
 	{
-		final double neg_zoom = Constants.ratio * Constants.z_shader_translation;
-		
-		shader_rectf_view.left = (float) (-Constants.ratio + Constants.x_shader_translation - neg_zoom);
-		shader_rectf_view.top = (float) (1 + Constants.y_shader_translation + Constants.z_shader_translation);
-		shader_rectf_view.right = (float) (Constants.ratio + Constants.x_shader_translation + neg_zoom);
-		shader_rectf_view.bottom = (float) (-1 + Constants.y_shader_translation - Constants.z_shader_translation);
+		if (camera_changed)
+		{	
+			camera_changed = false;
+			
+			final double neg_zoom = Constants.ratio * Constants.z_shader_translation;
+			
+			shader_rectf_view.left = (float) (-Constants.ratio + Constants.x_shader_translation - neg_zoom);
+			shader_rectf_view.top = (float) (1 + Constants.y_shader_translation + Constants.z_shader_translation);
+			shader_rectf_view.right = (float) (Constants.ratio + Constants.x_shader_translation + neg_zoom);
+			shader_rectf_view.bottom = (float) (-1 + Constants.y_shader_translation - Constants.z_shader_translation);
+			
+		}
 	}
 	
 	// helpful method
@@ -302,6 +308,8 @@ public class Functions
 		return ++x;
 	}
 	
+	private static boolean camera_changed = true;
+	
 	public static final void setCamera(double x_camera, double y_camera, double z_camera)
 	{
 		double user_set_buffer = Functions.clamp(Constants.user_zoom_max, UserSettings.zoom_value, Constants.user_zoom_min);
@@ -315,7 +323,12 @@ public class Functions
 			z_camera = max_z_value;
 		
 		if (x_camera == Constants.x_shader_translation && y_camera == Constants.y_shader_translation && z_camera == Constants.z_shader_translation)
+		{
+			camera_changed = false;
 			return;
+		}
+		
+		camera_changed = true;
 		
 		setIdentityMatrix(Constants.my_view_matrix);
 		Matrix.translateM(Constants.my_view_matrix, 0, (float) -x_camera, (float) -y_camera, (float) -z_camera);
