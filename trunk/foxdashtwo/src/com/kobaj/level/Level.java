@@ -62,9 +62,8 @@ public class Level
 	public ArrayList<LevelObject> object_list;
 	
 	public ArrayList<LevelObject> physics_objects = new ArrayList<LevelObject>(); // references for only physics (objects that move).
-	public HashMap<EnumLayerTypes, ArrayList<LevelObject>> object_hash;
-	// public ArrayList<LevelObject> interaction_objects = new ArrayList<LevelObject>(); // references for objects that are on the interaction layer
-	
+	public HashMap<EnumLayerTypes, LevelObject[]> object_hash;
+
 	@ElementList
 	public ArrayList<LevelAmbientLight> light_list; // all lights including blooms
 	
@@ -72,6 +71,8 @@ public class Level
 	
 	@Element
 	public LevelObject player;
+	
+	private boolean player_on_ground = false;
 	
 	@ElementList
 	public ArrayList<LevelEvent> event_list;
@@ -106,7 +107,7 @@ public class Level
 			reference.onInitialize();
 			
 			// do some particles
-			if (reference.this_object == EnumLevelObject.l2_ground_platform_floating)
+			if (reference.this_object == EnumLevelObject.l2_ground_platform_floating_1)
 			{
 				RectF emitt_from = new RectF((float) (reference.quad_object.best_fit_aabb.main_rect.left + Functions.screenWidthToShaderWidth(45)),
 						(float) (reference.quad_object.best_fit_aabb.main_rect.top - Functions.screenHeightToShaderHeight(85)),
@@ -120,6 +121,8 @@ public class Level
 				
 				physics_objects.add(reference);
 			}
+			if(reference.this_object == EnumLevelObject.l1_decoration_water_1)
+				physics_objects.add(reference);
 		}
 		
 		// setup lights
@@ -174,9 +177,9 @@ public class Level
 		
 		// setup player
 		player.quad_object = new QuadAnimated(R.raw.fox2, R.raw.fox2_alpha, R.raw.fox_animation_list, 350, 180, 1024, 1024);
-		player.eid = -1;
+		player.eid = Integer.MIN_VALUE;
 		player.layer = EnumLayerTypes.Pre_interaction;
-		player.z_plane = -1;
+		player.z_plane = Double.MIN_VALUE;
 		object_list.add(player);
 		
 		// sort the objects
@@ -202,7 +205,7 @@ public class Level
 			player.quad_object.setXYPos(x_player, y_player, player.draw_from);
 		
 		// build our hashmap (garbage?)
-		object_hash = new HashMap<EnumLayerTypes, ArrayList<LevelObject>>();
+		object_hash = new HashMap<EnumLayerTypes, LevelObject[]>();
 		
 		// optimize which objects to collide against
 		for (EnumLayerTypes t : EnumLayerTypes.values())
@@ -215,7 +218,7 @@ public class Level
 				if (reference.layer == t)
 					layer_temp.add(reference);
 			}
-			object_hash.put(t, layer_temp);
+			object_hash.put(t, (LevelObject[]) layer_temp.toArray(new LevelObject[layer_temp.size()]));
 			
 		}
 		
@@ -232,6 +235,9 @@ public class Level
 		 * Functions.screenXToShaderX(right_limit),// (float) Functions.screenYToShaderY(bottom_limit));// NParticleEmitter test = NParticleManager.makeEmitter(EnumParticleType.snow,
 		 * shader_limits_for_snow_test); test.onInitialize(); test.preUpdate(); local_np_emitter.add(test);
 		 */
+		
+		//sounds
+		Constants.sound.addSound(R.raw.fox_trot_2);
 	}
 	
 	public void onUnInitialize()
@@ -286,7 +292,19 @@ public class Level
 			
 			reference.onUpdate(delta);
 		}
+		
+		//then do sounds
+		walking_timeout += delta;
+		double velocity = Math.abs(player.quad_object.x_vel_shader) * 10000;
+		if(this.player_on_ground && velocity > 2 && walking_timeout - velocity > walking_max)
+		{
+			walking_timeout = 0;
+			Constants.sound.play(R.raw.fox_trot_2, 0);
+		}
 	}
+	
+	private final double walking_max = 600;
+	private double walking_timeout = 0;
 	
 	public void onDrawObject(EnumLayerTypes... types)
 	{
@@ -298,11 +316,11 @@ public class Level
 				if (my_backdrop != null)
 					my_backdrop.onDrawAmbient(Constants.my_ip_matrix, true);
 			
-			ArrayList<LevelObject> objects = object_hash.get(type);		
+			LevelObject[] objects = object_hash.get(type);		
 			
 			// draw sorted objects
-			for (int i = objects.size() - 1; i >= 0; i--)
-				objects.get(i).onDrawObject();
+			for (int i = objects.length - 1; i >= 0; i--)
+				objects[i].onDrawObject();
 			
 			// particles (looped in with top)
 			if (type == EnumLayerTypes.Top)
@@ -332,11 +350,15 @@ public class Level
 	
 	public void objectInteraction(final RectF collision, final LevelObject player, final LevelObject reference)
 	{
+		player_on_ground = false;
+		
 		// up down collision
 		if (collision.width() == 0)
 		{
+			player_on_ground = true;
+			
 			// floating platforms
-			if (reference.this_object == EnumLevelObject.l2_ground_platform_floating)
+			if (reference.this_object == EnumLevelObject.l2_ground_platform_floating_1)
 				if (player.quad_object.y_pos_shader > reference.quad_object.y_pos_shader) // remember this is the center of the object
 				{
 					player.quad_object.setXYPos(player.quad_object.x_pos_shader, player.quad_object.y_pos_shader - Constants.collision_detection_height, EnumDrawFrom.center);

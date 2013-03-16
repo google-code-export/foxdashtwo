@@ -319,6 +319,14 @@ public final class QuadRenderShell
 			Quad uncompressed = clones_two.get(i);
 			boolean removed = false;
 			
+			if(uncompressed == null)
+			{
+				clones_two.remove(i);
+				removed = true;
+				quad_size--;
+				continue;
+			}
+			
 			// see if regular texture is on device yet
 			if (!uncompressed.setTextureDataHandle())
 			{

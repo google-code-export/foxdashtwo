@@ -60,7 +60,7 @@ public class QuadColorShape extends Quad
 	private static Bitmap makeSquare(int left, int top, int right, int bottom, int color)
 	{
 		// very simple, draw a square
-		Bitmap bitmap_temp = Bitmap.createBitmap((int) Math.abs(right - left), (int) Math.abs(bottom - top), Bitmap.Config.ARGB_8888);
+		Bitmap bitmap_temp = Bitmap.createBitmap((int) Math.abs(right - left), (int) Math.abs(bottom - top), Bitmap.Config.ARGB_4444);
 		Canvas canvas_temp = new Canvas(bitmap_temp);
 		canvas_temp.drawColor(color);
 		
@@ -75,7 +75,7 @@ public class QuadColorShape extends Quad
 		paint.setAntiAlias(true);
 		
 		// make a bitmap that is the right size.
-		Bitmap bitmap_temp = Bitmap.createBitmap((int) (radius * 2.0), (int) (radius * 2.0), Bitmap.Config.ARGB_8888);
+		Bitmap bitmap_temp = Bitmap.createBitmap((int) (radius * 2.0), (int) (radius * 2.0), Bitmap.Config.ARGB_4444);
 		Canvas canvas_temp = new Canvas(bitmap_temp);
 		
 		// draw background then circle,
@@ -111,7 +111,7 @@ public class QuadColorShape extends Quad
 		screen.bottom = (int) (xy + radius);
 		
 		// create the canvas
-		Bitmap bitmap_temp = Bitmap.createBitmap((int) (radius * 2), (int) (radius * 2), Bitmap.Config.ARGB_8888);
+		Bitmap bitmap_temp = Bitmap.createBitmap((int) (radius * 2), (int) (radius * 2), Bitmap.Config.ARGB_4444);
 		Canvas canvas_temp = new Canvas(bitmap_temp);
 		
 		// obscuring light
@@ -173,7 +173,7 @@ public class QuadColorShape extends Quad
 		path.close();
 		
 		// make a bitmap
-		Bitmap bitmap_temp = Bitmap.createBitmap((int) (radius * 2), (int) (radius * 2), Bitmap.Config.ARGB_8888);
+		Bitmap bitmap_temp = Bitmap.createBitmap((int) (radius * 2), (int) (radius * 2), Bitmap.Config.ARGB_4444);
 		Canvas canvas_temp = new Canvas(bitmap_temp);
 		
 		// rotate and draw

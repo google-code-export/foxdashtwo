@@ -21,7 +21,7 @@ import com.kobaj.math.Functions;
 
 public class ETC1Extended
 {
-	private final boolean use_stream_io = true;
+	private final boolean use_stream_io = false;
 	private int hash = -1;
 	private InputStream input;
 	

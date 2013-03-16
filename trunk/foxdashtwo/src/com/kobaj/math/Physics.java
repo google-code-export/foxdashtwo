@@ -9,7 +9,7 @@ import com.kobaj.opengldrawable.Quad.Quad;
 //3. Collision handling
 public class Physics
 {
-	//applies gravity
+	// applies gravity
 	public <T extends Quad> void addGravity(T the_quad)
 	{
 		the_quad.y_acc_shader += Constants.gravity;
@@ -32,14 +32,14 @@ public class Physics
 	}
 	
 	public <T extends Quad> void addSpringY(double k, double b, double desired_distance, double distance, T the_quad)
-	{	
+	{
 		double abs_distance = Math.abs(distance);
 		double force = (-k * (abs_distance - desired_distance) * (distance / abs_distance)) - (b * the_quad.y_vel_shader);
-		if(Double.isNaN(force))
+		if (Double.isNaN(force))
 			force = 0;
 		
 		the_quad.y_acc_shader += force;
-	}	
+	}
 	
 	public <T extends Quad> void integratePhysics(double delta, T the_quad)
 	{
@@ -74,25 +74,18 @@ public class Physics
 	// otherwise return false
 	// zero based index. 0 = first quad, 1 = second_quad
 	public <T extends Quad> boolean checkCollision(RectF collision, T first_quad, T second_quad, int quad_to_move)
-	{	
+	{
 		// quick check to even see if its possible for two quads to touch
-		double first_x = first_quad.x_pos_shader;
-		double first_y = first_quad.y_pos_shader;
+		RectF player_extended = first_quad.best_fit_aabb.main_rect;
+		RectF main_rect = second_quad.best_fit_aabb.main_rect;
 		
-		double second_x = second_quad.x_pos_shader;
-		double second_y = second_quad.y_pos_shader;
+		// short circuit
+		if (player_extended.right < main_rect.left || //
+				player_extended.left > main_rect.right || //
+				player_extended.top < main_rect.bottom || //
+				player_extended.bottom > main_rect.top) //
+			return false;
 		
-		// reposition
-		first_x = first_x - first_quad.shader_width / 2.0;
-		first_y = first_y - first_quad.shader_height / 2.0;
-		
-		second_x = second_x - second_quad.shader_width / 2.0;
-		second_y = second_y - second_quad.shader_height / 2.0;
-		
-		if (first_x + first_quad.shader_width < second_x || first_x > second_x + second_quad.shader_width || first_y + first_quad.shader_height < second_y
-				|| first_y > second_y + second_quad.shader_height)
-			return false; // no possibility of collision
-			
 		// if its possible, get a detailed picture of the collision
 		for (int i = first_quad.phys_rect_list.size() - 1; i >= 0; i--)
 			for (int e = second_quad.phys_rect_list.size() - 1; i >= 0; i--)
@@ -105,10 +98,10 @@ public class Physics
 					// based on how the object should react (bounce, fly through, stick, etc
 					
 					// then decide normal
-					if(!cleanCollision(collision))
+					if (!cleanCollision(collision))
 						return false;
-						
-					//double width = collision.width();
+					
+					// double width = collision.width();
 					double height = collision.height();
 					
 					// and move the user specified quad
@@ -127,6 +120,46 @@ public class Physics
 		
 		// if there is a collision, return a rectF, if no collision then null.
 		return false;
+	}
+	
+	// this is a garbage filled terribly implemented static method that should only be used when you know what you're doing
+	// so like...durring loading scenes and stuff.
+	public static <T extends Quad> double physicsCollisionUpDown(T second_quad, RectF player_extended, double collision_y)
+	{
+		RectF collision = new RectF();
+		collision.left = collision.right = collision.top = collision.bottom = 0;
+		
+		// quick check to even see if its possible for two quads to touch
+		RectF main_rect = second_quad.best_fit_aabb.main_rect;
+		
+		// if its possible, get a detailed picture of the collision
+		for (int i = second_quad.phys_rect_list.size() - 1; i >= 0; i--)
+		{
+			if (player_extended.right < main_rect.left || player_extended.left > main_rect.right || player_extended.top < main_rect.bottom || player_extended.bottom > main_rect.top)
+			{
+				
+			}
+			else
+			{
+				Functions.setEqualIntersects(collision, second_quad.phys_rect_list.get(i).main_rect, player_extended);
+				if (collision.left != collision.right || collision.top != collision.bottom)
+				{
+					// force up down
+					if (collision.height() != 0)
+					{
+						collision.left = (float) -Constants.shadow_height;
+						collision.right = (float) Constants.shadow_height;
+					}
+					
+					if (Physics.cleanCollision(collision))
+						if (collision.height() != 0)
+							if (collision.bottom > collision_y)
+								collision_y = collision.bottom;
+				}
+			}
+		}
+		
+		return collision_y;
 	}
 	
 	public <T extends Quad> void handleCollision(RectF my_collision, T the_quad)
