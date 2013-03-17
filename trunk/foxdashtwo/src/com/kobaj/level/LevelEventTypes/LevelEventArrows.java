@@ -61,7 +61,7 @@ public class LevelEventArrows extends LevelEventBase
 			x_poss.add(x_pos);
 			y_poss.add(y_pos);
 		}
-		else if (this_event == EnumLevelEvent.up_arrow)
+		else if (this_event == EnumLevelEvent.up_arrows)
 		{
 			double y_pos = 0;
 			

@@ -19,6 +19,8 @@ import com.kobaj.level.LevelTypeLight.LevelCustomLight;
 import com.kobaj.level.LevelTypeLight.LevelPointLight;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
+import com.kobaj.math.Physics;
+import com.kobaj.math.RectFExtended;
 import com.kobaj.math.android.RectF;
 import com.kobaj.opengldrawable.EnumDrawFrom;
 import com.kobaj.opengldrawable.EnumGlobalAnimationList;
@@ -63,7 +65,7 @@ public class Level
 	
 	public ArrayList<LevelObject> physics_objects = new ArrayList<LevelObject>(); // references for only physics (objects that move).
 	public HashMap<EnumLayerTypes, LevelObject[]> object_hash;
-
+	
 	@ElementList
 	public ArrayList<LevelAmbientLight> light_list; // all lights including blooms
 	
@@ -105,24 +107,6 @@ public class Level
 		{
 			LevelObject reference = object_list.get(i);
 			reference.onInitialize();
-			
-			// do some particles
-			if (reference.this_object == EnumLevelObject.l2_ground_platform_floating_1)
-			{
-				RectF emitt_from = new RectF((float) (reference.quad_object.best_fit_aabb.main_rect.left + Functions.screenWidthToShaderWidth(45)),
-						(float) (reference.quad_object.best_fit_aabb.main_rect.top - Functions.screenHeightToShaderHeight(85)),
-						(float) (reference.quad_object.best_fit_aabb.main_rect.right - Functions.screenWidthToShaderWidth(45)),
-						(float) (reference.quad_object.best_fit_aabb.main_rect.bottom + Functions.screenHeightToShaderHeight(85)));
-				
-				NParticleEmitter test = NParticleManager.makeEmitter(EnumParticleType.floating_dust, emitt_from);
-				test.onInitialize();
-				test.preUpdate();
-				local_np_emitter.add(test);
-				
-				physics_objects.add(reference);
-			}
-			if(reference.this_object == EnumLevelObject.l1_decoration_water_1)
-				physics_objects.add(reference);
 		}
 		
 		// setup lights
@@ -222,6 +206,45 @@ public class Level
 			
 		}
 		
+		// then find our physics objects
+		for (int i = object_list.size() - 1; i >= 0; i--)
+		{
+			LevelObject reference = object_list.get(i);
+			
+			// do some particles
+			if (reference.this_object == EnumLevelObject.l2_ground_platform_floating_1)
+			{
+				RectF emitt_from = new RectF((float) (reference.quad_object.best_fit_aabb.main_rect.left + Functions.screenWidthToShaderWidth(45)),
+						(float) (reference.quad_object.best_fit_aabb.main_rect.top - Functions.screenHeightToShaderHeight(85)),
+						(float) (reference.quad_object.best_fit_aabb.main_rect.right - Functions.screenWidthToShaderWidth(45)),
+						(float) (reference.quad_object.best_fit_aabb.main_rect.bottom + Functions.screenHeightToShaderHeight(85)));
+				
+				NParticleEmitter test = NParticleManager.makeEmitter(EnumParticleType.floating_dust, emitt_from);
+				test.onInitialize();
+				test.preUpdate();
+				local_np_emitter.add(test);
+				
+				physics_objects.add(reference);
+			}
+			if (reference.this_object == EnumLevelObject.l1_decoration_water_1)
+			{
+				RectF water_drop = reference.quad_object.phys_rect_list.get(0).main_rect;
+				// make a very tall collision box for the water drop
+				reference.y_water_drop_path = new RectFExtended(water_drop.left, water_drop.top, water_drop.right, water_drop.bottom - 20);
+				double collision_y = reference.y_water_drop_path.main_rect.bottom;
+				
+				LevelObject[] interactables = object_hash.get(EnumLayerTypes.Interaction);
+				for (int e = interactables.length - 1; e >= 0; e--)
+					if (interactables[e].this_object != EnumLevelObject.l1_decoration_water_1)
+						collision_y = Physics.physicsCollisionUpDown(interactables[e].quad_object, reference.y_water_drop_path.main_rect, collision_y);
+				
+				if (collision_y < reference.y_water_drop_path.main_rect.top)
+					reference.y_water_drop_path.setExtendedRectF(water_drop.left, water_drop.top, water_drop.right, collision_y);
+				
+				physics_objects.add(reference);
+			}
+		}
+		
 		// set widths and heights for the camera
 		left_shader_limit = (Functions.screenXToShaderX(left_limit) + Constants.ratio);
 		right_shader_limit = (Functions.screenXToShaderX(right_limit) - Constants.ratio);
@@ -236,7 +259,7 @@ public class Level
 		 * shader_limits_for_snow_test); test.onInitialize(); test.preUpdate(); local_np_emitter.add(test);
 		 */
 		
-		//sounds
+		// sounds
 		Constants.sound.addSound(R.raw.fox_trot_2);
 	}
 	
@@ -293,10 +316,10 @@ public class Level
 			reference.onUpdate(delta);
 		}
 		
-		//then do sounds
+		// then do sounds
 		walking_timeout += delta;
 		double velocity = Math.abs(player.quad_object.x_vel_shader) * 10000;
-		if(this.player_on_ground && velocity > 2 && walking_timeout - velocity > walking_max)
+		if (this.player_on_ground && velocity > 2 && walking_timeout - velocity > walking_max)
 		{
 			walking_timeout = 0;
 			Constants.sound.play(R.raw.fox_trot_2, 0);
@@ -310,13 +333,13 @@ public class Level
 	{
 		// is ok, is array
 		for (EnumLayerTypes type : types)
-		{	
+		{
 			// backdrop (looped in with background)
 			if (type == EnumLayerTypes.Background)
 				if (my_backdrop != null)
 					my_backdrop.onDrawAmbient(Constants.my_ip_matrix, true);
 			
-			LevelObject[] objects = object_hash.get(type);		
+			LevelObject[] objects = object_hash.get(type);
 			
 			// draw sorted objects
 			for (int i = objects.length - 1; i >= 0; i--)

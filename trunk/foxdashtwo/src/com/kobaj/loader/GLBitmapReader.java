@@ -204,7 +204,7 @@ public class GLBitmapReader
 		int square_width = com.kobaj.math.Functions.nearestPowerOf2(bmp1.getWidth());
 		int square_height = com.kobaj.math.Functions.nearestPowerOf2(bmp1.getHeight());
 
-		final Bitmap bmp = Bitmap.createBitmap(square_width, square_height, Bitmap.Config.ARGB_4444);
+		final Bitmap bmp = Bitmap.createBitmap(square_width, square_height, Bitmap.Config.ARGB_8888);
 		Canvas temp_canvas = new Canvas(bmp);
 		temp_canvas.drawBitmap(bmp1, 0, square_height - original_height, new Paint());
 		
