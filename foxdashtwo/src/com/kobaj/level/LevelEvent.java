@@ -49,7 +49,7 @@ public class LevelEvent
 		my_collision_rect = new RectF((float) Functions.screenXToShaderX(x_pos), (float) (Functions.screenYToShaderY(y_pos + height)), (float) (Functions.screenXToShaderX(x_pos + width)),
 				(float) Functions.screenYToShaderY(y_pos));
 		
-		if (this_event == EnumLevelEvent.left_arrow || this_event == EnumLevelEvent.right_arrow || this_event == EnumLevelEvent.up_arrow)
+		if (this_event == EnumLevelEvent.left_arrow || this_event == EnumLevelEvent.right_arrow || this_event == EnumLevelEvent.up_arrows)
 			my_possible_event = new LevelEventArrows(this_event);
 		else if (this_event == EnumLevelEvent.send_to_start)
 			my_possible_event = new LevelEventTransportPlayer(this_event);

@@ -37,7 +37,8 @@ public class Sound extends AudioBase
 	// pass in the R value
 	public void addSound(int sound_id)
 	{
-		sound_pool_map.put(sound_id, sound_pool.load(com.kobaj.math.Constants.context, sound_id, 1));
+		if(sound_pool_map.get(sound_id, -1) == -1)
+			sound_pool_map.put(sound_id, sound_pool.load(com.kobaj.math.Constants.context, sound_id, 1));
 	}
 	
 	// for loop_count: it is zero index based ;). -1 for infinite loops
