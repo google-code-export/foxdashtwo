@@ -17,8 +17,8 @@ public class NParticleManager
 		 */
 		if(type == EnumParticleType.floating_dust)
 		{
-			emitter.direction_end = 270;
-			emitter.direction_start = 270;
+			emitter.direction_start = 240;
+			emitter.direction_end = 300;
 			emitter.fade_in = 500;
 			emitter.fade_out = 500;
 			emitter.is_affected_by_gravity = false;
@@ -29,7 +29,8 @@ public class NParticleManager
 			emitter.vary_scale = true;
 			emitter.vary_velocity = true;
 		}
-		if(type == EnumParticleType.snow)
+		
+		else if(type == EnumParticleType.snow)
 		{
 			emitter.direction_start = 225;
 			emitter.direction_end = 315;

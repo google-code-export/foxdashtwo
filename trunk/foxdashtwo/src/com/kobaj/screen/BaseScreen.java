@@ -6,7 +6,6 @@ import com.kobaj.foxdashtwo.R;
 import com.kobaj.level.EnumLayerTypes;
 import com.kobaj.math.Constants;
 import com.kobaj.opengldrawable.EnumDrawFrom;
-import com.kobaj.opengldrawable.Quad.Quad;
 import com.kobaj.opengldrawable.Quad.QuadCompressed;
 import com.kobaj.opengldrawable.Tween.EnumTweenEvent;
 import com.kobaj.opengldrawable.Tween.TweenEvent;
@@ -16,9 +15,12 @@ public abstract class BaseScreen implements Runnable
 {
 	public EnumScreenState current_state = EnumScreenState.not_started;
 	
-	protected Quad black_overlay;
+	protected QuadCompressed black_overlay_fade;
+	protected QuadCompressed color_overlay;
 	protected TweenManager tween_fade_in;
 	protected TweenManager tween_fade_out;
+	
+	protected final int fade_delay = 250;
 	
 	private EnumScreenState previous_state = EnumScreenState.not_started;
 	
@@ -34,29 +36,40 @@ public abstract class BaseScreen implements Runnable
 	
 	public final void onUnInitialize()
 	{
-		current_state = EnumScreenState.unload;
-		
-		// unload everything
-		black_overlay.onUnInitialize();
-		onUnload();
-		
-		current_state = EnumScreenState.stopped;
+		try
+		{
+			current_state = EnumScreenState.unload;
+			
+			// unload everything
+			black_overlay_fade.onUnInitialize();
+			color_overlay.onUnInitialize();
+			onUnload();
+			
+			current_state = EnumScreenState.stopped;
+		}
+		catch (NullPointerException e)
+		{
+			// do nothing
+		}
 	}
 	
 	public void run()
 	{
 		// nice overlay for fade in and out
-		black_overlay = new QuadCompressed(R.raw.white, R.raw.white, Constants.width, Constants.height);
-		black_overlay.setXYPos(0, 0, EnumDrawFrom.center);
-		black_overlay.color = Color.BLACK;
+		black_overlay_fade = new QuadCompressed(R.raw.white, R.raw.white, Constants.width, Constants.height);
+		black_overlay_fade.setXYPos(0, 0, EnumDrawFrom.center);
+		black_overlay_fade.color = Color.BLACK;
 		
-		int fade_delay = 200;
-		tween_fade_in = new TweenManager(black_overlay, new TweenEvent(EnumTweenEvent.color, 0, 0, Color.BLACK), //
+		tween_fade_in = new TweenManager(black_overlay_fade, new TweenEvent(EnumTweenEvent.color, 0, 0, Color.BLACK), //
 				fade_delay, // ms fade in.
 				new TweenEvent(EnumTweenEvent.color, 0, 0, Color.TRANSPARENT));
-		tween_fade_out = new TweenManager(black_overlay, new TweenEvent(EnumTweenEvent.color, 0, 0, Color.TRANSPARENT), //
+		tween_fade_out = new TweenManager(black_overlay_fade, new TweenEvent(EnumTweenEvent.color, 0, 0, Color.TRANSPARENT), //
 				fade_delay, //
 				new TweenEvent(EnumTweenEvent.color, 0, 0, Color.BLACK));
+		
+		color_overlay = new QuadCompressed(R.raw.white, R.raw.white, Constants.width, Constants.height);
+		color_overlay.setXYPos(0, 0, EnumDrawFrom.center);
+		color_overlay.color = Color.BLACK;
 		
 		// load everything else.
 		onLoad();

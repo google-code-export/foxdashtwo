@@ -29,7 +29,7 @@ public class UserSettings
 	public static boolean send_statistics = true;
 	
 	@Element
-	public static int max_fps = 45;
+	public static int max_fps = 60;
 	
 	public static void zoom(double value)
 	{

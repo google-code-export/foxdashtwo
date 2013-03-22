@@ -12,7 +12,6 @@ import android.graphics.Color;
 import com.kobaj.account_settings.SinglePlayerSave;
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.level.LevelEventTypes.EnumLevelEvent;
-import com.kobaj.level.LevelEventTypes.LevelEventTransportPlayer;
 import com.kobaj.level.LevelTypeLight.LevelAmbientLight;
 import com.kobaj.level.LevelTypeLight.LevelBloomLight;
 import com.kobaj.level.LevelTypeLight.LevelCustomLight;
@@ -33,6 +32,9 @@ import com.kobaj.opengldrawable.Quad.QuadCompressed;
 
 public class Level
 {
+	// do not rely on this as an indication of death
+	public boolean kill = false;
+	
 	@Element
 	public int backdrop_color;
 	private Quad my_backdrop = null;
@@ -96,10 +98,6 @@ public class Level
 			my_backdrop.color = backdrop_color;
 		}
 		
-		// pre-player
-		double x_player = Functions.screenXToShaderX(player.x_pos);
-		double y_player = Functions.screenYToShaderY(player.y_pos);
-		
 		// setup general objects
 		local_np_emitter.clear();
 		physics_objects.clear();
@@ -132,18 +130,21 @@ public class Level
 		// setup events
 		for (int i = event_list.size() - 1; i >= 0; i--)
 		{
-			event_list.get(i).onInitialize(player, object_list, light_list);
-			if (event_list.get(i).this_event == EnumLevelEvent.send_to_start)
-				LevelEventTransportPlayer.class.cast(event_list.get(i).my_possible_event).setTransportTo(x_player, y_player);
-			else if (event_list.get(i).this_event == EnumLevelEvent.invisible_wall)
+			LevelEvent current_event = event_list.get(i);
+			
+			current_event.onInitialize(this);
+			// if (event_list.get(i).this_event == EnumLevelEvent.send_to_start)
+			// LevelEventTransportPlayer.class.cast(event_list.get(i).my_possible_event).setTransportTo(x_player, y_player);
+			if (current_event.this_event == EnumLevelEvent.invisible_wall ||
+					current_event.this_event == EnumLevelEvent.color)
 			{
 				LevelEvent original = event_list.get(i);
 				
 				LevelObject temp = new LevelObject();
+				
 				temp.active = true;
 				temp.degree = 0;
 				temp.scale = 1;
-				temp.this_object = EnumLevelObject.transparent;
 				temp.id = original.id;
 				temp.x_pos = original.x_pos + original.width / 2.0;
 				temp.y_pos = original.y_pos - original.height / 2.0;
@@ -152,7 +153,30 @@ public class Level
 				temp.z_plane = 5;
 				temp.layer = EnumLayerTypes.Interaction;
 				
+				if(current_event.this_event == EnumLevelEvent.invisible_wall)
+					temp.this_object = EnumLevelObject.transparent;
+				else if(current_event.this_event == EnumLevelEvent.color)
+				{
+					temp.this_object = EnumLevelObject.color;
+					temp.layer = EnumLayerTypes.Top;
+				}
+				
 				temp.onInitialize();
+				
+				if(current_event.this_event == EnumLevelEvent.color)
+				{
+					if(!current_event.id_strings.isEmpty())
+					{
+						try
+						{
+							temp.quad_object.color = Integer.valueOf(current_event.id_strings.get(0));
+						}
+						catch(NumberFormatException e)
+						{
+							temp.quad_object.color = Color.BLACK;
+						}
+					}
+				}
 				
 				object_list.add(temp);
 				event_list.remove(i);
@@ -169,24 +193,8 @@ public class Level
 		// sort the objects
 		Collections.sort(object_list, new ObjectDrawSort());
 		
-		boolean player_set = false;
-		if (SinglePlayerSave.last_checkpoint != null)
-		{
-			for (int i = event_list.size() - 1; i >= 0; i--)
-			{
-				LevelEvent event_reference = event_list.get(i);
-				for (int e = event_reference.id_strings.size() - 1; e >= 0; e--)
-					if (event_reference.id_strings.get(e).equals(SinglePlayerSave.last_checkpoint))
-					{
-						player_set = true;
-						player.quad_object.setXYPos(Functions.screenXToShaderX(event_reference.x_pos + event_reference.width / 2),
-								Functions.screenYToShaderY(event_reference.y_pos + event_reference.height / 2), EnumDrawFrom.center);
-					}
-			}
-		}
-		
-		if (!player_set)
-			player.quad_object.setXYPos(x_player, y_player, player.draw_from);
+		// player set position
+		setPlayerPosition();
 		
 		// build our hashmap (garbage?)
 		object_hash = new HashMap<EnumLayerTypes, LevelObject[]>();
@@ -226,7 +234,9 @@ public class Level
 				
 				physics_objects.add(reference);
 			}
-			if (reference.this_object == EnumLevelObject.l1_decoration_water_1)
+			
+			// and falling water drops
+			else if (reference.this_object == EnumLevelObject.l1_decoration_water_1)
 			{
 				RectF water_drop = reference.quad_object.phys_rect_list.get(0).main_rect;
 				// make a very tall collision box for the water drop
@@ -261,6 +271,32 @@ public class Level
 		
 		// sounds
 		Constants.sound.addSound(R.raw.fox_trot_2);
+	}
+	
+	public void setPlayerPosition()
+	{
+		// pre-player
+		double x_player = Functions.screenXToShaderX(player.x_pos);
+		double y_player = Functions.screenYToShaderY(player.y_pos);
+		
+		boolean player_set = false;
+		if (SinglePlayerSave.last_checkpoint != null)
+		{
+			for (int i = event_list.size() - 1; i >= 0; i--)
+			{
+				LevelEvent event_reference = event_list.get(i);
+				for (int e = event_reference.id_strings.size() - 1; e >= 0; e--)
+					if (event_reference.id_strings.get(e).equals(SinglePlayerSave.last_checkpoint))
+					{
+						player_set = true;
+						player.quad_object.setXYPos(Functions.screenXToShaderX(event_reference.x_pos + event_reference.width / 2),
+								Functions.screenYToShaderY(event_reference.y_pos + event_reference.height / 2), EnumDrawFrom.center);
+					}
+			}
+		}
+		
+		if (!player_set)
+			player.quad_object.setXYPos(x_player, y_player, player.draw_from);
 	}
 	
 	public void onUnInitialize()
@@ -382,12 +418,20 @@ public class Level
 			
 			// floating platforms
 			if (reference.this_object == EnumLevelObject.l2_ground_platform_floating_1)
+			{
 				if (player.quad_object.y_pos_shader > reference.quad_object.y_pos_shader) // remember this is the center of the object
 				{
 					player.quad_object.setXYPos(player.quad_object.x_pos_shader, player.quad_object.y_pos_shader - Constants.collision_detection_height, EnumDrawFrom.center);
 					// it would be neat to have the players velocity affect this downward push. but since we zero out the velocity upon collision, at this point, it would do nothing.
 					reference.quad_object.y_acc_shader += Constants.player_downward_platform_acc;
 				}
+			}
 		}
+	}
+	
+	public void deadReset()
+	{
+		kill = false;
+		this.setPlayerPosition();
 	}
 }

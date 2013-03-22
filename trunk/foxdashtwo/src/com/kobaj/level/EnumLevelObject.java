@@ -3,7 +3,7 @@ package com.kobaj.level;
 public enum EnumLevelObject
 {
 	/* stuff */
-	test, player, transparent,
+	test, player, transparent, color,
 	
 	/* thematic 1 */
 	big_popup, black, fox2, l1_background_cave_1, l1_background_cave_2, l1_ceiling_rocks_1, l1_ceiling_rocks_2, l1_ceiling_rocks_3, l1_decoration_fungus_1,

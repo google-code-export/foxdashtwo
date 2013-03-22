@@ -60,7 +60,8 @@ public class LevelObject extends LevelEntityActive
 	// these variables (should be in their own class, but thats besides the point)
 	// are relative to the physics objects
 	public RectFExtended y_water_drop_path;
-	//public double y_water_drop_bottom_pos_shader;
+	
+	// public double y_water_drop_bottom_pos_shader;
 	
 	public void onInitialize()
 	{
@@ -133,11 +134,11 @@ public class LevelObject extends LevelEntityActive
 		else if (this_object == EnumLevelObject.l2_ground_grassplatform_1)
 			quad_object = new QuadCompressed(R.raw.l2_ground_grassplatform_1, R.raw.l2_ground_grassplatform_1_alpha, 425, 151);
 		else if (this_object == EnumLevelObject.l2_ground_grassplatform_2)
-			quad_object = new QuadCompressed(R.raw.l2_ground_grassplatform_2, R.raw.l2_ground_grassplatform_2_alpha, 488, 273);
+			quad_object = new QuadCompressed(R.raw.l2_ground_grassplatform_2, R.raw.l2_ground_grassplatform_2_alpha, 400, 229);
 		else if (this_object == EnumLevelObject.l2_ground_grassplatform_3)
-			quad_object = new QuadCompressed(R.raw.l2_ground_grassplatform_3, R.raw.l2_ground_grassplatform_3_alpha, 489, 273);
+			quad_object = new QuadCompressed(R.raw.l2_ground_grassplatform_3, R.raw.l2_ground_grassplatform_3_alpha, 400, 229);
 		else if (this_object == EnumLevelObject.l2_ground_grassplatform_4)
-			quad_object = new QuadCompressed(R.raw.l2_ground_grassplatform_4, R.raw.l2_ground_grassplatform_4_alpha, 920, 294);
+			quad_object = new QuadCompressed(R.raw.l2_ground_grassplatform_4, R.raw.l2_ground_grassplatform_4_alpha, 683, 242);
 		else if (this_object == EnumLevelObject.l2_ground_greenplatform_1)
 			quad_object = new QuadCompressed(R.raw.l2_ground_greenplatform_1, R.raw.l2_ground_greenplatform_1_alpha, 205, 77);
 		else if (this_object == EnumLevelObject.l2_ground_greenplatform_2)
@@ -302,17 +303,14 @@ public class LevelObject extends LevelEntityActive
 		/* everything else */
 		else if (this_object == EnumLevelObject.transparent)
 			quad_object = new QuadCompressed(R.raw.transparent, R.raw.transparent, (int) my_width, (int) my_height);
+		else if (this_object == EnumLevelObject.color)
+			quad_object = new QuadCompressed(R.raw.white, R.raw.white, (int) my_width, (int) my_height);
 		else if (this_object == EnumLevelObject.test)
 			quad_object = new QuadColorShape(0, 200, 200, 0, Color.WHITE, 0);
 		else
 			quad_object = new QuadColorShape(0, 200, 200, 0, Color.RED, 0);
 		
-		// quad_object.setZPos(quad_object.z_pos - (z_plane * Constants.z_modifier));
-		
-		// note how these are set AFTER
-		this.x_pos_shader = quad_object.x_pos_shader;
-		this.y_pos_shader = quad_object.y_pos_shader;
-		
+		// set these before
 		my_width = quad_object.width;
 		my_height = quad_object.height;
 		
@@ -321,6 +319,10 @@ public class LevelObject extends LevelEntityActive
 		scale = ((double) width) / ((double) my_width);
 		if (scale <= 0)
 			scale = 1;
+		
+		// note how these are set AFTER
+		this.x_pos_shader = quad_object.x_pos_shader;
+		this.y_pos_shader = quad_object.y_pos_shader;
 		
 		quad_object.reverseLeftRight(this.mirror_left_right);
 		quad_object.reverseUpDown(this.mirror_up_down);

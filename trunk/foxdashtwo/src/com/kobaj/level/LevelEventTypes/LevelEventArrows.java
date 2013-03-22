@@ -5,8 +5,7 @@ import java.util.ArrayList;
 import com.kobaj.account_settings.UserSettings;
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.input.InputType.EnumInputType;
-import com.kobaj.level.LevelObject;
-import com.kobaj.level.LevelTypeLight.LevelAmbientLight;
+import com.kobaj.level.Level;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.EnumDrawFrom;
@@ -32,9 +31,9 @@ public class LevelEventArrows extends LevelEventBase
 	}
 	
 	@Override
-	public void onInitialize(LevelObject player, ArrayList<LevelObject> objects, ArrayList<LevelAmbientLight> lights, ArrayList<String> id_strings)
+	public void onInitialize(final Level level, final ArrayList<String> id_strings)
 	{
-		super.onInitialize(player, objects, lights, id_strings);
+		super.onInitialize(level, id_strings);
 		
 		my_draw = new QuadCompressed(R.raw.right_arrow, R.raw.right_arrow_alpha, 112, 200);
 		secondary_draw = new QuadCompressed(R.raw.right_arrow, R.raw.right_arrow_alpha, 112, 200);
