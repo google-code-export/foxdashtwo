@@ -1,5 +1,6 @@
 package com.kobaj.screen;
 
+import android.graphics.Color;
 import android.util.Log;
 
 import com.kobaj.account_settings.SinglePlayerSave;
@@ -19,6 +20,14 @@ import com.kobaj.screen.screenaddons.floatingframe.BasePauseScreen;
 
 public class SinglePlayerScreen extends BaseScreen
 {
+	// handling death
+	public enum EnumDeathStages
+	{
+		alive, kill, fade_to_black, dead, fade_to_color
+	};
+	
+	public EnumDeathStages current_death_stage = EnumDeathStages.alive;
+	
 	// modification of input
 	private GameInputModifier my_modifier;
 	
@@ -33,6 +42,7 @@ public class SinglePlayerScreen extends BaseScreen
 	
 	// wheather to fade and what to fade to.
 	public boolean fade_in = true;
+	public boolean fade_out = false;
 	
 	public SinglePlayerScreen()
 	{
@@ -159,16 +169,50 @@ public class SinglePlayerScreen extends BaseScreen
 		// update all our objects and lights and things
 		the_level.onUpdate(delta);
 		
-		// interaction
+		// interaction and player
 		interaction_addon.onUpdate(delta, my_modifier, the_level);
 		
 		getPlayerPosition();
 		
-		// debug_addon.onUpdate(delta, test_level);
-		
 		// regardless we fade in
 		if (fade_in)
+		{
 			fade_in = tween_fade_in.onUpdate(delta);
+			if (fade_in == false)
+				tween_fade_in.reset();
+		}
+		
+		
+		if(fade_out)
+		{
+			fade_out = tween_fade_out.onUpdate(delta);
+			if(fade_out == false)
+				tween_fade_out.reset();
+		}
+		
+		// handle death events
+		if(this.current_death_stage == EnumDeathStages.alive)
+		{
+			if(the_level.kill)
+				this.current_death_stage = EnumDeathStages.kill;
+		}
+		else if(this.current_death_stage == EnumDeathStages.kill)
+		{
+			this.current_death_stage = EnumDeathStages.fade_to_black;
+			fade_out = true;
+		}
+		else if(this.current_death_stage == EnumDeathStages.fade_to_black && fade_out == false)
+			this.current_death_stage = EnumDeathStages.dead;
+		else if(this.current_death_stage == EnumDeathStages.dead)
+		{
+			the_level.deadReset();
+			this.current_death_stage = EnumDeathStages.fade_to_color;
+			fade_in = true;
+		}
+		else if(this.current_death_stage == EnumDeathStages.fade_to_color && fade_in == false)
+			this.current_death_stage = EnumDeathStages.alive;
+		
+		// debug_addon.onUpdate(delta, test_level);
 	}
 	
 	private void getPlayerPosition()
@@ -211,15 +255,21 @@ public class SinglePlayerScreen extends BaseScreen
 	{
 		the_level.onDrawConstant();
 		
+		// cover everything up
+		if (fade_in || fade_out) //yes this is correct
+			black_overlay_fade.onDrawAmbient(Constants.my_ip_matrix, true);
+		
+		if(this.current_death_stage == EnumDeathStages.dead)
+		{
+			color_overlay.color = Color.BLACK;
+			color_overlay.onDrawAmbient(Constants.my_ip_matrix, true);
+		}
+		
 		// draw the controls
 		if (current_state != EnumScreenState.paused)
 			my_modifier.onDraw();
 		else
 			pause_addon.onDraw();
-		
-		// finally
-		if (fade_in)
-			black_overlay.onDrawAmbient(Constants.my_ip_matrix, true);
 	}
 	
 	@Override

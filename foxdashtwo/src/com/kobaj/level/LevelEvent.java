@@ -10,9 +10,8 @@ import com.kobaj.level.LevelEventTypes.LevelEventActive;
 import com.kobaj.level.LevelEventTypes.LevelEventArrows;
 import com.kobaj.level.LevelEventTypes.LevelEventBase;
 import com.kobaj.level.LevelEventTypes.LevelEventCheckPoint;
+import com.kobaj.level.LevelEventTypes.LevelEventDeath;
 import com.kobaj.level.LevelEventTypes.LevelEventNextLevel;
-import com.kobaj.level.LevelEventTypes.LevelEventTransportPlayer;
-import com.kobaj.level.LevelTypeLight.LevelAmbientLight;
 import com.kobaj.math.Functions;
 import com.kobaj.math.android.RectF;
 
@@ -40,10 +39,10 @@ public class LevelEvent
 	
 	protected LevelObject player_cache;
 	
-	public void onInitialize(LevelObject player, ArrayList<LevelObject> objects, ArrayList<LevelAmbientLight> lights)
-	{		
-		//nice reference to our player
-		player_cache = player;
+	public void onInitialize(final Level level)
+	{
+		// nice reference to our player
+		player_cache = level.player;
 		
 		// bottom left
 		my_collision_rect = new RectF((float) Functions.screenXToShaderX(x_pos), (float) (Functions.screenYToShaderY(y_pos + height)), (float) (Functions.screenXToShaderX(x_pos + width)),
@@ -51,21 +50,18 @@ public class LevelEvent
 		
 		if (this_event == EnumLevelEvent.left_arrow || this_event == EnumLevelEvent.right_arrow || this_event == EnumLevelEvent.up_arrows)
 			my_possible_event = new LevelEventArrows(this_event);
-		else if (this_event == EnumLevelEvent.send_to_start)
-			my_possible_event = new LevelEventTransportPlayer(this_event);
-		else if (this_event == EnumLevelEvent.active_off ||
-				 this_event == EnumLevelEvent.active_on ||
-				 this_event == EnumLevelEvent.active_anti_touch ||
-				 this_event == EnumLevelEvent.active_touch ||
-				 this_event == EnumLevelEvent.active_toggle)
+		else if (this_event == EnumLevelEvent.active_off || this_event == EnumLevelEvent.active_on || this_event == EnumLevelEvent.active_anti_touch || this_event == EnumLevelEvent.active_touch
+				|| this_event == EnumLevelEvent.active_toggle)
 			my_possible_event = new LevelEventActive(this_event);
-		else if(this_event == EnumLevelEvent.next_level)
+		else if (this_event == EnumLevelEvent.next_level)
 			my_possible_event = new LevelEventNextLevel(this_event);
-		else if(this_event == EnumLevelEvent.checkpoint)
+		else if (this_event == EnumLevelEvent.checkpoint)
 			my_possible_event = new LevelEventCheckPoint(this_event);
+		else if (this_event == EnumLevelEvent.death)
+			my_possible_event = new LevelEventDeath(this_event);
 		
 		if (my_possible_event != null)
-			my_possible_event.onInitialize(player, objects, lights, id_strings);
+			my_possible_event.onInitialize(level, id_strings);
 	}
 	
 	public void onUpdate(double delta)
@@ -79,7 +75,7 @@ public class LevelEvent
 					active = true;
 					break;
 				}
-		
+			
 			my_possible_event.onUpdate(delta, active);
 		}
 	}

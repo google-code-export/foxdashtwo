@@ -182,6 +182,7 @@ public class Functions
 		return false;
 	}
 	
+	// shader coords
 	public static final boolean onShader(RectFExtended objects)
 	{
 		updateShaderRectFView();
@@ -207,7 +208,6 @@ public class Functions
 			shader_rectf_view.top = (float) (1 + Constants.y_shader_translation + Constants.z_shader_translation);
 			shader_rectf_view.right = (float) (Constants.ratio + Constants.x_shader_translation + neg_zoom);
 			shader_rectf_view.bottom = (float) (-1 + Constants.y_shader_translation - Constants.z_shader_translation);
-			
 		}
 	}
 	
@@ -321,7 +321,7 @@ public class Functions
 			z_camera = min_z_value;
 		if (z_camera > max_z_value)
 			z_camera = max_z_value;
-		
+	
 		if (x_camera == Constants.x_shader_translation && y_camera == Constants.y_shader_translation && z_camera == Constants.z_shader_translation)
 		{
 			camera_changed = false;

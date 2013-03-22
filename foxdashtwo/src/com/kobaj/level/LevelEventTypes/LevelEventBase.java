@@ -2,6 +2,7 @@ package com.kobaj.level.LevelEventTypes;
 
 import java.util.ArrayList;
 
+import com.kobaj.level.Level;
 import com.kobaj.level.LevelObject;
 import com.kobaj.level.LevelTypeLight.LevelAmbientLight;
 
@@ -19,11 +20,11 @@ public abstract class LevelEventBase
 		this_event = type;
 	}
 	
-	public void onInitialize(final LevelObject player, final ArrayList<LevelObject> objects, final ArrayList<LevelAmbientLight> lights, final ArrayList<String> affected_strings)
+	public void onInitialize(final Level level, final ArrayList<String> affected_strings)
 	{
-		player_cache = player;
-		object_cache = objects;
-		light_cache = lights;
+		player_cache = level.player;
+		object_cache = level.object_list;
+		light_cache = level.light_list;
 		id_cache = affected_strings;
 	}
 	

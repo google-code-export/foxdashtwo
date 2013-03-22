@@ -149,7 +149,14 @@ public class GLBitmapReader
 				GLLoadedTexture loaded_item = loaded_textures.get(resource);
 				if (loaded_item != null)
 				{
-					loading_list.set(my_index, true);
+					try
+					{
+						loading_list.set(my_index, true);
+					}
+					catch(IndexOutOfBoundsException e)
+					{
+						//do nothing
+					}	
 					return;
 				}
 				
@@ -166,7 +173,14 @@ public class GLBitmapReader
 				// save in our sources
 				loaded_textures.put(resource, load);
 				
-				loading_list.set(my_index, true);
+				try
+				{
+					loading_list.set(my_index, true);
+				}
+				catch(IndexOutOfBoundsException e)
+				{
+					//do nothing
+				}
 			}
 		});
 	}

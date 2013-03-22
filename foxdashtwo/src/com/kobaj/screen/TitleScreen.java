@@ -273,7 +273,7 @@ public class TitleScreen extends BaseScreen
 		}
 		
 		if (fade_in || fade_play)
-			black_overlay.onDrawAmbient(Constants.my_ip_matrix, true);
+			black_overlay_fade.onDrawAmbient(Constants.my_ip_matrix, true);
 	}
 	
 	@Override

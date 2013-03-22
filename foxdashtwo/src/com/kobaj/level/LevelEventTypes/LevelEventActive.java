@@ -2,6 +2,7 @@ package com.kobaj.level.LevelEventTypes;
 
 import java.util.ArrayList;
 
+import com.kobaj.level.Level;
 import com.kobaj.level.LevelEntityActive;
 import com.kobaj.level.LevelObject;
 import com.kobaj.level.LevelTypeLight.LevelAmbientLight;
@@ -19,9 +20,9 @@ public class LevelEventActive extends LevelEventBase
 	}
 	
 	@Override
-	public void onInitialize(LevelObject player, ArrayList<LevelObject> objects, ArrayList<LevelAmbientLight> lights, ArrayList<String> id_strings)
+	public void onInitialize(final Level level, final ArrayList<String> id_strings)
 	{
-		super.onInitialize(player, objects, lights, id_strings);
+		super.onInitialize(level, id_strings);
 		
 		matching_entity_cache = new ArrayList<LevelEntityActive>();
 		
@@ -86,5 +87,4 @@ public class LevelEventActive extends LevelEventBase
 		// finally swap activity
 		old_active = active;
 	}
-	
 }

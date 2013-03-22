@@ -185,16 +185,21 @@ public class BaseInteractionPhysics
 		// restrict camera movement
 		double x_buffer = Constants.ratio * Constants.z_shader_translation;
 		
-		// DO NOT ALTER
-		if (x_camera < test_level.left_shader_limit + x_buffer)
-			x_camera = test_level.left_shader_limit + x_buffer;
-		else if (x_camera > test_level.right_shader_limit - x_buffer)
-			x_camera = test_level.right_shader_limit - x_buffer;
+		double left_level_limit = test_level.left_shader_limit + x_buffer;
+		double right_level_limit = test_level.right_shader_limit - x_buffer;
+		double top_level_limit = test_level.top_shader_limit - Constants.z_shader_translation;
+		double bottom_level_limit = test_level.bottom_shader_limit + Constants.z_shader_translation;
 		
-		if (y_camera > test_level.top_shader_limit - Constants.z_shader_translation)
-			y_camera = test_level.top_shader_limit - Constants.z_shader_translation;
-		else if (y_camera < test_level.bottom_shader_limit + Constants.z_shader_translation)
-			y_camera = test_level.bottom_shader_limit + Constants.z_shader_translation;
+		// DO NOT ALTER
+		if (x_camera < left_level_limit)
+			x_camera = left_level_limit;
+		else if (x_camera > right_level_limit)
+			x_camera = right_level_limit;
+		
+		if (y_camera > top_level_limit)
+			y_camera = top_level_limit;
+		else if (y_camera < bottom_level_limit)
+			y_camera = bottom_level_limit;
 		
 		// update the camera zoom effect
 		double buffer = (float) Functions.linearInterpolate(//
