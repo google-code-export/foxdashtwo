@@ -1,11 +1,19 @@
 package com.kobaj.opengl;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.ShortBuffer;
+
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import android.graphics.Bitmap;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
+import android.os.Environment;
 import android.os.SystemClock;
 import android.util.Log;
 
@@ -158,6 +166,9 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 			
 			// draw everything!!
 			onDraw();
+			
+			if(slowmo)
+				screenshots();
 		}
 		catch (NullPointerException e)
 		{
@@ -199,12 +210,61 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 	
 	protected abstract void onDraw();
 	
+	public static boolean slowmo = false;
+	
+	public int screenshot_number = 0;
+	public void screenshots()
+	{
+		int size = Constants.width * Constants.height;
+		ByteBuffer buf = ByteBuffer.allocateDirect(size * 4);
+		buf.order(ByteOrder.nativeOrder());
+		GLES20.glReadPixels(0, 0, Constants.width, Constants.height, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, buf);
+		int data[] = new int[size];
+		buf.asIntBuffer().get(data);
+		buf = null;
+		Bitmap bitmap = Bitmap.createBitmap(Constants.width, Constants.height, Bitmap.Config.RGB_565);
+		bitmap.setPixels(data, size - Constants.width, -Constants.width, 0, 0, Constants.width, Constants.height);
+		data = null;
+		
+		short sdata[] = new short[size * 4];
+		ShortBuffer sbuf = ShortBuffer.wrap(sdata);
+		bitmap.copyPixelsToBuffer(sbuf);
+		for (int i = 0; i < size; ++i)
+		{
+			// BGR-565 to RGB-565
+			short v = sdata[i];
+			sdata[i] = (short) (((v & 0x1f) << 11) | (v & 0x7e0) | ((v & 0xf800) >> 11));
+		}
+		sbuf.rewind();
+		bitmap.copyPixelsFromBuffer(sbuf);
+		
+		try
+		{
+			File sdCard = Environment.getExternalStorageDirectory();
+			File dir = new File(sdCard.getAbsolutePath() + "/foxdashtwo/screenshots");
+			dir.mkdirs();
+			
+			FileOutputStream fos = new FileOutputStream(dir.getAbsolutePath() + "/screeshot_" + String.valueOf(screenshot_number) + ".png");
+			screenshot_number++;
+			bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+			fos.flush();
+			fos.close();
+		}
+		catch (Exception e)
+		{
+			// handle
+		}
+	}
+	
 	public void onUpdateFrame()
 	{
 		// might put fps here.
 		fps.onUpdate(SystemClock.uptimeMillis());
 		
-		onUpdate(fps.getDelta());
+		double delta = fps.getDelta() / 1.0;
+		if (slowmo)
+			delta /= 3.0;
+		onUpdate(delta);
 	}
 	
 	protected abstract void onUpdate(double delta);

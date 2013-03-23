@@ -122,12 +122,12 @@ public class Functions
 	// really you should not go from shader to screen
 	public static final double shaderXToScreenX(double input_x)
 	{
-		return linearInterpolateUnclamped(-Constants.ratio, Constants.ratio, input_x, 0, Constants.width);
+		return linearInterpolateUnclamped(shader_rectf_view_no_translation.left, shader_rectf_view_no_translation.right, input_x, 0, Constants.width);
 	}
 	
 	public static final double shaderYToScreenY(double input_y)
 	{
-		return linearInterpolateUnclamped(-1, 1, input_y, 0, Constants.height);
+		return linearInterpolateUnclamped(shader_rectf_view_no_translation.bottom, shader_rectf_view_no_translation.top, input_y, 0, Constants.height);
 	}
 	
 	public static final double shaderWidthToScreenWidth(double input_x)
@@ -195,6 +195,7 @@ public class Functions
 	
 	// helper method for the above so the two onShaders are consistent.
 	public static RectF shader_rectf_view = new RectF();
+	public static RectF shader_rectf_view_no_translation = new RectF();
 	
 	protected static final void updateShaderRectFView()
 	{
@@ -204,10 +205,15 @@ public class Functions
 			
 			final double neg_zoom = Constants.ratio * Constants.z_shader_translation;
 			
-			shader_rectf_view.left = (float) (-Constants.ratio + Constants.x_shader_translation - neg_zoom);
-			shader_rectf_view.top = (float) (1 + Constants.y_shader_translation + Constants.z_shader_translation);
-			shader_rectf_view.right = (float) (Constants.ratio + Constants.x_shader_translation + neg_zoom);
-			shader_rectf_view.bottom = (float) (-1 + Constants.y_shader_translation - Constants.z_shader_translation);
+			shader_rectf_view_no_translation.left = (float) (-Constants.ratio - neg_zoom);
+			shader_rectf_view_no_translation.top = (float) (1 + Constants.z_shader_translation);
+			shader_rectf_view_no_translation.right = (float) (Constants.ratio + neg_zoom);
+			shader_rectf_view_no_translation.bottom = (float) (-1 - Constants.z_shader_translation);
+			
+			shader_rectf_view.left = (float) (shader_rectf_view_no_translation.left + Constants.x_shader_translation);
+			shader_rectf_view.top = (float) (shader_rectf_view_no_translation.top + Constants.y_shader_translation);
+			shader_rectf_view.right = (float) (shader_rectf_view_no_translation.right + Constants.x_shader_translation);
+			shader_rectf_view.bottom = (float) (shader_rectf_view_no_translation.bottom + Constants.y_shader_translation);
 		}
 	}
 	
@@ -672,5 +678,7 @@ public class Functions
 		
 		Constants.player_downward_platform_acc = Functions.screenHeightToShaderHeight(Constants.player_downward_platform_acc_default);
 		Constants.player_movement_threshold = Functions.screenWidthToShaderWidth(Constants.player_movement_threshold_default);
+	
+		Constants.shadow_height_shader = Functions.screenHeightToShaderHeight(Constants.shadow_height);
 	}
 }

@@ -13,6 +13,7 @@ import com.kobaj.loader.FileHandler;
 import com.kobaj.loader.GLBitmapReader;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
+import com.kobaj.opengl.MyGLRender;
 import com.kobaj.screen.screenaddons.BaseInteractionPhysics;
 import com.kobaj.screen.screenaddons.BaseLoadingScreen;
 import com.kobaj.screen.screenaddons.LevelDebugScreen;
@@ -156,12 +157,15 @@ public class SinglePlayerScreen extends BaseScreen
 				Constants.input_manager.getKeyPressed(EnumKeyCodes.search)) //
 		{
 			// this is possible because onUpdate is only called when in two states, running or paused
-			if (current_state != EnumScreenState.paused)
+		/*	if (current_state != EnumScreenState.paused)
 			{
 				pause_addon.reset();
 				current_state = EnumScreenState.paused;
-			}
+			}*/
+			
+			MyGLRender.slowmo = !MyGLRender.slowmo;
 		}
+		
 	}
 	
 	private void onRunningUpdate(double delta)
@@ -182,34 +186,33 @@ public class SinglePlayerScreen extends BaseScreen
 				tween_fade_in.reset();
 		}
 		
-		
-		if(fade_out)
+		if (fade_out)
 		{
 			fade_out = tween_fade_out.onUpdate(delta);
-			if(fade_out == false)
+			if (fade_out == false)
 				tween_fade_out.reset();
 		}
 		
 		// handle death events
-		if(this.current_death_stage == EnumDeathStages.alive)
+		if (this.current_death_stage == EnumDeathStages.alive)
 		{
-			if(the_level.kill)
+			if (the_level.kill)
 				this.current_death_stage = EnumDeathStages.kill;
 		}
-		else if(this.current_death_stage == EnumDeathStages.kill)
+		else if (this.current_death_stage == EnumDeathStages.kill)
 		{
 			this.current_death_stage = EnumDeathStages.fade_to_black;
 			fade_out = true;
 		}
-		else if(this.current_death_stage == EnumDeathStages.fade_to_black && fade_out == false)
+		else if (this.current_death_stage == EnumDeathStages.fade_to_black && fade_out == false)
 			this.current_death_stage = EnumDeathStages.dead;
-		else if(this.current_death_stage == EnumDeathStages.dead)
+		else if (this.current_death_stage == EnumDeathStages.dead)
 		{
 			the_level.deadReset();
 			this.current_death_stage = EnumDeathStages.fade_to_color;
 			fade_in = true;
 		}
-		else if(this.current_death_stage == EnumDeathStages.fade_to_color && fade_in == false)
+		else if (this.current_death_stage == EnumDeathStages.fade_to_color && fade_in == false)
 			this.current_death_stage = EnumDeathStages.alive;
 		
 		// debug_addon.onUpdate(delta, test_level);
@@ -225,14 +228,14 @@ public class SinglePlayerScreen extends BaseScreen
 		// first do x
 		double player_x = the_level.player.quad_object.x_pos_shader;
 		double screen_x = Constants.x_shader_translation;
-		double shift_x = Functions.shaderXToScreenX(player_x - screen_x); // will be zero if in the middle of the screen.
+		double shift_x = Functions.shaderXToScreenX((player_x - screen_x)); // will be zero if in the middle of the screen.
 		
 		this.player_stats[0] = shift_x;
-		this.player_stats[1] = interaction_addon.player_shadow_y; // initialize to off screen.
+		this.player_stats[1] = interaction_addon.player_shadow_y;// +
 		
 		// finally recalculate radius to account for distance between fox and ground
 		double distance = Functions.distanceSquared(0, interaction_addon.player_extended.top, 0, interaction_addon.player_shadow_scale);
-		double multiplier = Functions.linearInterpolate(0, Functions.screenHeightToShaderHeight(Constants.shadow_height), distance, 1, 0) + .01;
+		double multiplier = Functions.linearInterpolate(0, Constants.shadow_height_shader, distance, 1, 0) + .01;
 		this.player_stats[2] *= multiplier;
 	}
 	
@@ -256,10 +259,10 @@ public class SinglePlayerScreen extends BaseScreen
 		the_level.onDrawConstant();
 		
 		// cover everything up
-		if (fade_in || fade_out) //yes this is correct
+		if (fade_in || fade_out) // yes this is correct
 			black_overlay_fade.onDrawAmbient(Constants.my_ip_matrix, true);
 		
-		if(this.current_death_stage == EnumDeathStages.dead)
+		if (this.current_death_stage == EnumDeathStages.dead)
 		{
 			color_overlay.color = Color.BLACK;
 			color_overlay.onDrawAmbient(Constants.my_ip_matrix, true);
