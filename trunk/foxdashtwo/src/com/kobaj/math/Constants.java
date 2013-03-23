@@ -59,6 +59,7 @@ public class Constants
 	// other pretty constants
 	public static final double shadow_radius = 50.0;
 	public static final double shadow_height = 450;
+	public static double shadow_height_shader;
 	
 	// physics constants
 	public static final double gravity_default = 0.000800;
@@ -153,7 +154,7 @@ public class Constants
 	public static ShadowLightShader shadow_light;
 	
 	// metrics
-	public static boolean draw_fps = true;
+	public static boolean draw_fps = false;
 	public static int quads_drawn_screen = 0;
 	
 	// errors
