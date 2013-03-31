@@ -166,9 +166,6 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 			
 			// draw everything!!
 			onDraw();
-			
-			if(slowmo)
-				screenshots();
 		}
 		catch (NullPointerException e)
 		{
@@ -263,7 +260,10 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		
 		double delta = fps.getDelta() / 1.0;
 		if (slowmo)
-			delta /= 3.0;
+		{
+			screenshots();
+			//delta /= 120.0;
+		}
 		onUpdate(delta);
 	}
 	

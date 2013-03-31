@@ -292,7 +292,6 @@ public class Text
 			// optimize the gets
 			Quad temp = bitmap_buffer.get(resource_value);
 			
-			temp.color = color;
 			if (temp.degree != degree)
 				temp.setRotationZ(degree);
 			temp.setXYPos(x, y, where);

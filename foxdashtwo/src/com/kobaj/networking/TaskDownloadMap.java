@@ -1,8 +1,8 @@
 package com.kobaj.networking;
 
-import org.json.JSONObject;
+import java.util.HashMap;
 
-import android.net.Uri;
+import org.json.JSONObject;
 
 import com.kobaj.account_settings.UserSettings;
 import com.kobaj.loader.FileHandler;
@@ -33,19 +33,18 @@ public class TaskDownloadMap extends MyTask
 		// modify the url
 		if (attributes.length == 1)
 		{
-			Uri.Builder b = Uri.parse(NetworkManager.server).buildUpon();
+			HashMap<String, String> url_helper = new HashMap<String, String>();
+			url_helper.put(NetworkManager.url_file, "shared.php");
+			url_helper.put(NetworkManager.url_action, "download_xml");
 			
-			b.path(NetworkManager.php_extension + "/shared.php");
+			url_helper.put("lid", attributes[0]);
 			
-			b.appendQueryParameter("action", "download_xml");
-			b.appendQueryParameter("lid", attributes[0]);
+			if (UserSettings.send_statistics)
+				url_helper.put("iso3", Constants.resources.getConfiguration().locale.getISO3Country());
 			
-			if(UserSettings.send_statistics)
-				b.appendQueryParameter("iso3", Constants.resources.getConfiguration().locale.getISO3Country());
+			the_url = NetworkManager.genericUrlBuilder(url_helper);
 			
 			this.lid = Integer.valueOf(attributes[0]);
-			
-			the_url = b.build().toString();
 		}
 		
 		return the_url;

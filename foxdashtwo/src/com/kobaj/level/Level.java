@@ -7,6 +7,7 @@ import java.util.HashMap;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 
 import com.kobaj.account_settings.SinglePlayerSave;
@@ -46,6 +47,9 @@ public class Level
 	public long changed;
 	
 	@Element
+	public long download_time;
+	
+	@Element
 	public int lid;
 	
 	@Element
@@ -56,6 +60,11 @@ public class Level
 	public int right_limit;
 	@Element
 	public int bottom_limit;
+	
+	@Element
+	public double background_parallax_ratio;
+	@Element
+	public double foreground_parallax_ratio;
 	
 	public double left_shader_limit;
 	public double top_shader_limit;
@@ -83,6 +92,10 @@ public class Level
 	
 	// and our local particles
 	private ArrayList<NParticleEmitter> local_np_emitter = new ArrayList<NParticleEmitter>();
+	
+	// walking sounds
+	private final double walking_max = 600;
+	private double walking_timeout = 0;
 	
 	// no constructor
 	
@@ -135,8 +148,7 @@ public class Level
 			current_event.onInitialize(this);
 			// if (event_list.get(i).this_event == EnumLevelEvent.send_to_start)
 			// LevelEventTransportPlayer.class.cast(event_list.get(i).my_possible_event).setTransportTo(x_player, y_player);
-			if (current_event.this_event == EnumLevelEvent.invisible_wall ||
-					current_event.this_event == EnumLevelEvent.color)
+			if (current_event.this_event == EnumLevelEvent.invisible_wall || current_event.this_event == EnumLevelEvent.color)
 			{
 				LevelEvent original = event_list.get(i);
 				
@@ -153,9 +165,9 @@ public class Level
 				temp.z_plane = 5;
 				temp.layer = EnumLayerTypes.Interaction;
 				
-				if(current_event.this_event == EnumLevelEvent.invisible_wall)
+				if (current_event.this_event == EnumLevelEvent.invisible_wall)
 					temp.this_object = EnumLevelObject.transparent;
-				else if(current_event.this_event == EnumLevelEvent.color)
+				else if (current_event.this_event == EnumLevelEvent.color)
 				{
 					temp.this_object = EnumLevelObject.color;
 					temp.layer = EnumLayerTypes.Top;
@@ -163,15 +175,15 @@ public class Level
 				
 				temp.onInitialize();
 				
-				if(current_event.this_event == EnumLevelEvent.color)
+				if (current_event.this_event == EnumLevelEvent.color)
 				{
-					if(!current_event.id_strings.isEmpty())
+					if (!current_event.id_strings.isEmpty())
 					{
 						try
 						{
 							temp.quad_object.color = Integer.valueOf(current_event.id_strings.get(0));
 						}
-						catch(NumberFormatException e)
+						catch (NumberFormatException e)
 						{
 							temp.quad_object.color = Color.BLACK;
 						}
@@ -362,9 +374,7 @@ public class Level
 		}
 	}
 	
-	private final double walking_max = 600;
-	private double walking_timeout = 0;
-	
+	@SuppressLint("WrongCall")
 	public void onDrawObject(EnumLayerTypes... types)
 	{
 		// is ok, is array
@@ -400,6 +410,7 @@ public class Level
 			light_list.get(i).onDrawLight();
 	}
 	
+	@SuppressLint("WrongCall")
 	public void onDrawConstant()
 	{
 		// events

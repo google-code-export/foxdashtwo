@@ -23,7 +23,8 @@ public class LevelItem implements FinishedDownloading
 	
 	public String name;
 	public int lid;
-	public long changed_time;
+	public long changed;
+	public long download_time;
 	
 	public Button button;
 	public ProgressBar progressbar;

@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.os.AsyncTask;
+import android.util.SparseArray;
 
 import com.kobaj.loader.FileHandler;
 import com.kobaj.loader.RawTextReader;
@@ -15,6 +16,11 @@ import com.kobaj.message.download.LevelItem;
 
 public class TaskGetDownloadedMaps extends AsyncTask<Void, Void, ArrayList<LevelItem>>
 {
+	public static final String lid = "lid";
+	public static final String name = "name";
+	public static final String changed = "changed";
+	public static final String download_time = "download_time";
+	
 	public interface finishedLoading
 	{
 		void onTaskComplete(ArrayList<LevelItem> levels);
@@ -46,31 +52,34 @@ public class TaskGetDownloadedMaps extends AsyncTask<Void, Void, ArrayList<Level
 			
 			String the_level = FileHandler.readTextFile(FileHandler.download_dir, full_file);
 			
-			if(the_level == null || the_level.equals(Constants.empty))
+			if (the_level == null || the_level.equals(Constants.empty))
 				continue;
 			
-			if (the_level != null)
+			LevelItem temp = new LevelItem();
+			
+			try
 			{
-				LevelItem temp = new LevelItem();
+				temp.lid = Integer.valueOf(RawTextReader.findValueInXML(the_level, lid));
+				temp.name = RawTextReader.findValueInXML(the_level, name);
+				temp.changed = Long.valueOf(RawTextReader.findValueInXML(the_level, changed));
+				temp.download_time = Long.valueOf(RawTextReader.findValueInXML(the_level, download_time));
 				
-				try
-				{
-					temp.lid = Integer.valueOf(RawTextReader.findValueInXML(the_level, "lid"));
-					temp.name = RawTextReader.findValueInXML(the_level, "name");
-					temp.changed_time = Long.valueOf(RawTextReader.findValueInXML(the_level, "changed"));
+				temp.this_state = LevelItem.EnumButtonStates.play;
 				
-					temp.this_state = LevelItem.EnumButtonStates.play;
+				// finally add and commit
+				levels.add(temp);
 				
-					// finally add and commit
-					levels.add(temp);
-				
-					the_level = null;
-				}
-				catch(java.lang.IllegalStateException e)
-				{
-					//bad download, do nothing.
-				}
+				the_level = null;
 			}
+			catch (java.lang.NumberFormatException e)
+			{
+				// could not format, do nothing.
+			}
+			catch (java.lang.IllegalStateException e)
+			{
+				// bad download, do nothing.
+			}
+			
 		}
 		
 		checkUpdates(levels);
@@ -80,8 +89,10 @@ public class TaskGetDownloadedMaps extends AsyncTask<Void, Void, ArrayList<Level
 	
 	private void checkUpdates(ArrayList<LevelItem> levels)
 	{
-		if(levels.size() == 0)
+		if (levels.size() == 0)
 			return;
+		
+		SparseArray<Long> local_download_times = new SparseArray<Long>();
 		
 		// here we check if it needs to be updated.
 		// because this is already in async mode, we dont need another task :D!
@@ -93,18 +104,24 @@ public class TaskGetDownloadedMaps extends AsyncTask<Void, Void, ArrayList<Level
 		url_helper.put(NetworkManager.url_action, "check_xml_update");
 		
 		// build a string of lids
-		String lid_string = "";
+		String lid_string = Constants.empty;
+		String changed_string = Constants.empty;
 		for (int i = levels.size() - 1; i >= 1; i--)
-			lid_string += String.valueOf(levels.get(i).lid) + ",";
-		lid_string += String.valueOf(levels.get(0).lid);
+		{
+			LevelItem reference = levels.get(i);
+			
+			lid_string += String.valueOf(reference.lid) + ",";
+			changed_string += String.valueOf(reference.changed) + ",";
+			
+			local_download_times.put(reference.lid, reference.download_time);
+		}
+		lid_string += String.valueOf(levels.get(0).lid); // properly comma separated
+		changed_string += String.valueOf(levels.get(0).changed);
 		
-		String changed_string = "";
-		for (int i = levels.size() - 1; i >= 1; i--)
-			changed_string += String.valueOf(levels.get(i).changed_time) + ",";
-		changed_string += String.valueOf(levels.get(0).changed_time);
+		local_download_times.put(levels.get(0).lid, levels.get(0).download_time);
 		
-		url_helper.put("lid", String.valueOf(lid_string));
-		url_helper.put("changed_time", String.valueOf(changed_string));
+		url_helper.put(lid, String.valueOf(lid_string));
+		url_helper.put(changed, String.valueOf(changed_string));
 		
 		String unparsed_return = my_manager.accessNetwork(NetworkManager.genericUrlBuilder(url_helper));
 		
@@ -121,15 +138,15 @@ public class TaskGetDownloadedMaps extends AsyncTask<Void, Void, ArrayList<Level
 					try
 					{
 						JSONObject lids_n_values = json.getJSONObject(String.valueOf(temp.lid));
-					
-						if (lids_n_values.getBoolean("needs_update"))
+						
+						if (lids_n_values.getBoolean("needs_update") || local_download_times.get(temp.lid, Constants.force_update_epoch + 1) < Constants.force_update_epoch)
 						{
 							temp.this_state = LevelItem.EnumButtonStates.update;
 						}
 					}
-					catch(JSONException e)
+					catch (JSONException e)
 					{
-						//do nothing
+						// do nothing
 					}
 				}
 			}

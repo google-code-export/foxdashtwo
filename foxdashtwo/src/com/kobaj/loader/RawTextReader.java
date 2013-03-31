@@ -9,6 +9,8 @@ import java.io.InputStreamReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.kobaj.math.Constants;
+
 import android.content.Context;
 import android.util.Log;
 
@@ -16,10 +18,14 @@ public class RawTextReader
 {
 	public static String findValueInXML(String input, String tag) throws IllegalStateException
 	{
+		String name = Constants.empty;
+		
 		final Pattern pattern = Pattern.compile("<" + tag + ">(.+?)</" + tag + ">");
 		final Matcher matcher = pattern.matcher(input);
-		matcher.find();
-		String name = matcher.group(1);
+		if(matcher.find())
+		{
+			name = matcher.group(1);
+		}
 		
 		return name;
 	}

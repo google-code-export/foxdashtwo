@@ -2,7 +2,11 @@ package com.kobaj.screen.screenaddons;
 
 import java.util.ArrayList;
 
+import android.graphics.Color;
+import android.util.Log;
+
 import com.kobaj.level.Level;
+import com.kobaj.level.LevelEvent;
 import com.kobaj.math.Functions;
 import com.kobaj.math.android.RectF;
 import com.kobaj.opengldrawable.EnumDrawFrom;
@@ -30,6 +34,21 @@ public class LevelDebugScreen
 						(int) Functions.shaderXToScreenX(temp.best_fit_aabb.main_rect.right), // right
 						(int) Functions.shaderYToScreenY(temp.best_fit_aabb.main_rect.bottom), // bottom
 						0x44FF00AA, // color
+						0)); // blur
+			}
+		}
+		else if (type == EnumDebugType.events)
+		{
+			for (int i = test_level.event_list.size() - 1; i >= 0; i--)
+			{
+				LevelEvent temp = test_level.event_list.get(i);
+				
+				outline_quads.add(new QuadColorShape( // slightly inaccurate
+						(int) 0, // left
+						(int) temp.height, // top
+						(int) temp.width, // right
+						(int) 0, // bottom
+						Color.RED, // color
 						0)); // blur
 			}
 		}
@@ -101,9 +120,18 @@ public class LevelDebugScreen
 			{
 				Quad temp = test_level.object_list.get(i).quad_object;
 				Quad relative = outline_quads.get(i);
-
+				
 				relative.setXYPos(temp.x_pos_shader, temp.y_pos_shader, EnumDrawFrom.center);
 			}
+		else if (type == EnumDebugType.events)
+		{
+			for (int i = test_level.event_list.size() - 1; i >= 0; i--)
+			{
+				Quad relative = outline_quads.get(i);
+				Log.w("foxdashtwo debugger error", "Events are not always drawn in correct order");
+				relative.setXYPos(Functions.screenXToShaderX(test_level.event_list.get(i).x_pos), Functions.screenYToShaderY(test_level.event_list.get(i).y_pos), EnumDrawFrom.top_left);
+			}
+		}
 		else if (type == EnumDebugType.physics)
 			for (int i = test_level.object_list.size() - 1; i >= 0; i--)
 			{
