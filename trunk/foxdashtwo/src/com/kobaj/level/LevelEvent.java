@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
 
+import android.annotation.SuppressLint;
+
 import com.kobaj.level.LevelEventTypes.EnumLevelEvent;
 import com.kobaj.level.LevelEventTypes.LevelEventActive;
 import com.kobaj.level.LevelEventTypes.LevelEventArrows;
@@ -44,9 +46,11 @@ public class LevelEvent
 		// nice reference to our player
 		player_cache = level.player;
 		
-		// bottom left
-		my_collision_rect = new RectF((float) Functions.screenXToShaderX(x_pos), (float) (Functions.screenYToShaderY(y_pos + height)), (float) (Functions.screenXToShaderX(x_pos + width)),
-				(float) Functions.screenYToShaderY(y_pos));
+		// this is bottom left
+		my_collision_rect = new RectF((float) Functions.screenXToShaderX(x_pos), // left
+				(float) (Functions.screenYToShaderY(y_pos)), // top
+				(float) (Functions.screenXToShaderX(x_pos + width)), // right
+				(float) Functions.screenYToShaderY(y_pos - height)); // bottom
 		
 		if (this_event == EnumLevelEvent.left_arrow || this_event == EnumLevelEvent.right_arrow || this_event == EnumLevelEvent.up_arrows)
 			my_possible_event = new LevelEventArrows(this_event);
@@ -80,6 +84,7 @@ public class LevelEvent
 		}
 	}
 	
+	@SuppressLint("WrongCall")
 	public void onDraw()
 	{
 		if (my_possible_event != null)

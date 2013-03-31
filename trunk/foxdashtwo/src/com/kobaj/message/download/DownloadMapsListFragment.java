@@ -1,13 +1,13 @@
 package com.kobaj.message.download;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.text.format.DateUtils;
@@ -61,7 +61,7 @@ public class DownloadMapsListFragment extends ListFragment
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
 		View v = inflater.inflate(R.layout.download_maps_list, container, false);
-
+		
 		tabUpdate();
 		
 		setListAdapter(adapter);
@@ -169,18 +169,17 @@ class LoadFeedData extends MyTask
 		// modify the url
 		if (attributes.length == 2)
 		{
-			Uri.Builder b = Uri.parse(NetworkManager.server).buildUpon();
+			HashMap<String, String> url_helper = new HashMap<String, String>();
+			url_helper.put(NetworkManager.url_file, "game.php");
+			url_helper.put(NetworkManager.url_action, "get_map_list");
 			
-			b.path(NetworkManager.php_extension + "/game.php");
+			url_helper.put("count", attributes[0]);
+			url_helper.put("page_type", attributes[1]);
 			
-			b.appendQueryParameter("action", "get_map_list");
-			b.appendQueryParameter("count", attributes[0]); // how many are currently grabbed
-			b.appendQueryParameter("page_type", attributes[1]); // what type to grab
+			if (Constants.logged_in && UserSettings.selected_account_login != -1)
+				url_helper.put("user_email", Constants.accounts.get_accounts()[UserSettings.selected_account_login]);
 			
-			if(Constants.logged_in && UserSettings.selected_account_login != -1)
-				b.appendQueryParameter("user_email", Constants.accounts.get_accounts()[UserSettings.selected_account_login]);
-			
-			the_url = b.build().toString();
+			the_url = NetworkManager.genericUrlBuilder(url_helper);
 		}
 		
 		return the_url;
@@ -207,9 +206,9 @@ class LoadFeedData extends MyTask
 						JSONObject json_data = levels.getJSONObject(i);
 						
 						LevelItem temp = new LevelItem();
-						temp.name = json_data.getString("name");
-						temp.lid = json_data.getInt("lid");
-						temp.changed_time = json_data.getInt("changed_time");
+						temp.name = json_data.getString(TaskGetDownloadedMaps.name);
+						temp.lid = json_data.getInt(TaskGetDownloadedMaps.lid);
+						temp.changed = json_data.getInt(TaskGetDownloadedMaps.changed);
 						
 						EnumButtonStates this_button_state = my_adapter.parent.parent.parent.downloaded_maps.get(temp.lid);
 						if (this_button_state != null)
@@ -247,15 +246,15 @@ class DownloadListAdapter extends BaseAdapter implements ListAdapter
 	}
 	
 	public void onUpdateEntries(ArrayList<LevelItem> levels, boolean clear)
-	{		
+	{
 		if (clear)
 			level_names.clear();
-	
+		
 		if (levels.isEmpty() && level_names.isEmpty())
 		{
 			LevelItem temp = new LevelItem();
 			temp.name = "None";
-			temp.changed_time = 0;
+			temp.changed = 0;
 			temp.lid = -1;
 			
 			levels.add(temp);
@@ -331,7 +330,7 @@ class DownloadListAdapter extends BaseAdapter implements ListAdapter
 		title_text.setText(this_item.name);
 		
 		// format the date
-		String time = DateUtils.formatDateTime(Constants.context, this_item.changed_time * 1000, DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_TIME);
+		String time = DateUtils.formatDateTime(Constants.context, this_item.changed * 1000, DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_TIME);
 		description_text.setText(time);
 		
 		return item_view;

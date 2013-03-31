@@ -23,6 +23,8 @@ public class Constants
 	// answer 2: This is faster/easier to code (I'm on a tight schedule)
 	// answer 3: I actually read somewhere (stackoverflow?) this is faster to execute. *shrugs*
 	
+	public static final long force_update_epoch = 1364706769;
+	
 	// density independent pixels
 	public static double dip_scale;
 	

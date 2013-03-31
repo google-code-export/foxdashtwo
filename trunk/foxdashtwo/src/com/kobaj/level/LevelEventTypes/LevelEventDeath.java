@@ -10,7 +10,7 @@ public class LevelEventDeath extends LevelEventBase
 	{
 		super(type);
 	}
-
+	
 	private Level level_cache;
 	
 	public void onInitialize(final Level level, final ArrayList<String> id_strings)
@@ -21,8 +21,7 @@ public class LevelEventDeath extends LevelEventBase
 	@Override
 	public void onUpdate(double delta, boolean active)
 	{
-		if(active)
+		if (active)
 			level_cache.kill = true;
 	}
-	
 }
