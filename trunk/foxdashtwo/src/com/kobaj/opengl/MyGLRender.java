@@ -9,6 +9,7 @@ import java.nio.ShortBuffer;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
@@ -130,6 +131,7 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		Constants.text.onUnInitialize();
 	}
 	
+	@SuppressLint("WrongCall")
 	public void onDrawFrame(GL10 unused)
 	{
 		long start_time = System.currentTimeMillis();
@@ -262,7 +264,7 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		if (slowmo)
 		{
 			screenshots();
-			//delta /= 120.0;
+			delta /= 2.0;
 		}
 		onUpdate(delta);
 	}

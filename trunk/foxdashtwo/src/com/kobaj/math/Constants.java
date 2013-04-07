@@ -121,9 +121,11 @@ public class Constants
 	public static InputManager input_manager;
 	// input constants
 	public static final double input_circle_width = 50;
-	public static final int input_swipe_sensitivity = 140;
-	public static final int input_unpress_color = 0xBBBBBBCC;
-	public static final int input_press_color = 0xBB888899;
+	//public static final int input_unpress_color = 0xBBBBBBCC;
+	//public static final int input_press_color = 0xBB888899;
+	public static final int input_unpress_color = 0x22BBBBCC;
+	public static final int input_press_color = 0x22888899;
+	
 	
 	// button constants
 	public static final int unpressed_color = 0xBBBBBBCC;
