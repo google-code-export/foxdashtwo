@@ -14,6 +14,7 @@ import com.kobaj.loader.FileHandler;
 import com.kobaj.loader.GLBitmapReader;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
+import com.kobaj.opengl.MyGLRender;
 import com.kobaj.screen.screenaddons.BaseInteractionPhysics;
 import com.kobaj.screen.screenaddons.BaseLoadingScreen;
 import com.kobaj.screen.screenaddons.EnumDebugType;
@@ -160,11 +161,11 @@ public class SinglePlayerScreen extends BaseScreen
 			// this is possible because onUpdate is only called when in two states, running or paused
 			if (current_state != EnumScreenState.paused)
 			{
-				pause_addon.reset();
-				current_state = EnumScreenState.paused;
+				 pause_addon.reset();
+				 current_state = EnumScreenState.paused;
 			}
 			
-			// MyGLRender.slowmo = !MyGLRender.slowmo;
+			//MyGLRender.slowmo = !MyGLRender.slowmo;
 		}
 		
 	}
@@ -216,7 +217,7 @@ public class SinglePlayerScreen extends BaseScreen
 		else if (this.current_death_stage == EnumDeathStages.fade_to_color && fade_in == false)
 			this.current_death_stage = EnumDeathStages.alive;
 		
-		 //debug_addon.onUpdate(delta, the_level);
+		// debug_addon.onUpdate(delta, the_level);
 	}
 	
 	private void getPlayerPosition()
@@ -245,7 +246,7 @@ public class SinglePlayerScreen extends BaseScreen
 	{
 		the_level.onDrawObject(types);
 		
-		//debug_addon.onDrawObject();
+		// debug_addon.onDrawObject();
 	}
 	
 	@Override
