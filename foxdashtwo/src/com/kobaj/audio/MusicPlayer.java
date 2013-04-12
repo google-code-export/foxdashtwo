@@ -67,7 +67,7 @@ public class MusicPlayer
 				start(next_song, fade_end - fade_start, music_player.media_player.isLooping());
 			else if (current_position >= fade_end && next_song == -1)
 			{
-				music_player.media_player.stop();
+				music_player.stop();
 				current_state = EnumMusicStates.stopped;
 			}
 		}
@@ -175,6 +175,9 @@ public class MusicPlayer
 	
 	public void stop(int fade_length)
 	{
+		if(fade_length < 0)
+			fade_length = 0;
+		
 		fade_start = music_player.media_player.getCurrentPosition();
 		fade_end = fade_start + fade_length;
 		checkFadeEnd();
@@ -186,7 +189,7 @@ public class MusicPlayer
 		// cant wait for update thread, as it may never come.
 		if (fade_length == 0)
 		{
-			music_player.media_player.stop();
+			music_player.stop();
 			current_state = EnumMusicStates.stopped;
 		}
 	}

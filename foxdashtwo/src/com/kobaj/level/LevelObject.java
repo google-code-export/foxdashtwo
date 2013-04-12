@@ -161,8 +161,6 @@ public class LevelObject extends LevelEntityActive
 			quad_object = new QuadCompressed(R.raw.l2_ground_platform_edge, R.raw.l2_ground_platform_edge_alpha, 60, 164);
 		else if (this_object == EnumLevelObject.l2_ground_platform_end)
 			quad_object = new QuadCompressed(R.raw.l2_ground_platform_end, R.raw.l2_ground_platform_end_alpha, 66, 256);
-		else if (this_object == EnumLevelObject.l2_ground_platform_floating_2)
-			quad_object = new QuadCompressed(R.raw.l2_ground_platform_floating_2, R.raw.l2_ground_platform_floating_2_alpha, 322, 144);
 		else if (this_object == EnumLevelObject.l2_ground_platform_medium)
 			quad_object = new QuadCompressed(R.raw.l2_ground_platform_medium, R.raw.l2_ground_platform_medium_alpha, 350, 255);
 		else if (this_object == EnumLevelObject.l2_ground_platform_small_1)
@@ -215,8 +213,6 @@ public class LevelObject extends LevelEntityActive
 			quad_object = new QuadCompressed(R.raw.l4_ground_platform_small, R.raw.l4_ground_platform_small_alpha, 265, 144);
 		else if (this_object == EnumLevelObject.l4_ground_platform_very_small)
 			quad_object = new QuadCompressed(R.raw.l4_ground_platform_very_small, R.raw.l4_ground_platform_very_small_alpha, 208, 106);
-		else if (this_object == EnumLevelObject.l4_ground_platform_floating)
-			quad_object = new QuadCompressed(R.raw.l4_ground_platform_floating, R.raw.l4_ground_platform_floating_alpha, 658, 260);
 		else if (this_object == EnumLevelObject.l4_decoration_mountainside_1)
 			quad_object = new QuadCompressed(R.raw.l4_decoration_mountainside_1, R.raw.l4_decoration_mountainside_1_alpha, 874, 1329);
 		else if (this_object == EnumLevelObject.l4_decoration_mountainside_2)
@@ -299,6 +295,28 @@ public class LevelObject extends LevelEntityActive
 			
 			quad_object.phys_rect_list.remove(0);
 		}
+		else if (this_object == EnumLevelObject.l2_ground_platform_floating_2)	
+		{
+			quad_object = new QuadCompressed(R.raw.l2_ground_platform_floating_2, R.raw.l2_ground_platform_floating_2_alpha, 322, 144);
+			RectF previous = quad_object.phys_rect_list.get(0).main_rect;//
+			quad_object.phys_rect_list.add(new RectFExtended(previous.left + Functions.screenWidthToShaderWidth(45), //
+					previous.top - Functions.screenHeightToShaderHeight(30),//
+					previous.right - Functions.screenWidthToShaderWidth(45),//
+					previous.bottom + Functions.screenHeightToShaderHeight(50)));//
+			
+			quad_object.phys_rect_list.remove(0);
+		}
+		else if (this_object == EnumLevelObject.l4_ground_platform_floating)
+		{
+			quad_object = new QuadCompressed(R.raw.l4_ground_platform_floating, R.raw.l4_ground_platform_floating_alpha, 658, 260);
+			RectF previous = quad_object.phys_rect_list.get(0).main_rect;//
+			quad_object.phys_rect_list.add(new RectFExtended(previous.left + Functions.screenWidthToShaderWidth(45), //
+					previous.top - Functions.screenHeightToShaderHeight(30),//
+					previous.right - Functions.screenWidthToShaderWidth(45),//
+					previous.bottom + Functions.screenHeightToShaderHeight(50)));//
+			
+			quad_object.phys_rect_list.remove(0);
+		}
 		
 		else if (this_object == EnumLevelObject.lx_background_fade_1)
 			quad_object = new QuadCompressed(R.raw.lx_background_fade_1, R.raw.lx_background_fade_1_alpha, 512, 512);
@@ -364,7 +382,25 @@ public class LevelObject extends LevelEntityActive
 	{
 		if (this_object == EnumLevelObject.l2_ground_platform_floating_1)
 		{
+			//make it move left and right
+			
+			//if(quad_object.x_pos_shader < this.x_pos_shader - floating_move_lr_limit)
+			//	quad_object.x_acc_shader = floating_move_lr_speed;
+			//else if(quad_object.x_pos_shader > this.x_pos_shader + floating_move_lr_limit)
+			//	quad_object.x_acc_shader = -floating_move_lr_speed;
+			//else if(quad_object.x_vel_shader == 0.0)
+			//	quad_object.x_acc_shader = floating_move_lr_speed;
+			
+			if(quad_object.x_vel_shader == 0)
+				quad_object.x_acc_shader = Constants.floating_move_lr_acc;
+			
+			Constants.physics.addSpringX(Constants.floating_spring / 32.0, 0, Constants.floating_lr_distance, quad_object.x_pos_shader - x_pos_shader, quad_object);
 			Constants.physics.addSpringY(Constants.floating_spring, Constants.floating_damper, 0, quad_object.y_pos_shader - y_pos_shader, quad_object);
+			Constants.physics.integratePhysics(delta, quad_object);
+		}
+		else if(this_object == EnumLevelObject.l2_ground_platform_floating_2)
+		{
+			Constants.physics.addSpringY(Constants.floating_spring, Constants.floating_damper / 4.0, 0, quad_object.y_pos_shader - y_pos_shader, quad_object);
 			Constants.physics.integratePhysics(delta, quad_object);
 		}
 		else if (this_object == EnumLevelObject.l1_decoration_water_1)

@@ -75,6 +75,9 @@ public class Constants
 	public static final double player_downward_platform_acc_default = -.001;
 	public static final double player_movement_threshold_default = .001;
 	
+	public static final double floating_move_lr_speed_default = .02;
+	public static final double floating_lr_distance_default = 2.0;
+	
 	// physics variables
 	public static double gravity;
 	public static double max_y_velocity; // of all objects
@@ -87,6 +90,8 @@ public class Constants
 	public static double max_speed; // this is of all objects
 	public static double player_downward_platform_acc; // player specific
 	public static double player_movement_threshold;
+	public static double floating_move_lr_acc;
+	public static double floating_lr_distance;
 	
 	// same regardless of screen.
 	public static final double normal_air_damping = .90;
@@ -121,11 +126,8 @@ public class Constants
 	public static InputManager input_manager;
 	// input constants
 	public static final double input_circle_width = 50;
-	//public static final int input_unpress_color = 0xBBBBBBCC;
-	//public static final int input_press_color = 0xBB888899;
-	public static final int input_unpress_color = 0x22BBBBCC;
-	public static final int input_press_color = 0x22888899;
-	
+	public static final int input_unpress_color = 0xBBBBBBCC;
+	public static final int input_press_color = 0xBB888899;
 	
 	// button constants
 	public static final int unpressed_color = 0xBBBBBBCC;

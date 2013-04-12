@@ -71,11 +71,17 @@ public class Level
 	public double right_shader_limit;
 	public double bottom_shader_limit;
 	
+	private double x_start;
+	private double y_start; // where the player starts in shader coordinates
+	
 	@ElementList
 	public ArrayList<LevelObject> object_list;
 	
 	public ArrayList<LevelObject> physics_objects = new ArrayList<LevelObject>(); // references for only physics (objects that move).
-	public HashMap<EnumLayerTypes, LevelObject[]> object_hash;
+	private ArrayList<LevelObject> background_objects = new ArrayList<LevelObject>(); // references to backgrounds
+	private ArrayList<LevelObject> foreground_objects = new ArrayList<LevelObject>(); // references to foregrounds
+	
+	public HashMap<EnumLayerTypes, LevelObject[]> object_hash; // index way of referenceing all objects
 	
 	@ElementList
 	public ArrayList<LevelAmbientLight> light_list; // all lights including blooms
@@ -114,6 +120,9 @@ public class Level
 		// setup general objects
 		local_np_emitter.clear();
 		physics_objects.clear();
+		background_objects.clear();
+		foreground_objects.clear();
+		
 		for (int i = object_list.size() - 1; i >= 0; i--)
 		{
 			LevelObject reference = object_list.get(i);
@@ -223,28 +232,39 @@ public class Level
 					layer_temp.add(reference);
 			}
 			object_hash.put(t, (LevelObject[]) layer_temp.toArray(new LevelObject[layer_temp.size()]));
-			
 		}
 		
-		// then find our physics objects
+		// then find our objects
 		for (int i = object_list.size() - 1; i >= 0; i--)
 		{
 			LevelObject reference = object_list.get(i);
 			
 			// do some particles
-			if (reference.this_object == EnumLevelObject.l2_ground_platform_floating_1)
+			if (reference.this_object == EnumLevelObject.l2_ground_platform_floating_1 //
+					|| reference.this_object == EnumLevelObject.l2_ground_platform_floating_2 //
+					|| reference.this_object == EnumLevelObject.l4_ground_platform_floating)
 			{
-				RectF emitt_from = new RectF((float) (reference.quad_object.best_fit_aabb.main_rect.left + Functions.screenWidthToShaderWidth(45)),
-						(float) (reference.quad_object.best_fit_aabb.main_rect.top - Functions.screenHeightToShaderHeight(85)),
-						(float) (reference.quad_object.best_fit_aabb.main_rect.right - Functions.screenWidthToShaderWidth(45)),
-						(float) (reference.quad_object.best_fit_aabb.main_rect.bottom + Functions.screenHeightToShaderHeight(85)));
+				float half_width = (float)(reference.quad_object.best_fit_aabb.main_rect.width() - Functions.screenWidthToShaderWidth(25)) / 2.0f;// (float) Functions.screenWidthToShaderWidth(45);
+				float half_height_top = (float) Functions.screenHeightToShaderHeight(0);
+				float half_height_bottom = (float) Functions.screenHeightToShaderHeight(50);
 				
-				NParticleEmitter test = NParticleManager.makeEmitter(EnumParticleType.floating_dust, emitt_from);
-				test.onInitialize();
-				test.preUpdate();
-				local_np_emitter.add(test);
+				RectFExtended emitt_from = new RectFExtended(-half_width, half_height_top, half_width, -half_height_bottom);
+				
+				NParticleEmitter my_particle_emitter = null;
+				
+				if (reference.this_object == EnumLevelObject.l2_ground_platform_floating_1)
+					my_particle_emitter = NParticleManager.makeEmitter(EnumParticleType.floating_dust, emitt_from);
+				else if (reference.this_object == EnumLevelObject.l2_ground_platform_floating_2 //
+						|| reference.this_object == EnumLevelObject.l4_ground_platform_floating)
+					my_particle_emitter = NParticleManager.makeEmitter(EnumParticleType.floating_dust_2, emitt_from);
+				
+				my_particle_emitter.onInitialize();
+				// test.preUpdate();
+				my_particle_emitter.associated_quad = reference.quad_object;
+				local_np_emitter.add(my_particle_emitter);
 				
 				physics_objects.add(reference);
+				
 			}
 			
 			// and falling water drops
@@ -264,6 +284,16 @@ public class Level
 					reference.y_water_drop_path.setExtendedRectF(water_drop.left, water_drop.top, water_drop.right, collision_y);
 				
 				physics_objects.add(reference);
+			}
+			
+			// then find our background objects
+			if (reference.layer == EnumLayerTypes.Background || reference.layer == EnumLayerTypes.Background_Aux)
+			{
+				background_objects.add(reference);
+			}
+			else if (reference.layer == EnumLayerTypes.Foreground || reference.layer == EnumLayerTypes.Foreground_Aux)
+			{
+				foreground_objects.add(reference);
 			}
 		}
 		
@@ -288,8 +318,8 @@ public class Level
 	public void setPlayerPosition()
 	{
 		// pre-player
-		double x_player = Functions.screenXToShaderX(player.x_pos);
-		double y_player = Functions.screenYToShaderY(player.y_pos);
+		x_start = Functions.screenXToShaderX(player.x_pos);
+		y_start = Functions.screenYToShaderY(player.y_pos);
 		
 		boolean player_set = false;
 		if (SinglePlayerSave.last_checkpoint != null)
@@ -308,7 +338,7 @@ public class Level
 		}
 		
 		if (!player_set)
-			player.quad_object.setXYPos(x_player, y_player, player.draw_from);
+			player.quad_object.setXYPos(x_start, y_start, player.draw_from);
 	}
 	
 	public void onUnInitialize()
@@ -342,7 +372,11 @@ public class Level
 			physics_objects.get(i).onUpdate(delta);
 		
 		for (int i = local_np_emitter.size() - 1; i >= 0; i--)
-			local_np_emitter.get(i).onUpdate(delta);
+		{
+			NParticleEmitter reference = local_np_emitter.get(i);
+			reference.emit_location.setPositionWithOffset(reference.associated_quad.x_pos_shader, reference.associated_quad.y_pos_shader);
+			reference.onUpdate(delta);
+		}
 		
 		if (QuadAnimated.class.isAssignableFrom(player.quad_object.getClass()))
 		{
@@ -362,6 +396,30 @@ public class Level
 			}
 			
 			reference.onUpdate(delta);
+		}
+		
+		// move the paralax backgrounds
+		double x_distance = -Constants.x_shader_translation + x_start;
+		//double y_distance = -Constants.y_shader_translation + y_start;
+		
+		for (int i = background_objects.size() - 1; i >= 0; i--)
+		{
+			LevelObject reference = background_objects.get(i);
+			double multiplier = this.background_parallax_ratio / 100.0;
+			if (reference.layer == EnumLayerTypes.Background_Aux)
+				multiplier = this.background_parallax_ratio / 85.0;
+			
+			reference.quad_object.setXYPos(reference.x_pos_shader + x_distance * multiplier, reference.y_pos_shader, EnumDrawFrom.center);
+		}
+		
+		for (int i = foreground_objects.size() - 1; i >= 0; i--)
+		{
+			LevelObject reference = foreground_objects.get(i);
+			double multiplier = this.background_parallax_ratio / 7.5;
+			if (reference.layer == EnumLayerTypes.Background_Aux)
+				multiplier = this.background_parallax_ratio / 5.0;
+			
+			reference.quad_object.setXYPos(reference.x_pos_shader + x_distance * multiplier, reference.y_pos_shader, EnumDrawFrom.center);
 		}
 		
 		// then do sounds
@@ -418,7 +476,7 @@ public class Level
 			event_list.get(i).onDraw();
 	}
 	
-	public void objectInteraction(final RectF collision, final LevelObject player, final LevelObject reference)
+	public void objectInteraction(final RectF collision, final LevelObject player, final LevelObject reference, double delta)
 	{
 		player_on_ground = false;
 		
@@ -428,11 +486,13 @@ public class Level
 			player_on_ground = true;
 			
 			// floating platforms
-			if (reference.this_object == EnumLevelObject.l2_ground_platform_floating_1)
+			if (reference.this_object == EnumLevelObject.l2_ground_platform_floating_1 //
+					|| reference.this_object == EnumLevelObject.l2_ground_platform_floating_2 //
+					|| reference.this_object == EnumLevelObject.l4_ground_platform_floating)
 			{
 				if (player.quad_object.y_pos_shader > reference.quad_object.y_pos_shader) // remember this is the center of the object
 				{
-					player.quad_object.setXYPos(player.quad_object.x_pos_shader, player.quad_object.y_pos_shader - Constants.collision_detection_height, EnumDrawFrom.center);
+					player.quad_object.setXYPos(player.quad_object.x_pos_shader + reference.quad_object.x_vel_shader * delta, player.quad_object.y_pos_shader - Constants.collision_detection_height, EnumDrawFrom.center);
 					// it would be neat to have the players velocity affect this downward push. but since we zero out the velocity upon collision, at this point, it would do nothing.
 					reference.quad_object.y_acc_shader += Constants.player_downward_platform_acc;
 				}

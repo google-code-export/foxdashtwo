@@ -62,7 +62,7 @@
     <string name="controller">Controller</string>
     <string name="halfhalf">HalfHalf</string>
     <string name="new_game">New Game</string>
-    <string name="continue_game">Continue</string>
+    <string name="level_select_game">Level Select</string>
     <string name="download_maps">Download Maps</string>
     <string name="login_button">Login</string>
     <string name="account_button">Account</string>
@@ -124,7 +124,7 @@
         <item>controller</item>
         <item>halfhalf</item>
         <item>new_game</item>
-        <item>continue_game</item>
+        <item>level_select_game</item>
         <item>download_maps</item>
         <item>login_button</item>
         <item>account_button</item>

@@ -55,7 +55,7 @@ public class BaseInteractionPhysics
 					can_jump = true;
 				
 				if (collision.width() != 0 || collision.height() != 0)
-					the_level.objectInteraction(collision, the_level.player, reference);
+					the_level.objectInteraction(collision, the_level.player, reference, delta);
 				
 				// do the fox's shadow
 				shadow_collision_y = calc_foxes_shadow(reference, shadow_collision_y);

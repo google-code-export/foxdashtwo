@@ -1,5 +1,6 @@
 package com.kobaj.screen;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 
 import com.kobaj.foxdashtwo.GameActivity;
@@ -62,6 +63,8 @@ public class TitleScreen extends BaseScreen
 	@Override
 	public void onLoad()
 	{
+		Constants.music_player.stop(1500);
+		
 		// Available buttons
 		double x_offset = -.3;
 		
@@ -157,6 +160,9 @@ public class TitleScreen extends BaseScreen
 	@Override
 	public void onUpdate(double delta)
 	{
+		// that music
+		Constants.music_player.onUpdate();
+		
 		// these are all the different possible poups that can be visible
 		if (settings_visible)
 			settings_visible = base_settings.onUpdate(delta);
@@ -242,6 +248,7 @@ public class TitleScreen extends BaseScreen
 		
 	}
 	
+	@SuppressLint("WrongCall")
 	@Override
 	public void onDrawConstant()
 	{

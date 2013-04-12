@@ -680,5 +680,8 @@ public class Functions
 		Constants.player_movement_threshold = Functions.screenWidthToShaderWidth(Constants.player_movement_threshold_default);
 	
 		Constants.shadow_height_shader = Functions.screenHeightToShaderHeight(Constants.shadow_height);
+		
+		Constants.floating_lr_distance = Functions.screenWidthToShaderWidth(Constants.floating_lr_distance_default);
+		Constants.floating_move_lr_acc = Functions.screenWidthToShaderWidth(Constants.floating_move_lr_speed_default);
 	}
 }

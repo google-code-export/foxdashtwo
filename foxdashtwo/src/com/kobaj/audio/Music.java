@@ -37,12 +37,16 @@ public class Music extends AudioBase
 	// return true if this is a new song and we can play it.
 	public boolean play(int sound_id, double volume)
 	{
+		if(sound_id == -1)
+			return false;
+		
 		boolean is_reset = false;
 		
 		if (sound_id != currently_playing)
 		{
 			currently_playing = sound_id;
 			media_player.reset(); // make it fresh
+			media_player.start();
 			
 			loaded = false;
 			// set the music.
