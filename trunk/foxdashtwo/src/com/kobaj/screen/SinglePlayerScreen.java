@@ -124,7 +124,7 @@ public class SinglePlayerScreen extends BaseScreen
 			}
 		}
 		
-		debug_addon = new LevelDebugScreen(the_level, EnumDebugType.events);
+		//debug_addon = new LevelDebugScreen(the_level, EnumDebugType.events);
 		
 		GLBitmapReader.isLoaded();
 		

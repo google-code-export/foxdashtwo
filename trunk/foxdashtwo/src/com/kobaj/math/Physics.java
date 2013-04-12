@@ -26,6 +26,9 @@ public class Physics
 		// v is velocity
 		// F = -k(|x|-d)(x/|x|) - bv
 		
+		if(distance == 0)
+			return;
+		
 		double abs_distance = Math.abs(distance);
 		double force = (-k * (abs_distance - desired_distance) * (distance / abs_distance)) - (b * the_quad.x_vel_shader);
 		the_quad.x_acc_shader += force;
@@ -33,6 +36,9 @@ public class Physics
 	
 	public <T extends Quad> void addSpringY(double k, double b, double desired_distance, double distance, T the_quad)
 	{
+		if(distance == 0)
+			return;
+		
 		double abs_distance = Math.abs(distance);
 		double force = (-k * (abs_distance - desired_distance) * (distance / abs_distance)) - (b * the_quad.y_vel_shader);
 		if (Double.isNaN(force))

@@ -7,10 +7,8 @@ import org.simpleframework.xml.ElementList;
 
 public class SinglePlayerSave
 {
-	@Element
 	public static String last_level = "";
 	
-	@Element
 	public static String last_checkpoint = "";
 	
 	@ElementList

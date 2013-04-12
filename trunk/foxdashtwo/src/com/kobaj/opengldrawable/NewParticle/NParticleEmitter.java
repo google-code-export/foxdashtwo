@@ -6,7 +6,7 @@ import java.util.Stack;
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
-import com.kobaj.math.android.RectF;
+import com.kobaj.math.RectFExtended;
 import com.kobaj.opengldrawable.EnumDrawFrom;
 import com.kobaj.opengldrawable.Quad.Quad;
 import com.kobaj.opengldrawable.Quad.QuadColorShape;
@@ -25,7 +25,7 @@ public class NParticleEmitter
 	public int custom_spawn_time = -1;
 	
 	// this is in shader coordinates (0-1)
-	public RectF emit_location;
+	public RectFExtended emit_location;
 	
 	// I have the best most readable variable names.
 	public boolean is_affected_by_gravity = false;
@@ -66,6 +66,10 @@ public class NParticleEmitter
 	// and the unchangeable type
 	private EnumParticleType particle_type;
 	
+	// association so we can move the particle with a quad
+	// be sure to keep this as a reference.
+	public Quad associated_quad;
+	
 	public NParticleEmitter(EnumParticleType type)
 	{
 		this.particle_type = type;
@@ -97,7 +101,9 @@ public class NParticleEmitter
 			// define the quad reference for each particle
 			if (particle_type == EnumParticleType.floating_dust)
 				temp.quad_reference = new QuadColorShape(28, 0xee000099, true, 0);
-			else if(particle_type == EnumParticleType.snow)
+			else if (particle_type == EnumParticleType.floating_dust_2)
+				temp.quad_reference = new QuadColorShape(28, 0xee000099, true, 0);
+			else if (particle_type == EnumParticleType.snow)
 				temp.quad_reference = new QuadCompressed(R.raw.white, R.raw.white, 8, 8);
 			
 			temp.onInitialize();
@@ -145,7 +151,7 @@ public class NParticleEmitter
 			
 			// if its snow check and see if it has traveled outside of the spawn area
 			if (particle_type == EnumParticleType.snow)
-				if (!Functions.inRectF(emit_location, reference.quad_reference.x_pos_shader, reference.quad_reference.y_pos_shader))
+				if (!Functions.inRectF(emit_location.main_rect, reference.quad_reference.x_pos_shader, reference.quad_reference.y_pos_shader))
 					reference.kill();
 			
 			if (reference.is_dead)
@@ -167,13 +173,13 @@ public class NParticleEmitter
 			reference.reset();
 			
 			// random position
-			double x_pos = Functions.randomDouble(emit_location.left, emit_location.right);
+			double x_pos = Functions.randomDouble(emit_location.main_rect.left, emit_location.main_rect.right);
 			
 			double y_pos = 0;
 			if (particle_type == EnumParticleType.snow) // different start location because its snow
-				y_pos = emit_location.top;
+				y_pos = emit_location.main_rect.top;
 			else
-				y_pos = Functions.randomDouble(emit_location.bottom, emit_location.top);
+				y_pos = Functions.randomDouble(emit_location.main_rect.bottom, emit_location.main_rect.top);
 			
 			reference.quad_reference.setXYPos(x_pos, y_pos, EnumDrawFrom.center);
 			
