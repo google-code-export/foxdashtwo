@@ -53,42 +53,6 @@ public class InputTypeHalfHalf extends InputTypeBase
 		return false;
 	}
 	
-	private boolean getLocalTouchedLeft()
-	{
-		for (int i = 0; i < 2; i++)
-			if (Constants.input_manager.getTouched(i) && Constants.input_manager.getX(i) < Constants.width / 2.0)
-				return true;
-		
-		return false;
-	}
-	
-	private boolean getLocalPressedLeft()
-	{
-		for (int i = 0; i < 2; i++)
-			if (Constants.input_manager.getPressed(i) && Constants.input_manager.getX(i) < Constants.width / 2.0)
-				return true;
-		
-		return false;
-	}
-	
-	private boolean getLocalTouchedRight()
-	{
-		for (int i = 0; i < 2; i++)
-			if (Constants.input_manager.getTouched(i) && Constants.input_manager.getX(i) > Constants.width / 2.0)
-				return true;
-		
-		return false;
-	}
-	
-	private boolean getLocalPressedRight()
-	{
-		for (int i = 0; i < 2; i++)
-			if (Constants.input_manager.getPressed(i) && Constants.input_manager.getX(i) > Constants.width / 2.0)
-				return true;
-		
-		return false;
-	}
-	
 	@Override
 	public boolean getTouchedLeft()
 	{

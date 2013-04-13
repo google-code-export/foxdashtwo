@@ -5,6 +5,7 @@ package com.kobaj.opengldrawable.Quad;
 
 import android.opengl.GLES20;
 
+import com.kobaj.account_settings.UserSettings;
 import com.kobaj.loader.GLBitmapReader;
 import com.kobaj.math.Functions;
 
@@ -13,14 +14,31 @@ public class QuadRenderTo extends Quad
 	// RENDER TO TEXTURE VARIABLES
 	private int fb = -1;
 	
+	private int local_fbo_divider = 1;
+	
+	public void setFBODivider(int fbo_divider)
+	{
+		if (fbo_divider < 0)
+			fbo_divider = 1;
+		local_fbo_divider = Functions.nearestPowerOf2(fbo_divider);
+		
+		computeSquares();
+		pushBitmap();
+	}
+	
 	public QuadRenderTo()
 	{
 		width = com.kobaj.math.Constants.width;
 		height = com.kobaj.math.Constants.height;
 		
+		computeSquares();
+	}
+	
+	private void computeSquares()
+	{
 		// must precompute the square (Even though its computed in the oncreate).
-		square_width = Functions.nearestPowerOf2(this.width);
-		square_height = Functions.nearestPowerOf2(this.height);
+		square_width = Functions.nearestPowerOf2(this.width) / local_fbo_divider;
+		square_height = Functions.nearestPowerOf2(this.height) / local_fbo_divider;
 	}
 	
 	public void onInitialize()
@@ -49,6 +67,22 @@ public class QuadRenderTo extends Quad
 		
 		// load a regular texture
 		this.my_texture_data_handle = GLBitmapReader.newTextureID();
+
+		pushBitmap();
+		
+		this.fb = fb[0];
+		
+		// bind our attachments really quick
+		GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, fb[0]);
+		
+		// specify texture as color attachment
+		GLES20.glFramebufferTexture2D(GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0, GLES20.GL_TEXTURE_2D, my_texture_data_handle, 0);
+		
+		GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
+	}
+	
+	private void pushBitmap()
+	{
 		GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, this.my_texture_data_handle);
 		
 		// Set all of our texture parameters:
@@ -62,25 +96,20 @@ public class QuadRenderTo extends Quad
 		
 		// Push the bitmap onto the GPU
 		GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA, bitmap_size_x, bitmap_size_y, 0, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, null);
-		
-		this.fb = fb[0];
-		
-		// bind our attachments really quick
-		GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, fb[0]);
-		
-		// specify texture as color attachment
-		GLES20.glFramebufferTexture2D(GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0, GLES20.GL_TEXTURE_2D, my_texture_data_handle, 0);
-		
-		GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
 	}
 	
 	public boolean beginRenderToTexture(boolean clear)
 	{
 		GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, fb);
 		
+		if (local_fbo_divider > 1)
+			GLES20.glViewport(0, 0, width / local_fbo_divider, height / local_fbo_divider);
+		
 		// clear
 		if (clear)
+		{
 			GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
+		}
 		
 		// check status
 		int status = GLES20.glCheckFramebufferStatus(GLES20.GL_FRAMEBUFFER);
@@ -95,8 +124,13 @@ public class QuadRenderTo extends Quad
 	{
 		GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
 		
+		if (local_fbo_divider > 1)
+			GLES20.glViewport(0, 0, width, height);
+		
 		// Same thing, only different texture is bound now
 		if (clear)
+		{
 			GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+		}
 	}
 }

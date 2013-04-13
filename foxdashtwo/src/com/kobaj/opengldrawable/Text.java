@@ -28,12 +28,11 @@ public class Text
 	private final int line_height = 4;
 	private final int padding = 4;
 	
-	public double size = 0;
 	private int count = 0;
 	
 	public Text()
 	{	
-		size = Constants.text_size * Constants.sd_scale;
+		double size = Constants.text_size;
 		
 		// new bitmap_buffer!
 		bitmap_buffer = new SparseArray<Quad>();

@@ -1,5 +1,7 @@
 package com.kobaj.screen.screenaddons.floatingframe;
 
+import android.annotation.SuppressLint;
+
 import com.kobaj.foxdashtwo.GameActivity;
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Constants;
@@ -23,6 +25,10 @@ public class BasePauseScreen extends BaseFloatingFrame
 	private boolean ready_to_quit = false;
 	private boolean settings_visible = false;
 	
+	// low fps situations
+	public boolean low_fps_detected = false;
+	private BaseLowFPS base_low_fps = new BaseLowFPS();
+	
 	@Override
 	public void onInitialize()
 	{
@@ -40,6 +46,7 @@ public class BasePauseScreen extends BaseFloatingFrame
 		quit_button.onInitialize();
 		settings_button.onInitialize();
 		title_button.onInitialize();
+		base_low_fps.onInitialize();
 		
 		BaseFloatingFrame.alignButtonsAlongXAxis(center_y, quit_button, title_button, settings_button);
 		BaseFloatingFrame.alignButtonsAlongXAxis(cancel_shift_y, cancel_button);
@@ -52,6 +59,7 @@ public class BasePauseScreen extends BaseFloatingFrame
 		
 		base_settings.onUnInitialize();
 		base_quit.onUnInitialize();
+		base_low_fps.onUnInitialize();
 		
 		cancel_button.onUnInitialize();
 		quit_button.onUnInitialize();
@@ -63,6 +71,7 @@ public class BasePauseScreen extends BaseFloatingFrame
 	{
 		ready_to_quit = false;
 		settings_visible = false;
+		low_fps_detected = false;
 		
 		// all our childrens
 		base_settings.reset();
@@ -82,9 +91,10 @@ public class BasePauseScreen extends BaseFloatingFrame
 			settings_visible = base_settings.onUpdate(delta);
 		else if (ready_to_quit)
 			ready_to_quit = base_quit.onUpdate(delta);
+		else if (low_fps_detected)
+			low_fps_detected = base_low_fps.onUpdate(delta);
 		else
 			handleTextButtons();
-		
 	}
 	
 	private void handleTextButtons()
@@ -106,6 +116,7 @@ public class BasePauseScreen extends BaseFloatingFrame
 		}
 	}
 	
+	@SuppressLint("WrongCall")
 	@Override
 	public void onDraw()
 	{
@@ -113,6 +124,8 @@ public class BasePauseScreen extends BaseFloatingFrame
 			base_settings.onDraw();
 		else if (ready_to_quit)
 			base_quit.onDraw();
+		else if (low_fps_detected)
+			base_low_fps.onDraw();
 		else
 		{
 			main_popup.onDrawAmbient(Constants.my_ip_matrix, true);
