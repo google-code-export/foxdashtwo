@@ -75,6 +75,29 @@ public class QuadAnimated extends QuadCompressed
 		return false;
 	}
 	
+	// if animation is already set, then continue
+	// otherwise force an instant update to the frame number
+	public boolean setAnimation(EnumGlobalAnimationList id, int frame, boolean instant_update)
+	{
+		if(frame_animation.animation_set.containsKey(id))
+		{
+			if(currently_playing != id)
+			{
+				currently_playing = id;
+				currently_playing_frameset_reference = frame_animation.animation_set.get(id);
+					
+				if (frame >= 0)
+					currently_playing_frameset_reference.setCurrentFrame(frame);
+				
+				updateTexCoords();
+				
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
 	// see above, but this allows you to specify what frame to start from
 	// other wise it will start from the last frame it was on
 	public boolean setAnimation(EnumGlobalAnimationList id, int frame, double fps)
@@ -84,8 +107,12 @@ public class QuadAnimated extends QuadCompressed
 		if (setAnimation(id))
 		{
 			if (frame >= 0)
+			{
 				if (currently_playing_frameset_reference.setCurrentFrame(frame))
 					success = true;
+				
+				updateTexCoords();
+			}
 			
 			if (fps >= 0)
 				currently_playing_frameset_reference.rec_fps = fps;

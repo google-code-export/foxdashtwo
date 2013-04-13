@@ -205,7 +205,9 @@ public class Level
 		}
 		
 		// setup player
-		player.quad_object = new QuadAnimated(R.raw.fox2, R.raw.fox2_alpha, R.raw.fox_animation_list, 350, 180, 1024, 1024);
+		QuadAnimated player_animation = new QuadAnimated(R.raw.fox2, R.raw.fox2_alpha, R.raw.fox_animation_list, 350, 180, 1024, 1024);
+		player_animation.setAnimation(EnumGlobalAnimationList.stop, 0, -1);
+		player.quad_object = player_animation;
 		player.eid = Integer.MIN_VALUE;
 		player.layer = EnumLayerTypes.Pre_interaction;
 		player.z_plane = Double.MIN_VALUE;
@@ -346,6 +348,11 @@ public class Level
 		
 		if (!player_set)
 			player.quad_object.setXYPos(x_start, y_start, player.draw_from);
+		
+		player.quad_object.x_acc_shader = 0;
+		player.quad_object.y_acc_shader = 0;
+		player.quad_object.x_vel_shader = 0;
+		player.quad_object.y_vel_shader = 0;
 	}
 	
 	public void onUnInitialize()
@@ -389,14 +396,18 @@ public class Level
 		{
 			QuadAnimated reference = QuadAnimated.class.cast(player.quad_object);
 			
-			double current_x_speed = Math.abs(player.quad_object.x_vel_shader);
+			double current_x_speed = Math.abs(reference.x_vel_shader);
 			
 			// currently playing animation
-			if (current_x_speed < Constants.player_movement_threshold)
-				reference.setAnimation(EnumGlobalAnimationList.stop);
+			if(reference.y_vel_shader < 0)
+				reference.setAnimation(EnumGlobalAnimationList.falling, 0, true);
+			else if(reference.y_vel_shader > 0)
+				reference.setAnimation(EnumGlobalAnimationList.jumping, 0, true);
+			else if (current_x_speed < Constants.player_movement_threshold)
+				reference.setAnimation(EnumGlobalAnimationList.stop, 0, true);
 			else
 			{
-				reference.setAnimation(EnumGlobalAnimationList.running);
+				reference.setAnimation(EnumGlobalAnimationList.running, 0, true);
 				
 				// current direction
 				reference.reverseLeftRight((player.quad_object.x_vel_shader > 0));

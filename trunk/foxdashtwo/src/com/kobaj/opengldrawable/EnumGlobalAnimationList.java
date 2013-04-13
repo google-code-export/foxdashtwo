@@ -3,5 +3,5 @@ package com.kobaj.opengldrawable;
 public enum EnumGlobalAnimationList
 {
 	//just some examples
-	walking, running, sitting, stop
+	walking, running, sitting, stop, jumping, falling
 }
