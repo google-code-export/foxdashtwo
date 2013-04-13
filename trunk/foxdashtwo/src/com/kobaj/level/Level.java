@@ -244,7 +244,7 @@ public class Level
 					|| reference.this_object == EnumLevelObject.l2_ground_platform_floating_2 //
 					|| reference.this_object == EnumLevelObject.l4_ground_platform_floating)
 			{
-				float half_width = (float)(reference.quad_object.best_fit_aabb.main_rect.width() - Functions.screenWidthToShaderWidth(25)) / 2.0f;// (float) Functions.screenWidthToShaderWidth(45);
+				float half_width = (float) (reference.quad_object.best_fit_aabb.main_rect.width() - Functions.screenWidthToShaderWidth(25)) / 2.0f;// (float) Functions.screenWidthToShaderWidth(45);
 				float half_height_top = (float) Functions.screenHeightToShaderHeight(0);
 				float half_height_bottom = (float) Functions.screenHeightToShaderHeight(50);
 				
@@ -400,14 +400,14 @@ public class Level
 		
 		// move the paralax backgrounds
 		double x_distance = -Constants.x_shader_translation + x_start;
-		//double y_distance = -Constants.y_shader_translation + y_start;
+		// double y_distance = -Constants.y_shader_translation + y_start;
 		
 		for (int i = background_objects.size() - 1; i >= 0; i--)
 		{
 			LevelObject reference = background_objects.get(i);
-			double multiplier = this.background_parallax_ratio / 100.0;
+			double multiplier = this.background_parallax_ratio / 90.0;
 			if (reference.layer == EnumLayerTypes.Background_Aux)
-				multiplier = this.background_parallax_ratio / 85.0;
+				multiplier = this.background_parallax_ratio / 75.0;
 			
 			reference.quad_object.setXYPos(reference.x_pos_shader + x_distance * multiplier, reference.y_pos_shader, EnumDrawFrom.center);
 		}
@@ -415,9 +415,9 @@ public class Level
 		for (int i = foreground_objects.size() - 1; i >= 0; i--)
 		{
 			LevelObject reference = foreground_objects.get(i);
-			double multiplier = this.background_parallax_ratio / 7.5;
+			double multiplier = this.background_parallax_ratio / 15.0;
 			if (reference.layer == EnumLayerTypes.Background_Aux)
-				multiplier = this.background_parallax_ratio / 5.0;
+				multiplier = this.background_parallax_ratio / 10.0;
 			
 			reference.quad_object.setXYPos(reference.x_pos_shader + x_distance * multiplier, reference.y_pos_shader, EnumDrawFrom.center);
 		}
@@ -492,7 +492,8 @@ public class Level
 			{
 				if (player.quad_object.y_pos_shader > reference.quad_object.y_pos_shader) // remember this is the center of the object
 				{
-					player.quad_object.setXYPos(player.quad_object.x_pos_shader + reference.quad_object.x_vel_shader * delta, player.quad_object.y_pos_shader - Constants.collision_detection_height, EnumDrawFrom.center);
+					player.quad_object.setXYPos(player.quad_object.x_pos_shader + reference.quad_object.x_vel_shader * delta, player.quad_object.y_pos_shader - Constants.collision_detection_height,
+							EnumDrawFrom.center);
 					// it would be neat to have the players velocity affect this downward push. but since we zero out the velocity upon collision, at this point, it would do nothing.
 					reference.quad_object.y_acc_shader += Constants.player_downward_platform_acc;
 				}

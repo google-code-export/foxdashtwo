@@ -77,11 +77,9 @@ public class BaseInteractionPhysics
 		Quad second_quad = reference.quad_object;
 		RectFExtended best_fit_aabb = second_quad.best_fit_aabb;
 		
-		//short circuit
-		if (player_extended.right < best_fit_aabb.main_rect.left ||
-			player_extended.left > best_fit_aabb.main_rect.right ||
-			player_extended.top < best_fit_aabb.main_rect.bottom ||
-			player_extended.bottom > best_fit_aabb.main_rect.top)
+		// short circuit
+		if (player_extended.right < best_fit_aabb.main_rect.left || player_extended.left > best_fit_aabb.main_rect.right || player_extended.top < best_fit_aabb.main_rect.bottom
+				|| player_extended.bottom > best_fit_aabb.main_rect.top)
 			return collision_y;
 		
 		for (int e = reference.quad_object.phys_rect_list.size() - 1; e >= 0; e--)

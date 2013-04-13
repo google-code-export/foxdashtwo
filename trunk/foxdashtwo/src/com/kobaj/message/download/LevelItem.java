@@ -43,7 +43,7 @@ public class LevelItem implements FinishedDownloading
 		this.adapter = adapater;
 	}
 	
-	public OnClickListener listener = new OnClickListener()
+	public OnClickListener play_update_listener = new OnClickListener()
 	{
 		public void onClick(View v)
 		{

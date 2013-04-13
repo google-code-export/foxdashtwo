@@ -68,6 +68,11 @@
     <string name="account_button">Account</string>
     <string name="yes_button">Yes</string>
     <string name="no_button">No</string>
+    
+    <!-- popup buttons -->
+    <string name="rate">Rate</string>
+    <string name="delete">Delete</string>
+    <string name="report">Report</string>
     <string name="download">Download</string>
     <string name="update">Update</string>
     

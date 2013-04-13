@@ -54,7 +54,6 @@ public class Constants
 	public static final double arbitrary_z = .180;
 	// level zoom settings
 	
-	
 	// and for when a level loads
 	public static final double z_modifier = 0.0000001;
 	

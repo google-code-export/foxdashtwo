@@ -26,7 +26,7 @@ public class Physics
 		// v is velocity
 		// F = -k(|x|-d)(x/|x|) - bv
 		
-		if(distance == 0)
+		if (distance == 0)
 			return;
 		
 		double abs_distance = Math.abs(distance);
@@ -36,7 +36,7 @@ public class Physics
 	
 	public <T extends Quad> void addSpringY(double k, double b, double desired_distance, double distance, T the_quad)
 	{
-		if(distance == 0)
+		if (distance == 0)
 			return;
 		
 		double abs_distance = Math.abs(distance);
