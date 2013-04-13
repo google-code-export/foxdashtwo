@@ -311,7 +311,7 @@ public class LevelObject extends LevelEntityActive
 			quad_object = new QuadCompressed(R.raw.l4_ground_platform_floating, R.raw.l4_ground_platform_floating_alpha, 658, 260);
 			RectF previous = quad_object.phys_rect_list.get(0).main_rect;//
 			quad_object.phys_rect_list.add(new RectFExtended(previous.left + Functions.screenWidthToShaderWidth(45), //
-					previous.top - Functions.screenHeightToShaderHeight(30),//
+					previous.top - Functions.screenHeightToShaderHeight(60),//
 					previous.right - Functions.screenWidthToShaderWidth(45),//
 					previous.bottom + Functions.screenHeightToShaderHeight(50)));//
 			
@@ -398,7 +398,8 @@ public class LevelObject extends LevelEntityActive
 			Constants.physics.addSpringY(Constants.floating_spring, Constants.floating_damper, 0, quad_object.y_pos_shader - y_pos_shader, quad_object);
 			Constants.physics.integratePhysics(delta, quad_object);
 		}
-		else if (this_object == EnumLevelObject.l2_ground_platform_floating_2)
+		else if (this_object == EnumLevelObject.l2_ground_platform_floating_2 // 
+				|| this_object == EnumLevelObject.l4_ground_platform_floating)
 		{
 			Constants.physics.addSpringY(Constants.floating_spring, Constants.floating_damper / 4.0, 0, quad_object.y_pos_shader - y_pos_shader, quad_object);
 			Constants.physics.integratePhysics(delta, quad_object);

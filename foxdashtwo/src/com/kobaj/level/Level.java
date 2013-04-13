@@ -246,9 +246,16 @@ public class Level
 			{
 				float half_width = (float) (reference.quad_object.best_fit_aabb.main_rect.width() - Functions.screenWidthToShaderWidth(25)) / 2.0f;// (float) Functions.screenWidthToShaderWidth(45);
 				float half_height_top = (float) Functions.screenHeightToShaderHeight(0);
-				float half_height_bottom = (float) Functions.screenHeightToShaderHeight(50);
+				float half_height_bottom = (float) Functions.screenHeightToShaderHeight(-50);
 				
-				RectFExtended emitt_from = new RectFExtended(-half_width, half_height_top, half_width, -half_height_bottom);
+				//additional changes
+				if(reference.this_object == EnumLevelObject.l4_ground_platform_floating)
+				{
+					half_height_top = (float) Functions.screenHeightToShaderHeight(-60);
+					half_height_bottom = (float) Functions.screenHeightToShaderHeight(-110);
+				}
+				
+				RectFExtended emitt_from = new RectFExtended(-half_width, half_height_top, half_width, half_height_bottom);
 				
 				NParticleEmitter my_particle_emitter = null;
 				
@@ -402,16 +409,18 @@ public class Level
 		double x_distance = -Constants.x_shader_translation + x_start;
 		// double y_distance = -Constants.y_shader_translation + y_start;
 		
+		if(this.background_parallax_ratio != 0)
 		for (int i = background_objects.size() - 1; i >= 0; i--)
 		{
 			LevelObject reference = background_objects.get(i);
-			double multiplier = this.background_parallax_ratio / 90.0;
+			double multiplier = this.background_parallax_ratio / 30.0;
 			if (reference.layer == EnumLayerTypes.Background_Aux)
-				multiplier = this.background_parallax_ratio / 75.0;
+				multiplier = this.background_parallax_ratio / 20.0;
 			
-			reference.quad_object.setXYPos(reference.x_pos_shader + x_distance * multiplier, reference.y_pos_shader, EnumDrawFrom.center);
+			reference.quad_object.setXYPos(reference.x_pos_shader - x_distance * multiplier, reference.y_pos_shader, EnumDrawFrom.center);
 		}
 		
+		if(this.foreground_parallax_ratio != 0)
 		for (int i = foreground_objects.size() - 1; i >= 0; i--)
 		{
 			LevelObject reference = foreground_objects.get(i);

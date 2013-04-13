@@ -141,6 +141,7 @@ public class MyGame extends MyGLRender
 			currently_active_screen.onDrawLight();
 		
 		// regular objects
+		//GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA); // no see thru
 		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA); // no see thru
 		
 		if (scene.beginRenderToTexture(true))
