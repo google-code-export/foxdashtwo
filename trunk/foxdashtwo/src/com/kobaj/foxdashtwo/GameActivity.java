@@ -54,9 +54,6 @@ public class GameActivity extends FragmentActivity
 		display.getMetrics(metrics);
 		Constants.dip_scale = ((double) metrics.densityDpi) / DisplayMetrics.DENSITY_HIGH;
 		
-		// fonts and text scale
-		Constants.sd_scale = metrics.scaledDensity;
-		
 		// touchy
 		Constants.input_manager = new com.kobaj.input.InputManager();
 		

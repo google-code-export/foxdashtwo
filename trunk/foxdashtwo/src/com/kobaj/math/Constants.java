@@ -28,9 +28,6 @@ public class Constants
 	// density independent pixels
 	public static double dip_scale;
 	
-	// scaled text density
-	public static double sd_scale;
-	
 	// width n height
 	public static int width;
 	public static int height;
@@ -138,7 +135,7 @@ public class Constants
 	
 	// text (obviously?)
 	public static Text text;
-	public static double text_size = 16.0; // all text is the same size (how lame!)
+	public static double text_size = 28.0; // all text is the same size (how lame!)
 	
 	// camera
 	public static float[] my_view_matrix = new float[16];
@@ -159,7 +156,6 @@ public class Constants
 	public static ShadowLightShader shadow_light;
 	
 	// metrics
-	public static boolean draw_fps = false;
 	public static int quads_drawn_screen = 0;
 	
 	// errors

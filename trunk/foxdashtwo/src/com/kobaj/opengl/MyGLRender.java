@@ -104,10 +104,10 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		// in the onDrawFrame() method
 		
 		// we use a frustrum because the game utilizes 'zoom' effects via the camera
-		Matrix.frustumM(Constants.my_proj_matrix, 0, -ratio, ratio, -1, 1, .9999999999f, 2);
+		Matrix.frustumM(Constants.my_proj_matrix, 0, -ratio, ratio, -1f, 1f, .9999999999f, 2);
 		// Matrix.orthoM(Constants.my_proj_matrix, 0, -ratio, ratio, -1, 1, .99999999f, 2);
 		Matrix.setLookAtM(Constants.my_view_matrix, 0, // this is the identity...
-				0, 0, 0, // eye position/look at
+				0f, 0f, 0f, // eye position/look at
 				0f, 0f, -5.0f, // center/camera position
 				0f, 1.0f, 0.0f); // up vector
 		
@@ -212,6 +212,7 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 	public static boolean slowmo = false;
 	
 	public int screenshot_number = 0;
+	
 	public void screenshots()
 	{
 		int size = Constants.width * Constants.height;

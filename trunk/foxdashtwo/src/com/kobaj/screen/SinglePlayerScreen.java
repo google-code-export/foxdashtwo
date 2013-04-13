@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.util.Log;
 
 import com.kobaj.account_settings.SinglePlayerSave;
+import com.kobaj.account_settings.UserSettings;
 import com.kobaj.foxdashtwo.GameActivity;
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.input.EnumKeyCodes;
@@ -45,6 +46,9 @@ public class SinglePlayerScreen extends BaseScreen
 	public boolean fade_in = true;
 	public boolean fade_out = false;
 	
+	private int below_xfps_count = 300;
+	private double fps_limit = 1.0 / 20.0 * 1000.0;
+	
 	public SinglePlayerScreen()
 	{
 		// initialize everything
@@ -62,7 +66,7 @@ public class SinglePlayerScreen extends BaseScreen
 		if (level_name == null || level_name.equals(Constants.empty))
 		{
 			//change the first level
-			the_level = FileHandler.readSerialResource(Constants.resources, R.raw.level_two, com.kobaj.level.Level.class);
+			the_level = FileHandler.readSerialResource(Constants.resources, R.raw.test_level, com.kobaj.level.Level.class);
 			return true;
 		}
 		
@@ -167,6 +171,19 @@ public class SinglePlayerScreen extends BaseScreen
 			// MyGLRender.slowmo = !MyGLRender.slowmo;
 		}
 		
+		//handle low fps situations
+		if(delta > this.fps_limit && UserSettings.fbo_divider < 2 && !UserSettings.fbo_warned)
+		{
+			this.below_xfps_count--;
+			if(below_xfps_count == 0)
+			{
+				UserSettings.fbo_warned = true;
+				
+				pause_addon.reset();
+				pause_addon.low_fps_detected = true;
+				current_state = EnumScreenState.paused;
+			}
+		}
 	}
 	
 	private void onRunningUpdate(double delta)

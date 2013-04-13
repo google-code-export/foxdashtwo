@@ -122,8 +122,11 @@ public class NParticleEmitter
 	
 	public void onUpdate(double delta)
 	{
-		// first see if we need to spawn some particles
+		//why update if not on screen?
+		if(!Functions.onShader(emit_location))
+			return;
 		
+		// first see if we need to spawn some particles
 		if (number_of_particles != 0)
 		{
 			current_time += delta;
@@ -218,10 +221,13 @@ public class NParticleEmitter
 		// INSTANCE THAT HECK YEAH
 		if (used_quads.size() > 0)
 		{
-			if (QuadCompressed.class.isAssignableFrom(used_quads.get(0).getClass()))
-				QuadRenderShell.onDrawQuad(Constants.my_vp_matrix, false, Constants.compressed_light, used_quads);
-			else
-				QuadRenderShell.onDrawQuad(Constants.my_vp_matrix, false, Constants.ambient_light, used_quads);
+			if(Functions.onShader(emit_location))
+			{
+				if (QuadCompressed.class.isAssignableFrom(used_quads.get(0).getClass()))
+					QuadRenderShell.onDrawQuad(Constants.my_vp_matrix, true, Constants.compressed_light, used_quads);
+				else
+					QuadRenderShell.onDrawQuad(Constants.my_vp_matrix, true, Constants.ambient_light, used_quads);
+			}
 		}
 	}
 	
