@@ -53,8 +53,7 @@ public class InputTypeHalfHalf extends InputTypeBase
 		return false;
 	}
 	
-	@Override
-	public boolean getTouchedLeft()
+	private boolean getLocalTouchedLeft()
 	{
 		for (int i = 0; i < 2; i++)
 			if (Constants.input_manager.getTouched(i) && Constants.input_manager.getX(i) < Constants.width / 2.0)
@@ -63,11 +62,54 @@ public class InputTypeHalfHalf extends InputTypeBase
 		return false;
 	}
 	
-	@Override
-	public boolean getTouchedRight()
+	private boolean getLocalPressedLeft()
+	{
+		for (int i = 0; i < 2; i++)
+			if (Constants.input_manager.getPressed(i) && Constants.input_manager.getX(i) < Constants.width / 2.0)
+				return true;
+		
+		return false;
+	}
+	
+	private boolean getLocalTouchedRight()
 	{
 		for (int i = 0; i < 2; i++)
 			if (Constants.input_manager.getTouched(i) && Constants.input_manager.getX(i) > Constants.width / 2.0)
+				return true;
+		
+		return false;
+	}
+	
+	private boolean getLocalPressedRight()
+	{
+		for (int i = 0; i < 2; i++)
+			if (Constants.input_manager.getPressed(i) && Constants.input_manager.getX(i) > Constants.width / 2.0)
+				return true;
+		
+		return false;
+	}
+	
+	@Override
+	public boolean getTouchedLeft()
+	{
+		if (Constants.input_manager.getTouched(0) && Constants.input_manager.getX(0) < Constants.width / 2.0)
+			return true;
+		
+		if (Constants.input_manager.getTouched(1) && Constants.input_manager.getX(1) < Constants.width / 2.0)
+			if(!getTouchedRight())
+				return true;
+		
+		return false;
+	}
+	
+	@Override
+	public boolean getTouchedRight()
+	{
+		if (Constants.input_manager.getTouched(0) && Constants.input_manager.getX(0) > Constants.width / 2.0)
+			return true;
+	
+		if (Constants.input_manager.getTouched(1) && Constants.input_manager.getX(1) > Constants.width / 2.0)
+			if(!getTouchedLeft())
 				return true;
 		
 		return false;
