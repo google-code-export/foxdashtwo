@@ -1,8 +1,5 @@
 package com.kobaj.opengldrawable.Quad;
 
-import com.kobaj.loader.GLBitmapReader;
-import com.kobaj.math.Functions;
-
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -12,6 +9,9 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.RadialGradient;
 import android.graphics.Rect;
 import android.graphics.Shader;
+
+import com.kobaj.loader.GLBitmapReader;
+import com.kobaj.math.Functions;
 
 public class QuadColorShape extends Quad
 {

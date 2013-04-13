@@ -14,10 +14,8 @@ import com.kobaj.loader.FileHandler;
 import com.kobaj.loader.GLBitmapReader;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
-import com.kobaj.opengl.MyGLRender;
 import com.kobaj.screen.screenaddons.BaseInteractionPhysics;
 import com.kobaj.screen.screenaddons.BaseLoadingScreen;
-import com.kobaj.screen.screenaddons.EnumDebugType;
 import com.kobaj.screen.screenaddons.LevelDebugScreen;
 import com.kobaj.screen.screenaddons.floatingframe.BasePauseScreen;
 
@@ -63,7 +61,8 @@ public class SinglePlayerScreen extends BaseScreen
 		
 		if (level_name == null || level_name.equals(Constants.empty))
 		{
-			the_level = FileHandler.readSerialResource(Constants.resources, R.raw.test_level, com.kobaj.level.Level.class);
+			//change the first level
+			the_level = FileHandler.readSerialResource(Constants.resources, R.raw.level_two, com.kobaj.level.Level.class);
 			return true;
 		}
 		
@@ -124,7 +123,7 @@ public class SinglePlayerScreen extends BaseScreen
 			}
 		}
 		
-		//debug_addon = new LevelDebugScreen(the_level, EnumDebugType.events);
+		// debug_addon = new LevelDebugScreen(the_level, EnumDebugType.events);
 		
 		GLBitmapReader.isLoaded();
 		
@@ -161,11 +160,11 @@ public class SinglePlayerScreen extends BaseScreen
 			// this is possible because onUpdate is only called when in two states, running or paused
 			if (current_state != EnumScreenState.paused)
 			{
-				 pause_addon.reset();
-				 current_state = EnumScreenState.paused;
+				pause_addon.reset();
+				current_state = EnumScreenState.paused;
 			}
 			
-			//MyGLRender.slowmo = !MyGLRender.slowmo;
+			// MyGLRender.slowmo = !MyGLRender.slowmo;
 		}
 		
 	}

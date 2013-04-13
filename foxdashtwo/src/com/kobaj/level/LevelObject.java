@@ -295,7 +295,7 @@ public class LevelObject extends LevelEntityActive
 			
 			quad_object.phys_rect_list.remove(0);
 		}
-		else if (this_object == EnumLevelObject.l2_ground_platform_floating_2)	
+		else if (this_object == EnumLevelObject.l2_ground_platform_floating_2)
 		{
 			quad_object = new QuadCompressed(R.raw.l2_ground_platform_floating_2, R.raw.l2_ground_platform_floating_2_alpha, 322, 144);
 			RectF previous = quad_object.phys_rect_list.get(0).main_rect;//
@@ -382,23 +382,23 @@ public class LevelObject extends LevelEntityActive
 	{
 		if (this_object == EnumLevelObject.l2_ground_platform_floating_1)
 		{
-			//make it move left and right
+			// make it move left and right
 			
-			//if(quad_object.x_pos_shader < this.x_pos_shader - floating_move_lr_limit)
-			//	quad_object.x_acc_shader = floating_move_lr_speed;
-			//else if(quad_object.x_pos_shader > this.x_pos_shader + floating_move_lr_limit)
-			//	quad_object.x_acc_shader = -floating_move_lr_speed;
-			//else if(quad_object.x_vel_shader == 0.0)
-			//	quad_object.x_acc_shader = floating_move_lr_speed;
+			// if(quad_object.x_pos_shader < this.x_pos_shader - floating_move_lr_limit)
+			// quad_object.x_acc_shader = floating_move_lr_speed;
+			// else if(quad_object.x_pos_shader > this.x_pos_shader + floating_move_lr_limit)
+			// quad_object.x_acc_shader = -floating_move_lr_speed;
+			// else if(quad_object.x_vel_shader == 0.0)
+			// quad_object.x_acc_shader = floating_move_lr_speed;
 			
-			if(quad_object.x_vel_shader == 0)
+			if (quad_object.x_vel_shader == 0)
 				quad_object.x_acc_shader = Constants.floating_move_lr_acc;
 			
 			Constants.physics.addSpringX(Constants.floating_spring / 32.0, 0, Constants.floating_lr_distance, quad_object.x_pos_shader - x_pos_shader, quad_object);
 			Constants.physics.addSpringY(Constants.floating_spring, Constants.floating_damper, 0, quad_object.y_pos_shader - y_pos_shader, quad_object);
 			Constants.physics.integratePhysics(delta, quad_object);
 		}
-		else if(this_object == EnumLevelObject.l2_ground_platform_floating_2)
+		else if (this_object == EnumLevelObject.l2_ground_platform_floating_2)
 		{
 			Constants.physics.addSpringY(Constants.floating_spring, Constants.floating_damper / 4.0, 0, quad_object.y_pos_shader - y_pos_shader, quad_object);
 			Constants.physics.integratePhysics(delta, quad_object);

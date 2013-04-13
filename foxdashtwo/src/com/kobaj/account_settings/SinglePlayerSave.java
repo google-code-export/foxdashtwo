@@ -2,7 +2,6 @@ package com.kobaj.account_settings;
 
 import java.util.HashSet;
 
-import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
 
 public class SinglePlayerSave

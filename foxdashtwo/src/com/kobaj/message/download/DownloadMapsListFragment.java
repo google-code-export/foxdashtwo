@@ -16,9 +16,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -26,6 +29,7 @@ import android.widget.TextView;
 import com.kobaj.account_settings.UserSettings;
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Constants;
+import com.kobaj.message.animation.ExpandAnimation;
 import com.kobaj.message.download.LevelItem.EnumButtonStates;
 import com.kobaj.networking.MyTask;
 import com.kobaj.networking.NetworkManager;
@@ -54,7 +58,26 @@ public class DownloadMapsListFragment extends ListFragment
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState)
 	{
-		this.getListView().setOnScrollListener(new ScrollHelper(this));
+		ListView list = this.getListView();
+		
+		list.setOnScrollListener(new ScrollHelper(this));
+		list.setOnItemClickListener(new AdapterView.OnItemClickListener()
+		{
+			public void onItemClick(AdapterView<?> parent, final View view, int position, long id)
+			{
+				
+				View toolbar = view.findViewById(R.id.toolbar);
+				
+				if(toolbar == null)
+					return;
+				
+				// Creating the expand animation for the item
+				ExpandAnimation expandAni = new ExpandAnimation(toolbar, 500);
+				
+				// Start the animation on the toolbar
+				toolbar.startAnimation(expandAni);
+			}
+		});
 	}
 	
 	@Override
@@ -72,7 +95,7 @@ public class DownloadMapsListFragment extends ListFragment
 	public void tabUpdate()
 	{
 		// determine what we show the user depending on the tab
-		if (current_page != DownloadMapsFragmentPager.pages.length - 1)
+		if (!isDownloadedPage())
 		{
 			LoadFeedData load_feed_data = new LoadFeedData(adapter);
 			load_feed_data.execute(String.valueOf(adapter.getCount()), DownloadMapsFragmentPager.pages[current_page]);
@@ -83,6 +106,11 @@ public class DownloadMapsListFragment extends ListFragment
 			LoadDiskData load_disk_data = new LoadDiskData(adapter);
 			load_disk_data.execute();
 		}
+	}
+	
+	public boolean isDownloadedPage()
+	{
+		return current_page == DownloadMapsFragmentPager.pages.length - 1;
 	}
 }
 
@@ -287,42 +315,49 @@ class DownloadListAdapter extends BaseAdapter implements ListAdapter
 		return position;
 	}
 	
-	public View getView(int position, View convertView, ViewGroup parent)
+	public View getView(int position, View convertView, ViewGroup view_parent)
 	{
-		RelativeLayout item_view;
+		ViewGroup item_view;
 		
 		if (convertView == null)
 		{
-			item_view = (RelativeLayout) mLayoutInflator.inflate(R.layout.download_maps_item, parent, false);
+			if (parent.isDownloadedPage())
+			{
+				item_view = (LinearLayout) mLayoutInflator.inflate(R.layout.download_maps_item_expandable, view_parent, false);
+			}
+			else
+			{
+				item_view = (RelativeLayout) mLayoutInflator.inflate(R.layout.download_maps_item, view_parent, false);
+			}
 		}
 		else
 		{
-			item_view = (RelativeLayout) convertView;
+			item_view = (ViewGroup) convertView;
 		}
 		
-		// get the elements
+		// get the main elements
 		TextView title_text = (TextView) item_view.findViewById(R.id.title_text);
 		TextView description_text = (TextView) item_view.findViewById(R.id.description_text);
 		
 		ProgressBar progressbar = (ProgressBar) item_view.findViewById(R.id.progressbar_download);
 		
-		Button button = (Button) item_view.findViewById(R.id.button_download);
+		Button play_update_button = (Button) item_view.findViewById(R.id.button_download);
 		
 		LevelItem this_item = level_names.get(position);
-		button.setOnClickListener(this_item.listener);
-		this_item.button = button;
+		play_update_button.setOnClickListener(this_item.play_update_listener);
+		this_item.button = play_update_button;
 		this_item.progressbar = progressbar;
 		
 		if (this_item.this_state == LevelItem.EnumButtonStates.play)
-			button.setText(R.string.play);
+			play_update_button.setText(R.string.play);
 		else if (this_item.this_state == LevelItem.EnumButtonStates.update)
-			button.setText(R.string.update);
+			play_update_button.setText(R.string.update);
 		else if (this_item.this_state == LevelItem.EnumButtonStates.download)
-			button.setText(R.string.download);
+			play_update_button.setText(R.string.download);
 		
 		if (this_item.lid < 1)
 		{
-			button.setVisibility(View.INVISIBLE);
+			play_update_button.setVisibility(View.INVISIBLE);
 			description_text.setVisibility(View.INVISIBLE);
 		}
 		
@@ -332,6 +367,8 @@ class DownloadListAdapter extends BaseAdapter implements ListAdapter
 		// format the date
 		String time = DateUtils.formatDateTime(Constants.context, this_item.changed * 1000, DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_TIME);
 		description_text.setText(time);
+		
+		// then do the secondary elements
 		
 		return item_view;
 	}

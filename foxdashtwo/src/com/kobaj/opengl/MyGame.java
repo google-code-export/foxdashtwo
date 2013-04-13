@@ -151,15 +151,20 @@ public class MyGame extends MyGLRender
 		
 		if (foregroup.beginRenderToTexture(true))
 			currently_active_screen.onDrawObject(foregroup_enums);
-		foregroup.endRenderToTexture(false);
+		foregroup.endRenderToTexture(true);
 		
 		// draw everything
+		GLES20.glBlendFunc(GLES20.GL_ONE, GLES20.GL_ZERO);
 		shadow_generator.shadow_radius = (float) currently_active_screen.player_stats[2];
 		shadow_generator.shadow_x_pos = (float) currently_active_screen.player_stats[0];
 		shadow_generator.shadow_y_pos = (float) currently_active_screen.player_stats[1];
 		shadow_generator.onDrawAmbient(my_local_ip_matrix, true);
 		
+		//debugging
+		//scene.onDrawAmbient(my_local_ip_matrix, true);
+		
 		// text below this line
+		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA); // no see thru
 		currently_active_screen.onDrawConstant();
 	}
 	

@@ -200,7 +200,7 @@ public class Functions
 	protected static final void updateShaderRectFView()
 	{
 		if (camera_changed)
-		{	
+		{
 			camera_changed = false;
 			
 			final double neg_zoom = Constants.ratio * Constants.z_shader_translation;
@@ -327,7 +327,7 @@ public class Functions
 			z_camera = min_z_value;
 		if (z_camera > max_z_value)
 			z_camera = max_z_value;
-	
+		
 		if (x_camera == Constants.x_shader_translation && y_camera == Constants.y_shader_translation && z_camera == Constants.z_shader_translation)
 		{
 			camera_changed = false;
@@ -678,7 +678,7 @@ public class Functions
 		
 		Constants.player_downward_platform_acc = Functions.screenHeightToShaderHeight(Constants.player_downward_platform_acc_default);
 		Constants.player_movement_threshold = Functions.screenWidthToShaderWidth(Constants.player_movement_threshold_default);
-	
+		
 		Constants.shadow_height_shader = Functions.screenHeightToShaderHeight(Constants.shadow_height);
 		
 		Constants.floating_lr_distance = Functions.screenWidthToShaderWidth(Constants.floating_lr_distance_default);

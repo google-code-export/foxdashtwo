@@ -68,7 +68,7 @@ public class RectFExtended
 		x_offset = x_offset * scale_factor;
 		y_offset = y_offset * scale_factor;
 		
-		//set the width n such
+		// set the width n such
 		setHalfWidthHalfHeight(half_width * scale_factor, half_height * scale_factor);
 		
 		// finally set the global scale value
