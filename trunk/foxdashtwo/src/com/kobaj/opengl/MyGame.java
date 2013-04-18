@@ -35,9 +35,9 @@ public class MyGame extends MyGLRender
 	
 	private QuadShadow shadow_generator;
 	
-	private final EnumLayerTypes[] backgroup_enums = { EnumLayerTypes.Background, EnumLayerTypes.Background_Aux };
-	private final EnumLayerTypes[] interaction_group_enums = { EnumLayerTypes.Post_interaction, EnumLayerTypes.Interaction, EnumLayerTypes.Pre_interaction };
-	private final EnumLayerTypes[] foregroup_enums = { EnumLayerTypes.Foreground_Aux, EnumLayerTypes.Foreground, EnumLayerTypes.Top };
+	private final EnumLayerTypes[] backgroup_enums = { EnumLayerTypes.Background, EnumLayerTypes.Background_Aux, EnumLayerTypes.Post_interaction };
+	private final EnumLayerTypes[] interaction_group_enums = { EnumLayerTypes.Interaction };
+	private final EnumLayerTypes[] foregroup_enums = { EnumLayerTypes.Pre_interaction, EnumLayerTypes.Foreground_Aux, EnumLayerTypes.Foreground, EnumLayerTypes.Top };
 	
 	private int left_corner_count = 0;
 	

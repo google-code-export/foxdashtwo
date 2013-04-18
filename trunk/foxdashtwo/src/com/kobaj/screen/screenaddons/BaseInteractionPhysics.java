@@ -40,9 +40,12 @@ public class BaseInteractionPhysics
 		// integrate all other objects
 		LevelObject[] temp = the_level.object_hash.get(EnumLayerTypes.Interaction);
 		for (int i = temp.length - 1; i >= 0; i--)
-		{
+		{			
 			LevelObject reference = temp[i];
 			
+			if(!reference.collide_with_player)
+				continue;
+				
 			if (reference.active)
 			{
 				// do the regular fox's collision

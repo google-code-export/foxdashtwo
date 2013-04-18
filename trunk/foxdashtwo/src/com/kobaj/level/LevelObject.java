@@ -46,6 +46,8 @@ public class LevelObject extends LevelEntityActive
 	@Element
 	public boolean mirror_left_right = false;
 	
+	public boolean collide_with_player = false;
+	
 	public Quad quad_object;
 	
 	// usually read only
@@ -294,6 +296,8 @@ public class LevelObject extends LevelEntityActive
 					previous.bottom + Functions.screenHeightToShaderHeight(50)));//
 			
 			quad_object.phys_rect_list.remove(0);
+			
+			collide_with_player = true;
 		}
 		else if (this_object == EnumLevelObject.l2_ground_platform_floating_2)
 		{
@@ -305,6 +309,8 @@ public class LevelObject extends LevelEntityActive
 					previous.bottom + Functions.screenHeightToShaderHeight(50)));//
 			
 			quad_object.phys_rect_list.remove(0);
+			
+			collide_with_player = true;
 		}
 		else if (this_object == EnumLevelObject.l4_ground_platform_floating)
 		{
@@ -316,6 +322,8 @@ public class LevelObject extends LevelEntityActive
 					previous.bottom + Functions.screenHeightToShaderHeight(50)));//
 			
 			quad_object.phys_rect_list.remove(0);
+			
+			collide_with_player = true;
 		}
 		
 		else if (this_object == EnumLevelObject.lx_background_fade_1)

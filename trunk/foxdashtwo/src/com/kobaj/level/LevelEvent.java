@@ -52,10 +52,15 @@ public class LevelEvent
 				(float) (Functions.screenXToShaderX(x_pos + width)), // right
 				(float) Functions.screenYToShaderY(y_pos - height)); // bottom
 		
-		if (this_event == EnumLevelEvent.left_arrow || this_event == EnumLevelEvent.right_arrow || this_event == EnumLevelEvent.up_arrows)
+		if (this_event == EnumLevelEvent.left_arrow //
+				|| this_event == EnumLevelEvent.right_arrow //
+				|| this_event == EnumLevelEvent.up_arrows) //
 			my_possible_event = new LevelEventArrows(this_event);
-		else if (this_event == EnumLevelEvent.active_off || this_event == EnumLevelEvent.active_on || this_event == EnumLevelEvent.active_anti_touch || this_event == EnumLevelEvent.active_touch
-				|| this_event == EnumLevelEvent.active_toggle)
+		else if (this_event == EnumLevelEvent.active_off //
+				|| this_event == EnumLevelEvent.active_on //
+				|| this_event == EnumLevelEvent.active_anti_touch //
+				|| this_event == EnumLevelEvent.active_touch //
+				|| this_event == EnumLevelEvent.active_toggle) //
 			my_possible_event = new LevelEventActive(this_event);
 		else if (this_event == EnumLevelEvent.next_level)
 			my_possible_event = new LevelEventNextLevel(this_event);

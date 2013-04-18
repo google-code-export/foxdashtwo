@@ -5,7 +5,6 @@ package com.kobaj.opengldrawable.Quad;
 
 import android.opengl.GLES20;
 
-import com.kobaj.account_settings.UserSettings;
 import com.kobaj.loader.GLBitmapReader;
 import com.kobaj.math.Functions;
 
@@ -67,7 +66,7 @@ public class QuadRenderTo extends Quad
 		
 		// load a regular texture
 		this.my_texture_data_handle = GLBitmapReader.newTextureID();
-
+		
 		pushBitmap();
 		
 		this.fb = fb[0];
