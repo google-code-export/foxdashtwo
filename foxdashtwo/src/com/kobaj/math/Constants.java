@@ -25,6 +25,8 @@ public class Constants
 	
 	public static final long force_update_epoch = 1364706769;
 	
+	public static final boolean demo_mode = false;
+	
 	// density independent pixels
 	public static double dip_scale;
 	

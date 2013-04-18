@@ -155,9 +155,8 @@ public class Level
 			LevelEvent current_event = event_list.get(i);
 			
 			current_event.onInitialize(this);
-			// if (event_list.get(i).this_event == EnumLevelEvent.send_to_start)
-			// LevelEventTransportPlayer.class.cast(event_list.get(i).my_possible_event).setTransportTo(x_player, y_player);
-			if (current_event.this_event == EnumLevelEvent.invisible_wall || current_event.this_event == EnumLevelEvent.color)
+			if (current_event.this_event == EnumLevelEvent.invisible_wall //
+					|| current_event.this_event == EnumLevelEvent.color) //
 			{
 				LevelEvent original = event_list.get(i);
 				
@@ -175,7 +174,10 @@ public class Level
 				temp.layer = EnumLayerTypes.Interaction;
 				
 				if (current_event.this_event == EnumLevelEvent.invisible_wall)
+				{
 					temp.this_object = EnumLevelObject.transparent;
+					temp.collide_with_player = true;
+				}
 				else if (current_event.this_event == EnumLevelEvent.color)
 				{
 					temp.this_object = EnumLevelObject.color;

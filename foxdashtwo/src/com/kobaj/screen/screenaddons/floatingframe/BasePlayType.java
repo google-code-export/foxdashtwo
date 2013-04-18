@@ -13,8 +13,9 @@ public class BasePlayType extends BaseFloatingFrame
 {
 	TextButton back_button;
 	TextButton new_game_button;
-	//TextButton level_select_button;
-	//TextButton download_maps_button;
+	
+	TextButton level_select_button;
+	TextButton download_maps_button;
 	
 	public static final String popup_tag = "FoxDashTwoDownload";
 	
@@ -25,19 +26,28 @@ public class BasePlayType extends BaseFloatingFrame
 		
 		back_button = new TextButton(R.string.back);
 		new_game_button = new TextButton(R.string.new_game);
-		//level_select_button = new TextButton(R.string.level_select_game);
-		//download_maps_button = new TextButton(R.string.download_maps);
+		level_select_button = new TextButton(R.string.level_select_game);
+		download_maps_button = new TextButton(R.string.download_maps);
 		
 		back_button.onInitialize();
 		new_game_button.onInitialize();
-		//level_select_button.onInitialize();
-		//download_maps_button.onInitialize();
+		level_select_button.onInitialize();
+		download_maps_button.onInitialize();
 		
 		double shift_y = Functions.screenHeightToShaderHeight(32);
 		double move_y = Functions.screenHeightToShaderHeight(5); // same value is in base audio settings
 		
-		BaseFloatingFrame.alignButtonsAlongXAxis(center_y + shift_y + move_y, new_game_button/*, level_select_button*/);
-		BaseFloatingFrame.alignButtonsAlongXAxis(center_y - 2.0 * shift_y + move_y/*, download_maps_button*/);
+		if (Constants.demo_mode)
+		{
+			BaseFloatingFrame.alignButtonsAlongXAxis(center_y + shift_y + move_y, new_game_button/* , level_select_button */);
+			BaseFloatingFrame.alignButtonsAlongXAxis(center_y - 2.0 * shift_y + move_y/* , download_maps_button */);
+		}
+		else
+		{
+			BaseFloatingFrame.alignButtonsAlongXAxis(center_y + shift_y + move_y, new_game_button, level_select_button);
+			BaseFloatingFrame.alignButtonsAlongXAxis(center_y - 2.0 * shift_y + move_y, download_maps_button);
+		}
+		
 		BaseFloatingFrame.alignButtonsAlongXAxis(cancel_shift_y, back_button);
 	}
 	
@@ -48,8 +58,8 @@ public class BasePlayType extends BaseFloatingFrame
 		
 		back_button.onUnInitialize();
 		new_game_button.onUnInitialize();
-		//level_select_button.onUnInitialize();
-		//download_maps_button.onUnInitialize();
+		level_select_button.onUnInitialize();
+		download_maps_button.onUnInitialize();
 	}
 	
 	@Override
@@ -62,15 +72,15 @@ public class BasePlayType extends BaseFloatingFrame
 			SinglePlayerSave.last_checkpoint = null;
 			TitleScreen.fade_play = true;
 		}
-		/*else if (level_select_button.isReleased())
+		else if (level_select_button.isReleased() && !Constants.demo_mode)
 		{
-		//for now, do nothing.
+			// for now, do nothing.
 		}
-		else if (download_maps_button.isReleased())
+		else if (download_maps_button.isReleased() && !Constants.demo_mode)
 		{
 			DownloadMapsManager popup = new DownloadMapsManager();
 			popup.show(Constants.fragment_manager, popup_tag);
-		}*/
+		}
 		else if (back_button.isReleased())
 			return false;
 		
@@ -89,8 +99,13 @@ public class BasePlayType extends BaseFloatingFrame
 		Constants.text.drawText(R.string.play_header, label_x, label_y, EnumDrawFrom.center);
 		
 		new_game_button.onDrawConstant();
-		//level_select_button.onDrawConstant();
-		//download_maps_button.onDrawConstant();
+		
+		if (!Constants.demo_mode)
+		{
+			level_select_button.onDrawConstant();
+			download_maps_button.onDrawConstant();
+		}
+		
 		back_button.onDrawConstant();
 	}
 	
