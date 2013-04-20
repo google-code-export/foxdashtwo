@@ -11,11 +11,11 @@ import java.io.InputStreamReader;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
-import com.kobaj.math.Constants;
-
 import android.content.res.Resources;
 import android.os.Environment;
 import android.util.Log;
+
+import com.kobaj.math.Constants;
 
 public class FileHandler
 {
@@ -35,9 +35,9 @@ public class FileHandler
 		{
 			try
 			{
-				if(!file_name.contains(fullstop))
+				if (!file_name.contains(fullstop))
 					file_name += save_format;
-					
+				
 				// create file and directory
 				File dir = prepareDirectory();
 				File sdcardFile = new File(dir, file_name);
@@ -65,16 +65,16 @@ public class FileHandler
 	
 	public static String readTextFile(String external_dir, String file_name)
 	{
-		if(hasStorage(false))
+		if (hasStorage(false))
 		{
-			if(!file_name.contains(fullstop))
+			if (!file_name.contains(fullstop))
 				file_name += save_format;
 			
 			try
 			{
-				if(!file_name.contains(fullstop))
+				if (!file_name.contains(fullstop))
 					file_name += save_format;
-					
+				
 				// create file and directory
 				File dir = prepareDirectory(external_dir);
 				File sdcardFile = new File(dir, file_name);
@@ -96,9 +96,9 @@ public class FileHandler
 	
 	public static boolean fileExists(String file_name)
 	{
-		if(hasStorage(false))
+		if (hasStorage(false))
 		{
-			if(!file_name.contains(fullstop))
+			if (!file_name.contains(fullstop))
 				file_name += save_format;
 			
 			File dir = prepareDirectory();
@@ -107,7 +107,7 @@ public class FileHandler
 		}
 		
 		return false;
-	}	
+	}
 	
 	public static String[] getFileList(String directory_extension)
 	{
@@ -137,7 +137,7 @@ public class FileHandler
 			Serializer serial = new Persister();
 			File dir = prepareDirectory();
 			
-			if(!file_name.contains(fullstop))
+			if (!file_name.contains(fullstop))
 				file_name += save_format;
 			
 			File sdcardFile = new File(dir, file_name);
@@ -182,7 +182,7 @@ public class FileHandler
 		{
 			File dir = prepareDirectory(external_dir);
 			
-			if(!file_name.contains(fullstop))
+			if (!file_name.contains(fullstop))
 				file_name += save_format;
 			
 			File sdcardFile = new File(dir, file_name);
@@ -217,7 +217,6 @@ public class FileHandler
 		
 		// dont need to check for directory or read access, as resources are in memory.
 		final_return = readString(ioStreamToString(resources.openRawResource(identity)), type);
-
 		
 		return final_return;
 	}
@@ -242,7 +241,7 @@ public class FileHandler
 		return final_return;
 	}
 	
-	//build our folder structure
+	// build our folder structure
 	private static File prepareDirectory(String directory_extension)
 	{
 		File sdCard = Environment.getExternalStorageDirectory();
@@ -270,7 +269,7 @@ public class FileHandler
 		return false;
 	}
 	
-	//convert iostream to string (io can be from the internet or disk)
+	// convert iostream to string (io can be from the internet or disk)
 	public static String ioStreamToString(InputStream is)
 	{
 		BufferedReader reader = null;
@@ -300,5 +299,24 @@ public class FileHandler
 		}
 		
 		return b.toString();
+	}
+	
+	public static void deleteFile(String file_name)
+	{
+		if (hasStorage(true))
+		{
+			File dir = prepareDirectory();
+			
+			if (!file_name.contains(fullstop))
+				file_name += save_format;
+			
+			File sdcardFile = new File(dir, file_name);
+			
+			if (sdcardFile.exists())
+			{
+				sdcardFile.delete();
+			}
+			
+		}
 	}
 }

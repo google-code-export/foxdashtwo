@@ -92,7 +92,7 @@ public class Constants
 	public static double floating_lr_distance;
 	
 	// same regardless of screen.
-	public static final double normal_air_damping = .90;
+	public static final double normal_air_damping = .50;
 	public static final double normal_friction = .011;
 	public static final double floating_spring = .00005;
 	public static final double floating_damper = .0035;

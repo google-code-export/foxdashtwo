@@ -16,8 +16,8 @@ import android.view.Window;
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Constants;
 import com.kobaj.message.download.LevelItem.EnumButtonStates;
-import com.kobaj.networking.TaskGetDownloadedMaps;
-import com.kobaj.networking.TaskGetDownloadedMaps.finishedLoading;
+import com.kobaj.networking.task.TaskGetDownloadedMaps;
+import com.kobaj.networking.task.TaskGetDownloadedMaps.finishedLoading;
 
 public class DownloadMapsManager extends DialogFragment implements finishedLoading
 {
