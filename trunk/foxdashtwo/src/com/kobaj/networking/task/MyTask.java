@@ -1,4 +1,4 @@
-package com.kobaj.networking;
+package com.kobaj.networking.task;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Constants;
 import com.kobaj.message.ToastManager;
+import com.kobaj.networking.NetworkManager;
 
 public abstract class MyTask extends AsyncTask<String, Void, String>
 {

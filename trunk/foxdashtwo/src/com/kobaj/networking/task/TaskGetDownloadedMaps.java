@@ -1,4 +1,4 @@
-package com.kobaj.networking;
+package com.kobaj.networking.task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,6 +13,7 @@ import com.kobaj.loader.FileHandler;
 import com.kobaj.loader.RawTextReader;
 import com.kobaj.math.Constants;
 import com.kobaj.message.download.LevelItem;
+import com.kobaj.networking.NetworkManager;
 
 public class TaskGetDownloadedMaps extends AsyncTask<Void, Void, ArrayList<LevelItem>>
 {

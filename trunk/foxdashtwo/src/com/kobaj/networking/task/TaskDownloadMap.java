@@ -1,4 +1,4 @@
-package com.kobaj.networking;
+package com.kobaj.networking.task;
 
 import java.util.HashMap;
 
@@ -8,12 +8,13 @@ import com.kobaj.account_settings.UserSettings;
 import com.kobaj.loader.FileHandler;
 import com.kobaj.loader.RawTextReader;
 import com.kobaj.math.Constants;
+import com.kobaj.networking.NetworkManager;
 
 public class TaskDownloadMap extends MyTask
 {
 	public interface FinishedDownloading
 	{
-		void onTaskCompleted(int lid);
+		void onDownloadCompleted(int lid);
 	}
 	
 	private FinishedDownloading local_callback;
@@ -64,7 +65,7 @@ public class TaskDownloadMap extends MyTask
 				FileHandler.writeTextFile(FileHandler.download_dir + name, value);
 				
 				if (local_callback != null)
-					local_callback.onTaskCompleted(lid);
+					local_callback.onDownloadCompleted(lid);
 			}
 		}
 		catch (IllegalStateException e)

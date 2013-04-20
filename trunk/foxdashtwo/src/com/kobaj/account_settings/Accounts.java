@@ -15,7 +15,7 @@ import com.kobaj.foxdashtwo.GameActivity;
 import com.kobaj.math.Constants;
 import com.kobaj.message.ListPopupManager;
 import com.kobaj.networking.EnumNetworkAction;
-import com.kobaj.networking.TaskLogin;
+import com.kobaj.networking.task.TaskLogin;
 
 public class Accounts
 {

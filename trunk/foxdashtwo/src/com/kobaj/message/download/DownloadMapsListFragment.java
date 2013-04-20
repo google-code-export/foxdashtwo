@@ -31,10 +31,10 @@ import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Constants;
 import com.kobaj.message.animation.ExpandAnimation;
 import com.kobaj.message.download.LevelItem.EnumButtonStates;
-import com.kobaj.networking.MyTask;
 import com.kobaj.networking.NetworkManager;
-import com.kobaj.networking.TaskGetDownloadedMaps;
-import com.kobaj.networking.TaskGetDownloadedMaps.finishedLoading;
+import com.kobaj.networking.task.MyTask;
+import com.kobaj.networking.task.TaskGetDownloadedMaps;
+import com.kobaj.networking.task.TaskGetDownloadedMaps.finishedLoading;
 
 public class DownloadMapsListFragment extends ListFragment
 {
@@ -300,6 +300,20 @@ class DownloadListAdapter extends BaseAdapter implements ListAdapter
 		notifyDataSetChanged();
 	}
 	
+	public void onRemoveEntry(int lid)
+	{
+		for(int i = level_names.size() - 1; i >= 0; i--)
+		{
+			if(level_names.get(i).lid == lid)
+			{
+				level_names.remove(i);
+				break;
+			}
+		}
+		
+		notifyDataSetChanged();
+	}
+	
 	public int getCount()
 	{
 		return level_names.size();
@@ -345,7 +359,7 @@ class DownloadListAdapter extends BaseAdapter implements ListAdapter
 		
 		LevelItem this_item = level_names.get(position);
 		play_update_button.setOnClickListener(this_item.play_update_listener);
-		this_item.button = play_update_button;
+		this_item.play_update_button = play_update_button;
 		this_item.progressbar = progressbar;
 		
 		if (this_item.this_state == LevelItem.EnumButtonStates.play)
@@ -369,6 +383,11 @@ class DownloadListAdapter extends BaseAdapter implements ListAdapter
 		description_text.setText(time);
 		
 		// then do the secondary elements
+		Button delete_button = (Button) item_view.findViewById(R.id.button_delete);
+		if(delete_button != null)
+		{
+			delete_button.setOnClickListener(this_item.delete_listener);
+		}
 		
 		return item_view;
 	}
