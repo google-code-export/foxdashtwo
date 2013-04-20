@@ -64,7 +64,7 @@ public class TaskGetDownloadedMaps extends AsyncTask<Void, Void, ArrayList<Level
 				temp.name = RawTextReader.findValueInXML(the_level, name);
 				temp.changed = Long.valueOf(RawTextReader.findValueInXML(the_level, changed));
 				temp.download_time = Long.valueOf(RawTextReader.findValueInXML(the_level, download_time));
-				
+	
 				temp.this_state = LevelItem.EnumButtonStates.play;
 				
 				// finally add and commit
@@ -103,6 +103,9 @@ public class TaskGetDownloadedMaps extends AsyncTask<Void, Void, ArrayList<Level
 		HashMap<String, String> url_helper = new HashMap<String, String>();
 		url_helper.put(NetworkManager.url_file, "shared.php");
 		url_helper.put(NetworkManager.url_action, "check_xml_update");
+		
+		//TODO put here a request for my current rateing (if logged in of course)
+		//TODO and if this has been reported before by me
 		
 		// build a string of lids
 		String lid_string = Constants.empty;

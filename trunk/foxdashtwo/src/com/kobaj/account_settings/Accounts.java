@@ -16,6 +16,7 @@ import com.kobaj.math.Constants;
 import com.kobaj.message.ListPopupManager;
 import com.kobaj.networking.EnumNetworkAction;
 import com.kobaj.networking.task.TaskLogin;
+import com.kobaj.networking.task.TaskSendRate;
 
 public class Accounts
 {
@@ -85,6 +86,13 @@ public class Accounts
 		
 	}
 	
+	// login required for sendRate
+	public void sendRate(int lid, int rateing, TaskSendRate sender)
+	{
+		TaskToken get_token = new TaskToken();
+		get_token.execute(EnumNetworkAction.rate, lid, rateing, sender);
+	}
+	
 	// async task calls this
 	public String get_token(boolean invalidateToken)
 	{
@@ -128,7 +136,7 @@ public class Accounts
 	}
 	
 	// async task calls this too
-	public void tokenReceivedFromTask(String token, EnumNetworkAction action)
+	public void tokenReceivedFromTask(String token, EnumNetworkAction action, Object[] passthru)
 	{
 		if (action == EnumNetworkAction.login)
 		{
@@ -149,23 +157,42 @@ public class Accounts
 			TaskLogin network_login = new TaskLogin();
 			network_login.execute(get_accounts()[UserSettings.selected_account_login], token);
 		}
+		else if (action == EnumNetworkAction.rate)
+		{
+			if (token.equals(Constants.empty))
+			{
+				return;
+			}
+			
+			if(TaskSendRate.class.isAssignableFrom(passthru[3].getClass()))
+			{
+				TaskSendRate network_rate = TaskSendRate.class.cast(passthru[3]);
+				network_rate.execute(token, String.valueOf((Integer) passthru[1]), String.valueOf((Integer) passthru[2]));
+			}
+		}
 	}
 }
 
-class TaskToken extends AsyncTask<EnumNetworkAction, Void, String>
+class TaskToken extends AsyncTask<Object, Void, String>
 {
 	private EnumNetworkAction action;
 	
+	private Object[] passthru;
+	
 	@Override
-	protected String doInBackground(EnumNetworkAction... action)
+	protected String doInBackground(Object... actions)
 	{
-		this.action = action[0];
+		if (EnumNetworkAction.class.isAssignableFrom(actions[0].getClass()))
+			this.action = (EnumNetworkAction) actions[0];
+		
+		passthru = actions;
+		
 		return Constants.accounts.get_token(true);
 	}
 	
 	@Override
 	protected void onPostExecute(String token)
 	{
-		Constants.accounts.tokenReceivedFromTask(token, action);
+		Constants.accounts.tokenReceivedFromTask(token, action, passthru);
 	}
 }
