@@ -389,6 +389,17 @@ class DownloadListAdapter extends BaseAdapter implements ListAdapter
 			delete_button.setOnClickListener(this_item.delete_listener);
 		}
 		
+		Button rate_button = (Button) item_view.findViewById(R.id.button_rate);
+		if(rate_button != null)
+		{
+			if(!Constants.logged_in)
+				rate_button.setEnabled(false);
+			else
+				rate_button.setEnabled(true);
+			
+			rate_button.setOnClickListener(this_item.rate_listener);
+		}
+		
 		return item_view;
 	}
 }
