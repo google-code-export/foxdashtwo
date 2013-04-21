@@ -33,8 +33,8 @@ import com.kobaj.message.animation.ExpandAnimation;
 import com.kobaj.message.download.LevelItem.EnumButtonStates;
 import com.kobaj.networking.NetworkManager;
 import com.kobaj.networking.task.MyTask;
-import com.kobaj.networking.task.TaskGetDownloadedMaps;
-import com.kobaj.networking.task.TaskGetDownloadedMaps.finishedLoading;
+import com.kobaj.networking.task.TaskUpdateMaps;
+import com.kobaj.networking.task.TaskUpdateMaps.finishedLoading;
 
 public class DownloadMapsListFragment extends ListFragment
 {
@@ -165,7 +165,7 @@ class LoadDiskData implements finishedLoading
 	
 	public void execute()
 	{
-		TaskGetDownloadedMaps maps = new TaskGetDownloadedMaps();
+		TaskUpdateMaps maps = new TaskUpdateMaps();
 		maps.setFinishedLoading(this);
 		maps.execute();
 	}
@@ -198,7 +198,7 @@ class LoadFeedData extends MyTask
 		if (attributes.length == 2)
 		{
 			HashMap<String, String> url_helper = new HashMap<String, String>();
-			url_helper.put(NetworkManager.url_file, "game.php");
+			url_helper.put(NetworkManager.url_file, NetworkManager.file_game);
 			url_helper.put(NetworkManager.url_action, "get_map_list");
 			
 			url_helper.put("count", attributes[0]);
@@ -234,9 +234,9 @@ class LoadFeedData extends MyTask
 						JSONObject json_data = levels.getJSONObject(i);
 						
 						LevelItem temp = new LevelItem();
-						temp.name = json_data.getString(TaskGetDownloadedMaps.name);
-						temp.lid = json_data.getInt(TaskGetDownloadedMaps.lid);
-						temp.changed = json_data.getInt(TaskGetDownloadedMaps.changed);
+						temp.name = json_data.getString(TaskUpdateMaps.name);
+						temp.lid = json_data.getInt(TaskUpdateMaps.lid);
+						temp.changed = json_data.getInt(TaskUpdateMaps.changed);
 						
 						EnumButtonStates this_button_state = my_adapter.parent.parent.parent.downloaded_maps.get(temp.lid);
 						if (this_button_state != null)
@@ -398,6 +398,19 @@ class DownloadListAdapter extends BaseAdapter implements ListAdapter
 				rate_button.setEnabled(true);
 			
 			rate_button.setOnClickListener(this_item.rate_listener);
+		}
+		
+		Button report_button = (Button) item_view.findViewById(R.id.button_report);
+		if(report_button != null)
+		{
+			if(!Constants.logged_in)
+				report_button.setEnabled(false);
+			else if(this_item.reported)
+				report_button.setEnabled(false);
+			else
+				report_button.setEnabled(true);
+			
+			report_button.setOnClickListener(this_item.report_listener);
 		}
 		
 		return item_view;

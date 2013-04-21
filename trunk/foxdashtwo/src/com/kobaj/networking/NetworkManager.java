@@ -24,6 +24,13 @@ public class NetworkManager
 	public static final String server = "http://foxdashgame.com/";
 	public static final String php_extension = "php";
 	
+	// test server
+	// public static final String server = "http://normannexus.com:8080/";
+	// public static final String php_extension = "new_level_editor/php";
+	
+	public static final String file_game = "game.php";
+	public static final String file_shared = "shared.php";
+	
 	public static final String url_file = "url_file";
 	public static final String url_action = "action";
 	public static final String slash = "/";

@@ -1,9 +1,9 @@
 package com.kobaj.networking.task;
 
+import java.util.HashMap;
+
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import android.net.Uri;
 
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Constants;
@@ -19,15 +19,14 @@ public class TaskLogin extends MyTask
 		// modify the url
 		if (attributes.length == 2)
 		{
-			Uri.Builder b = Uri.parse(NetworkManager.server).buildUpon();
+			HashMap<String, String> url_helper = new HashMap<String, String>();
+			url_helper.put(NetworkManager.url_file, NetworkManager.file_game);
+			url_helper.put(NetworkManager.url_action, "check_user");
 			
-			b.path(NetworkManager.php_extension + "/game.php");
+			url_helper.put("token", attributes[1]);
+			url_helper.put("username", attributes[0]);
 			
-			b.appendQueryParameter("action", "check_user");
-			b.appendQueryParameter("username", attributes[0]);
-			b.appendQueryParameter("token", attributes[1]);
-			
-			the_url = b.build().toString();
+			the_url = NetworkManager.genericUrlBuilder(url_helper);
 		}
 		
 		return the_url;
@@ -44,6 +43,8 @@ public class TaskLogin extends MyTask
 			{
 				Constants.logged_in = true;
 				ToastManager.makeShortToast(R.string.logged_in);
+		
+				Constants.uid = json.getInt("uid");
 			}
 			else
 			{
@@ -53,8 +54,7 @@ public class TaskLogin extends MyTask
 		}
 		catch (JSONException e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// oh well!
 		}
 	}
 	

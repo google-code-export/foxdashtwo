@@ -15,7 +15,7 @@ import com.kobaj.math.Constants;
 import com.kobaj.message.download.LevelItem;
 import com.kobaj.networking.NetworkManager;
 
-public class TaskGetDownloadedMaps extends AsyncTask<Void, Void, ArrayList<LevelItem>>
+public class TaskUpdateMaps extends AsyncTask<Void, Void, ArrayList<LevelItem>>
 {
 	public static final String lid = "lid";
 	public static final String name = "name";
@@ -101,12 +101,12 @@ public class TaskGetDownloadedMaps extends AsyncTask<Void, Void, ArrayList<Level
 		NetworkManager my_manager = new NetworkManager();
 		
 		HashMap<String, String> url_helper = new HashMap<String, String>();
-		url_helper.put(NetworkManager.url_file, "shared.php");
+		url_helper.put(NetworkManager.url_file, NetworkManager.file_game);
 		url_helper.put(NetworkManager.url_action, "check_xml_update");
 		
-		//TODO put here a request for my current rateing (if logged in of course)
-		//TODO and if this has been reported before by me
-		
+		if(Constants.logged_in)
+			url_helper.put("uid", String.valueOf(Constants.uid));
+
 		// build a string of lids
 		String lid_string = Constants.empty;
 		String changed_string = Constants.empty;
@@ -147,6 +147,10 @@ public class TaskGetDownloadedMaps extends AsyncTask<Void, Void, ArrayList<Level
 						{
 							temp.this_state = LevelItem.EnumButtonStates.update;
 						}
+						
+						temp.current_rateing = lids_n_values.getInt("rating");
+						if(lids_n_values.getInt("reporting") != 0)
+							temp.reported = true;
 					}
 					catch (JSONException e)
 					{
