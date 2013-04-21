@@ -26,7 +26,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.kobaj.account_settings.UserSettings;
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Constants;
 import com.kobaj.message.animation.ExpandAnimation;
@@ -68,7 +67,7 @@ public class DownloadMapsListFragment extends ListFragment
 				
 				View toolbar = view.findViewById(R.id.toolbar);
 				
-				if(toolbar == null)
+				if (toolbar == null)
 					return;
 				
 				// Creating the expand animation for the item
@@ -204,8 +203,8 @@ class LoadFeedData extends MyTask
 			url_helper.put("count", attributes[0]);
 			url_helper.put("page_type", attributes[1]);
 			
-			if (Constants.logged_in && UserSettings.selected_account_login != -1)
-				url_helper.put("user_email", Constants.accounts.get_accounts()[UserSettings.selected_account_login]);
+			if (Constants.logged_in)
+				url_helper.put("uid", String.valueOf(Constants.uid));
 			
 			the_url = NetworkManager.genericUrlBuilder(url_helper);
 		}
@@ -302,9 +301,9 @@ class DownloadListAdapter extends BaseAdapter implements ListAdapter
 	
 	public void onRemoveEntry(int lid)
 	{
-		for(int i = level_names.size() - 1; i >= 0; i--)
+		for (int i = level_names.size() - 1; i >= 0; i--)
 		{
-			if(level_names.get(i).lid == lid)
+			if (level_names.get(i).lid == lid)
 			{
 				level_names.remove(i);
 				break;
@@ -384,15 +383,15 @@ class DownloadListAdapter extends BaseAdapter implements ListAdapter
 		
 		// then do the secondary elements
 		Button delete_button = (Button) item_view.findViewById(R.id.button_delete);
-		if(delete_button != null)
+		if (delete_button != null)
 		{
 			delete_button.setOnClickListener(this_item.delete_listener);
 		}
 		
 		Button rate_button = (Button) item_view.findViewById(R.id.button_rate);
-		if(rate_button != null)
+		if (rate_button != null)
 		{
-			if(!Constants.logged_in)
+			if (!Constants.logged_in)
 				rate_button.setEnabled(false);
 			else
 				rate_button.setEnabled(true);
@@ -401,11 +400,11 @@ class DownloadListAdapter extends BaseAdapter implements ListAdapter
 		}
 		
 		Button report_button = (Button) item_view.findViewById(R.id.button_report);
-		if(report_button != null)
+		if (report_button != null)
 		{
-			if(!Constants.logged_in)
+			if (!Constants.logged_in)
 				report_button.setEnabled(false);
-			else if(this_item.reported)
+			else if (this_item.reported)
 				report_button.setEnabled(false);
 			else
 				report_button.setEnabled(true);

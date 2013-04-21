@@ -21,12 +21,12 @@ public class NetworkManager
 {
 	private final String error_tag = "Network Error";
 	
-	public static final String server = "http://foxdashgame.com/";
-	public static final String php_extension = "php";
+	//public static final String server = "http://foxdashgame.com/";
+	//public static final String php_extension = "php";
 	
 	// test server
-	// public static final String server = "http://normannexus.com:8080/";
-	// public static final String php_extension = "new_level_editor/php";
+	 public static final String server = "http://normannexus.com:8080/";
+	 public static final String php_extension = "new_level_editor/php";
 	
 	public static final String file_game = "game.php";
 	public static final String file_shared = "shared.php";

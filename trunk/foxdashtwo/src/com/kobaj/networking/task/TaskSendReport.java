@@ -28,7 +28,7 @@ public class TaskSendReport extends MyTask
 		String the_url = Constants.empty;
 		
 		// modify the url
-		if (attributes.length == 3)
+		if (attributes.length == 2)
 		{
 			HashMap<String, String> url_helper = new HashMap<String, String>();
 			url_helper.put(NetworkManager.url_file, NetworkManager.file_game);
