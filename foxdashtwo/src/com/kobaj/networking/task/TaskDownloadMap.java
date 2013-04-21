@@ -35,7 +35,7 @@ public class TaskDownloadMap extends MyTask
 		if (attributes.length == 1)
 		{
 			HashMap<String, String> url_helper = new HashMap<String, String>();
-			url_helper.put(NetworkManager.url_file, "shared.php");
+			url_helper.put(NetworkManager.url_file, NetworkManager.file_shared);
 			url_helper.put(NetworkManager.url_action, "download_xml");
 			
 			url_helper.put("lid", attributes[0]);

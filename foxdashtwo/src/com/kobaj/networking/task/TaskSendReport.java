@@ -8,18 +8,18 @@ import org.json.JSONObject;
 import com.kobaj.math.Constants;
 import com.kobaj.networking.NetworkManager;
 
-public class TaskSendRate extends MyTask
+public class TaskSendReport extends MyTask
 {
-	public interface FinishedRateing
+	public interface FinishedReporting
 	{
-		void onRateCompleted(int rate);
+		void onReportCompleted(boolean reported);
 	}
 	
-	private FinishedRateing local_callback;
+	private FinishedReporting local_callback;
 	
-	public void setFinishedRateing(FinishedRateing finishedRateing)
+	public void setFinishedReporting(FinishedReporting finishedReporting)
 	{
-		local_callback = finishedRateing;
+		local_callback = finishedReporting;
 	}
 	
 	@Override
@@ -32,11 +32,10 @@ public class TaskSendRate extends MyTask
 		{
 			HashMap<String, String> url_helper = new HashMap<String, String>();
 			url_helper.put(NetworkManager.url_file, NetworkManager.file_game);
-			url_helper.put(NetworkManager.url_action, "rate_map");
+			url_helper.put(NetworkManager.url_action, "report_map");
 			
 			url_helper.put("token", attributes[0]);
 			url_helper.put("lid", attributes[1]);
-			url_helper.put("rate", attributes[2]);
 			
 			the_url = NetworkManager.genericUrlBuilder(url_helper);
 		}
@@ -53,11 +52,11 @@ public class TaskSendRate extends MyTask
 			success = json.getBoolean("success");
 			if (success)
 			{
-				local_callback.onRateCompleted(json.getInt("rate"));
+				local_callback.onReportCompleted(true);
 			}
 			else
 			{
-				local_callback.onRateCompleted(0);
+				local_callback.onReportCompleted(false);
 			}
 		}
 		catch (JSONException e)

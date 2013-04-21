@@ -17,6 +17,7 @@ import com.kobaj.message.ListPopupManager;
 import com.kobaj.networking.EnumNetworkAction;
 import com.kobaj.networking.task.TaskLogin;
 import com.kobaj.networking.task.TaskSendRate;
+import com.kobaj.networking.task.TaskSendReport;
 
 public class Accounts
 {
@@ -93,6 +94,13 @@ public class Accounts
 		get_token.execute(EnumNetworkAction.rate, lid, rateing, sender);
 	}
 	
+	// login required for sendReport
+	public void sendReport(int lid, TaskSendReport sender)
+	{
+		TaskToken get_token = new TaskToken();
+		get_token.execute(EnumNetworkAction.report, lid, sender);
+	}
+	
 	// async task calls this
 	public String get_token(boolean invalidateToken)
 	{
@@ -164,11 +172,25 @@ public class Accounts
 				return;
 			}
 			
-			if(TaskSendRate.class.isAssignableFrom(passthru[3].getClass()))
+			if (TaskSendRate.class.isAssignableFrom(passthru[3].getClass()))
 			{
 				TaskSendRate network_rate = TaskSendRate.class.cast(passthru[3]);
 				network_rate.execute(token, String.valueOf((Integer) passthru[1]), String.valueOf((Integer) passthru[2]));
 			}
+		}
+		else if (action == EnumNetworkAction.report)
+		{
+			if (token.equals(Constants.empty))
+			{
+				return;
+			}
+			
+			if (TaskSendReport.class.isAssignableFrom(passthru[2].getClass()))
+			{
+				TaskSendReport network_report = TaskSendReport.class.cast((passthru[2]));
+				network_report.execute(token, String.valueOf((Integer) passthru[1]));
+			}
+			
 		}
 	}
 }
