@@ -11,7 +11,9 @@ import com.kobaj.loader.FileHandler;
 import com.kobaj.math.Constants;
 import com.kobaj.message.DeletePopupManager;
 import com.kobaj.message.RatePopupManager;
+import com.kobaj.message.ReportPopupManager;
 import com.kobaj.networking.task.HalfTaskDeleteMap;
+import com.kobaj.networking.task.TaskSendReport;
 import com.kobaj.networking.task.HalfTaskDeleteMap.FinishedDeleteing;
 import com.kobaj.networking.task.TaskDownloadMap;
 import com.kobaj.networking.task.TaskDownloadMap.FinishedDownloading;
@@ -24,6 +26,7 @@ public class LevelItem implements FinishedDownloading, FinishedDeleteing, Finish
 {
 	private static final String delete_tag = "FoxDashTwoDeleteTag";
 	private static final String rate_tag = "FoxDashTwoRateTag";
+	private static final String report_tag = "FoxDashTwoReportTag";
 	
 	public static enum EnumButtonStates
 	{
@@ -52,6 +55,7 @@ public class LevelItem implements FinishedDownloading, FinishedDeleteing, Finish
 	private TaskDownloadMap downloader;
 	private HalfTaskDeleteMap deleter;
 	private TaskSendRate rater;
+	private TaskSendReport reporter;
 	
 	public void setDownloadListAdapter(DownloadListAdapter adapater)
 	{
@@ -77,11 +81,24 @@ public class LevelItem implements FinishedDownloading, FinishedDeleteing, Finish
 		rater.setFinishedRateing(this);
 	}
 	
+	private void setReport()
+	{
+		reporter = new TaskSendReport();
+		reporter.setFinishedReporting(this);
+	}
+	
 	public OnClickListener report_listener = new OnClickListener()
 	{
 		public void onClick(View v)
 		{
+			ReportPopupManager popup = new ReportPopupManager();
+			popup.name = name;
+			popup.lid = lid;
 			
+			setReport();
+			popup.sender = reporter;
+			
+			popup.show(Constants.fragment_manager, report_tag);
 		}
 	};
 	
