@@ -14,6 +14,7 @@ import android.view.WindowManager;
 
 import com.kobaj.loader.FileHandler;
 import com.kobaj.math.Constants;
+import com.kobaj.opengldrawable.Quad.QuadRenderShell;
 
 public class GameActivity extends FragmentActivity
 {
@@ -85,6 +86,7 @@ public class GameActivity extends FragmentActivity
 	{
 		super.onResume();
 		
+		QuadRenderShell.reset(); // hopefully fixes black screen issue
 		mGLView.onResume();
 	}
 	

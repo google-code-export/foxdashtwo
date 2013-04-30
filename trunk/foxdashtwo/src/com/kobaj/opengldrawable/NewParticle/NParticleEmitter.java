@@ -180,7 +180,7 @@ public class NParticleEmitter
 			
 			double y_pos = 0;
 			if (particle_type == EnumParticleType.snow) // different start location because its snow
-				y_pos = emit_location.main_rect.top;
+				y_pos = emit_location.main_rect.top - .00001;
 			else
 				y_pos = Functions.randomDouble(emit_location.main_rect.bottom, emit_location.main_rect.top);
 			

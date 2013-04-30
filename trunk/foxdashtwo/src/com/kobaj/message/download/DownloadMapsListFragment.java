@@ -23,7 +23,6 @@ import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kobaj.foxdashtwo.R;
@@ -69,6 +68,18 @@ public class DownloadMapsListFragment extends ListFragment
 				
 				if (toolbar == null)
 					return;
+				
+				try
+				{
+					LevelItem item = (LevelItem) adapter.getItem((int) id);
+					if(item.this_state == EnumButtonStates.download)
+						return;
+				}
+				catch(IndexOutOfBoundsException e)
+				{
+					// return
+					return;
+				}
 				
 				// Creating the expand animation for the item
 				ExpandAnimation expandAni = new ExpandAnimation(toolbar, 500);
@@ -334,14 +345,7 @@ class DownloadListAdapter extends BaseAdapter implements ListAdapter
 		
 		if (convertView == null)
 		{
-			if (parent.isDownloadedPage())
-			{
-				item_view = (LinearLayout) mLayoutInflator.inflate(R.layout.download_maps_item_expandable, view_parent, false);
-			}
-			else
-			{
-				item_view = (RelativeLayout) mLayoutInflator.inflate(R.layout.download_maps_item, view_parent, false);
-			}
+			item_view = (LinearLayout) mLayoutInflator.inflate(R.layout.download_maps_item_expandable, view_parent, false);
 		}
 		else
 		{

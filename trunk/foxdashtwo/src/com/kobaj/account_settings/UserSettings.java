@@ -23,8 +23,7 @@ public class UserSettings
 	@Element
 	public static boolean auto_login = false;
 	
-	@Element
-	public static double zoom_value = 0.3;
+	public static double zoom_value = 0.5;
 	
 	@Element
 	public static boolean send_statistics = true;
