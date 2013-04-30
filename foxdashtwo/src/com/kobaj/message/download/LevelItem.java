@@ -30,7 +30,7 @@ public class LevelItem implements FinishedDownloading, FinishedDeleteing, Finish
 	
 	public static enum EnumButtonStates
 	{
-		download, update, play, delete
+		download, update, play
 	};
 	
 	public EnumButtonStates this_state = EnumButtonStates.download;

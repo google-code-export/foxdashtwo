@@ -173,6 +173,10 @@ public class LevelObject extends LevelEntityActive
 			quad_object = new QuadCompressed(R.raw.l2_ground_transition_1, R.raw.l2_ground_transition_1_alpha, 330, 79);
 		else if (this_object == EnumLevelObject.l3_background_swamp)
 			quad_object = new QuadCompressed(R.raw.l3_background_swamp, R.raw.l3_background_swamp_alpha, 1820, 1024);
+		else if (this_object == EnumLevelObject.l3_background_tree_1)
+			quad_object = new QuadCompressed(R.raw.l3_background_tree_1, R.raw.l3_background_tree_1_alpha, 751, 791);
+		else if (this_object == EnumLevelObject.l3_background_tree_2)
+			quad_object = new QuadCompressed(R.raw.l3_background_tree_2, R.raw.l3_background_tree_2_alpha, 895, 856);
 		else if (this_object == EnumLevelObject.l3_decoration_bones_hand)
 			quad_object = new QuadCompressed(R.raw.l3_decoration_bones_hand, R.raw.l3_decoration_bones_hand_alpha, 88, 54);
 		else if (this_object == EnumLevelObject.l3_decoration_bones_skull)
@@ -187,6 +191,15 @@ public class LevelObject extends LevelEntityActive
 			quad_object = new QuadCompressed(R.raw.l3_decoration_sticks, R.raw.l3_decoration_sticks_alpha, 133, 148);
 		else if (this_object == EnumLevelObject.l3_decoration_tree)
 			quad_object = new QuadCompressed(R.raw.l3_decoration_tree, R.raw.l3_decoration_tree_alpha, 662, 574);
+		else if (this_object == EnumLevelObject.l3_decoration_tree_front)
+			quad_object = new QuadCompressed(R.raw.l3_decoration_tree_front, R.raw.l3_decoration_tree_front_alpha, 580, 643);
+		
+		else if (this_object == EnumLevelObject.l3_ground_extra_platform_1)
+			quad_object = new QuadCompressed(R.raw.l3_ground_extra_platform_1, R.raw.l3_ground_extra_platform_1_alpha, 94, 159);
+		else if (this_object == EnumLevelObject.l3_ground_extra_platform_2)
+			quad_object = new QuadCompressed(R.raw.l3_ground_extra_platform_2, R.raw.l3_ground_extra_platform_2_alpha, 786, 190);
+		else if (this_object == EnumLevelObject.l3_ground_extra_platform_3)
+			quad_object = new QuadCompressed(R.raw.l3_ground_extra_platform_3, R.raw.l3_ground_extra_platform_3_alpha, 782, 179);
 		else if (this_object == EnumLevelObject.l3_ground_platform_connector)
 			quad_object = new QuadCompressed(R.raw.l3_ground_platform_connector, R.raw.l3_ground_platform_connector_alpha, 138, 95);
 		else if (this_object == EnumLevelObject.l3_ground_platform_long)
@@ -266,6 +279,14 @@ public class LevelObject extends LevelEntityActive
 			quad_object = new QuadCompressed(R.raw.l6_decoration_rock, R.raw.l6_decoration_rock_alpha, 270, 176);
 		else if (this_object == EnumLevelObject.l6_decoration_tree_dead)
 			quad_object = new QuadCompressed(R.raw.l6_decoration_tree_dead, R.raw.l6_decoration_tree_dead_alpha, 463, 528);
+		else if (this_object == EnumLevelObject.l6_ground_platform_extra_1)
+			quad_object = new QuadCompressed(R.raw.l6_ground_platform_extra_1, R.raw.l6_ground_platform_extra_1_alpha, 520, 294);
+		else if (this_object == EnumLevelObject.l6_ground_platform_extra_2)
+			quad_object = new QuadCompressed(R.raw.l6_ground_platform_extra_2, R.raw.l6_ground_platform_extra_2_alpha, 192, 369);
+		else if (this_object == EnumLevelObject.l6_ground_platform_extra_3)
+			quad_object = new QuadCompressed(R.raw.l6_ground_platform_extra_3, R.raw.l6_ground_platform_extra_3_alpha, 496, 245);
+		else if (this_object == EnumLevelObject.l6_ground_platform_extra_4)
+			quad_object = new QuadCompressed(R.raw.l6_ground_platform_extra_4, R.raw.l6_ground_platform_extra_4_alpha, 162, 249);
 		else if (this_object == EnumLevelObject.l6_ground_platform_flat)
 			quad_object = new QuadCompressed(R.raw.l6_ground_platform_flat, R.raw.l6_ground_platform_flat_alpha, 681, 282);
 		else if (this_object == EnumLevelObject.l6_ground_platform_huge)
@@ -406,7 +427,7 @@ public class LevelObject extends LevelEntityActive
 			Constants.physics.addSpringY(Constants.floating_spring, Constants.floating_damper, 0, quad_object.y_pos_shader - y_pos_shader, quad_object);
 			Constants.physics.integratePhysics(delta, quad_object);
 		}
-		else if (this_object == EnumLevelObject.l2_ground_platform_floating_2 // 
+		else if (this_object == EnumLevelObject.l2_ground_platform_floating_2 //
 				|| this_object == EnumLevelObject.l4_ground_platform_floating)
 		{
 			Constants.physics.addSpringY(Constants.floating_spring, Constants.floating_damper / 4.0, 0, quad_object.y_pos_shader - y_pos_shader, quad_object);

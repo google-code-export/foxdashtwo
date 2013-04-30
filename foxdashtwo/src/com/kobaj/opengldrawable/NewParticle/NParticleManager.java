@@ -43,7 +43,6 @@ public class NParticleManager
 			emitter.vary_scale = true;
 			emitter.vary_velocity = true;
 		}
-		
 		else if (type == EnumParticleType.snow)
 		{
 			emitter.direction_start = 225;

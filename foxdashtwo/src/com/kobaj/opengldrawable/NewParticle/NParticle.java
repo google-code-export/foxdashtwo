@@ -6,6 +6,7 @@ import com.kobaj.opengldrawable.Quad.Quad;
 public class NParticle
 {
 	private int life_time;
+	private int original_life_time;
 	private final int fade_out_time;
 	private final int fade_in_time;
 	private final boolean vary_scale;
@@ -14,6 +15,7 @@ public class NParticle
 	
 	public Quad quad_reference;
 	public boolean is_dead = false;
+	private boolean killed = false;
 	
 	public int red_reference = 255;
 	public int green_reference = 255;
@@ -24,6 +26,7 @@ public class NParticle
 		this.fade_in_time = fade_in_time;
 		this.fade_out_time = fade_out_time;
 		this.life_time = life_time;
+		this.original_life_time = life_time;
 		this.vary_scale = vary_scale;
 	}
 	
@@ -37,6 +40,8 @@ public class NParticle
 	{
 		current_time = 0;
 		is_dead = false;
+		killed = false;
+		this.life_time = original_life_time;
 	}
 	
 	public void onUpdate(double delta)
@@ -68,6 +73,10 @@ public class NParticle
 	// this will make the particle fade out to its death
 	public void kill()
 	{
-		life_time = current_time + fade_out_time;
+		if(!killed)
+		{
+			life_time = current_time + fade_out_time;
+			killed = true;
+		}
 	}
 }
