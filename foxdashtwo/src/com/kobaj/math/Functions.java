@@ -683,5 +683,15 @@ public class Functions
 		
 		Constants.floating_lr_distance = Functions.screenWidthToShaderWidth(Constants.floating_lr_distance_default);
 		Constants.floating_move_lr_acc = Functions.screenWidthToShaderWidth(Constants.floating_move_lr_speed_default);
+		
+		Constants.mini_time_pos_x = Functions.screenXToShaderX(Constants.width - Constants.default_mini_time_pos_x);
+		Constants.mini_time_pos_y = Functions.screenYToShaderY(Constants.height - Constants.default_mini_time_pos_y);
+		
+		Constants.one_fourth_height = Functions.screenYToShaderY(Constants.height / 4.0);
+		Constants.two_fourth_height = Functions.screenYToShaderY(2.0 * Constants.height / 4.0);
+		Constants.three_fourth_height = Functions.screenYToShaderY(3.0 * Constants.height / 4.0);
+		
+		Constants.one_third_width = Functions.screenXToShaderX(Constants.width / 3.0);
+		Constants.two_third_width = Functions.screenXToShaderX(2.0 * Constants.width / 3.0);
 	}
 }

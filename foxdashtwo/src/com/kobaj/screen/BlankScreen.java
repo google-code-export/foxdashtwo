@@ -59,5 +59,12 @@ public class BlankScreen extends BaseScreen
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void onScreenChange()
+	{
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

@@ -2,35 +2,40 @@ package com.kobaj.level.LevelEventTypes;
 
 import com.kobaj.account_settings.SinglePlayerSave;
 import com.kobaj.foxdashtwo.GameActivity;
+import com.kobaj.screen.BaseScreen;
 import com.kobaj.screen.SinglePlayerScreen;
+import com.kobaj.screen.TitleScreen;
 
 public class LevelEventNextLevel extends LevelEventBase
 {
-	SinglePlayerScreen next_screen;
-	
 	public LevelEventNextLevel(EnumLevelEvent type)
 	{
 		super(type);
-		
-		next_screen = new SinglePlayerScreen();
 	}
 	
 	@Override
 	public void onUpdate(double delta, boolean active)
 	{
+		
 		if (active)
-		{
-			// mark the old level as complete
-			if (SinglePlayerSave.last_level != null)
-				SinglePlayerSave.finished_levels.add(SinglePlayerSave.last_level);
+		{	
+			SinglePlayerSave.last_level = null;
+			SinglePlayerSave.last_checkpoint = null;
+			
+			BaseScreen next = null;
 			
 			// set the next level
 			if (!this.id_cache.isEmpty())
+			{
 				SinglePlayerSave.last_level = id_cache.get(0);
-			SinglePlayerSave.last_checkpoint = null;
+				
+				// load the next level
+				next = (new SinglePlayerScreen());
+			}
+			else
+				next = (new TitleScreen());
 			
-			// load the next level
-			GameActivity.mGLView.my_game.onChangeScreen(next_screen);
+			GameActivity.mGLView.my_game.onPreChangeScreen(next);
 		}
 	}
 	

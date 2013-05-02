@@ -23,6 +23,8 @@ public class MyGame extends MyGLRender
 	private BaseScreen currently_active_screen;
 	private BaseScreen next_active_screen;
 	
+	private BaseScreen pre_next_screen;
+	
 	// dont touch the variables below this line
 	// final drawable.
 	private QuadRenderTo scene;
@@ -47,9 +49,26 @@ public class MyGame extends MyGLRender
 		currently_active_screen = new BlankScreen(); // single_player_screen;
 	}
 	
-	public void onChangeScreen(BaseScreen next_active_screen)
+	// make the screen fade
+	public void onPreChangeScreen(BaseScreen new_screen)
 	{
-		this.next_active_screen = next_active_screen;
+		pre_next_screen = new_screen;
+		
+		currently_active_screen.onScreenChange();
+	}
+	
+	// commit a pre change screen
+	public void onCommitChangeScreen()
+	{
+		if (pre_next_screen != null)
+			this.next_active_screen = pre_next_screen;
+	}
+	
+	// change screen without fade
+	public void onChangeScreen(BaseScreen new_screen)
+	{
+		if (new_screen != null)
+			this.next_active_screen = new_screen;
 	}
 	
 	public void onChangeScreenState(EnumScreenState new_state)
@@ -77,13 +96,13 @@ public class MyGame extends MyGLRender
 		lights = QuadRendersHandler(lights);
 		backgroup = QuadRendersHandler(backgroup);
 		foregroup = QuadRendersHandler(foregroup);
-	
+		
 		if (shadow_generator != null)
 		{
 			shadow_generator.onUnInitialize();
 			shadow_generator = null;
 		}
-		 
+		
 		shadow_generator = new QuadShadow();
 		shadow_generator.my_texture_data_handle = scene.my_texture_data_handle;
 		shadow_generator.my_light_data_handle = lights.my_texture_data_handle;
@@ -103,18 +122,18 @@ public class MyGame extends MyGLRender
 	
 	private QuadRenderTo QuadRendersHandler(QuadRenderTo scene)
 	{
-		 if (scene != null)
-		 {
-			 scene.onUnInitialize();
-			 scene = null;
-		 }
-		 
+		if (scene != null)
+		{
+			scene.onUnInitialize();
+			scene = null;
+		}
+		
 		scene = new QuadRenderTo();
 		scene.onInitialize();
 		
 		return scene;
 	}
-
+	
 	@Override
 	protected void onUpdate(double delta)
 	{
@@ -138,7 +157,7 @@ public class MyGame extends MyGLRender
 		
 		// super hacks to change settings
 		if (Constants.input_manager.getPressed(0))
-			if (Constants.input_manager.getX(0) < 100 && Constants.input_manager.getY(0) < 100)
+			if (Constants.input_manager.getX(0) < 100 * Constants.ratio && Constants.input_manager.getY(0) < 100 * Constants.ratio)
 			{
 				left_corner_count++;
 				
