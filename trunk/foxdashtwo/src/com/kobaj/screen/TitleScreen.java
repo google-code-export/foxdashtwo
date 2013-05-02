@@ -294,4 +294,11 @@ public class TitleScreen extends BaseScreen
 	{
 		// do nothing
 	}
+
+	@Override
+	public void onScreenChange()
+	{
+		// TODO Auto-generated method stub
+		
+	}
 }

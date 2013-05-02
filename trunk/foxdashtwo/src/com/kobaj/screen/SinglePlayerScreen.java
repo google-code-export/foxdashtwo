@@ -15,6 +15,7 @@ import com.kobaj.loader.FileHandler;
 import com.kobaj.loader.GLBitmapReader;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
+import com.kobaj.opengldrawable.EnumDrawFrom;
 import com.kobaj.screen.screenaddons.BaseInteractionPhysics;
 import com.kobaj.screen.screenaddons.BaseLoadingScreen;
 import com.kobaj.screen.screenaddons.LevelDebugScreen;
@@ -46,8 +47,18 @@ public class SinglePlayerScreen extends BaseScreen
 	public boolean fade_in = true;
 	public boolean fade_out = false;
 	
-	private int below_xfps_count = 300;
+	private boolean level_done = false;
+	
+	private int below_xfps_count = 300; // number of times to be triggered before throwing the popup
 	private double fps_limit = 1.0 / 20.0 * 1000.0;
+	
+	private double max_color_time = 2000;
+	private double color_time = 0;
+	private double game_time = 0;
+	private double prev_best = 0;
+	private double world_best = 0;
+	
+	private String level_name;
 	
 	public SinglePlayerScreen()
 	{
@@ -65,9 +76,12 @@ public class SinglePlayerScreen extends BaseScreen
 		
 		if (level_name == null || level_name.equals(Constants.empty))
 		{
-			//change the first level
-			the_level = FileHandler.readSerialResource(Constants.resources, R.raw.snow_test, com.kobaj.level.Level.class);
-			return true;
+			// change the first level
+			the_level = FileHandler.readSerialResource(Constants.resources, R.raw.test_level, com.kobaj.level.Level.class);
+			{
+				level_name = "level_one";
+				return true;
+			}
 		}
 		
 		// if not then try to load from R
@@ -76,7 +90,10 @@ public class SinglePlayerScreen extends BaseScreen
 		{
 			the_level = FileHandler.readSerialResource(Constants.resources, level_R, com.kobaj.level.Level.class);
 			if (the_level != null)
+			{
+				this.level_name = level_name;
 				return true;
+			}
 		}
 		
 		// first see if it is a physical level on disk
@@ -84,7 +101,10 @@ public class SinglePlayerScreen extends BaseScreen
 		{
 			the_level = FileHandler.readSerialFile(level_name, com.kobaj.level.Level.class);
 			if (the_level != null)
+			{
+				this.level_name = level_name;
 				return true;
+			}
 		}
 		
 		return false;
@@ -171,11 +191,11 @@ public class SinglePlayerScreen extends BaseScreen
 			// MyGLRender.slowmo = !MyGLRender.slowmo;
 		}
 		
-		//handle low fps situations
-		if(delta > this.fps_limit && UserSettings.fbo_divider < 2 && !UserSettings.fbo_warned)
+		// handle low fps situations
+		if (delta > this.fps_limit && UserSettings.fbo_divider < 2 && !UserSettings.fbo_warned)
 		{
 			this.below_xfps_count--;
-			if(below_xfps_count == 0)
+			if (below_xfps_count == 0)
 			{
 				UserSettings.fbo_warned = true;
 				
@@ -191,8 +211,12 @@ public class SinglePlayerScreen extends BaseScreen
 		// update all our objects and lights and things
 		the_level.onUpdate(delta);
 		
+		if (!level_done)
+			game_time += delta;
+		
 		// interaction and player
-		interaction_addon.onUpdate(delta, my_modifier, the_level);
+		if (!level_done)
+			interaction_addon.onUpdate(delta, my_modifier, the_level);
 		
 		getPlayerPosition();
 		
@@ -207,7 +231,7 @@ public class SinglePlayerScreen extends BaseScreen
 		if (fade_out)
 		{
 			fade_out = tween_fade_out.onUpdate(delta);
-			if (fade_out == false)
+			if (fade_out == false && !this.level_done)
 				tween_fade_out.reset();
 		}
 		
@@ -234,6 +258,18 @@ public class SinglePlayerScreen extends BaseScreen
 			this.current_death_stage = EnumDeathStages.alive;
 		
 		// debug_addon.onUpdate(delta, the_level);
+		
+		if (level_done && !fade_out)
+		{
+			color_time += delta;
+			
+			if (color_time > this.max_color_time)
+				color_time = 0;
+			
+			// level is done and it finished fadeing
+			if (Constants.input_manager.getPressed(0))
+				GameActivity.mGLView.my_game.onCommitChangeScreen();
+		}
 	}
 	
 	private void getPlayerPosition()
@@ -260,7 +296,10 @@ public class SinglePlayerScreen extends BaseScreen
 	@Override
 	public void onDrawObject(EnumLayerTypes... types)
 	{
-		the_level.onDrawObject(types);
+		if (!level_done || fade_out)
+		{
+			the_level.onDrawObject(types);
+		}
 		
 		// debug_addon.onDrawObject();
 	}
@@ -288,10 +327,36 @@ public class SinglePlayerScreen extends BaseScreen
 		}
 		
 		// draw the controls
-		if (current_state != EnumScreenState.paused)
-			my_modifier.onDraw();
-		else
+		if (current_state == EnumScreenState.paused)
 			pause_addon.onDraw();
+		else if (!level_done)
+		{
+			my_modifier.onDraw();
+			
+			Constants.text.drawDecimalNumber(this.game_time / 1000.0, 2, 1, Constants.mini_time_pos_x, Constants.mini_time_pos_y);
+		}
+		else if (level_done)
+		{
+			// draw the scores
+			Constants.text.drawText(R.string.your_time, Constants.one_third_width, Constants.three_fourth_height, EnumDrawFrom.bottom_right);
+			Constants.text.drawText(R.string.best_time, Constants.one_third_width, Constants.two_fourth_height, EnumDrawFrom.bottom_right);
+			Constants.text.drawText(R.string.world_time, Constants.one_third_width, Constants.one_fourth_height, EnumDrawFrom.bottom_right);
+			
+			Constants.text.drawDecimalNumber(this.game_time / 1000.0, 4, 3, Constants.two_third_width, Constants.three_fourth_height);
+			
+			// make it look nice
+			int game_color = Color.WHITE;
+			if (game_time / 1000.0 == prev_best)
+			{
+				
+				if (color_time > max_color_time / 2.0)
+					game_color = Functions.linearInterpolateColor(max_color_time / 2.0, max_color_time, color_time, Color.GREEN, Color.WHITE);
+				else
+					game_color = Functions.linearInterpolateColor(0, max_color_time / 2.0, color_time, Color.WHITE, Color.GREEN);
+				
+			}
+			Constants.text.drawDecimalNumber(this.prev_best, 4, 3, Constants.two_third_width, Constants.two_fourth_height, game_color);
+		}
 	}
 	
 	@Override
@@ -307,5 +372,33 @@ public class SinglePlayerScreen extends BaseScreen
 	{
 		// only on game screens to we send the system into paused state.
 		current_state = EnumScreenState.paused;
+	}
+	
+	@Override
+	public void onScreenChange()
+	{
+		if (level_done == false)
+		{
+			fade_out = true;
+			level_done = true;
+			
+			// get the previous
+			prev_best = SinglePlayerSave.getPrevBest(level_name);
+			
+			// get and set world bests here
+			
+			// save this as the best if its better...
+			if (game_time < prev_best && game_time > 0)
+			{
+				SinglePlayerSave.saveBest(level_name, game_time / 1000.0);
+				prev_best = game_time / 1000.0;
+			}
+			
+			// mark the old level as complete
+			// if (SinglePlayerSave.last_level != null)
+			// SinglePlayerSave.finished_levels.add(SinglePlayerSave.last_level);
+			// moved to single
+			
+		}
 	}
 }

@@ -218,7 +218,7 @@ public class Level
 						(float) Functions.screenYToShaderY(y_pos - original.height));//
 				NParticleEmitter test = NParticleManager.makeEmitter(EnumParticleType.snow, shader_limits_for_snow_test);
 				test.onInitialize();
-				//test.preUpdate();
+				test.preUpdate();
 				local_np_emitter.add(test);
 				
 				event_list.remove(i);

@@ -20,8 +20,6 @@ public abstract class BaseScreen implements Runnable
 	protected TweenManager tween_fade_in;
 	protected TweenManager tween_fade_out;
 	
-	protected final int fade_delay = 250;
-	
 	private EnumScreenState previous_state = EnumScreenState.not_started;
 	
 	// if a screen has a player
@@ -61,10 +59,10 @@ public abstract class BaseScreen implements Runnable
 		black_overlay_fade.color = Color.BLACK;
 		
 		tween_fade_in = new TweenManager(black_overlay_fade, new TweenEvent(EnumTweenEvent.color, 0, 0, Color.BLACK), //
-				fade_delay, // ms fade in.
+				Constants.fade_delay, // ms fade in.
 				new TweenEvent(EnumTweenEvent.color, 0, 0, Color.TRANSPARENT));
 		tween_fade_out = new TweenManager(black_overlay_fade, new TweenEvent(EnumTweenEvent.color, 0, 0, Color.TRANSPARENT), //
-				fade_delay, //
+				Constants.fade_delay, //
 				new TweenEvent(EnumTweenEvent.color, 0, 0, Color.BLACK));
 		
 		color_overlay = new QuadCompressed(R.raw.white, R.raw.white, Constants.width, Constants.height);
@@ -100,4 +98,7 @@ public abstract class BaseScreen implements Runnable
 	
 	// do something when the system pauses
 	public abstract void onPause();
+	
+	// prepare for shutdown
+	public abstract void onScreenChange();
 }

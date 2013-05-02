@@ -205,6 +205,28 @@ public class Text
 		}
 	}
 	
+	// x and y are shader coords. this is centered around the decimal
+	public void drawDecimalNumber(double number, int number_of_predecimals, int number_of_decimals, double x, double y)
+	{
+		drawDecimalNumber(number, number_of_predecimals, number_of_decimals, x, y, Color.WHITE);
+	}
+	
+	public void drawDecimalNumber(double number, int number_of_predecimals, int number_of_decimals, double x, double y, int color)
+	{
+		int value = (int) number;
+		double decimal = number - value;
+		
+		int fixed_decimals = (int)(decimal * Math.pow(10, number_of_decimals));
+		
+		drawNumber(value, x, y, EnumDrawFrom.bottom_right, color);
+		if(value < Math.pow(10, number_of_predecimals))
+		{
+			Quad temp = bitmap_buffer.get(R.string.full_stop);
+			drawText(R.string.full_stop, x - temp.shader_width, y, EnumDrawFrom.bottom_right, color);
+			drawNumber(fixed_decimals, x - temp.shader_width, y, EnumDrawFrom.bottom_left, color);
+		}
+	}
+	
 	// x and y are in shader coordinates 0 to 1
 	public void drawNumber(int this_number, double x, double y, EnumDrawFrom where)
 	{

@@ -1,8 +1,10 @@
 package com.kobaj.account_settings;
 
-import java.util.HashSet;
+import java.util.HashMap;
 
 import org.simpleframework.xml.ElementList;
+
+import com.kobaj.math.Constants;
 
 public class SinglePlayerSave
 {
@@ -11,5 +13,24 @@ public class SinglePlayerSave
 	public static String last_checkpoint = "";
 	
 	@ElementList
-	public static HashSet<String> finished_levels = new HashSet<String>();
+	public static HashMap<String, Double> finished_levels_and_times = new HashMap<String, Double>();
+	
+	public static double getPrevBest(String level_name)
+	{
+		if (!level_name.equals(Constants.empty))
+		{
+			if (finished_levels_and_times.containsKey(level_name))
+			{
+				return finished_levels_and_times.get(level_name);
+			}
+		}
+		
+		return Double.MAX_VALUE;
+	}
+	
+	public static void saveBest(String level_name, Double new_best)
+	{
+		if(!level_name.equals(Constants.empty))
+			finished_levels_and_times.put(level_name, new_best);
+	}
 }

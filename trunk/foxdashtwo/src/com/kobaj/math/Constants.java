@@ -61,6 +61,17 @@ public class Constants
 	public static final double shadow_height = 450;
 	public static double shadow_height_shader;
 	
+	// score position constants
+	public static final double default_mini_time_pos_x = 100;
+	public static final double default_mini_time_pos_y = 100;
+	public static double mini_time_pos_x;
+	public static double mini_time_pos_y;
+	public static double one_fourth_height;
+	public static double two_fourth_height;
+	public static double three_fourth_height;
+	public static double one_third_width;
+	public static double two_third_width;
+	
 	// physics constants
 	public static final double gravity_default = 0.000800;
 	public static final double max_y_velocity_default = 1.0;
@@ -177,5 +188,10 @@ public class Constants
 	// strings
 	public static final String empty = "";
 	
-	public static boolean global_draw = true; // true = draw, false = draw absolutely nothing.
+	// true = draw, false = draw absolutely nothing.
+	// this is used in combination with the map download tool
+	public static boolean global_draw = true; 
+	
+	// screen changes
+	public static final int fade_delay = 250;
 }

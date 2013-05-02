@@ -70,6 +70,8 @@ public class NParticleEmitter
 	// be sure to keep this as a reference.
 	public Quad associated_quad;
 	
+	private boolean force_update = false;
+	
 	public NParticleEmitter(EnumParticleType type)
 	{
 		this.particle_type = type;
@@ -77,8 +79,12 @@ public class NParticleEmitter
 	
 	public void preUpdate()
 	{
-		for (int i = 0; i < 100; i++)
-			this.onUpdate(16);
+		force_update = true;
+		
+		for (int i = 0; i < 1000; i++)
+			this.onUpdate(32);
+		
+		force_update = false;
 	}
 	
 	public void onInitialize()
@@ -123,7 +129,7 @@ public class NParticleEmitter
 	public void onUpdate(double delta)
 	{
 		//why update if not on screen?
-		if(!Functions.onShader(emit_location))
+		if(!force_update && !Functions.onShader(emit_location))
 			return;
 		
 		// first see if we need to spawn some particles
