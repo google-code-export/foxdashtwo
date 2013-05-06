@@ -18,6 +18,7 @@ import com.kobaj.networking.EnumNetworkAction;
 import com.kobaj.networking.task.TaskLogin;
 import com.kobaj.networking.task.TaskSendRate;
 import com.kobaj.networking.task.TaskSendReport;
+import com.kobaj.networking.task.TaskSendScore;
 
 public class Accounts
 {
@@ -101,6 +102,13 @@ public class Accounts
 		get_token.execute(EnumNetworkAction.report, lid, sender);
 	}
 	
+	// login required for score
+	public void sendScore(String lid, double score, TaskSendScore sender)
+	{
+		TaskToken get_token = new TaskToken();
+		get_token.execute(EnumNetworkAction.score, lid, score, sender);
+	}
+	
 	// async task calls this
 	public String get_token(boolean invalidateToken)
 	{
@@ -175,7 +183,9 @@ public class Accounts
 			if (TaskSendRate.class.isAssignableFrom(passthru[3].getClass()))
 			{
 				TaskSendRate network_rate = TaskSendRate.class.cast(passthru[3]);
-				network_rate.execute(token, String.valueOf((Integer) passthru[1]), String.valueOf((Integer) passthru[2]));
+				network_rate.execute(token,
+						String.valueOf((Integer) passthru[1]), // lid
+						String.valueOf((Integer) passthru[2])); // rate
 			}
 		}
 		else if (action == EnumNetworkAction.report)
@@ -188,9 +198,20 @@ public class Accounts
 			if (TaskSendReport.class.isAssignableFrom(passthru[2].getClass()))
 			{
 				TaskSendReport network_report = TaskSendReport.class.cast((passthru[2]));
-				network_report.execute(token, String.valueOf((Integer) passthru[1]));
+				network_report.execute(token, 
+						String.valueOf((Integer) passthru[1])); // lid
 			}
 			
+		}
+		else if (action == EnumNetworkAction.score)
+		{
+			if(TaskSendScore.class.isAssignableFrom(passthru[3].getClass()))
+			{
+				TaskSendScore network_score = TaskSendScore.class.cast(passthru[3]);
+				network_score.execute(token,
+						String.valueOf(passthru[1]), // lid
+						String.valueOf((Double) passthru[2])); // score
+			}
 		}
 	}
 }

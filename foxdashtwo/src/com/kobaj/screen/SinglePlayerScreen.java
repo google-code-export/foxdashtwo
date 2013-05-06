@@ -2,7 +2,6 @@ package com.kobaj.screen;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
-import android.util.Log;
 
 import com.kobaj.account_settings.SinglePlayerSave;
 import com.kobaj.account_settings.UserSettings;
@@ -15,13 +14,19 @@ import com.kobaj.loader.FileHandler;
 import com.kobaj.loader.GLBitmapReader;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
+import com.kobaj.networking.task.TaskSendScore;
+import com.kobaj.networking.task.TaskSendScore.FinishedScoring;
 import com.kobaj.opengldrawable.EnumDrawFrom;
+import com.kobaj.opengldrawable.Tween.EnumTweenEvent;
+import com.kobaj.opengldrawable.Tween.TweenEvent;
+import com.kobaj.opengldrawable.Tween.TweenManager;
 import com.kobaj.screen.screenaddons.BaseInteractionPhysics;
 import com.kobaj.screen.screenaddons.BaseLoadingScreen;
 import com.kobaj.screen.screenaddons.LevelDebugScreen;
+import com.kobaj.screen.screenaddons.RotationLoadingJig;
 import com.kobaj.screen.screenaddons.floatingframe.BasePauseScreen;
 
-public class SinglePlayerScreen extends BaseScreen
+public class SinglePlayerScreen extends BaseScreen implements FinishedScoring
 {
 	// handling death
 	public enum EnumDeathStages
@@ -52,13 +57,16 @@ public class SinglePlayerScreen extends BaseScreen
 	private int below_xfps_count = 300; // number of times to be triggered before throwing the popup
 	private double fps_limit = 1.0 / 20.0 * 1000.0;
 	
+	// dealing with score presentation
 	private double max_color_time = 2000;
 	private double color_time = 0;
 	private double game_time = 0;
 	private double prev_best = 0;
-	private double world_best = 0;
+	private double world_best = -1;
 	
 	private String level_name;
+	
+	private RotationLoadingJig network_loader;
 	
 	public SinglePlayerScreen()
 	{
@@ -102,7 +110,9 @@ public class SinglePlayerScreen extends BaseScreen
 			the_level = FileHandler.readSerialFile(level_name, com.kobaj.level.Level.class);
 			if (the_level != null)
 			{
-				this.level_name = level_name;
+				// split the path
+				String[] paths = level_name.split("/");
+				this.level_name = paths[paths.length - 1]; // last path is file name
 				return true;
 			}
 		}
@@ -119,7 +129,12 @@ public class SinglePlayerScreen extends BaseScreen
 		this.setNextLevel(SinglePlayerSave.last_level);
 		
 		if (the_level != null)
+		{
 			the_level.onInitialize();
+			
+			// testing sounds
+			the_level.startMusic();
+		}
 		else
 		{
 			TitleScreen crash = new TitleScreen();
@@ -133,21 +148,13 @@ public class SinglePlayerScreen extends BaseScreen
 		pause_addon = new BasePauseScreen();
 		pause_addon.onInitialize();
 		
-		// testing sounds
-		Constants.music_player.start(R.raw.tunnel, 5000, true);
-		while (!Constants.music_player.isLoaded())
-		{
-			try
-			{
-				Thread.sleep(Constants.exception_timeout);
-			}
-			catch (InterruptedException e)
-			{
-				Log.e("Single Player Exception", e.toString());
-			}
-		}
-		
 		// debug_addon = new LevelDebugScreen(the_level, EnumDebugType.events);
+		
+		network_loader = new RotationLoadingJig();
+		network_loader.onInitialize();
+		network_loader.radius = Constants.spinning_jig_radius;
+		network_loader.x_pos = Constants.two_third_width;
+		network_loader.y_pos = Constants.one_fourth_height;
 		
 		GLBitmapReader.isLoaded();
 		
@@ -163,6 +170,8 @@ public class SinglePlayerScreen extends BaseScreen
 		
 		if (the_level != null)
 			the_level.onUnInitialize();
+		
+		network_loader.onUnInitialize();
 	}
 	
 	@Override
@@ -204,6 +213,8 @@ public class SinglePlayerScreen extends BaseScreen
 				current_state = EnumScreenState.paused;
 			}
 		}
+		
+		network_loader.onUpdate(delta);
 	}
 	
 	private void onRunningUpdate(double delta)
@@ -342,20 +353,38 @@ public class SinglePlayerScreen extends BaseScreen
 			Constants.text.drawText(R.string.best_time, Constants.one_third_width, Constants.two_fourth_height, EnumDrawFrom.bottom_right);
 			Constants.text.drawText(R.string.world_time, Constants.one_third_width, Constants.one_fourth_height, EnumDrawFrom.bottom_right);
 			
-			Constants.text.drawDecimalNumber(this.game_time / 1000.0, 4, 3, Constants.two_third_width, Constants.three_fourth_height);
-			
 			// make it look nice
 			int game_color = Color.WHITE;
+			int world_color = Color.WHITE;
+			
+			int change_color = 0;
+			if (color_time > max_color_time / 2.0)
+				change_color = Functions.linearInterpolateColor(max_color_time / 2.0, max_color_time, color_time, Color.GREEN, Color.WHITE);
+			else
+				change_color = Functions.linearInterpolateColor(0, max_color_time / 2.0, color_time, Color.WHITE, Color.GREEN);
+			
 			if (game_time / 1000.0 == prev_best)
 			{
-				
-				if (color_time > max_color_time / 2.0)
-					game_color = Functions.linearInterpolateColor(max_color_time / 2.0, max_color_time, color_time, Color.GREEN, Color.WHITE);
-				else
-					game_color = Functions.linearInterpolateColor(0, max_color_time / 2.0, color_time, Color.WHITE, Color.GREEN);
-				
+				game_color = change_color;
 			}
+			if (game_time / 1000.0 == world_best)
+			{
+				world_color = change_color;
+			}
+			
+			// draw level score
+			Constants.text.drawDecimalNumber(this.game_time / 1000.0, 4, 3, Constants.two_third_width, Constants.three_fourth_height);
+			
+			// draw our local score
 			Constants.text.drawDecimalNumber(this.prev_best, 4, 3, Constants.two_third_width, Constants.two_fourth_height, game_color);
+			
+			// draw our world score
+			if (Constants.network_activity > 0 || world_best < 0)
+				network_loader.onDrawLoading();
+			if (this.world_best > 0)
+			{
+				Constants.text.drawDecimalNumber(this.world_best, 4, 3, Constants.two_third_width, Constants.one_fourth_height, game_color);
+			}
 		}
 	}
 	
@@ -386,6 +415,9 @@ public class SinglePlayerScreen extends BaseScreen
 			prev_best = SinglePlayerSave.getPrevBest(level_name);
 			
 			// get and set world bests here
+			TaskSendScore score_sender = new TaskSendScore();
+			score_sender.setFinishedScoring(this);
+			Constants.accounts.sendScore(level_name, game_time / 1000.0, score_sender);
 			
 			// save this as the best if its better...
 			if (game_time < prev_best && game_time > 0)
@@ -393,12 +425,11 @@ public class SinglePlayerScreen extends BaseScreen
 				SinglePlayerSave.saveBest(level_name, game_time / 1000.0);
 				prev_best = game_time / 1000.0;
 			}
-			
-			// mark the old level as complete
-			// if (SinglePlayerSave.last_level != null)
-			// SinglePlayerSave.finished_levels.add(SinglePlayerSave.last_level);
-			// moved to single
-			
 		}
+	}
+	
+	public void onScoreCompleted(double score)
+	{
+		this.world_best = score;
 	}
 }

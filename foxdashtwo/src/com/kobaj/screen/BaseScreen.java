@@ -58,12 +58,7 @@ public abstract class BaseScreen implements Runnable
 		black_overlay_fade.setXYPos(0, 0, EnumDrawFrom.center);
 		black_overlay_fade.color = Color.BLACK;
 		
-		tween_fade_in = new TweenManager(black_overlay_fade, new TweenEvent(EnumTweenEvent.color, 0, 0, Color.BLACK), //
-				Constants.fade_delay, // ms fade in.
-				new TweenEvent(EnumTweenEvent.color, 0, 0, Color.TRANSPARENT));
-		tween_fade_out = new TweenManager(black_overlay_fade, new TweenEvent(EnumTweenEvent.color, 0, 0, Color.TRANSPARENT), //
-				Constants.fade_delay, //
-				new TweenEvent(EnumTweenEvent.color, 0, 0, Color.BLACK));
+		recomputeDefaultTweens();
 		
 		color_overlay = new QuadCompressed(R.raw.white, R.raw.white, Constants.width, Constants.height);
 		color_overlay.setXYPos(0, 0, EnumDrawFrom.center);
@@ -76,6 +71,16 @@ public abstract class BaseScreen implements Runnable
 			current_state = EnumScreenState.paused;
 		else
 			current_state = EnumScreenState.running;
+	}
+	
+	protected void recomputeDefaultTweens()
+	{
+		tween_fade_in = new TweenManager(black_overlay_fade, new TweenEvent(EnumTweenEvent.color, 0, 0, Color.BLACK), //
+				Constants.fade_delay, // ms fade in.
+				new TweenEvent(EnumTweenEvent.color, 0, 0, Color.TRANSPARENT));
+		tween_fade_out = new TweenManager(black_overlay_fade, new TweenEvent(EnumTweenEvent.color, 0, 0, Color.TRANSPARENT), //
+				Constants.fade_delay, //
+				new TweenEvent(EnumTweenEvent.color, 0, 0, Color.BLACK));
 	}
 	
 	// loading things on a seperate thread

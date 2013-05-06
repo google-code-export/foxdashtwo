@@ -23,7 +23,7 @@ public class Constants
 	// answer 2: This is faster/easier to code (I'm on a tight schedule)
 	// answer 3: I actually read somewhere (stackoverflow?) this is faster to execute. *shrugs*
 	
-	public static final long force_update_epoch = 1364706769;
+	public static final long force_update_epoch = 1367777076;
 	
 	public static final boolean demo_mode = false;
 	
@@ -114,6 +114,9 @@ public class Constants
 	public static final int loading_primary_color = 0xFFDD550C;
 	public static final int loading_secondary_color = 0xFF03244D;
 	
+	public static final double default_spinning_jig_radius = 25;
+	public static double spinning_jig_radius;
+	
 	// While the below are not really constant and don't belong here
 	// this is a convenient way of being able to see all objects a game screen can see and use
 	
@@ -129,8 +132,10 @@ public class Constants
 	
 	public static Physics physics;
 	
+	// music
 	public static MusicPlayer music_player;
 	public static Sound sound;
+	public static final int music_fade_time = 3000;
 	
 	public static InputManager input_manager;
 	// input constants
