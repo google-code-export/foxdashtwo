@@ -63,7 +63,7 @@ public class TitleScreen extends BaseScreen
 	@Override
 	public void onLoad()
 	{
-		Constants.music_player.stop(1500);
+		Constants.music_player.stop(Constants.music_fade_time);
 		
 		// Available buttons
 		double x_offset = -.3;
@@ -115,7 +115,7 @@ public class TitleScreen extends BaseScreen
 		
 		network_loader = new RotationLoadingJig();
 		network_loader.onInitialize();
-		network_loader.radius = Functions.screenWidthToShaderWidth(25);
+		network_loader.radius = Constants.spinning_jig_radius;
 		
 		// and allow the user to set some settings
 		base_settings = new BaseSettingsScreen();
@@ -155,6 +155,8 @@ public class TitleScreen extends BaseScreen
 		base_play.onUnInitialize();
 		login_button.onUnInitialize();
 		base_login.onUnInitialize();
+		
+		network_loader.onUnInitialize();
 	}
 	
 	@Override

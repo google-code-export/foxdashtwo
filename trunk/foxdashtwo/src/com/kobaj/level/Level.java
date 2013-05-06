@@ -9,6 +9,7 @@ import org.simpleframework.xml.ElementList;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
+import android.util.Log;
 
 import com.kobaj.account_settings.SinglePlayerSave;
 import com.kobaj.foxdashtwo.R;
@@ -65,6 +66,11 @@ public class Level
 	public double background_parallax_ratio;
 	@Element
 	public double foreground_parallax_ratio;
+	
+	public static enum EnumMusics {none, tunnel, field, swamp, mountain, canyon, river};
+	
+	@Element
+	public EnumMusics music = EnumMusics.none;
 	
 	public double left_shader_limit;
 	public double top_shader_limit;
@@ -543,5 +549,32 @@ public class Level
 	{
 		kill = false;
 		this.setPlayerPosition();
+	}
+	
+	public void startMusic()
+	{
+		if(music == EnumMusics.none)
+		{
+			Constants.music_player.stop(Constants.music_fade_time);
+			return;
+		}
+		
+		if(music == EnumMusics.tunnel)
+			Constants.music_player.start(R.raw.tunnel, Constants.music_fade_time, true);
+		else
+			return;
+		// rest of the music will go here eventually.
+		
+		while (!Constants.music_player.isLoaded())
+		{
+			try
+			{
+				Thread.sleep(Constants.exception_timeout);
+			}
+			catch (InterruptedException e)
+			{
+				Log.e("Single Player Exception", e.toString());
+			}
+		}
 	}
 }

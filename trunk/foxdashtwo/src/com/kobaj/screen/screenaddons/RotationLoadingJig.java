@@ -11,7 +11,10 @@ public class RotationLoadingJig extends BaseLoadingScreen
 	
 	private double local_delta = 0;
 	
+	// shader coords
 	public double radius = 1.0;
+	
+	// shader coords
 	public double x_pos = 0.0;
 	public double y_pos = 0.0;
 	
