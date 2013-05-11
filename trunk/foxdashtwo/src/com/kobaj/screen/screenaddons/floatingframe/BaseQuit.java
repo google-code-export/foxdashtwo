@@ -16,12 +16,15 @@ public class BaseQuit extends BaseFloatingFrame
 	{
 		super.onInitialize();
 		
-		cancel_button = new TextButton(R.string.cancel);
-		quit_button = new TextButton(R.string.quit);
+		cancel_button = new TextButton(R.string.cancel, true);
+		quit_button = new TextButton(R.string.quit, true);
 		
 		cancel_button.onInitialize();
 		quit_button.onInitialize();
 		BaseFloatingFrame.alignButtonsAlongXAxis(center_y - shift_y, cancel_button, quit_button);
+		
+		main_popup.setScale(.5);
+		main_popup.color = Constants.frame_sec_color;
 	}
 	
 	@Override
@@ -50,7 +53,7 @@ public class BaseQuit extends BaseFloatingFrame
 	@Override
 	public void onDraw()
 	{
-		secondary_popup.onDrawAmbient(Constants.my_ip_matrix, true);
+		main_popup.onDrawAmbient(Constants.my_ip_matrix, true);
 		Constants.text.drawText(R.string.are_you_sure, label_x, shift_y, EnumDrawFrom.center);
 		
 		cancel_button.onDrawConstant();

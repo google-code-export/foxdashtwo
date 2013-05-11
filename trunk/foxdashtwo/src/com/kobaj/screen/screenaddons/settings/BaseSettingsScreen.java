@@ -1,6 +1,8 @@
 package com.kobaj.screen.screenaddons.settings;
 
 import android.annotation.SuppressLint;
+
+import com.kobaj.foxdashtwo.FoxdashtwoActivity;
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Constants;
 import com.kobaj.opengldrawable.EnumDrawFrom;
@@ -15,6 +17,7 @@ public class BaseSettingsScreen extends BaseFloatingFrame
 	private TextButton input_button;
 	private TextButton video_button;
 	
+	private boolean something_changed = false; // rudimentary but effective
 	private EnumSettingsShowing current_settings = EnumSettingsShowing.none;
 	
 	private BaseVideoSettingsScreen base_video = new BaseVideoSettingsScreen();
@@ -34,11 +37,11 @@ public class BaseSettingsScreen extends BaseFloatingFrame
 		base_account.onInitialize();
 		
 		// initialize everything else
-		account_button = new TextButton(R.string.account_button);
-		input_button = new TextButton(R.string.input_button);
-		cancel_button = new TextButton(R.string.back);
-		audio_button = new TextButton(R.string.audio_button);
-		video_button = new TextButton(R.string.video_button);
+		account_button = new TextButton(R.string.account_button, true);
+		input_button = new TextButton(R.string.input_button, true);
+		cancel_button = new TextButton(R.string.back, true);
+		audio_button = new TextButton(R.string.audio_button, true);
+		video_button = new TextButton(R.string.video_button, true);
 		
 		account_button.onInitialize();
 		input_button.onInitialize();
@@ -77,6 +80,7 @@ public class BaseSettingsScreen extends BaseFloatingFrame
 	{
 		if (current_settings == EnumSettingsShowing.audio)
 		{
+			something_changed = true;
 			if (!base_audio.onUpdate(delta))
 				current_settings = EnumSettingsShowing.none;
 		}
@@ -87,12 +91,14 @@ public class BaseSettingsScreen extends BaseFloatingFrame
 		}
 		else if (current_settings == EnumSettingsShowing.account)
 		{
+			something_changed = true;
 			if (!base_account.onUpdate(delta))
 				current_settings = EnumSettingsShowing.none;
 		}
 		else if (current_settings == EnumSettingsShowing.video)
 		{
-			if(!base_video.onUpdate(delta))
+			something_changed = true;
+			if (!base_video.onUpdate(delta))
 				current_settings = EnumSettingsShowing.none;
 		}
 		else
@@ -103,10 +109,14 @@ public class BaseSettingsScreen extends BaseFloatingFrame
 				current_settings = EnumSettingsShowing.input;
 			else if (account_button.isReleased())
 				current_settings = EnumSettingsShowing.account;
-			else if(video_button.isReleased())
+			else if (video_button.isReleased())
 				current_settings = EnumSettingsShowing.video;
 			else if (cancel_button.isReleased())
+			{
+				if (something_changed)
+					FoxdashtwoActivity.onSave();
 				return false;
+			}
 		}
 		
 		return super.onUpdate(delta);

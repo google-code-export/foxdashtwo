@@ -195,13 +195,6 @@ public class Quad
 		unfiltered_texture_data[2] = one_y;
 		unfiltered_texture_data[3] = two_y;
 		
-		// only time I use floats...
-		float buffer = -0.005f;
-		one_x -= buffer;
-		two_x += buffer;
-		one_y -= buffer;
-		two_y += buffer;
-		
 		// manipulations to turn the texture around correctly.
 		if (reverse_left_right)
 		{

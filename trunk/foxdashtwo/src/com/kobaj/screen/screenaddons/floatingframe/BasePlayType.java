@@ -24,10 +24,10 @@ public class BasePlayType extends BaseFloatingFrame
 	{
 		super.onInitialize();
 		
-		back_button = new TextButton(R.string.back);
-		new_game_button = new TextButton(R.string.new_game);
-		level_select_button = new TextButton(R.string.level_select_game);
-		download_maps_button = new TextButton(R.string.download_maps);
+		back_button = new TextButton(R.string.back, true);
+		new_game_button = new TextButton(R.string.new_game, true);
+		level_select_button = new TextButton(R.string.level_select_game, true);
+		download_maps_button = new TextButton(R.string.download_maps, true);
 		
 		back_button.onInitialize();
 		new_game_button.onInitialize();
@@ -40,12 +40,12 @@ public class BasePlayType extends BaseFloatingFrame
 		if (Constants.demo_mode)
 		{
 			BaseFloatingFrame.alignButtonsAlongXAxis(center_y + shift_y + move_y, new_game_button/* , level_select_button */);
-			BaseFloatingFrame.alignButtonsAlongXAxis(center_y - 2.0 * shift_y + move_y/* , download_maps_button */);
+			//BaseFloatingFrame.alignButtonsAlongXAxis(center_y - 2.0 * shift_y + move_y, download_maps_button);
 		}
 		else
 		{
 			BaseFloatingFrame.alignButtonsAlongXAxis(center_y + shift_y + move_y, new_game_button, level_select_button);
-			BaseFloatingFrame.alignButtonsAlongXAxis(center_y - 2.0 * shift_y + move_y, download_maps_button);
+			BaseFloatingFrame.alignButtonsAlongXAxis(center_y - 1.9 * shift_y + move_y, download_maps_button);
 		}
 		
 		BaseFloatingFrame.alignButtonsAlongXAxis(cancel_shift_y, back_button);

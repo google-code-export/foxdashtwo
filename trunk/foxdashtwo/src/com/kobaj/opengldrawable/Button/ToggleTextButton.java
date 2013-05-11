@@ -11,7 +11,7 @@ public class ToggleTextButton extends TextButton
 	// these are shader coordinates of the center of the button
 	public ToggleTextButton(int... resource_label)
 	{
-		super(resource_label[0]);
+		super(resource_label[0], true);
 		
 		this.labels = resource_label;
 		

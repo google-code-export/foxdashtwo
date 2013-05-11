@@ -50,11 +50,11 @@ public class MyGame extends MyGLRender
 	}
 	
 	// make the screen fade
-	public void onPreChangeScreen(BaseScreen new_screen)
+	public void onPreChangeScreen(BaseScreen new_screen, boolean next_level)
 	{
 		pre_next_screen = new_screen;
 		
-		currently_active_screen.onScreenChange();
+		currently_active_screen.onScreenChange(next_level);
 	}
 	
 	// commit a pre change screen

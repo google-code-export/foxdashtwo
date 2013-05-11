@@ -22,9 +22,9 @@ public class BaseVideoSettingsScreen extends BaseFloatingFrame
 	{
 		super.onInitialize();
 		
-		cancel_button = new TextButton(R.string.back);
-		fbo_up_button = new TextButton(R.string.fbo_up);
-		fbo_down_button = new TextButton(R.string.fbo_down);
+		cancel_button = new TextButton(R.string.back, true);
+		fbo_up_button = new TextButton(R.string.fbo_up, true);
+		fbo_down_button = new TextButton(R.string.fbo_down, true);
 		
 		cancel_button.onInitialize();
 		fbo_up_button.onInitialize();

@@ -14,7 +14,7 @@ public class BaseError extends BaseFloatingFrame
 	{
 		super.onInitialize();
 		
-		ok_button = new TextButton(R.string.ok);
+		ok_button = new TextButton(R.string.ok, true);
 		ok_button.onInitialize();
 		
 		BaseFloatingFrame.alignButtonsAlongXAxis(cancel_shift_y, ok_button);

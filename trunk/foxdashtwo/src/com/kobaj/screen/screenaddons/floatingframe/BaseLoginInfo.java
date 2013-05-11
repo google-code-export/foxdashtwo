@@ -16,8 +16,8 @@ public class BaseLoginInfo extends BaseFloatingFrame
 	{
 		super.onInitialize();
 		
-		cancel_button = new TextButton(R.string.cancel);
-		ok_button = new TextButton(R.string.ok);
+		cancel_button = new TextButton(R.string.cancel, true);
+		ok_button = new TextButton(R.string.ok, true);
 		
 		cancel_button.onInitialize();
 		ok_button.onInitialize();

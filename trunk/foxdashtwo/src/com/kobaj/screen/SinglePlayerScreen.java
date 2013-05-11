@@ -5,11 +5,13 @@ import android.graphics.Color;
 
 import com.kobaj.account_settings.SinglePlayerSave;
 import com.kobaj.account_settings.UserSettings;
+import com.kobaj.foxdashtwo.FoxdashtwoActivity;
 import com.kobaj.foxdashtwo.GameActivity;
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.input.EnumKeyCodes;
 import com.kobaj.input.GameInputModifier;
 import com.kobaj.level.EnumLayerTypes;
+import com.kobaj.loader.AsyncSave;
 import com.kobaj.loader.FileHandler;
 import com.kobaj.loader.GLBitmapReader;
 import com.kobaj.math.Constants;
@@ -17,13 +19,12 @@ import com.kobaj.math.Functions;
 import com.kobaj.networking.task.TaskSendScore;
 import com.kobaj.networking.task.TaskSendScore.FinishedScoring;
 import com.kobaj.opengldrawable.EnumDrawFrom;
-import com.kobaj.opengldrawable.Tween.EnumTweenEvent;
-import com.kobaj.opengldrawable.Tween.TweenEvent;
-import com.kobaj.opengldrawable.Tween.TweenManager;
+import com.kobaj.opengldrawable.Button.TextButton;
 import com.kobaj.screen.screenaddons.BaseInteractionPhysics;
 import com.kobaj.screen.screenaddons.BaseLoadingScreen;
 import com.kobaj.screen.screenaddons.LevelDebugScreen;
 import com.kobaj.screen.screenaddons.RotationLoadingJig;
+import com.kobaj.screen.screenaddons.floatingframe.BaseFloatingFrame;
 import com.kobaj.screen.screenaddons.floatingframe.BasePauseScreen;
 
 public class SinglePlayerScreen extends BaseScreen implements FinishedScoring
@@ -55,7 +56,7 @@ public class SinglePlayerScreen extends BaseScreen implements FinishedScoring
 	private boolean level_done = false;
 	
 	private int below_xfps_count = 300; // number of times to be triggered before throwing the popup
-	private double fps_limit = 1.0 / 20.0 * 1000.0;
+	private double below_xfps = 1.0 / 20.0 * 1000.0;
 	
 	// dealing with score presentation
 	private double max_color_time = 2000;
@@ -63,6 +64,12 @@ public class SinglePlayerScreen extends BaseScreen implements FinishedScoring
 	private double game_time = 0;
 	private double prev_best = 0;
 	private double world_best = -1;
+	
+	// buttons for the end of the level!
+	private TextButton title_screen_button;
+	private TextButton replay_button;
+	private boolean going_to_titlescreen = false;
+	private boolean replay_reset = false;
 	
 	private String level_name;
 	
@@ -153,8 +160,16 @@ public class SinglePlayerScreen extends BaseScreen implements FinishedScoring
 		network_loader = new RotationLoadingJig();
 		network_loader.onInitialize();
 		network_loader.radius = Constants.spinning_jig_radius;
-		network_loader.x_pos = Constants.two_third_width;
-		network_loader.y_pos = Constants.one_fourth_height;
+		network_loader.x_pos = Constants.two_third_width - Constants.width_padding;
+		network_loader.y_pos = Constants.two_fourth_height - Constants.height_padding;
+		
+		// buttons
+		title_screen_button = new TextButton(R.string.title_screen, true);
+		replay_button = new TextButton(R.string.replay, true);
+		
+		title_screen_button.onInitialize();
+		replay_button.onInitialize();
+		BaseFloatingFrame.alignButtonsAlongXAxis(Constants.one_fourth_height, title_screen_button, replay_button);
 		
 		GLBitmapReader.isLoaded();
 		
@@ -172,6 +187,9 @@ public class SinglePlayerScreen extends BaseScreen implements FinishedScoring
 			the_level.onUnInitialize();
 		
 		network_loader.onUnInitialize();
+		
+		title_screen_button.onUnInitialize();
+		replay_button.onUnInitialize();
 	}
 	
 	@Override
@@ -201,7 +219,7 @@ public class SinglePlayerScreen extends BaseScreen implements FinishedScoring
 		}
 		
 		// handle low fps situations
-		if (delta > this.fps_limit && UserSettings.fbo_divider < 2 && !UserSettings.fbo_warned)
+		if (delta > this.below_xfps && UserSettings.fbo_divider < 2 && !UserSettings.fbo_warned)
 		{
 			this.below_xfps_count--;
 			if (below_xfps_count == 0)
@@ -220,13 +238,13 @@ public class SinglePlayerScreen extends BaseScreen implements FinishedScoring
 	private void onRunningUpdate(double delta)
 	{
 		// update all our objects and lights and things
-		the_level.onUpdate(delta);
+		the_level.onUpdate(delta, !level_done);
 		
 		if (!level_done)
 			game_time += delta;
 		
 		// interaction and player
-		if (!level_done)
+		if (!level_done && !replay_reset)
 			interaction_addon.onUpdate(delta, my_modifier, the_level);
 		
 		getPlayerPosition();
@@ -242,8 +260,14 @@ public class SinglePlayerScreen extends BaseScreen implements FinishedScoring
 		if (fade_out)
 		{
 			fade_out = tween_fade_out.onUpdate(delta);
-			if (fade_out == false && !this.level_done)
+			if (fade_out == false)
+			{
+				// see if we are going home
+				if (going_to_titlescreen)
+					GameActivity.mGLView.my_game.onCommitChangeScreen();
+				
 				tween_fade_out.reset();
+			}
 		}
 		
 		// handle death events
@@ -262,6 +286,7 @@ public class SinglePlayerScreen extends BaseScreen implements FinishedScoring
 		else if (this.current_death_stage == EnumDeathStages.dead)
 		{
 			the_level.deadReset();
+			this.replay_reset = false;
 			this.current_death_stage = EnumDeathStages.fade_to_color;
 			fade_in = true;
 		}
@@ -270,7 +295,7 @@ public class SinglePlayerScreen extends BaseScreen implements FinishedScoring
 		
 		// debug_addon.onUpdate(delta, the_level);
 		
-		if (level_done && !fade_out)
+		if (level_done)
 		{
 			color_time += delta;
 			
@@ -278,8 +303,22 @@ public class SinglePlayerScreen extends BaseScreen implements FinishedScoring
 				color_time = 0;
 			
 			// level is done and it finished fadeing
-			if (Constants.input_manager.getPressed(0))
-				GameActivity.mGLView.my_game.onCommitChangeScreen();
+			if (title_screen_button.isReleased())
+			{
+				fade_out = true;
+				this.going_to_titlescreen = true;
+			}
+			else if (replay_button.isReleased())
+			{
+				// reset everything.
+				level_done = false;
+				SinglePlayerSave.last_checkpoint = Constants.empty;
+				game_time = 0;
+				
+				// send to start.
+				this.current_death_stage = EnumDeathStages.kill;
+				System.gc();
+			}
 		}
 	}
 	
@@ -307,11 +346,7 @@ public class SinglePlayerScreen extends BaseScreen implements FinishedScoring
 	@Override
 	public void onDrawObject(EnumLayerTypes... types)
 	{
-		if (!level_done || fade_out)
-		{
-			the_level.onDrawObject(types);
-		}
-		
+		the_level.onDrawObject(types);
 		// debug_addon.onDrawObject();
 	}
 	
@@ -327,31 +362,18 @@ public class SinglePlayerScreen extends BaseScreen implements FinishedScoring
 	{
 		the_level.onDrawConstant();
 		
-		// cover everything up
-		if (fade_in || fade_out) // yes this is correct
-			black_overlay_fade.onDrawAmbient(Constants.my_ip_matrix, true);
-		
-		if (this.current_death_stage == EnumDeathStages.dead)
+		if (level_done)
 		{
-			color_overlay.color = Color.BLACK;
+			// darken things just a bit
+			color_overlay.color = Color.argb(100, 0, 0, 0);
 			color_overlay.onDrawAmbient(Constants.my_ip_matrix, true);
-		}
-		
-		// draw the controls
-		if (current_state == EnumScreenState.paused)
-			pause_addon.onDraw();
-		else if (!level_done)
-		{
-			my_modifier.onDraw();
 			
-			Constants.text.drawDecimalNumber(this.game_time / 1000.0, 2, 1, Constants.mini_time_pos_x, Constants.mini_time_pos_y);
-		}
-		else if (level_done)
-		{
 			// draw the scores
-			Constants.text.drawText(R.string.your_time, Constants.one_third_width, Constants.three_fourth_height, EnumDrawFrom.bottom_right);
-			Constants.text.drawText(R.string.best_time, Constants.one_third_width, Constants.two_fourth_height, EnumDrawFrom.bottom_right);
-			Constants.text.drawText(R.string.world_time, Constants.one_third_width, Constants.one_fourth_height, EnumDrawFrom.bottom_right);
+			Constants.text.drawText(R.string.time, 0, Constants.three_fourth_height, EnumDrawFrom.center);
+			
+			Constants.text.drawText(R.string.your_time, Constants.one_third_width + Constants.width_padding, Constants.two_fourth_height + Constants.height_padding, EnumDrawFrom.bottom_right);
+			Constants.text.drawText(R.string.best_time, Constants.one_third_width + Constants.width_padding, Constants.two_fourth_height, EnumDrawFrom.bottom_right);
+			Constants.text.drawText(R.string.world_time, Constants.one_third_width + Constants.width_padding, Constants.two_fourth_height - Constants.height_padding, EnumDrawFrom.bottom_right);
 			
 			// make it look nice
 			int game_color = Color.WHITE;
@@ -373,18 +395,42 @@ public class SinglePlayerScreen extends BaseScreen implements FinishedScoring
 			}
 			
 			// draw level score
-			Constants.text.drawDecimalNumber(this.game_time / 1000.0, 4, 3, Constants.two_third_width, Constants.three_fourth_height);
+			Constants.text.drawDecimalNumber(this.game_time / 1000.0, 4, 3, Constants.two_third_width - Constants.width_padding, Constants.two_fourth_height + Constants.height_padding);
 			
 			// draw our local score
-			Constants.text.drawDecimalNumber(this.prev_best, 4, 3, Constants.two_third_width, Constants.two_fourth_height, game_color);
+			Constants.text.drawDecimalNumber(this.prev_best, 4, 3, Constants.two_third_width - Constants.width_padding, Constants.two_fourth_height, game_color);
 			
 			// draw our world score
 			if (Constants.network_activity > 0 || world_best < 0)
 				network_loader.onDrawLoading();
 			if (this.world_best > 0)
 			{
-				Constants.text.drawDecimalNumber(this.world_best, 4, 3, Constants.two_third_width, Constants.one_fourth_height, game_color);
+				Constants.text.drawDecimalNumber(this.world_best, 4, 3, Constants.two_third_width - Constants.width_padding, Constants.two_fourth_height - Constants.height_padding, world_color);
 			}
+			
+			// draw our buttons
+			title_screen_button.onDrawConstant();
+			replay_button.onDrawConstant();
+		}
+		
+		// cover everything up
+		if (fade_in || fade_out || this.going_to_titlescreen) // yes this is correct
+			black_overlay_fade.onDrawAmbient(Constants.my_ip_matrix, true);
+		
+		if (this.current_death_stage == EnumDeathStages.dead)
+		{
+			color_overlay.color = Color.BLACK;
+			color_overlay.onDrawAmbient(Constants.my_ip_matrix, true);
+		}
+		
+		// draw the controls
+		if (current_state == EnumScreenState.paused)
+			pause_addon.onDraw();
+		else if (!level_done)
+		{
+			my_modifier.onDraw();
+			
+			Constants.text.drawDecimalNumber(this.game_time / 1000.0, 2, 1, Constants.mini_time_pos_x, Constants.mini_time_pos_y);
 		}
 	}
 	
@@ -404,11 +450,10 @@ public class SinglePlayerScreen extends BaseScreen implements FinishedScoring
 	}
 	
 	@Override
-	public void onScreenChange()
+	public void onScreenChange(boolean next_level)
 	{
-		if (level_done == false)
+		if (!level_done && !replay_reset)
 		{
-			fade_out = true;
 			level_done = true;
 			
 			// get the previous
@@ -420,11 +465,23 @@ public class SinglePlayerScreen extends BaseScreen implements FinishedScoring
 			Constants.accounts.sendScore(level_name, game_time / 1000.0, score_sender);
 			
 			// save this as the best if its better...
-			if (game_time < prev_best && game_time > 0)
+			if (game_time / 1000.0 < prev_best && game_time > 0)
 			{
 				SinglePlayerSave.saveBest(level_name, game_time / 1000.0);
 				prev_best = game_time / 1000.0;
 			}
+			
+			// save everything
+			AsyncSave save_xml = new AsyncSave();
+			save_xml.execute();
+			
+			// set the buttons
+			if (next_level) // has another level, not title screen
+				title_screen_button.label = R.string.next_level;
+			else
+				title_screen_button.label = R.string.title_screen;
+			
+			replay_reset = true;
 		}
 	}
 	

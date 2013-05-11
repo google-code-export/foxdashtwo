@@ -11,7 +11,6 @@ import com.kobaj.opengldrawable.Quad.QuadCompressed;
 public abstract class BaseFloatingFrame
 {
 	protected QuadCompressed main_popup;
-	protected QuadCompressed secondary_popup;
 	
 	// these need to be refactored to x_label, etc.
 	protected double label_x;
@@ -25,9 +24,7 @@ public abstract class BaseFloatingFrame
 	
 	public void onInitialize()
 	{
-		main_popup = new QuadCompressed(R.raw.big_popup, R.raw.big_popup_alpha, 626, 386);
-		secondary_popup = new QuadCompressed(R.raw.big_popup, R.raw.big_popup_alpha, 626, 386);
-		secondary_popup.setScale(.5);
+		main_popup = new QuadCompressed(R.raw.ui_big_popup, R.raw.ui_big_popup_alpha, 626, 386);
 		
 		shift_y = Functions.screenHeightToShaderHeight(45);
 		
@@ -37,14 +34,12 @@ public abstract class BaseFloatingFrame
 		label_y = center_y + 3.0 * shift_y; // Functions.screenHeightToShaderHeight(95);
 		
 		// set colors
-		secondary_popup.color = Constants.frame_sec_color;
 		main_popup.color = Constants.frame_main_color;
 	}
 	
 	public void onUnInitialize()
 	{
 		main_popup.onUnInitialize();
-		secondary_popup.onUnInitialize();
 	}
 	
 	public boolean onUpdate(double delta)
@@ -87,7 +82,7 @@ public abstract class BaseFloatingFrame
 			int x_pos = half_width + half_button_width;
 			double bx_pos = Functions.screenWidthToShaderWidth(x_pos);
 			double by_pos = y_pos;
-			button.invisible_outline.setXYPos(bx_pos, by_pos, EnumDrawFrom.center);
+			button.setXYPos(bx_pos, by_pos, EnumDrawFrom.center);
 			
 			// calculate next buttons starting point
 			half_width += button.width + padding;

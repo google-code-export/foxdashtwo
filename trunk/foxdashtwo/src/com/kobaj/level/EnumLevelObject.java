@@ -35,8 +35,8 @@ public enum EnumLevelObject
 	l5_ground_branch_bridge_support, l5_ground_platform_puddle, l5_ground_platform_small,
 	
 	/* thematic 6 */
-	l6_background_canyon, l6_background_canyon_cave, l6_background_canyon_crack, l6_ground_platform_extra_1, l6_ground_platform_extra_2, l6_ground_platform_extra_3,
-	l6_ground_platform_extra_4,
+	l6_background_canyon, l6_background_canyon_2, l6_background_canyon_cave, l6_background_canyon_crack, l6_ground_platform_extra_1,
+	l6_ground_platform_extra_2, l6_ground_platform_extra_3, l6_ground_platform_extra_4,
 	l6_background_clouds, l6_decoration_brush_1, l6_decoration_brush_2, l6_decoration_rock, l6_decoration_tree_dead, l6_ground_platform_flat, l6_ground_platform_huge,
 	
 	/* more stuff */

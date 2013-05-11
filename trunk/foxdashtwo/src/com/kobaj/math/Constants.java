@@ -64,6 +64,8 @@ public class Constants
 	// score position constants
 	public static final double default_mini_time_pos_x = 100;
 	public static final double default_mini_time_pos_y = 100;
+	public static final double default_width_padding = 75;
+	public static final double default_height_padding = 75;
 	public static double mini_time_pos_x;
 	public static double mini_time_pos_y;
 	public static double one_fourth_height;
@@ -71,6 +73,8 @@ public class Constants
 	public static double three_fourth_height;
 	public static double one_third_width;
 	public static double two_third_width;
+	public static double width_padding;
+	public static double height_padding;
 	
 	// physics constants
 	public static final double gravity_default = 0.000800;
@@ -144,12 +148,14 @@ public class Constants
 	public static final int input_press_color = 0xBB888899;
 	
 	// button constants
+	public static final int ui_button_unpressed = 0xFFFFFFFF;
+	public static final int ui_button_pressed = 0xFFBBBBBB;
 	public static final int unpressed_color = 0xBBBBBBCC;
 	public static final int pressed_color = 0xBB888899;
 	
 	// floating frame colors
-	public static final int frame_main_color = 0xCC999999;
-	public static final int frame_sec_color = 0xCCFFAAAA;
+	public static final int frame_main_color = 0xDDBBBBBB;
+	public static final int frame_sec_color = 0xDDBF8888;
 	
 	// text (obviously?)
 	public static Text text;
