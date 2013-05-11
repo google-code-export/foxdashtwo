@@ -24,6 +24,8 @@ public class LevelEventNextLevel extends LevelEventBase
 			
 			BaseScreen next = null;
 			
+			boolean next_level = false;
+			
 			// set the next level
 			if (!this.id_cache.isEmpty())
 			{
@@ -31,11 +33,12 @@ public class LevelEventNextLevel extends LevelEventBase
 				
 				// load the next level
 				next = (new SinglePlayerScreen());
+				next_level = true;
 			}
 			else
 				next = (new TitleScreen());
 			
-			GameActivity.mGLView.my_game.onPreChangeScreen(next);
+			GameActivity.mGLView.my_game.onPreChangeScreen(next, next_level);
 		}
 	}
 	

@@ -117,6 +117,7 @@ public class LevelObject extends LevelEntityActive
 			quad_object = new QuadCompressed(R.raw.l1_ground_platform_small_2, R.raw.l1_ground_platform_small_2_alpha, 530, 173);
 		else if (this_object == EnumLevelObject.l1_ground_platform_small_3)
 			quad_object = new QuadCompressed(R.raw.l1_ground_platform_small_3, R.raw.l1_ground_platform_small_3_alpha, 326, 195);
+		
 		else if (this_object == EnumLevelObject.l2_background_2)
 			quad_object = new QuadCompressed(R.raw.l2_background_2, R.raw.l2_background_2_alpha, 2008, 1024);
 		else if (this_object == EnumLevelObject.l2_background_hill_1)
@@ -171,6 +172,7 @@ public class LevelObject extends LevelEntityActive
 			quad_object = new QuadCompressed(R.raw.l2_ground_platform_small_2, R.raw.l2_ground_platform_small_2_alpha, 168, 179);
 		else if (this_object == EnumLevelObject.l2_ground_transition_1)
 			quad_object = new QuadCompressed(R.raw.l2_ground_transition_1, R.raw.l2_ground_transition_1_alpha, 330, 79);
+		
 		else if (this_object == EnumLevelObject.l3_background_swamp)
 			quad_object = new QuadCompressed(R.raw.l3_background_swamp, R.raw.l3_background_swamp_alpha, 1820, 1024);
 		else if (this_object == EnumLevelObject.l3_background_tree_1)
@@ -193,7 +195,6 @@ public class LevelObject extends LevelEntityActive
 			quad_object = new QuadCompressed(R.raw.l3_decoration_tree, R.raw.l3_decoration_tree_alpha, 662, 574);
 		else if (this_object == EnumLevelObject.l3_decoration_tree_front)
 			quad_object = new QuadCompressed(R.raw.l3_decoration_tree_front, R.raw.l3_decoration_tree_front_alpha, 580, 643);
-		
 		else if (this_object == EnumLevelObject.l3_ground_extra_platform_1)
 			quad_object = new QuadCompressed(R.raw.l3_ground_extra_platform_1, R.raw.l3_ground_extra_platform_1_alpha, 94, 159);
 		else if (this_object == EnumLevelObject.l3_ground_extra_platform_2)
@@ -208,6 +209,7 @@ public class LevelObject extends LevelEntityActive
 			quad_object = new QuadCompressed(R.raw.l3_ground_platform_small, R.raw.l3_ground_platform_small_alpha, 313, 328);
 		else if (this_object == EnumLevelObject.l3_ground_platform_very_small)
 			quad_object = new QuadCompressed(R.raw.l3_ground_platform_very_small, R.raw.l3_ground_platform_very_small_alpha, 111, 70);
+		
 		else if (this_object == EnumLevelObject.l4_background_sky)
 			quad_object = new QuadCompressed(R.raw.l4_background_sky, R.raw.l4_background_sky_alpha, 1962, 1024);
 		else if (this_object == EnumLevelObject.l4_decoration_rocks_1)
@@ -263,8 +265,11 @@ public class LevelObject extends LevelEntityActive
 			quad_object = new QuadCompressed(R.raw.l5_ground_platform_puddle, R.raw.l5_ground_platform_puddle_alpha, 609, 583);
 		else if (this_object == EnumLevelObject.l5_ground_platform_small)
 			quad_object = new QuadCompressed(R.raw.l5_ground_platform_small, R.raw.l5_ground_platform_small_alpha, 645, 222);
+		
 		else if (this_object == EnumLevelObject.l6_background_canyon)
 			quad_object = new QuadCompressed(R.raw.l6_background_canyon, R.raw.l6_background_canyon_alpha, 2048, 861);
+		else if (this_object == EnumLevelObject.l6_background_canyon_2) 
+			 quad_object = new QuadCompressed(R.raw.l6_background_canyon_2, R.raw.l6_background_canyon_2_alpha, 2048, 861); 
 		else if (this_object == EnumLevelObject.l6_background_canyon_cave)
 			quad_object = new QuadCompressed(R.raw.l6_background_canyon_cave, R.raw.l6_background_canyon_cave_alpha, 915, 885);
 		else if (this_object == EnumLevelObject.l6_background_canyon_crack)

@@ -694,6 +694,9 @@ public class Functions
 		Constants.one_third_width = Functions.screenXToShaderX(Constants.width / 3.0);
 		Constants.two_third_width = Functions.screenXToShaderX(2.0 * Constants.width / 3.0);
 		
+		Constants.width_padding = Functions.screenWidthToShaderWidth(Constants.default_width_padding);
+		Constants.height_padding = Functions.screenHeightToShaderHeight(Constants.default_height_padding);
+		
 		Constants.spinning_jig_radius = Functions.screenWidthToShaderWidth(Constants.default_spinning_jig_radius);
 	}
 }

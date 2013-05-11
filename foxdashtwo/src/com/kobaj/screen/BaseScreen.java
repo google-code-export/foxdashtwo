@@ -105,5 +105,5 @@ public abstract class BaseScreen implements Runnable
 	public abstract void onPause();
 	
 	// prepare for shutdown
-	public abstract void onScreenChange();
+	public abstract void onScreenChange(boolean next_level);
 }

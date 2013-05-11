@@ -28,10 +28,10 @@ public class BaseInputSettingsScreen extends BaseFloatingFrame
 	{
 		super.onInitialize();
 		
-		cancel_button = new TextButton(R.string.back);
+		cancel_button = new TextButton(R.string.back, true);
 		switch_button = new ToggleTextButton(R.string.halfhalf, R.string.controller);
-		in_button = new TextButton(R.string.zoom_in);
-		out_button = new TextButton(R.string.zoom_out);
+		in_button = new TextButton(R.string.zoom_in, true);
+		out_button = new TextButton(R.string.zoom_out, true);
 		
 		cancel_button.onInitialize();
 		switch_button.onInitialize();

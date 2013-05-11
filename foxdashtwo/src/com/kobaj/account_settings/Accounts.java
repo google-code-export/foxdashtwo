@@ -112,7 +112,8 @@ public class Accounts
 	// async task calls this
 	public String get_token(boolean invalidateToken)
 	{
-		if (UserSettings.selected_account_login == -1)
+		if ((!Constants.logged_in && !Constants.logging_in) //
+				|| UserSettings.selected_account_login == -1) // 
 			return Constants.empty;
 		
 		Account[] accounts = Constants.accounts.accounts_array();

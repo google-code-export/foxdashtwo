@@ -22,7 +22,7 @@ public class BaseAccountSettingsScreen extends BaseFloatingFrame
 	{
 		super.onInitialize();
 		
-		cancel_button = new TextButton(R.string.back);
+		cancel_button = new TextButton(R.string.back, true);
 		switch_button = new ToggleTextButton(R.string.yes_button, R.string.no_button);
 		
 		cancel_button.onInitialize();

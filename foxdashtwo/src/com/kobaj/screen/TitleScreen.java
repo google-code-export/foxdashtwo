@@ -69,49 +69,45 @@ public class TitleScreen extends BaseScreen
 		double x_offset = -.3;
 		
 		// TODO change all these to look the same regardless of screen size,
-		play_button = new TextButton(R.string.play);
-		play_button.draw_background = false;
+		play_button = new TextButton(R.string.play, false);
 		play_button.onInitialize();
-		play_button.invisible_outline.setXYPos(x_offset, -Constants.shader_height - play_button.invisible_outline.shader_height, EnumDrawFrom.center);
-		play_tween = new TweenManager(play_button.invisible_outline,//
-				new TweenEvent(EnumTweenEvent.delay, 0 + x_offset, -Constants.shader_height - play_button.invisible_outline.shader_height),//
+		play_button.setXYPos(x_offset, -Constants.shader_height - play_button.invisible_outline().shader_height, EnumDrawFrom.center);
+		play_tween = new TweenManager(play_button.invisible_outline(),//
+				new TweenEvent(EnumTweenEvent.delay, 0 + x_offset, -Constants.shader_height - play_button.invisible_outline().shader_height),//
 				1000,//
-				new TweenEvent(EnumTweenEvent.delay, 0 + x_offset, play_button.invisible_outline.shader_height),//
+				new TweenEvent(EnumTweenEvent.delay, 0 + x_offset, play_button.invisible_outline().shader_height),//
 				400,//
 				new TweenEvent(EnumTweenEvent.rotate, 0 + x_offset, 0, Color.WHITE, 35));//
 		
-		settings_button = new TextButton(R.string.settings_button);
-		settings_button.draw_background = false;
+		settings_button = new TextButton(R.string.settings_button, false);
 		settings_button.onInitialize();
-		settings_tween = new TweenManager(settings_button.invisible_outline,//
-				new TweenEvent(EnumTweenEvent.delay, .1 + x_offset, -Constants.shader_height - settings_button.invisible_outline.shader_height),//
+		settings_tween = new TweenManager(settings_button.invisible_outline(),//
+				new TweenEvent(EnumTweenEvent.delay, .1 + x_offset, -Constants.shader_height - settings_button.invisible_outline().shader_height),//
 				300,//
-				new TweenEvent(EnumTweenEvent.move, .1 + x_offset, -Constants.shader_height - settings_button.invisible_outline.shader_height),//
+				new TweenEvent(EnumTweenEvent.move, .1 + x_offset, -Constants.shader_height - settings_button.invisible_outline().shader_height),//
 				1000,//
 				new TweenEvent(EnumTweenEvent.delay, .1 + x_offset, 0),//
 				400,//
-				new TweenEvent(EnumTweenEvent.rotate, .1 + x_offset, -settings_button.invisible_outline.shader_height, Color.WHITE, 35));//
+				new TweenEvent(EnumTweenEvent.rotate, .1 + x_offset, -settings_button.invisible_outline().shader_height, Color.WHITE, 35));//
 		
-		quit_button = new TextButton(R.string.quit);
-		quit_button.draw_background = false;
+		quit_button = new TextButton(R.string.quit, false);
 		quit_button.onInitialize();
-		quit_tween = new TweenManager(quit_button.invisible_outline,//
-				new TweenEvent(EnumTweenEvent.delay, .2 + x_offset, -Constants.shader_height - quit_button.invisible_outline.shader_height),//
+		quit_tween = new TweenManager(quit_button.invisible_outline(),//
+				new TweenEvent(EnumTweenEvent.delay, .2 + x_offset, -Constants.shader_height - quit_button.invisible_outline().shader_height),//
 				600,//
-				new TweenEvent(EnumTweenEvent.move, .2 + x_offset, -Constants.shader_height - quit_button.invisible_outline.shader_height),//
+				new TweenEvent(EnumTweenEvent.move, .2 + x_offset, -Constants.shader_height - quit_button.invisible_outline().shader_height),//
 				1000,//
-				new TweenEvent(EnumTweenEvent.delay, .2 + x_offset, -quit_button.invisible_outline.shader_height),//
+				new TweenEvent(EnumTweenEvent.delay, .2 + x_offset, -quit_button.invisible_outline().shader_height),//
 				400,//
-				new TweenEvent(EnumTweenEvent.rotate, .2 + x_offset, 2.0 * -quit_button.invisible_outline.shader_height, Color.WHITE, 35));//
+				new TweenEvent(EnumTweenEvent.rotate, .2 + x_offset, 2.0 * -quit_button.invisible_outline().shader_height, Color.WHITE, 35));//
 		
-		login_button = new TextButton(R.string.login_button);
-		login_button.draw_background = false;
+		login_button = new TextButton(R.string.login_button, false);
 		login_button.onInitialize();
-		login_tween = new TweenManager(login_button.invisible_outline, //
-				new TweenEvent(EnumTweenEvent.delay, Constants.shader_width, Constants.shader_height / 2.0 - login_button.invisible_outline.shader_height), //
+		login_tween = new TweenManager(login_button.invisible_outline(), //
+				new TweenEvent(EnumTweenEvent.delay, Constants.shader_width, Constants.shader_height / 2.0 - login_button.invisible_outline().shader_height), //
 				1000, //
-				new TweenEvent(EnumTweenEvent.move, Constants.shader_width / 2.0 - login_button.invisible_outline.shader_width * 1.5, Constants.shader_height / 2.0
-						- login_button.invisible_outline.shader_height)); //
+				new TweenEvent(EnumTweenEvent.move, Constants.shader_width / 2.0 - login_button.invisible_outline().shader_width * 1.5, Constants.shader_height / 2.0
+						- login_button.invisible_outline().shader_height)); //
 		
 		network_loader = new RotationLoadingJig();
 		network_loader.onInitialize();
@@ -184,16 +180,16 @@ public class TitleScreen extends BaseScreen
 			
 			// testing spring
 			double y_pos_shader = 0;
-			Constants.physics.addSpringY(.00003, .007, 0, play_button.invisible_outline.y_pos_shader - y_pos_shader, play_button.invisible_outline);
-			Constants.physics.integratePhysics(delta, play_button.invisible_outline);
+			Constants.physics.addSpringY(.00003, .007, 0, play_button.invisible_outline().y_pos_shader - y_pos_shader, play_button.invisible_outline());
+			Constants.physics.integratePhysics(delta, play_button.invisible_outline());
 			
-			y_pos_shader = -settings_button.invisible_outline.shader_height;
-			Constants.physics.addSpringY(.00003, .007, 0, settings_button.invisible_outline.y_pos_shader - y_pos_shader, settings_button.invisible_outline);
-			Constants.physics.integratePhysics(delta, settings_button.invisible_outline);
+			y_pos_shader = -settings_button.invisible_outline().shader_height;
+			Constants.physics.addSpringY(.00003, .007, 0, settings_button.invisible_outline().y_pos_shader - y_pos_shader, settings_button.invisible_outline());
+			Constants.physics.integratePhysics(delta, settings_button.invisible_outline());
 			
-			y_pos_shader = 2.0 * -quit_button.invisible_outline.shader_height;
-			Constants.physics.addSpringY(.00003, .007, 0, quit_button.invisible_outline.y_pos_shader - y_pos_shader, quit_button.invisible_outline);
-			Constants.physics.integratePhysics(delta, quit_button.invisible_outline);
+			y_pos_shader = 2.0 * -quit_button.invisible_outline().shader_height;
+			Constants.physics.addSpringY(.00003, .007, 0, quit_button.invisible_outline().y_pos_shader - y_pos_shader, quit_button.invisible_outline());
+			Constants.physics.integratePhysics(delta, quit_button.invisible_outline());
 			
 			// tween
 			play_tween.onUpdate(delta);
@@ -224,8 +220,8 @@ public class TitleScreen extends BaseScreen
 				login_tween.finish();
 				
 				// set the rotator
-				network_loader.x_pos = login_button.invisible_outline.x_pos_shader;
-				network_loader.y_pos = login_button.invisible_outline.y_pos_shader;
+				network_loader.x_pos = login_button.invisible_outline().x_pos_shader;
+				network_loader.y_pos = login_button.invisible_outline().y_pos_shader;
 			}
 		}
 		
@@ -298,7 +294,7 @@ public class TitleScreen extends BaseScreen
 	}
 
 	@Override
-	public void onScreenChange()
+	public void onScreenChange(boolean next_level)
 	{
 		// TODO Auto-generated method stub
 		

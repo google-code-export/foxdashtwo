@@ -16,10 +16,10 @@ public class BaseLowFPS extends BaseFloatingFrame
 	{
 		super.onInitialize();
 		
-		ok_button = new TextButton(R.string.ok);
+		ok_button = new TextButton(R.string.ok, true);
 		ok_button.onInitialize();
 		
-		cancel_button = new TextButton(R.string.cancel);
+		cancel_button = new TextButton(R.string.cancel, true);
 		cancel_button.onInitialize();
 		
 		BaseFloatingFrame.alignButtonsAlongXAxis(cancel_shift_y, cancel_button, ok_button);

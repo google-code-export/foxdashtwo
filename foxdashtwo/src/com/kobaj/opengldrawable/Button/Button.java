@@ -2,6 +2,7 @@ package com.kobaj.opengldrawable.Button;
 
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
+import com.kobaj.opengldrawable.EnumDrawFrom;
 import com.kobaj.opengldrawable.Quad.QuadCompressed;
 
 public abstract class Button
@@ -9,14 +10,24 @@ public abstract class Button
 	private boolean current_touch;
 	private boolean old_touch;
 	
-	public QuadCompressed invisible_outline;
+	protected QuadCompressed invisible_outline;
 	
 	public int width;
 	public int height;
 	
-	public boolean draw_background = true;
+	protected boolean draw_background = false;
 	
 	public abstract void onInitialize();
+	
+	public void setXYPos(double x, double y, EnumDrawFrom draw_from)
+	{
+		invisible_outline.setXYPos(x, y, draw_from);
+	}
+	
+	public QuadCompressed invisible_outline()
+	{
+		return invisible_outline;
+	}
 	
 	public void onUnInitialize()
 	{
