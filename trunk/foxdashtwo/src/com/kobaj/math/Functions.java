@@ -141,6 +141,7 @@ public class Functions
 	}
 	
 	// random between two values
+	// includes min and max
 	public static final double randomDouble(double min, double max)
 	{
 		if (min == max)

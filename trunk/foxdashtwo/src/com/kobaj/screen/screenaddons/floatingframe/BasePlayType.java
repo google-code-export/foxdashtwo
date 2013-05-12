@@ -1,6 +1,7 @@
 package com.kobaj.screen.screenaddons.floatingframe;
 
-import com.kobaj.account_settings.SinglePlayerSave;
+import android.annotation.SuppressLint;
+
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
@@ -11,13 +12,16 @@ import com.kobaj.screen.TitleScreen;
 
 public class BasePlayType extends BaseFloatingFrame
 {
-	TextButton back_button;
-	TextButton new_game_button;
+	private TextButton back_button;
+	private TextButton new_game_button;
 	
-	TextButton level_select_button;
-	TextButton download_maps_button;
+	private TextButton level_select_button;
+	private TextButton download_maps_button;
 	
 	public static final String popup_tag = "FoxDashTwoDownload";
+	
+	private BaseLevelSelect level_selector;
+	private boolean level_select_open = false;
 	
 	@Override
 	public void onInitialize()
@@ -40,7 +44,7 @@ public class BasePlayType extends BaseFloatingFrame
 		if (Constants.demo_mode)
 		{
 			BaseFloatingFrame.alignButtonsAlongXAxis(center_y + shift_y + move_y, new_game_button/* , level_select_button */);
-			//BaseFloatingFrame.alignButtonsAlongXAxis(center_y - 2.0 * shift_y + move_y, download_maps_button);
+			// BaseFloatingFrame.alignButtonsAlongXAxis(center_y - 2.0 * shift_y + move_y, download_maps_button);
 		}
 		else
 		{
@@ -49,6 +53,9 @@ public class BasePlayType extends BaseFloatingFrame
 		}
 		
 		BaseFloatingFrame.alignButtonsAlongXAxis(cancel_shift_y, back_button);
+		
+		level_selector = new BaseLevelSelect();
+		level_selector.onInitialize();
 	}
 	
 	@Override
@@ -60,21 +67,22 @@ public class BasePlayType extends BaseFloatingFrame
 		new_game_button.onUnInitialize();
 		level_select_button.onUnInitialize();
 		download_maps_button.onUnInitialize();
+		
+		level_selector.onUnInitialize();
 	}
 	
 	@Override
 	public boolean onUpdate(double delta)
 	{
-		if (new_game_button.isReleased())
+		if (this.level_select_open)
+			level_select_open = this.level_selector.onUpdate(delta);
+		else if (new_game_button.isReleased())
 		{
-			// erase the last checkpoint since we are 'starting new';
-			SinglePlayerSave.last_level = null;
-			SinglePlayerSave.last_checkpoint = null;
 			TitleScreen.fade_play = true;
 		}
 		else if (level_select_button.isReleased() && !Constants.demo_mode)
 		{
-			// for now, do nothing.
+			level_select_open = true;
 		}
 		else if (download_maps_button.isReleased() && !Constants.demo_mode)
 		{
@@ -92,21 +100,27 @@ public class BasePlayType extends BaseFloatingFrame
 		
 	}
 	
+	@SuppressLint("WrongCall")
 	@Override
 	public void onDraw()
 	{
-		main_popup.onDrawAmbient(Constants.my_ip_matrix, true);
-		Constants.text.drawText(R.string.play_header, label_x, label_y, EnumDrawFrom.center);
-		
-		new_game_button.onDrawConstant();
-		
-		if (!Constants.demo_mode)
+		if (this.level_select_open)
+			this.level_selector.onDraw();
+		else
 		{
-			level_select_button.onDrawConstant();
-			download_maps_button.onDrawConstant();
+			
+			main_popup.onDrawAmbient(Constants.my_ip_matrix, true);
+			Constants.text.drawText(R.string.play_header, label_x, label_y, EnumDrawFrom.center);
+			
+			new_game_button.onDrawConstant();
+			
+			if (!Constants.demo_mode)
+			{
+				level_select_button.onDrawConstant();
+				download_maps_button.onDrawConstant();
+			}
+			
+			back_button.onDrawConstant();
 		}
-		
-		back_button.onDrawConstant();
 	}
-	
 }

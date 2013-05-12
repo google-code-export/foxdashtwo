@@ -1,7 +1,6 @@
 package com.kobaj.opengldrawable.Button;
 
 import com.kobaj.math.Constants;
-import com.kobaj.opengldrawable.EnumDrawFrom;
 
 public class ToggleTextButton extends TextButton
 {
@@ -31,25 +30,12 @@ public class ToggleTextButton extends TextButton
 	{
 		boolean pushed = super.isReleased();
 		
-		if(pushed)
+		if (pushed)
+		{
 			label_pointer = (label_pointer + 1) % labels.length;
+			label = labels[label_pointer];
+		}
 		
 		return pushed;
 	}
-	
-	public void onDrawConstant()
-	{
-		if (draw_background)
-		{
-			int color = Constants.unpressed_color;
-			if (isTouched())
-				color = Constants.pressed_color;
-			
-			invisible_outline.color = color;
-			invisible_outline.onDrawAmbient(Constants.my_ip_matrix, true);
-		}
-		
-		Constants.text.drawText(labels[label_pointer], invisible_outline.x_pos_shader, invisible_outline.y_pos_shader, EnumDrawFrom.center, invisible_outline.color, invisible_outline.degree);
-	}
-	
 }

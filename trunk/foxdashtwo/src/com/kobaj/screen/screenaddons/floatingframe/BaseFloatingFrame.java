@@ -1,10 +1,13 @@
 package com.kobaj.screen.screenaddons.floatingframe;
 
+import android.graphics.Color;
+
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.input.EnumKeyCodes;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.EnumDrawFrom;
+import com.kobaj.opengldrawable.SimpleColorLoop;
 import com.kobaj.opengldrawable.Button.Button;
 import com.kobaj.opengldrawable.Quad.QuadCompressed;
 
@@ -22,6 +25,9 @@ public abstract class BaseFloatingFrame
 	protected final double center_x = 0; // heh
 	protected final double center_y = 0;
 	
+	protected final double color_time = 5000;
+	protected SimpleColorLoop my_color_set;
+	
 	public void onInitialize()
 	{
 		main_popup = new QuadCompressed(R.raw.ui_big_popup, R.raw.ui_big_popup_alpha, 626, 386);
@@ -34,7 +40,12 @@ public abstract class BaseFloatingFrame
 		label_y = center_y + 3.0 * shift_y; // Functions.screenHeightToShaderHeight(95);
 		
 		// set colors
-		main_popup.color = Constants.frame_main_color;
+		my_color_set = new SimpleColorLoop(color_time, 0xDDBBBBBB, 0xDD95BF96, 0xDD95BFBF, 0xDD9597BF, 0xDDB895BF, 0xDDBEBF95);
+		main_popup.color = my_color_set.pickRandomStart();
+		
+		// floating frame colors
+		// public static final int frame_main_color = 0xDDBBBBBB;
+		// public static final int frame_sec_color = 0xDDBF8888;
 	}
 	
 	public void onUnInitialize()
@@ -44,6 +55,9 @@ public abstract class BaseFloatingFrame
 	
 	public boolean onUpdate(double delta)
 	{
+		my_color_set.onUpdate(delta);
+		main_popup.color = my_color_set.getCurrentColor();
+		
 		if (Constants.input_manager.getKeyPressed(EnumKeyCodes.back))
 			return false;
 		

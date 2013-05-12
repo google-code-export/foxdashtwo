@@ -1,9 +1,12 @@
 package com.kobaj.screen.screenaddons.floatingframe;
 
+import android.graphics.Color;
+
 import com.kobaj.foxdashtwo.GameActivity;
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Constants;
 import com.kobaj.opengldrawable.EnumDrawFrom;
+import com.kobaj.opengldrawable.SimpleColorLoop;
 import com.kobaj.opengldrawable.Button.TextButton;
 
 public class BaseQuit extends BaseFloatingFrame
@@ -24,7 +27,8 @@ public class BaseQuit extends BaseFloatingFrame
 		BaseFloatingFrame.alignButtonsAlongXAxis(center_y - shift_y, cancel_button, quit_button);
 		
 		main_popup.setScale(.5);
-		main_popup.color = Constants.frame_sec_color;
+		my_color_set = new SimpleColorLoop(color_time, 0xDDBF8888, 0xDDDB6363);
+		main_popup.color = 0xDDBF8888;
 	}
 	
 	@Override

@@ -153,10 +153,6 @@ public class Constants
 	public static final int unpressed_color = 0xBBBBBBCC;
 	public static final int pressed_color = 0xBB888899;
 	
-	// floating frame colors
-	public static final int frame_main_color = 0xDDBBBBBB;
-	public static final int frame_sec_color = 0xDDBF8888;
-	
 	// text (obviously?)
 	public static Text text;
 	public static double text_size = 28.0; // all text is the same size (how lame!)
