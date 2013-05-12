@@ -21,14 +21,15 @@ public class ImageButton extends Button
 		this.width = width;
 		this.height = height;
 		
-		this.unpressed_color = Constants.unpressed_color;
-		this.pressed_color = Constants.pressed_color;
+		this.unpressed_color = Constants.ui_button_unpressed;
+		this.pressed_color = Constants.ui_button_pressed;
 	}
 	
 	public void onInitialize()
 	{
 		// even if we dont draw this, we will need to instantiate it so we have something to check a bounding box with.
 		invisible_outline = new QuadCompressed(image, image_alpha, width, height);
+		draw_background = true;
 	}
 	
 	public void onDrawConstant()

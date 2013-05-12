@@ -86,6 +86,10 @@ public class SinglePlayerScreen extends BaseScreen implements FinishedScoring
 	// loads the next level and returns true if successful.
 	private boolean setNextLevel(String level_name)
 	{
+		// erase the last checkpoint since we are 'starting new';
+		SinglePlayerSave.last_level = null;
+		SinglePlayerSave.last_checkpoint = null;
+		
 		if (level_name != null)
 			level_name = level_name.trim();
 		

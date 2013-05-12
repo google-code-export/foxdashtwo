@@ -47,6 +47,7 @@
     <string name="input">Input</string>
     <string name="account">Account</string>
     <string name="video">Video</string>
+    <string name="level_select">Level Select</string>
 	
     <!-- buttons!!!! Squee -->
     <string name="quit">Quit</string>
@@ -184,6 +185,7 @@
         <item>input</item>
         <item>account</item>
         <item>video</item>
+        <item>level_select</item>
         
         <item>time</item>
     </string-array>
