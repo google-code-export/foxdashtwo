@@ -1,7 +1,5 @@
 package com.kobaj.screen.screenaddons.floatingframe;
 
-import android.graphics.Color;
-
 import com.kobaj.foxdashtwo.GameActivity;
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Constants;

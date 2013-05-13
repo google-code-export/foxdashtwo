@@ -229,7 +229,7 @@ public class NParticleEmitter
 		{
 			if(Functions.onShader(emit_location))
 			{
-				if (QuadCompressed.class.isAssignableFrom(used_quads.get(0).getClass()))
+				if(used_quads.get(0) instanceof QuadCompressed)
 					QuadRenderShell.onDrawQuad(Constants.my_vp_matrix, true, Constants.compressed_light, used_quads);
 				else
 					QuadRenderShell.onDrawQuad(Constants.my_vp_matrix, true, Constants.ambient_light, used_quads);

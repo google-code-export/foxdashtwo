@@ -6,6 +6,7 @@ import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
@@ -293,6 +294,7 @@ public final class QuadRenderShell
 	// also they are all on the same z layer.
 	// so like...particles.
 	
+	@SuppressLint("WrongCall")
 	public static final <T extends BaseLightShader> void onDrawQuad(final float[] my_vp_matrix, final boolean skip_draw_check, final T shader, final ArrayList<Quad> quads)
 	{
 		int quad_size = quads.size();
@@ -385,14 +387,6 @@ public final class QuadRenderShell
 				Log.e("Shadow Shader Error", "Attempted to draw a shadow object with a non shadow shader.");
 			
 		}
-		
-		// blur
-		/*
-		 * else if (QuadBlur.class.isAssignableFrom(zero.getClass())); { QuadBlur zero_blur = QuadBlur.class.cast(zero);
-		 * 
-		 * if (BlurLightShader.class.isAssignableFrom(shader.getClass())) onSetupBlur((float) zero_blur.x_blur_offset, (float) zero_blur.y_blur_offset, (BlurLightShader) shader); else
-		 * Log.e("Blur Shader Error", "Attempted to draw a blur object with a non blur shader."); }
-		 */
 		
 		for (int i = clones_size - 1; i >= 0; i--)
 		{

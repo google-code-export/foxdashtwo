@@ -29,7 +29,7 @@ public class BaseInteractionPhysics
 		player_extended.left = (float) (the_level.player.quad_object.x_pos_shader - the_level.player.quad_object.shader_width / 2.0);
 		player_extended.right = (float) (player_extended.left + the_level.player.quad_object.shader_width);
 		player_extended.top = (float) (the_level.player.quad_object.y_pos_shader - the_level.player.quad_object.shader_height / 2.0);
-		player_extended.bottom = (float) (player_extended.top - Functions.screenHeightToShaderHeight(Constants.shadow_height));
+		player_extended.bottom = (float) (player_extended.top - Constants.shadow_height_shader);
 		
 		double shadow_collision_y = player_extended.bottom;
 		player_shadow_y = -200;

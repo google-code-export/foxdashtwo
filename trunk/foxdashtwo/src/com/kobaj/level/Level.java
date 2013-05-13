@@ -174,8 +174,8 @@ public class Level
 				temp.id = original.id;
 				temp.x_pos = original.x_pos + original.width / 2.0;
 				temp.y_pos = original.y_pos - original.height / 2.0;
-				temp.my_width = original.width;
-				temp.my_height = original.height;
+				temp.shader_width = original.width;
+				temp.shader_height = original.height;
 				temp.z_plane = 5;
 				temp.layer = EnumLayerTypes.Interaction;
 				
@@ -419,7 +419,7 @@ public class Level
 			reference.onUpdate(delta);
 		}
 		
-		if (QuadAnimated.class.isAssignableFrom(player.quad_object.getClass()))
+		if(player.quad_object instanceof QuadAnimated)
 		{
 			QuadAnimated reference = QuadAnimated.class.cast(player.quad_object);
 			

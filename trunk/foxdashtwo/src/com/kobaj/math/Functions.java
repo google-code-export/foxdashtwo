@@ -188,17 +188,14 @@ public class Functions
 	{
 		updateShaderRectFView();
 		
-		if (equalIntersects(objects.main_rect, shader_rectf_view))
-			return true;
-		
-		return false;
+		return equalIntersects(objects.main_rect, shader_rectf_view);
 	}
 	
 	// helper method for the above so the two onShaders are consistent.
 	public static RectF shader_rectf_view = new RectF();
 	public static RectF shader_rectf_view_no_translation = new RectF();
 	
-	protected static final void updateShaderRectFView()
+	public static final void updateShaderRectFView()
 	{
 		if (camera_changed)
 		{
@@ -699,5 +696,10 @@ public class Functions
 		Constants.height_padding = Functions.screenHeightToShaderHeight(Constants.default_height_padding);
 		
 		Constants.spinning_jig_radius = Functions.screenWidthToShaderWidth(Constants.default_spinning_jig_radius);
+		
+		Constants.x_100 = Functions.screenXToShaderX(100);
+		Constants.y_50 = Functions.screenYToShaderY((int) Functions.fix_y(50));
+		Constants.y_125 = Functions.screenYToShaderY((int) Functions.fix_y(125));
+		Constants.sixteen = Functions.screenWidthToShaderWidth(16);
 	}
 }
