@@ -7,9 +7,7 @@ import com.kobaj.opengldrawable.Quad.QuadColorShape;
 
 public class RotationLoadingJig extends BaseLoadingScreen
 {
-	protected double loading_delta_shift = Math.PI / Constants.loading_max_shapes * 2.0;
-	
-	private double local_delta = 0;
+	protected double local_delta = 0;
 	
 	// shader coords
 	public double radius = 1.0;
@@ -20,6 +18,11 @@ public class RotationLoadingJig extends BaseLoadingScreen
 	
 	//higher is faster
 	public double speed = 100.0;
+	
+	public RotationLoadingJig()
+	{
+		loading_delta_shift = Math.PI / shape_count * 2.0;
+	}
 	
 	public void onUpdate(double delta)
 	{
@@ -34,18 +37,21 @@ public class RotationLoadingJig extends BaseLoadingScreen
 	@Override
 	public void onDrawLoading(double delta)
 	{
-		total_delta += (Math.PI / Constants.loading_max_shapes) * delta * (speed / 10000.0);
+		total_delta += (Math.PI / shape_count) * delta * (speed / 10000.0);
 		
 		if (total_delta >= Math.PI * 4.0)
 			total_delta = 0;
 		
-		for (int i = 0; i < Constants.loading_max_shapes; i++)
+		for (int i = 0; i < shape_count; i++)
 		{
 			// set their position
 			setPosition(my_shapes[i], i);
 			
 			// draw them all
-			my_shapes[i].onDrawAmbient(Constants.my_ip_matrix, true);
+			if(vp_matrix)
+				my_shapes[i].onDrawAmbient(Constants.my_vp_matrix, false);
+			else
+				my_shapes[i].onDrawAmbient(Constants.my_ip_matrix, false);
 		}
 	}
 	
@@ -58,10 +64,10 @@ public class RotationLoadingJig extends BaseLoadingScreen
 		double r = radius;
 		
 		// calculate x
-		double x = Functions.polarRadToX(local_total_delta, r) + x_pos;
+		double x = (Constants.ratio / Constants.my_ratio) * Functions.polarRadToX(local_total_delta, r) + x_pos;
 		
 		// calculate y;
-		double y = Functions.polarRadToY(local_total_delta, r) + y_pos;
+		double y = (Constants.ratio / Constants.my_ratio) * Functions.polarRadToY(local_total_delta, r) + y_pos;
 		
 		// set it all
 		my_quad.setXYPos(x, y, EnumDrawFrom.center);

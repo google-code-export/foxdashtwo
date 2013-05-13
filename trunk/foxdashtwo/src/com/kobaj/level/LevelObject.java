@@ -13,6 +13,7 @@ import com.kobaj.opengldrawable.EnumDrawFrom;
 import com.kobaj.opengldrawable.Quad.Quad;
 import com.kobaj.opengldrawable.Quad.QuadColorShape;
 import com.kobaj.opengldrawable.Quad.QuadCompressed;
+import com.kobaj.screen.screenaddons.InfiniteJig;
 
 public class LevelObject extends LevelEntityActive
 {
@@ -63,7 +64,8 @@ public class LevelObject extends LevelEntityActive
 	// are relative to the physics objects
 	public RectFExtended y_water_drop_path;
 	
-	// public double y_water_drop_bottom_pos_shader;
+	// having a checkpoint
+	public InfiniteJig my_checkpoint = null;
 	
 	public void onInitialize()
 	{
@@ -268,8 +270,8 @@ public class LevelObject extends LevelEntityActive
 		
 		else if (this_object == EnumLevelObject.l6_background_canyon)
 			quad_object = new QuadCompressed(R.raw.l6_background_canyon, R.raw.l6_background_canyon_alpha, 2048, 861);
-		else if (this_object == EnumLevelObject.l6_background_canyon_2) 
-			 quad_object = new QuadCompressed(R.raw.l6_background_canyon_2, R.raw.l6_background_canyon_2_alpha, 2048, 861); 
+		else if (this_object == EnumLevelObject.l6_background_canyon_2)
+			quad_object = new QuadCompressed(R.raw.l6_background_canyon_2, R.raw.l6_background_canyon_2_alpha, 2048, 861);
 		else if (this_object == EnumLevelObject.l6_background_canyon_cave)
 			quad_object = new QuadCompressed(R.raw.l6_background_canyon_cave, R.raw.l6_background_canyon_cave_alpha, 915, 885);
 		else if (this_object == EnumLevelObject.l6_background_canyon_crack)
@@ -352,6 +354,7 @@ public class LevelObject extends LevelEntityActive
 			collide_with_player = true;
 		}
 		
+		/* any level objects */
 		else if (this_object == EnumLevelObject.lx_background_fade_1)
 			quad_object = new QuadCompressed(R.raw.lx_background_fade_1, R.raw.lx_background_fade_1_alpha, 512, 512);
 		else if (this_object == EnumLevelObject.lx_decoration_spikes_1)
@@ -360,6 +363,18 @@ public class LevelObject extends LevelEntityActive
 			quad_object = new QuadCompressed(R.raw.lx_decoration_spikes_2, R.raw.lx_decoration_spikes_2_alpha, 89, 337);
 		else if (this_object == EnumLevelObject.lx_decoration_spikes_3)
 			quad_object = new QuadCompressed(R.raw.lx_decoration_spikes_3, R.raw.lx_decoration_spikes_3_alpha, 86, 337);
+		
+		/* check points */
+		else if (this_object == EnumLevelObject.lx_decoration_checkpoint)
+		{
+			quad_object = new QuadColorShape(45, 0xFF9999FF, true, 0);
+			
+			my_checkpoint = new InfiniteJig();
+			my_checkpoint.onInitialize();
+			my_checkpoint.set_vp(true);
+			
+			collide_with_player = true;
+		}
 		
 		/* everything else */
 		else if (this_object == EnumLevelObject.transparent)
@@ -396,7 +411,14 @@ public class LevelObject extends LevelEntityActive
 			quad_object.setRotationZ(degree);
 		if (scale != 1)
 			quad_object.setScale(scale);
+	}
+	
+	public void onUnInitialize()
+	{
+		if (my_checkpoint != null)
+			my_checkpoint.onUnInitialize();
 		
+		quad_object.onUnInitialize();
 	}
 	
 	private void translate_object_to_original_position()
@@ -410,21 +432,19 @@ public class LevelObject extends LevelEntityActive
 		quad_object.y_acc_shader = 0;
 		quad_object.x_vel_shader = 0;
 		quad_object.y_vel_shader = 0;
+		
+		// modification to the checkpoint
+		if (my_checkpoint != null)
+		{
+			my_checkpoint.x_pos = quad_object.x_pos_shader;
+			my_checkpoint.y_pos = quad_object.y_pos_shader;
+		}
 	}
 	
 	public void onUpdate(double delta)
 	{
 		if (this_object == EnumLevelObject.l2_ground_platform_floating_1)
 		{
-			// make it move left and right
-			
-			// if(quad_object.x_pos_shader < this.x_pos_shader - floating_move_lr_limit)
-			// quad_object.x_acc_shader = floating_move_lr_speed;
-			// else if(quad_object.x_pos_shader > this.x_pos_shader + floating_move_lr_limit)
-			// quad_object.x_acc_shader = -floating_move_lr_speed;
-			// else if(quad_object.x_vel_shader == 0.0)
-			// quad_object.x_acc_shader = floating_move_lr_speed;
-			
 			if (quad_object.x_vel_shader == 0)
 				quad_object.x_acc_shader = Constants.floating_move_lr_acc;
 			
@@ -451,11 +471,21 @@ public class LevelObject extends LevelEntityActive
 				}
 			}
 		}
+		
+		if (my_checkpoint != null)
+			my_checkpoint.onUpdate(delta);
 	}
 	
 	public void onDrawObject()
 	{
 		if (active && (this_object != EnumLevelObject.transparent))
+		{
 			quad_object.onDrawAmbient();
+			
+			if (my_checkpoint != null)
+			{
+				my_checkpoint.onDrawLoading();
+			}
+		}
 	}
 }

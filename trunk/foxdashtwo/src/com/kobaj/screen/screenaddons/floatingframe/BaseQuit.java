@@ -6,8 +6,8 @@ import com.kobaj.foxdashtwo.GameActivity;
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Constants;
 import com.kobaj.opengldrawable.EnumDrawFrom;
-import com.kobaj.opengldrawable.SimpleColorLoop;
 import com.kobaj.opengldrawable.Button.TextButton;
+import com.kobaj.screen.screenaddons.SimpleColorLoop;
 
 public class BaseQuit extends BaseFloatingFrame
 {

@@ -292,7 +292,7 @@ public class TitleScreen extends BaseScreen
 	{
 		// do nothing
 	}
-
+	
 	@Override
 	public void onScreenChange(boolean next_level)
 	{

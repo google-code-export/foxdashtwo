@@ -9,42 +9,55 @@ import com.kobaj.opengldrawable.Quad.QuadColorShape;
 public class BaseLoadingScreen
 {
 	// this will not be moved to constants (obviously XP)
-	protected QuadColorShape[] my_shapes = new QuadColorShape[Constants.loading_max_shapes];
+	protected QuadColorShape[] my_shapes;
 	protected double total_delta = 0;
-	protected double loading_delta_shift = Math.PI / Constants.loading_max_shapes;
+	
+	protected int shape_count = Constants.loading_max_shapes;
+	
+	protected double loading_delta_shift = Math.PI / shape_count;
+	
+	protected int primary_color = Constants.loading_primary_color;
+	protected int secondary_color = Constants.loading_secondary_color;
+	
+	public boolean vp_matrix = false;
 	
 	public void onInitialize()
-	{
-		for (int i = 0; i < Constants.loading_max_shapes; i++)
+	{	
+		my_shapes = new QuadColorShape[shape_count];
+		
+		for (int i = 0; i < shape_count; i++)
 			my_shapes[i] = new QuadColorShape(Constants.loading_radius, getColor(i), 0);
 	}
 	
 	public void onUnInitialize()
 	{
-		for (int i = 0; i < Constants.loading_max_shapes; i++)
+		for (int i = 0; i < shape_count; i++)
 			my_shapes[i].onUnInitialize();
 	}
 	
 	// this function will linear interpolate between the two colors
 	public int getColor(int i)
 	{
-		return Functions.linearInterpolateColor(0, Constants.loading_max_shapes - 1, i, Constants.loading_primary_color, Constants.loading_secondary_color);
+		return Functions.linearInterpolateColor(0, shape_count - 1, i, primary_color, secondary_color);
 	}
 	
 	public void onDrawLoading(double delta)
 	{
-		total_delta += (Math.PI / Constants.loading_max_shapes) * delta / 250.0;
+		total_delta += (Math.PI / shape_count) * delta / 250.0;
 		
 		if (total_delta >= Math.PI * 4.0)
 			total_delta = 0;
 		
-		for (int i = 0; i < Constants.loading_max_shapes; i++)
+		for (int i = 0; i < shape_count; i++)
 		{
 			// set their position
 			setPosition(my_shapes[i], i);
 			
 			// draw them all
-			my_shapes[i].onDrawAmbient(Constants.my_ip_matrix, true);
+			if(vp_matrix)
+				my_shapes[i].onDrawAmbient(Constants.my_vp_matrix, false);
+			else
+				my_shapes[i].onDrawAmbient(Constants.my_ip_matrix, false);
 		}
 		
 		// draw some text

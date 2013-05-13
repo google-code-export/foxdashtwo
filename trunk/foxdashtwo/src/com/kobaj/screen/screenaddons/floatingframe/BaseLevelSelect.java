@@ -123,8 +123,10 @@ public class BaseLevelSelect extends BaseFloatingFrame
 		main_popup.onDrawAmbient(Constants.my_ip_matrix, true);
 		Constants.text.drawText(R.string.level_select, label_x, label_y, EnumDrawFrom.center);
 		
-		for(ImageButton b: my_levels)
-			b.onDrawConstant();
+		for(int i = 0; i < 7; i++)
+		{
+			my_levels[i].onDrawConstant();
+		}
 		
 		back_button.onDrawConstant();
 	}

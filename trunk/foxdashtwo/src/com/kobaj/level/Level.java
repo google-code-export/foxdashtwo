@@ -301,7 +301,6 @@ public class Level
 				local_np_emitter.add(my_particle_emitter);
 				
 				physics_objects.add(reference);
-				
 			}
 			
 			// and falling water drops
@@ -322,6 +321,10 @@ public class Level
 				
 				physics_objects.add(reference);
 			}
+			
+			// checkpoint
+			else if (reference.this_object == EnumLevelObject.lx_decoration_checkpoint)
+				physics_objects.add(reference);
 			
 			// then find our background objects
 			if (reference.layer == EnumLayerTypes.Background || reference.layer == EnumLayerTypes.Background_Aux)
@@ -383,7 +386,7 @@ public class Level
 		
 		// draw sorted objects
 		for (int i = object_list.size() - 1; i >= 0; i--)
-			object_list.get(i).quad_object.onUnInitialize();
+			object_list.get(i).onUnInitialize();
 		
 		// particles
 		for (int i = local_np_emitter.size() - 1; i >= 0; i--)
@@ -543,6 +546,15 @@ public class Level
 					reference.quad_object.y_acc_shader += Constants.player_downward_platform_acc;
 				}
 			}
+		}
+		
+		if(reference.this_object == EnumLevelObject.lx_decoration_checkpoint)
+		{
+			reference.collide_with_player = false;
+			if(reference.my_checkpoint != null)
+				reference.my_checkpoint.explode();
+			
+			SinglePlayerSave.last_checkpoint = reference.id;
 		}
 	}
 	

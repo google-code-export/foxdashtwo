@@ -40,6 +40,6 @@ public enum EnumLevelObject
 	l6_background_clouds, l6_decoration_brush_1, l6_decoration_brush_2, l6_decoration_rock, l6_decoration_tree_dead, l6_ground_platform_flat, l6_ground_platform_huge,
 	
 	/* more stuff */
-	lx_background_fade_1, lx_decoration_spikes_1, lx_decoration_spikes_2, lx_decoration_spikes_3, 
+	lx_background_fade_1, lx_decoration_spikes_1, lx_decoration_spikes_2, lx_decoration_spikes_3, lx_decoration_checkpoint,
 	right_arrow, test_light
 }

@@ -2,6 +2,7 @@ package com.kobaj.screen.screenaddons;
 
 import com.kobaj.input.GameInputModifier;
 import com.kobaj.level.EnumLayerTypes;
+import com.kobaj.level.EnumLevelObject;
 import com.kobaj.level.Level;
 import com.kobaj.level.LevelObject;
 import com.kobaj.math.AverageMaker;
@@ -54,7 +55,11 @@ public class BaseInteractionPhysics
 				collision.right = 0;
 				collision.bottom = 0;
 				
-				if (Constants.physics.checkCollision(collision, the_level.player.quad_object, reference.quad_object, 0))
+				int collision_agent = 0;
+				if(reference.this_object == EnumLevelObject.lx_decoration_checkpoint)
+					collision_agent = 3;
+					
+				if (Constants.physics.checkCollision(collision, the_level.player.quad_object, reference.quad_object, collision_agent))
 					can_jump = true;
 				
 				if (collision.width() != 0 || collision.height() != 0)

@@ -143,7 +143,7 @@ public class Physics
 		{
 			if (player_extended.right < main_rect.left || player_extended.left > main_rect.right || player_extended.top < main_rect.bottom || player_extended.bottom > main_rect.top)
 			{
-				
+				// do nothing
 			}
 			else
 			{
