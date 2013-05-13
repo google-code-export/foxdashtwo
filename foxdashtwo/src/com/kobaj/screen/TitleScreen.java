@@ -262,6 +262,7 @@ public class TitleScreen extends BaseScreen
 			base_login.onDraw();
 		else
 		{
+			// TODO add the actual logo here and delete this.
 			double x_pos = Functions.screenXToShaderX(500);
 			double y_pos = Functions.screenYToShaderY((int) Functions.fix_y(100));
 			Constants.text.drawText(R.string.fdtdh, x_pos, y_pos, EnumDrawFrom.center);

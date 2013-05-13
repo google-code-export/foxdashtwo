@@ -3,14 +3,14 @@ package com.kobaj.opengldrawable.Button;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.EnumDrawFrom;
-import com.kobaj.opengldrawable.Quad.QuadCompressed;
+import com.kobaj.opengldrawable.Quad.Quad;
 
 public abstract class Button
 {
 	private boolean current_touch;
 	private boolean old_touch;
 	
-	protected QuadCompressed invisible_outline;
+	protected Quad invisible_outline;
 	
 	public int width;
 	public int height;
@@ -24,7 +24,7 @@ public abstract class Button
 		invisible_outline.setXYPos(x, y, draw_from);
 	}
 	
-	public QuadCompressed invisible_outline()
+	public Quad invisible_outline()
 	{
 		return invisible_outline;
 	}

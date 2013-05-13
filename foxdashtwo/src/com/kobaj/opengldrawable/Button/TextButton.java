@@ -7,12 +7,13 @@ import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.EnumDrawFrom;
 import com.kobaj.opengldrawable.Quad.QuadCompressed;
+import com.kobaj.opengldrawable.Quad.QuadEmpty;
 
 public class TextButton extends Button
 {
 	public int label;
 	protected int padding = 35;
-	protected int height = 64;//23 + padding;
+	protected int height = 64;// 23 + padding;
 	
 	private QuadCompressed left_outline;
 	private QuadCompressed right_outline;
@@ -32,12 +33,12 @@ public class TextButton extends Button
 	public void onInitialize()
 	{
 		// even if we dont draw this, we will need to instantiate it so we have something to check a bounding box with.
-		invisible_outline = new QuadCompressed(R.raw.black, R.raw.black, width, height);
+		invisible_outline = new QuadEmpty(width, height);
 		
 		if (draw_background)
 		{
 			int local_width = width;
-			if(draw_background)
+			if (draw_background)
 				local_width -= 64;
 			
 			shader_half_width = Functions.screenWidthToShaderWidth(local_width) / 2.0;
@@ -55,7 +56,7 @@ public class TextButton extends Button
 	{
 		invisible_outline.onUnInitialize();
 		
-		if(draw_background)
+		if (draw_background)
 		{
 			middle_outline.onUnInitialize();
 			left_outline.onUnInitialize();
@@ -68,13 +69,11 @@ public class TextButton extends Button
 	{
 		invisible_outline.setXYPos(x, y, draw_from);
 		
-		if(draw_background)
+		if (draw_background)
 		{
-			double sixteen = Functions.screenWidthToShaderWidth(16);
-			
 			middle_outline.setXYPos(x, y, draw_from);
-			left_outline.setXYPos(x - shader_half_width - sixteen, y, draw_from);
-			right_outline.setXYPos(x + shader_half_width + sixteen, y, draw_from);
+			left_outline.setXYPos(x - shader_half_width - Constants.sixteen, y, draw_from);
+			right_outline.setXYPos(x + shader_half_width + Constants.sixteen, y, draw_from);
 		}
 	}
 	

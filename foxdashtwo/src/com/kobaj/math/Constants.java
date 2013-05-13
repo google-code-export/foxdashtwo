@@ -178,6 +178,10 @@ public class Constants
 	
 	// metrics
 	public static int quads_drawn_screen = 0;
+	public static double x_100;
+	public static double y_50;
+	public static double y_125;
+	public static double sixteen;
 	
 	// errors
 	public static int exception_timeout = 300; // ms

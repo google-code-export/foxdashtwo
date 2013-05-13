@@ -245,8 +245,8 @@ public class MyGame extends MyGLRender
 				fps_color = Color.RED;
 			
 			// fps metrics
-			x_pos = Functions.screenXToShaderX(100);
-			y_pos = Functions.screenYToShaderY((int) Functions.fix_y(50));
+			x_pos = Constants.x_100;
+			y_pos = Constants.y_50;
 			
 			Constants.text.drawText(R.string.fps, x_pos, y_pos, EnumDrawFrom.bottom_right);
 			Constants.text.drawNumber(fps.fps, x_pos, y_pos, EnumDrawFrom.bottom_left, fps_color);
@@ -267,7 +267,7 @@ public class MyGame extends MyGLRender
 			Constants.quads_drawn_screen = 0;
 			
 			// music metrics
-			y_pos = Functions.screenYToShaderY((int) Functions.fix_y(125));
+			y_pos = Constants.y_125;
 			
 			Constants.text.drawText(R.string.volume, x_pos, y_pos, EnumDrawFrom.bottom_right);
 			Constants.text.drawNumber((int) (Constants.music_player.actual_volume * 100.0), x_pos, y_pos, EnumDrawFrom.bottom_left);
