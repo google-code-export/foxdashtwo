@@ -96,7 +96,7 @@ public class SinglePlayerScreen extends BaseScreen implements FinishedScoring
 		if (level_name == null || level_name.equals(Constants.empty))
 		{
 			// change the first level
-			the_level = FileHandler.readSerialResource(Constants.resources, R.raw.test_level, com.kobaj.level.Level.class);
+			the_level = FileHandler.readSerialResource(Constants.resources, R.raw.level_0, com.kobaj.level.Level.class);
 			{
 				level_name = "level_one";
 				return true;

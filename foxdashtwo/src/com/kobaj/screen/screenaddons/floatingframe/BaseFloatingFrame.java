@@ -7,9 +7,9 @@ import com.kobaj.input.EnumKeyCodes;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.EnumDrawFrom;
-import com.kobaj.opengldrawable.SimpleColorLoop;
 import com.kobaj.opengldrawable.Button.Button;
 import com.kobaj.opengldrawable.Quad.QuadCompressed;
+import com.kobaj.screen.screenaddons.SimpleColorLoop;
 
 public abstract class BaseFloatingFrame
 {

@@ -1,4 +1,4 @@
-package com.kobaj.opengldrawable;
+package com.kobaj.screen.screenaddons;
 
 import com.kobaj.math.Functions;
 

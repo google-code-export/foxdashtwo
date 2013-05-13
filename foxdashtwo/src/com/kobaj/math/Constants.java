@@ -39,6 +39,7 @@ public class Constants
 	
 	// this is (width / height)
 	public static double ratio;
+	public static final double my_ratio = 1.777777777;
 	
 	// this is where the camera is translated to
 	public static double x_shader_translation;
