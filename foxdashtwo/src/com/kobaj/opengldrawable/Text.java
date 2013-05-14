@@ -46,7 +46,7 @@ public class Text
 		
 		// fill in our array list
 		for (int i = 0; i < 10; i++)
-			my_string_array.add(Integer.toString(i));
+			my_string_array.add(String.valueOf(i));
 		// this is ok because it is an actual array
 		for (String s : m_test_array)
 			my_string_array.add(s);
@@ -259,6 +259,9 @@ public class Text
 			while (number > 0)
 			{
 				int key = (number % 10);
+				
+				if(zero)
+					key = 0;
 				
 				total_width += bitmap_buffer.get(key).shader_width;
 				

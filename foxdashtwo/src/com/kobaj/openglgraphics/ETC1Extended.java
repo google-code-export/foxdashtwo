@@ -41,7 +41,7 @@ public class ETC1Extended
 		int stride = 3 * square_width;
 		ByteBuffer out_rgb = ByteBuffer.allocateDirect(square_height * stride).order(ByteOrder.nativeOrder());
 		ByteBuffer out_a = ByteBuffer.allocate(0);
-		if(has_alpha)
+		if (has_alpha)
 			out_a = ByteBuffer.allocateDirect(square_height * stride).order(ByteOrder.nativeOrder());
 		
 		// split image
@@ -84,7 +84,7 @@ public class ETC1Extended
 			}
 			catch (IOException e)
 			{
-				Log.e("ETC1 Conversion Error", "Could not load texture: " + e);
+				Log.e("ETC1 Conversion Error", "Could not load texture: trace: ", e);
 			}
 		else
 			ETC1Util.loadTexture(GLES20.GL_TEXTURE_2D, 0, 0, GLES20.GL_RGB, GLES20.GL_UNSIGNED_SHORT_5_6_5, etc1Texture);
@@ -94,7 +94,7 @@ public class ETC1Extended
 	
 	public int getETC1Hash(int resource_id)
 	{
-		if(hash == -1 || input == null)
+		if (hash == -1 || input == null)
 		{
 			input = Constants.resources.openRawResource(resource_id);
 			hash = input.hashCode();
@@ -122,7 +122,7 @@ public class ETC1Extended
 		}
 		catch (IOException e)
 		{
-			Log.e("ETC1 Conversion Error", "Could not load texture: " + e);
+			Log.e("ETC1 Conversion Error", "Could not load texture: id=" + resource_id, e);
 		}
 		finally
 		{
@@ -141,13 +141,12 @@ public class ETC1Extended
 		return id;
 	}
 	
-	
 	public ETC1Util.ETC1Texture compress(ByteBuffer image, int width, int height)
 	{
 		return ETC1Util.compressTexture(image, width, height, 3, 3 * width);
 	}
 	
-	/*WARNING*/
+	/* WARNING */
 	// the below method sometimes will fail
 	// Use at your own risk.
 	
@@ -188,7 +187,7 @@ public class ETC1Extended
 		
 		out_rgb = out_rgb.put(rgb_array);
 		
-		if(out_a.capacity() > 0)
+		if (out_a.capacity() > 0)
 			out_a = out_a.put(a_array);
 		
 		out_rgb.position(0);

@@ -1,7 +1,6 @@
 package com.kobaj.level;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import android.util.SparseArray;
@@ -12,12 +11,15 @@ import com.kobaj.math.android.RectF;
 
 public class CoordMap
 {
+	private ArrayList<LevelObject> objects_copy;
+	
 	// x, y, values are shader based indexes
 	public SparseArray<SparseArray<ArrayList<LevelObject>>> calculated_objects;
 	
 	private ArrayList<LevelObject> ignored_objects;
 	
 	public List<LevelObject> visible_objects;
+	public Boolean[] untrimmed_visible_objects;
 	
 	private double half_width;
 	private double half_height;
@@ -34,6 +36,12 @@ public class CoordMap
 		visible_objects = new ArrayList<LevelObject>();
 		
 		insert_objects(level_objects);
+		
+		objects_copy = level_objects;
+		
+		untrimmed_visible_objects = new Boolean[level_objects.size()];
+		for (int i = 0; i < untrimmed_visible_objects.length; i++)
+			untrimmed_visible_objects[i] = false;
 	}
 	
 	public void insert_objects(ArrayList<LevelObject> level_objects)
@@ -41,8 +49,12 @@ public class CoordMap
 		if (level_objects == null)
 			return;
 		
+		int count = 0;
 		for (LevelObject j : level_objects)
 		{
+			j.sort_index = count;
+			count++;
+			
 			if (j.ignore_coord_map)
 				ignored_objects.add(j);
 			else
@@ -79,9 +91,12 @@ public class CoordMap
 		visible_objects.clear();
 		
 		// add the ignored objects
-		int ignore_size = ignored_objects.size();
-		for (int i = 0; i < ignore_size; i++)
-			sorted_insert(ignored_objects.get(i));
+		for (int i = ignored_objects.size() - 1; i >= 0; i--)
+			this.untrimmed_visible_objects[ignored_objects.get(i).sort_index] = true;
+		
+		// int ignore_size = ignored_objects.size();
+		// for (int i = 0; i < ignore_size; i++)
+		// sorted_insert(ignored_objects.get(i));
 		
 		// find all objects in view of the camera
 		Functions.updateShaderRectFView();
@@ -111,46 +126,29 @@ public class CoordMap
 						{
 							LevelObject temp = objects.get(i);
 							
+							this.untrimmed_visible_objects[temp.sort_index] = true;
+							
 							// sorted_insert(temp);
 							
-							if (!visible_objects.contains(temp))
-								visible_objects.add(temp);
+							// if (!visible_objects.contains(temp))
+							// visible_objects.add(temp);
 						}
 					}
 				}
 			}
 		}
 		
-		// and then sort
-		Collections.sort(visible_objects, new ObjectDrawSort());
-	}
-	
-	private void sorted_insert(LevelObject input)
-	{
-		int visible_size = visible_objects.size();
-		
-		if (visible_size == 0)
-			visible_objects.add(input);
-		else
+		for (int i = 0; i < untrimmed_visible_objects.length; i++)
 		{
-			for (int e = 0; e < visible_size; e++)
+			if (untrimmed_visible_objects[i])
 			{
-				LevelObject in_list_temp = visible_objects.get(e);
-				
-				if (in_list_temp.id.equals(input.id))
-					break;
-				
-				// see about sort
-				if (in_list_temp.z_plane < input.z_plane)
-					continue;
-				
-				if (in_list_temp.eid < input.eid)
-					continue;
-				
-				// insert
-				visible_objects.add(e, input);
+				visible_objects.add(objects_copy.get(i));
+				untrimmed_visible_objects[i] = false;
 			}
 		}
+		
+		// and then sort
+		// Collections.sort(visible_objects, new ObjectDrawSort());
 	}
 	
 	public int[] calculate_x_y(int level_width, int level_height)

@@ -5,7 +5,6 @@ import android.graphics.Color;
 
 import com.kobaj.account_settings.SinglePlayerSave;
 import com.kobaj.account_settings.UserSettings;
-import com.kobaj.foxdashtwo.FoxdashtwoActivity;
 import com.kobaj.foxdashtwo.GameActivity;
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.input.EnumKeyCodes;

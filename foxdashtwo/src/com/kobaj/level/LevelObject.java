@@ -13,6 +13,7 @@ import com.kobaj.opengldrawable.EnumDrawFrom;
 import com.kobaj.opengldrawable.Quad.Quad;
 import com.kobaj.opengldrawable.Quad.QuadColorShape;
 import com.kobaj.opengldrawable.Quad.QuadCompressed;
+import com.kobaj.opengldrawable.Quad.QuadEmpty;
 import com.kobaj.screen.screenaddons.InfiniteJig;
 
 public class LevelObject extends LevelEntityActive
@@ -68,6 +69,9 @@ public class LevelObject extends LevelEntityActive
 	
 	// having a checkpoint
 	public InfiniteJig my_checkpoint = null;
+	
+	// helps with our "quadtree"
+	public int sort_index = -1;
 	
 	public void onInitialize()
 	{
@@ -329,7 +333,7 @@ public class LevelObject extends LevelEntityActive
 			
 			quad_object.phys_rect_list.remove(0);
 			
-			collide_with_player = true;	
+			collide_with_player = true;
 			this.ignore_coord_map = true;
 		}
 		else if (this_object == EnumLevelObject.l2_ground_platform_floating_2)
@@ -343,7 +347,7 @@ public class LevelObject extends LevelEntityActive
 			
 			quad_object.phys_rect_list.remove(0);
 			
-			collide_with_player = true;		
+			collide_with_player = true;
 			this.ignore_coord_map = true;
 		}
 		else if (this_object == EnumLevelObject.l4_ground_platform_floating)
@@ -357,7 +361,7 @@ public class LevelObject extends LevelEntityActive
 			
 			quad_object.phys_rect_list.remove(0);
 			
-			collide_with_player = true;	
+			collide_with_player = true;
 			this.ignore_coord_map = true;
 		}
 		
@@ -386,7 +390,7 @@ public class LevelObject extends LevelEntityActive
 		
 		/* everything else */
 		else if (this_object == EnumLevelObject.transparent)
-			quad_object = new QuadCompressed(R.raw.transparent, R.raw.transparent, (int) shader_width, (int) shader_height);
+			quad_object = new QuadEmpty((int) shader_width, (int) shader_height);
 		else if (this_object == EnumLevelObject.color)
 			quad_object = new QuadCompressed(R.raw.white, R.raw.white, (int) shader_width, (int) shader_height);
 		else if (this_object == EnumLevelObject.test)
@@ -501,12 +505,12 @@ public class LevelObject extends LevelEntityActive
 	public boolean equals(Object other)
 	{
 		boolean sameSame = false;
-
-        if (other != null && other instanceof LevelObject)
-        {
-            sameSame = this.id.equals(((LevelObject) other).id);
-        }
-
-        return sameSame;
+		
+		if (other != null && other instanceof LevelObject)
+		{
+			sameSame = this.id.equals(((LevelObject) other).id);
+		}
+		
+		return sameSame;
 	}
 }

@@ -6,6 +6,6 @@ public class QuadEmpty extends Quad
 {
 	public QuadEmpty(int width, int height)
 	{
-		onCreate(0, width, height);
+		onCreate(Integer.MIN_VALUE, width, height);
 	}
 }
