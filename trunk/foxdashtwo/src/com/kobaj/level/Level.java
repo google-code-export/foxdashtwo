@@ -404,7 +404,7 @@ public class Level
 			bloom_light_list.get(i).onUnInitialize();
 	}
 	
-	public void onUpdate(double delta, boolean play_sound)
+	public void onUpdate(double delta, boolean play)
 	{
 		for (int i = light_list.size() - 1; i >= 0; i--)
 			light_list.get(i).onUpdate(delta);
@@ -426,7 +426,7 @@ public class Level
 			reference.onUpdate(delta);
 		}
 		
-		if (player.quad_object instanceof QuadAnimated)
+		if (play && player.quad_object instanceof QuadAnimated)
 		{
 			QuadAnimated reference = QuadAnimated.class.cast(player.quad_object);
 			
@@ -482,7 +482,7 @@ public class Level
 		if (this.player_on_ground && velocity > 2 && walking_timeout - velocity > walking_max)
 		{
 			walking_timeout = 0;
-			if (play_sound)
+			if (play)
 				Constants.sound.play(R.raw.fox_trot_2, 0);
 		}
 	}
