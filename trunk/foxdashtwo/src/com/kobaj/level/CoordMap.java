@@ -2,6 +2,7 @@ package com.kobaj.level;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import android.util.SparseArray;
 
@@ -11,13 +12,12 @@ import com.kobaj.math.android.RectF;
 
 public class CoordMap
 {
-	// x, y, values
-	// should be in shader coords
+	// x, y, values are shader based indexes
 	public SparseArray<SparseArray<ArrayList<LevelObject>>> calculated_objects;
 	
 	private ArrayList<LevelObject> ignored_objects;
 	
-	public ArrayList<LevelObject> visible_objects;
+	public List<LevelObject> visible_objects;
 	
 	private double half_width;
 	private double half_height;
@@ -81,7 +81,7 @@ public class CoordMap
 		// add the ignored objects
 		int ignore_size = ignored_objects.size();
 		for (int i = 0; i < ignore_size; i++)
-			visible_objects.add(ignored_objects.get(i));
+			sorted_insert(ignored_objects.get(i));
 		
 		// find all objects in view of the camera
 		Functions.updateShaderRectFView();
@@ -110,6 +110,9 @@ public class CoordMap
 						for (int i = objects.size() - 1; i >= 0; i--)
 						{
 							LevelObject temp = objects.get(i);
+							
+							// sorted_insert(temp);
+							
 							if (!visible_objects.contains(temp))
 								visible_objects.add(temp);
 						}
@@ -120,6 +123,34 @@ public class CoordMap
 		
 		// and then sort
 		Collections.sort(visible_objects, new ObjectDrawSort());
+	}
+	
+	private void sorted_insert(LevelObject input)
+	{
+		int visible_size = visible_objects.size();
+		
+		if (visible_size == 0)
+			visible_objects.add(input);
+		else
+		{
+			for (int e = 0; e < visible_size; e++)
+			{
+				LevelObject in_list_temp = visible_objects.get(e);
+				
+				if (in_list_temp.id.equals(input.id))
+					break;
+				
+				// see about sort
+				if (in_list_temp.z_plane < input.z_plane)
+					continue;
+				
+				if (in_list_temp.eid < input.eid)
+					continue;
+				
+				// insert
+				visible_objects.add(e, input);
+			}
+		}
 	}
 	
 	public int[] calculate_x_y(int level_width, int level_height)
