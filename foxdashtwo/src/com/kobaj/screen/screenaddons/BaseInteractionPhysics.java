@@ -1,5 +1,7 @@
 package com.kobaj.screen.screenaddons;
 
+import java.util.List;
+
 import com.kobaj.input.GameInputModifier;
 import com.kobaj.level.EnumLayerTypes;
 import com.kobaj.level.EnumLevelObject;
@@ -39,14 +41,14 @@ public class BaseInteractionPhysics
 		Constants.physics.integratePhysics(delta, the_level.player.quad_object);
 		
 		// integrate all other objects
-		LevelObject[] temp = the_level.object_hash.get(EnumLayerTypes.Interaction);
-		for (int i = temp.length - 1; i >= 0; i--)
-		{			
-			LevelObject reference = temp[i];
+		List<LevelObject> temp = the_level.object_hash.get(EnumLayerTypes.Interaction).visible_objects;
+		for (int i = temp.size() - 1; i >= 0; i--)
+		{
+			LevelObject reference = temp.get(i);
 			
-			if(!reference.collide_with_player)
+			if (!reference.collide_with_player)
 				continue;
-				
+			
 			if (reference.active)
 			{
 				// do the regular fox's collision
@@ -56,9 +58,9 @@ public class BaseInteractionPhysics
 				collision.bottom = 0;
 				
 				int collision_agent = 0;
-				if(reference.this_object == EnumLevelObject.lx_decoration_checkpoint)
+				if (reference.this_object == EnumLevelObject.lx_decoration_checkpoint)
 					collision_agent = 3;
-					
+				
 				if (Constants.physics.checkCollision(collision, the_level.player.quad_object, reference.quad_object, collision_agent))
 					can_jump = true;
 				

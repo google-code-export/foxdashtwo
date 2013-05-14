@@ -3,6 +3,7 @@ package com.kobaj.level;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
@@ -67,7 +68,10 @@ public class Level
 	@Element
 	public double foreground_parallax_ratio;
 	
-	public static enum EnumMusics {none, tunnel, field, swamp, mountain, canyon, river};
+	public static enum EnumMusics
+	{
+		none, tunnel, field, swamp, mountain, canyon, river
+	};
 	
 	@Element
 	public EnumMusics music = EnumMusics.none;
@@ -87,7 +91,7 @@ public class Level
 	private ArrayList<LevelObject> background_objects = new ArrayList<LevelObject>(); // references to backgrounds
 	private ArrayList<LevelObject> foreground_objects = new ArrayList<LevelObject>(); // references to foregrounds
 	
-	public HashMap<EnumLayerTypes, LevelObject[]> object_hash; // index way of referenceing all objects
+	public HashMap<EnumLayerTypes, CoordMap> object_hash; // index way of referenceing all objects
 	
 	@ElementList
 	public ArrayList<LevelAmbientLight> light_list; // all lights including blooms
@@ -248,7 +252,7 @@ public class Level
 		setPlayerPosition();
 		
 		// build our hashmap (garbage?)
-		object_hash = new HashMap<EnumLayerTypes, LevelObject[]>();
+		object_hash = new HashMap<EnumLayerTypes, CoordMap>();
 		
 		// optimize which objects to collide against
 		for (EnumLayerTypes t : EnumLayerTypes.values())
@@ -261,7 +265,7 @@ public class Level
 				if (reference.layer == t)
 					layer_temp.add(reference);
 			}
-			object_hash.put(t, (LevelObject[]) layer_temp.toArray(new LevelObject[layer_temp.size()]));
+			object_hash.put(t, new CoordMap(this.right_limit - this.left_limit, this.top_limit - this.bottom_limit, layer_temp));
 		}
 		
 		// then find our objects
@@ -311,10 +315,13 @@ public class Level
 				reference.y_water_drop_path = new RectFExtended(water_drop.left, water_drop.top, water_drop.right, water_drop.bottom - 20);
 				double collision_y = reference.y_water_drop_path.main_rect.bottom;
 				
-				LevelObject[] interactables = object_hash.get(EnumLayerTypes.Interaction);
-				for (int e = interactables.length - 1; e >= 0; e--)
-					if (interactables[e].this_object != EnumLevelObject.l1_decoration_water_1)
-						collision_y = Physics.physicsCollisionUpDown(interactables[e].quad_object, reference.y_water_drop_path.main_rect, collision_y);
+				for (int e = object_list.size() - 1; e >= 0; e--)
+				{
+					LevelObject local_reference = object_list.get(e);
+					if (local_reference.layer == EnumLayerTypes.Interaction)
+						if (local_reference.this_object != EnumLevelObject.l1_decoration_water_1)
+							collision_y = Physics.physicsCollisionUpDown(local_reference.quad_object, reference.y_water_drop_path.main_rect, collision_y);
+				}
 				
 				if (collision_y < reference.y_water_drop_path.main_rect.top)
 					reference.y_water_drop_path.setExtendedRectF(water_drop.left, water_drop.top, water_drop.right, collision_y);
@@ -412,14 +419,14 @@ public class Level
 		for (int i = local_np_emitter.size() - 1; i >= 0; i--)
 		{
 			NParticleEmitter reference = local_np_emitter.get(i);
-			if(reference.associated_quad != null)
+			if (reference.associated_quad != null)
 			{
 				reference.emit_location.setPositionWithOffset(reference.associated_quad.x_pos_shader, reference.associated_quad.y_pos_shader);
 			}
 			reference.onUpdate(delta);
 		}
 		
-		if(player.quad_object instanceof QuadAnimated)
+		if (player.quad_object instanceof QuadAnimated)
 		{
 			QuadAnimated reference = QuadAnimated.class.cast(player.quad_object);
 			
@@ -475,8 +482,8 @@ public class Level
 		if (this.player_on_ground && velocity > 2 && walking_timeout - velocity > walking_max)
 		{
 			walking_timeout = 0;
-			if(play_sound)
-			Constants.sound.play(R.raw.fox_trot_2, 0);
+			if (play_sound)
+				Constants.sound.play(R.raw.fox_trot_2, 0);
 		}
 	}
 	
@@ -491,11 +498,13 @@ public class Level
 				if (my_backdrop != null)
 					my_backdrop.onDrawAmbient(Constants.my_ip_matrix, true);
 			
-			LevelObject[] objects = object_hash.get(type);
+			CoordMap temp_coord = object_hash.get(type);
+			temp_coord.updated_visible_objects();
+			List<LevelObject> objects = object_hash.get(type).visible_objects;
 			
 			// draw sorted objects
-			for (int i = objects.length - 1; i >= 0; i--)
-				objects[i].onDrawObject();
+			for (int i = objects.size() - 1; i >= 0; i--)
+				objects.get(i).onDrawObject();
 			
 			// particles (looped in with top)
 			if (type == EnumLayerTypes.Top)
@@ -548,10 +557,10 @@ public class Level
 			}
 		}
 		
-		if(reference.this_object == EnumLevelObject.lx_decoration_checkpoint)
+		if (reference.this_object == EnumLevelObject.lx_decoration_checkpoint)
 		{
 			reference.collide_with_player = false;
-			if(reference.my_checkpoint != null)
+			if (reference.my_checkpoint != null)
 				reference.my_checkpoint.explode();
 			
 			SinglePlayerSave.last_checkpoint = reference.id;
@@ -566,13 +575,13 @@ public class Level
 	
 	public void startMusic()
 	{
-		if(music == EnumMusics.none)
+		if (music == EnumMusics.none)
 		{
 			Constants.music_player.stop(Constants.music_fade_time);
 			return;
 		}
 		
-		if(music == EnumMusics.tunnel)
+		if (music == EnumMusics.tunnel)
 			Constants.music_player.start(R.raw.tunnel, Constants.music_fade_time, true);
 		else
 			return;
