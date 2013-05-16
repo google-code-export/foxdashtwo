@@ -208,4 +208,5 @@ public class Constants
 	
 	// screen changes
 	public static final int fade_delay = 250;
+	public static final int light_fade = 2000;
 }
