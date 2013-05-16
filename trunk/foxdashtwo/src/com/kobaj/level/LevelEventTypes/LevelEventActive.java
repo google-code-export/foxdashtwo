@@ -63,22 +63,22 @@ public class LevelEventActive extends LevelEventBase
 				LevelEntityActive entity = matching_entity_cache.get(i);
 				if (active)
 				{
-					if (this_event == EnumLevelEvent.active_off)
+					if (this_event == EnumLevelEvent.off_active)
 						entity.active = false;
-					else if (this_event == EnumLevelEvent.active_on)
+					else if (this_event == EnumLevelEvent.on_active)
 						entity.active = true;
-					else if (this_event == EnumLevelEvent.active_toggle)
+					else if (this_event == EnumLevelEvent.toggle_active)
 						entity.active = !entity.active;
-					else if (this_event == EnumLevelEvent.active_touch)
+					else if (this_event == EnumLevelEvent.touch_active)
 						entity.active = true;
-					else if (this_event == EnumLevelEvent.active_anti_touch)
+					else if (this_event == EnumLevelEvent.anti_touch_active)
 						entity.active = false;
 				}
 				else if (!active)
 				{
-					if (this_event == EnumLevelEvent.active_touch)
+					if (this_event == EnumLevelEvent.touch_active)
 						entity.active = false;
-					else if (this_event == EnumLevelEvent.active_anti_touch)
+					else if (this_event == EnumLevelEvent.anti_touch_active)
 						entity.active = true;
 				}
 			}

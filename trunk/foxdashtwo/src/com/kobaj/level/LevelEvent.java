@@ -56,11 +56,11 @@ public class LevelEvent
 				|| this_event == EnumLevelEvent.right_arrow //
 				|| this_event == EnumLevelEvent.up_arrows) //
 			my_possible_event = new LevelEventArrows(this_event);
-		else if (this_event == EnumLevelEvent.active_off //
-				|| this_event == EnumLevelEvent.active_on //
-				|| this_event == EnumLevelEvent.active_anti_touch //
-				|| this_event == EnumLevelEvent.active_touch //
-				|| this_event == EnumLevelEvent.active_toggle) //
+		else if (this_event == EnumLevelEvent.off_active //
+				|| this_event == EnumLevelEvent.on_active //
+				|| this_event == EnumLevelEvent.anti_touch_active //
+				|| this_event == EnumLevelEvent.touch_active //
+				|| this_event == EnumLevelEvent.toggle_active) //
 			my_possible_event = new LevelEventActive(this_event);
 		else if (this_event == EnumLevelEvent.next_level)
 			my_possible_event = new LevelEventNextLevel(this_event);
