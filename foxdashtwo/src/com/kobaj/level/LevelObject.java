@@ -367,16 +367,22 @@ public class LevelObject extends LevelEntityActive
 		
 		/* any level objects */
 		else if (this_object == EnumLevelObject.lx_background_fade_1)
-			quad_object = new QuadCompressed(R.raw.lx_background_fade_1, R.raw.lx_background_fade_1_alpha, 512, 512);
+			quad_object = new QuadCompressed(R.raw.black, R.raw.lx_background_fade_1_alpha, 512, 512);
 		else if (this_object == EnumLevelObject.lx_decoration_spikes_1)
 			quad_object = new QuadCompressed(R.raw.lx_decoration_spikes_1, R.raw.lx_decoration_spikes_1_alpha, 81, 320);
 		else if (this_object == EnumLevelObject.lx_decoration_spikes_2)
 			quad_object = new QuadCompressed(R.raw.lx_decoration_spikes_2, R.raw.lx_decoration_spikes_2_alpha, 89, 337);
 		else if (this_object == EnumLevelObject.lx_decoration_spikes_3)
 			quad_object = new QuadCompressed(R.raw.lx_decoration_spikes_3, R.raw.lx_decoration_spikes_3_alpha, 86, 337);
+		else if (this_object == EnumLevelObject.lx_decoration_spikes_4) 
+			quad_object = new QuadCompressed(R.raw.lx_decoration_spikes_4, R.raw.lx_decoration_spikes_4_alpha, 200, 400);
+		else if (this_object == EnumLevelObject.lx_decoration_spikes_5) // TODO switch this back to 4
+			quad_object = new QuadCompressed(R.raw.lx_decoration_spikes_5, R.raw.lx_decoration_spikes_5_alpha, 200, 400);
+		else if (this_object == EnumLevelObject.lx_decoration_spikes_6) // TODO switch this back to 4
+			quad_object = new QuadCompressed(R.raw.lx_decoration_spikes_6, R.raw.lx_decoration_spikes_6_alpha, 327, 217);
 		
 		/* check points */
-		else if (this_object == EnumLevelObject.lx_decoration_checkpoint)
+		else if (this_object == EnumLevelObject.lx_pickup_checkpoint)
 		{
 			quad_object = new QuadColorShape(45, 0xFF9999FF, true, 0);
 			
@@ -389,7 +395,7 @@ public class LevelObject extends LevelEntityActive
 		}
 		
 		/* everything else */
-		else if (this_object == EnumLevelObject.transparent)
+		else if (this_object == EnumLevelObject.transparent || this_object == EnumLevelObject.invisible_wall)
 			quad_object = new QuadEmpty((int) shader_width, (int) shader_height);
 		else if (this_object == EnumLevelObject.color)
 			quad_object = new QuadCompressed(R.raw.white, R.raw.white, (int) shader_width, (int) shader_height);
@@ -490,7 +496,7 @@ public class LevelObject extends LevelEntityActive
 	
 	public void onDrawObject()
 	{
-		if (active && (this_object != EnumLevelObject.transparent))
+		if (active && (this_object != EnumLevelObject.transparent) && (this_object != EnumLevelObject.invisible_wall))
 		{
 			quad_object.onDrawAmbient();
 			

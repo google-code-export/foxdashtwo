@@ -8,4 +8,10 @@ public class QuadEmpty extends Quad
 	{
 		onCreate(Integer.MIN_VALUE, width, height);
 	}
+	
+	@Override
+	public void onDrawAmbient(float[] my_vp_matrix, boolean skip_draw_check)
+	{
+		return;
+	}
 }

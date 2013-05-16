@@ -25,7 +25,7 @@ public class BaseQuit extends BaseFloatingFrame
 		BaseFloatingFrame.alignButtonsAlongXAxis(center_y - shift_y, cancel_button, quit_button);
 		
 		main_popup.setScale(.5);
-		my_color_set = new SimpleColorLoop(color_time, 0xDDBF8888, 0xDDDB6363);
+		my_color_set = new SimpleColorLoop(color_time, 0xCCBF8888, 0xCCDB6363);
 		main_popup.color = 0xDDBF8888;
 	}
 	

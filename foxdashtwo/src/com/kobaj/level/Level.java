@@ -185,7 +185,7 @@ public class Level
 				
 				if (current_event.this_event == EnumLevelEvent.invisible_wall)
 				{
-					temp.this_object = EnumLevelObject.transparent;
+					temp.this_object = EnumLevelObject.invisible_wall;
 					temp.collide_with_player = true;
 				}
 				else if (current_event.this_event == EnumLevelEvent.color)
@@ -243,6 +243,7 @@ public class Level
 		player.layer = EnumLayerTypes.Pre_interaction;
 		player.z_plane = Double.MIN_VALUE;
 		player.quad_object.setScale(.75);
+		player.ignore_coord_map = true;
 		object_list.add(player);
 		
 		// sort the objects
@@ -319,7 +320,7 @@ public class Level
 				{
 					LevelObject local_reference = object_list.get(e);
 					if (local_reference.layer == EnumLayerTypes.Interaction)
-						if (local_reference.this_object != EnumLevelObject.l1_decoration_water_1)
+						if (local_reference.this_object == EnumLevelObject.invisible_wall)
 							collision_y = Physics.physicsCollisionUpDown(local_reference.quad_object, reference.y_water_drop_path.main_rect, collision_y);
 				}
 				
@@ -330,7 +331,7 @@ public class Level
 			}
 			
 			// checkpoint
-			else if (reference.this_object == EnumLevelObject.lx_decoration_checkpoint)
+			else if (reference.this_object == EnumLevelObject.lx_pickup_checkpoint)
 				physics_objects.add(reference);
 			
 			// then find our background objects
@@ -364,15 +365,14 @@ public class Level
 		boolean player_set = false;
 		if (SinglePlayerSave.last_checkpoint != null)
 		{
-			for (int i = event_list.size() - 1; i >= 0; i--)
+			for (int i = this.physics_objects.size() - 1; i >= 0; i--)
 			{
-				LevelEvent event_reference = event_list.get(i);
-				for (int e = event_reference.id_strings.size() - 1; e >= 0; e--)
-					if (event_reference.id_strings.get(e).equals(SinglePlayerSave.last_checkpoint))
+				LevelObject checkpoint = physics_objects.get(i);
+				if (checkpoint.this_object == EnumLevelObject.lx_pickup_checkpoint)
+					if (checkpoint.id.equals(SinglePlayerSave.last_checkpoint))
 					{
 						player_set = true;
-						player.quad_object.setXYPos(Functions.screenXToShaderX(event_reference.x_pos + event_reference.width / 2),
-								Functions.screenYToShaderY(event_reference.y_pos + event_reference.height / 2), EnumDrawFrom.center);
+						player.quad_object.setXYPos(checkpoint.x_pos_shader, checkpoint.y_pos_shader, EnumDrawFrom.center);
 					}
 			}
 		}
@@ -446,6 +446,12 @@ public class Level
 				// current direction
 				reference.reverseLeftRight((player.quad_object.x_vel_shader > 0));
 			}
+			
+			if (reference.best_fit_aabb.main_rect.top + Constants.shader_height / 2.0 < this.bottom_shader_limit
+					|| //
+					reference.best_fit_aabb.main_rect.bottom - Constants.shader_height / 2.0 > this.top_shader_limit
+					|| reference.best_fit_aabb.main_rect.left - Constants.ratio > this.right_shader_limit || reference.best_fit_aabb.main_rect.right + Constants.ratio < this.left_shader_limit)
+				kill = true;
 			
 			reference.onUpdate(delta);
 		}
@@ -557,7 +563,7 @@ public class Level
 			}
 		}
 		
-		if (reference.this_object == EnumLevelObject.lx_decoration_checkpoint)
+		if (reference.this_object == EnumLevelObject.lx_pickup_checkpoint)
 		{
 			reference.collide_with_player = false;
 			if (reference.my_checkpoint != null)
@@ -596,6 +602,19 @@ public class Level
 			catch (InterruptedException e)
 			{
 				Log.e("Single Player Exception", e.toString());
+			}
+		}
+	}
+	
+	public void reset_checkpoints()
+	{
+		for (int i = this.physics_objects.size() - 1; i >= 0; i--)
+		{
+			LevelObject checkpoint = physics_objects.get(i);
+			if (checkpoint.this_object == EnumLevelObject.lx_pickup_checkpoint)
+			{
+				checkpoint.my_checkpoint.reset();
+				
 			}
 		}
 	}

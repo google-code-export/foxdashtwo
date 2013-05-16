@@ -38,7 +38,7 @@ public abstract class BaseFloatingFrame
 		label_y = center_y + 3.0 * shift_y; // Functions.screenHeightToShaderHeight(95);
 		
 		// set colors
-		my_color_set = new SimpleColorLoop(color_time, 0xDDBBBBBB, 0xDD95BF96, 0xDD95BFBF, 0xDD9597BF, 0xDDB895BF, 0xDDBEBF95);
+		my_color_set = new SimpleColorLoop(color_time, 0xCCBBBBBB, 0xCC95BF96, 0xCC95BFBF, 0xCC9597BF, 0xCCB895BF, 0xCCBEBF95);
 		main_popup.color = my_color_set.pickRandomStart();
 		
 		// floating frame colors
