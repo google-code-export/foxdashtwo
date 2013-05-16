@@ -78,11 +78,11 @@ public class Constants
 	public static double height_padding;
 	
 	// physics constants
-	public static final double gravity_default = 0.000800;
-	public static final double max_y_velocity_default = 1.0;
-	public static final double max_x_velocity_default = 1.0;
-	public static final double normal_acceleration_default = 0.00050;
-	public static final double normal_reverse_acceleration_default = 0.00600;
+	public static final double gravity_default = 0.00100;
+	public static final double max_y_velocity_default = .9;
+	public static final double max_x_velocity_default = .9;
+	public static final double normal_acceleration_default = 0.00100;
+	public static final double normal_reverse_acceleration_default = 0.00750;
 	public static final double collision_detection_height_default = 1.0;
 	public static final double jump_velocity_default = 0.800;
 	public static final double jump_limiter_default = 0.185;
@@ -108,8 +108,10 @@ public class Constants
 	public static double floating_lr_distance;
 	
 	// same regardless of screen.
-	public static final double normal_air_damping = .50;
+	public static final double normal_air_damping = .75;
 	public static final double normal_friction = .011;
+	
+	// floating platforms
 	public static final double floating_spring = .00005;
 	public static final double floating_damper = .0035;
 	

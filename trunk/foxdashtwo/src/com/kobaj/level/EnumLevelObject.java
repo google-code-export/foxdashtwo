@@ -3,7 +3,7 @@ package com.kobaj.level;
 public enum EnumLevelObject
 {
 	/* stuff */
-	test, player, transparent, color,
+	test, player, transparent, invisible_wall, color,
 	
 	/* thematic 1 */
 	big_popup, black, fox2, l1_background_cave_1, l1_background_cave_2, l1_ceiling_rocks_1, l1_ceiling_rocks_2, l1_ceiling_rocks_3, l1_decoration_fungus_1,
@@ -40,6 +40,8 @@ public enum EnumLevelObject
 	l6_background_clouds, l6_decoration_brush_1, l6_decoration_brush_2, l6_decoration_rock, l6_decoration_tree_dead, l6_ground_platform_flat, l6_ground_platform_huge,
 	
 	/* more stuff */
-	lx_background_fade_1, lx_decoration_spikes_1, lx_decoration_spikes_2, lx_decoration_spikes_3, lx_decoration_checkpoint,
+	lx_background_fade_1, lx_decoration_spikes_1, lx_decoration_spikes_2, lx_decoration_spikes_3,
+	lx_decoration_spikes_4, lx_decoration_spikes_5, lx_decoration_spikes_6,
+	lx_pickup_checkpoint,
 	right_arrow, test_light
 }

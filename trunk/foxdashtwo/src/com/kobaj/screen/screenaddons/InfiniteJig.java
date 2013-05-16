@@ -26,7 +26,7 @@ public class InfiniteJig extends RotationLoadingJig
 		
 		for (int i = 0; i < outer_rings.length; i++)
 		{
-			int i_2 = i+2;
+			int i_2 = i + 2;
 			
 			outer_rings[i] = new RotationLoadingJig();
 			outer_rings[i].shape_count = i_2;
@@ -39,7 +39,7 @@ public class InfiniteJig extends RotationLoadingJig
 	public void set_vp(boolean new_vp)
 	{
 		this.vp_matrix = new_vp;
-		for(RotationLoadingJig j: outer_rings)
+		for (RotationLoadingJig j : outer_rings)
 			j.vp_matrix = new_vp;
 	}
 	
@@ -127,11 +127,10 @@ public class InfiniteJig extends RotationLoadingJig
 		// flip the y upside down
 		if (pre_x < 0)
 		{
-			pre_y = -pre_y;		
+			pre_y = -pre_y;
 		}
 		
 		double y = (Constants.ratio / Constants.my_ratio) * pre_y + y_pos;
-		
 		
 		// set it all
 		my_quad.setXYPos(x, y, EnumDrawFrom.center);
@@ -140,5 +139,11 @@ public class InfiniteJig extends RotationLoadingJig
 	public void explode()
 	{
 		explode = true;
+	}
+	
+	public void reset()
+	{
+		explode = false;
+		saved_delta = 0;
 	}
 }

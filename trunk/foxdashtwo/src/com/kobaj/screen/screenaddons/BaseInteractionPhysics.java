@@ -58,7 +58,7 @@ public class BaseInteractionPhysics
 				collision.bottom = 0;
 				
 				int collision_agent = 0;
-				if (reference.this_object == EnumLevelObject.lx_decoration_checkpoint)
+				if (reference.this_object == EnumLevelObject.lx_pickup_checkpoint)
 					collision_agent = 3;
 				
 				if (Constants.physics.checkCollision(collision, the_level.player.quad_object, reference.quad_object, collision_agent))

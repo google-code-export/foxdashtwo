@@ -19,7 +19,7 @@ public class CoordMap
 	private ArrayList<LevelObject> ignored_objects;
 	
 	public List<LevelObject> visible_objects;
-	public Boolean[] untrimmed_visible_objects;
+	public boolean[] untrimmed_visible_objects;
 	
 	private double half_width;
 	private double half_height;
@@ -39,7 +39,7 @@ public class CoordMap
 		
 		objects_copy = level_objects;
 		
-		untrimmed_visible_objects = new Boolean[level_objects.size()];
+		untrimmed_visible_objects = new boolean[level_objects.size()];
 		for (int i = 0; i < untrimmed_visible_objects.length; i++)
 			untrimmed_visible_objects[i] = false;
 	}
@@ -93,11 +93,7 @@ public class CoordMap
 		// add the ignored objects
 		for (int i = ignored_objects.size() - 1; i >= 0; i--)
 			this.untrimmed_visible_objects[ignored_objects.get(i).sort_index] = true;
-		
-		// int ignore_size = ignored_objects.size();
-		// for (int i = 0; i < ignore_size; i++)
-		// sorted_insert(ignored_objects.get(i));
-		
+
 		// find all objects in view of the camera
 		Functions.updateShaderRectFView();
 		int left_most_x = (int) Math.ceil(Functions.shader_rectf_view.left / this.half_width_shader);
@@ -127,11 +123,6 @@ public class CoordMap
 							LevelObject temp = objects.get(i);
 							
 							this.untrimmed_visible_objects[temp.sort_index] = true;
-							
-							// sorted_insert(temp);
-							
-							// if (!visible_objects.contains(temp))
-							// visible_objects.add(temp);
 						}
 					}
 				}
@@ -146,15 +137,12 @@ public class CoordMap
 				untrimmed_visible_objects[i] = false;
 			}
 		}
-		
-		// and then sort
-		// Collections.sort(visible_objects, new ObjectDrawSort());
 	}
 	
 	public int[] calculate_x_y(int level_width, int level_height)
 	{
-		half_width = (Constants.width / 2.0);
-		half_height = (Constants.height / 2.0);
+		half_width = (Constants.width / 1.0);
+		half_height = (Constants.height / 1.0);
 		
 		half_width_shader = Functions.screenWidthToShaderWidth(half_width);
 		half_height_shader = Functions.screenHeightToShaderHeight(half_height);

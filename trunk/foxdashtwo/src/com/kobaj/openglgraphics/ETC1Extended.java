@@ -23,7 +23,7 @@ public class ETC1Extended
 {
 	private final boolean use_stream_io = false;
 	private int hash = -1;
-	private InputStream input;
+	private InputStream input = null;
 	
 	// returns the handle to the RGB in int[0] and the handle to A in int[1] if alpha is set to true
 	public int[] loadETC1(Bitmap image, int square_width, int square_height, boolean has_alpha)
