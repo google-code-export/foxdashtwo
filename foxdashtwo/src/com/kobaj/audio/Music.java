@@ -35,10 +35,10 @@ public class Music extends AudioBase
 	}
 	
 	// return true if this is a new song and we can play it.
-	public boolean play(int sound_id, double volume)
+	public int play(int sound_id, double volume)
 	{
 		if(sound_id == -1)
-			return false;
+			return 0;
 		
 		boolean is_reset = false;
 		
@@ -79,10 +79,12 @@ public class Music extends AudioBase
 		float corrected_volume = (float) getCorrectedVolume(volume);
 		media_player.setVolume(corrected_volume, corrected_volume);
 		
-		return is_reset;
+		if(is_reset)
+			return 1;
+		return 0;
 	}
 	
-	public boolean play(int sound_id)
+	public int play(int sound_id)
 	{
 		return play(sound_id, 1.0);
 	}

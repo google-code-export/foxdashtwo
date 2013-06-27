@@ -65,7 +65,7 @@ public class TitleScreen extends BaseScreen
 	{
 		Constants.music_player.stop(Constants.music_fade_time);
 		
-		Functions.setCamera(0, 0, 0);
+		Functions.setCamera(0, 0, Constants.arbitrary_z);
 		
 		// Available buttons
 		double x_offset = -.3;

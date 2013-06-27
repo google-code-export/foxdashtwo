@@ -86,18 +86,17 @@ public class CoordMap
 		}
 	}
 	
-	public void updated_visible_objects()
+	public void updated_visible_objects(double shift_x)
 	{
 		visible_objects.clear();
 		
 		// add the ignored objects
 		for (int i = ignored_objects.size() - 1; i >= 0; i--)
 			this.untrimmed_visible_objects[ignored_objects.get(i).sort_index] = true;
-
+		
 		// find all objects in view of the camera
-		Functions.updateShaderRectFView();
-		int left_most_x = (int) Math.ceil(Functions.shader_rectf_view.left / this.half_width_shader);
-		int right_most_x = (int) Math.ceil(Functions.shader_rectf_view.right / this.half_width_shader);
+		int left_most_x = (int) Math.ceil((Functions.shader_rectf_view.left + shift_x) / this.half_width_shader);
+		int right_most_x = (int) Math.ceil((Functions.shader_rectf_view.right + shift_x) / this.half_width_shader);
 		
 		int top_most_y = (int) Math.ceil(Functions.shader_rectf_view.top / this.half_height_shader);
 		int bottom_most_y = (int) Math.ceil(Functions.shader_rectf_view.bottom / this.half_height_shader);
@@ -137,6 +136,14 @@ public class CoordMap
 				untrimmed_visible_objects[i] = false;
 			}
 		}
+		
+		Constants.quads_coord_map_check += visible_objects.size();
+		
+	}
+	
+	public void updated_visible_objects()
+	{
+		this.updated_visible_objects(0);
 	}
 	
 	public int[] calculate_x_y(int level_width, int level_height)

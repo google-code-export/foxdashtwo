@@ -56,8 +56,8 @@ public class LevelObject extends LevelEntityActive
 	
 	// usually read only
 	// screen coords
-	public double shader_width;
-	public double shader_height;
+	public double quad_width; // actual width and height
+	public double quad_height;
 	
 	// these dont change,
 	public double x_pos_shader;
@@ -72,6 +72,9 @@ public class LevelObject extends LevelEntityActive
 	
 	// helps with our "quadtree"
 	public int sort_index = -1;
+	
+	// moveing objects
+	private boolean kickstarted = false;
 	
 	public void onInitialize()
 	{
@@ -244,6 +247,10 @@ public class LevelObject extends LevelEntityActive
 			quad_object = new QuadCompressed(R.raw.l4_decoration_mountainside_2, R.raw.l4_decoration_mountainside_2_alpha, 581, 1347);
 		else if (this_object == EnumLevelObject.l4_decoration_mountainside_filler)
 			quad_object = new QuadCompressed(R.raw.l4_decoration_mountainside_filler, R.raw.l4_decoration_mountainside_filler_alpha, 37, 125);
+		else if (this_object == EnumLevelObject.l4_decoration_clouds_1) 
+			 quad_object = new QuadCompressed(R.raw.l4_decoration_clouds_1, R.raw.l4_decoration_clouds_1_alpha, 755, 268); 
+		else if (this_object == EnumLevelObject.l4_decoration_clouds_2) 
+			 quad_object = new QuadCompressed(R.raw.l4_decoration_clouds_2, R.raw.l4_decoration_clouds_2_alpha, 410, 159); 
 		
 		else if (this_object == EnumLevelObject.l5_background_coast)
 			quad_object = new QuadCompressed(R.raw.l5_background_coast, R.raw.l5_background_coast_alpha, 2048, 850);
@@ -396,21 +403,21 @@ public class LevelObject extends LevelEntityActive
 		
 		/* everything else */
 		else if (this_object == EnumLevelObject.transparent || this_object == EnumLevelObject.invisible_wall)
-			quad_object = new QuadEmpty((int) shader_width, (int) shader_height);
+			quad_object = new QuadEmpty((int) quad_width, (int) quad_height);
 		else if (this_object == EnumLevelObject.color)
-			quad_object = new QuadCompressed(R.raw.white, R.raw.white, (int) shader_width, (int) shader_height);
+			quad_object = new QuadCompressed(R.raw.white, R.raw.white, (int) quad_width, (int) quad_height);
 		else if (this_object == EnumLevelObject.test)
 			quad_object = new QuadColorShape(0, 200, 200, 0, Color.WHITE, 0);
 		else
 			quad_object = new QuadColorShape(0, 200, 200, 0, Color.RED, 0);
 		
 		// set these before
-		shader_width = quad_object.width;
-		shader_height = quad_object.height;
+		quad_width = quad_object.width;
+		quad_height = quad_object.height;
 		
 		// translate
 		translate_object_to_original_position();
-		scale = ((double) width) / ((double) shader_width);
+		scale = ((double) width) / ((double) quad_width);
 		if (scale <= 0)
 			scale = 1;
 		
@@ -442,8 +449,8 @@ public class LevelObject extends LevelEntityActive
 	private void translate_object_to_original_position()
 	{
 		// crazy translation to account for scale discrepencies between editor and game
-		double translate_scale_x = (shader_width - width) / 2.0;
-		double translate_scale_y = (shader_height - height) / 2.0;
+		double translate_scale_x = (quad_width - width) / 2.0;
+		double translate_scale_y = (quad_height - height) / 2.0;
 		
 		quad_object.setXYPos(Functions.screenXToShaderX(x_pos - translate_scale_x), Functions.screenYToShaderY(y_pos + translate_scale_y), draw_from);
 		quad_object.x_acc_shader = 0;
@@ -463,8 +470,11 @@ public class LevelObject extends LevelEntityActive
 	{
 		if (this_object == EnumLevelObject.l2_ground_platform_floating_1)
 		{
-			if (quad_object.x_vel_shader == 0)
+			if (!kickstarted)
+			{
+				kickstarted = true;
 				quad_object.x_acc_shader = Constants.floating_move_lr_acc;
+			}
 			
 			Constants.physics.addSpringX(Constants.floating_spring / 32.0, 0, Constants.floating_lr_distance, quad_object.x_pos_shader - x_pos_shader, quad_object);
 			Constants.physics.addSpringY(Constants.floating_spring, Constants.floating_damper, 0, quad_object.y_pos_shader - y_pos_shader, quad_object);

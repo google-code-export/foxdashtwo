@@ -25,7 +25,7 @@ public enum EnumLevelObject
 	l3_decoration_tree_front, l3_ground_extra_platform_1, l3_ground_extra_platform_2, l3_ground_extra_platform_3,
 	
 	/* thematic 4 */
-	l4_decoration_rocks_1, l4_background_sky, l4_decoration_clouds1, l4_decoration_clouds2,
+	l4_decoration_rocks_1, l4_background_sky, l4_decoration_clouds_1, l4_decoration_clouds_2,
 	l4_decoration_rocks_2, l4_decoration_rocks_3, l4_decoration_rocks_4, l4_ground_platform_connector, l4_ground_platform_large_1, l4_ground_platform_large_2, l4_ground_platform_small,
 	l4_ground_platform_very_small, l4_ground_platform_floating, l4_decoration_mountainside_1, l4_decoration_mountainside_2, l4_decoration_mountainside_filler, 
 	

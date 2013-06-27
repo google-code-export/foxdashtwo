@@ -87,10 +87,13 @@ public class Constants
 	public static final double jump_velocity_default = 0.800;
 	public static final double jump_limiter_default = 0.185;
 	public static final double player_downward_platform_acc_default = -.001;
-	public static final double player_movement_threshold_default = .005;
+	public static final double player_movement_threshold_horizontal_default = .01;
+	public static final double player_movement_threshold_vertical_default = .01;
 	
 	public static final double floating_move_lr_speed_default = .02;
 	public static final double floating_lr_distance_default = 2.0;
+	
+	public static final double arbitrary_sound_velocity = 2.0;
 	
 	// physics variables
 	public static double gravity;
@@ -103,7 +106,8 @@ public class Constants
 	public static double jump_limiter;
 	public static double max_speed; // this is of all objects
 	public static double player_downward_platform_acc; // player specific
-	public static double player_movement_threshold;
+	public static double player_movement_threshold_horizintal;
+	public static double player_movement_threshold_vertical;
 	public static double floating_move_lr_acc;
 	public static double floating_lr_distance;
 	
@@ -180,9 +184,11 @@ public class Constants
 	
 	// metrics
 	public static int quads_drawn_screen = 0;
+	public static int quads_coord_map_check = 0;
 	public static double x_100;
 	public static double y_50;
 	public static double y_125;
+	public static double y_200;
 	public static double sixteen;
 	
 	// errors
@@ -208,5 +214,12 @@ public class Constants
 	
 	// screen changes
 	public static final int fade_delay = 250;
-	public static final int light_fade = 2000;
+	public static final int light_active_fade = 1000;
+	public static final int object_active_fade = 1000;
+	
+	// background parallax
+	public static final double enum_layer_background_para = 30.0;
+	public static final double enum_layer_background_aux_para = 20.0;
+	public static final double enum_layer_foreground_para = 30.0;
+	public static final double enum_layer_foreground_aux_para = 20.0;
 }
