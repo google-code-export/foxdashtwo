@@ -19,5 +19,5 @@ public abstract class AudioBase
 		return 1.0 - log1;
 	}
 	
-	abstract boolean play(int sound_id);
+	abstract int play(int sound_id);
 }

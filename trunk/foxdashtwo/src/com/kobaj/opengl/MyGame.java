@@ -198,9 +198,8 @@ public class MyGame extends MyGLRender
 		if (lights.beginRenderToTexture(true))
 			currently_active_screen.onDrawLight();
 		
-		// regular objects
-		// GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA); // no see thru
-		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA); // no see thru
+		// regular objects	
+		GLES20.glBlendFuncSeparate(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA, GLES20.GL_ONE, GLES20.GL_ONE);
 		
 		if (scene.beginRenderToTexture(true))
 			currently_active_screen.onDrawObject(interaction_group_enums);
@@ -212,6 +211,8 @@ public class MyGame extends MyGLRender
 			currently_active_screen.onDrawObject(foregroup_enums);
 		foregroup.endRenderToTexture(true);
 		
+		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA); // no see thru
+		
 		// draw everything
 		GLES20.glBlendFunc(GLES20.GL_ONE, GLES20.GL_ZERO);
 		shadow_generator.shadow_radius = (float) currently_active_screen.player_stats[2];
@@ -220,8 +221,11 @@ public class MyGame extends MyGLRender
 		shadow_generator.onDrawAmbient(my_local_ip_matrix, true);
 		
 		// debugging
-		// scene.onDrawAmbient(my_local_ip_matrix, true);
-		
+		/*backgroup.onDrawAmbient(my_local_ip_matrix, true); 
+		scene.onDrawAmbient(my_local_ip_matrix, true);
+		foregroup.onDrawAmbient(my_local_ip_matrix, true);
+	*/
+		 
 		// text below this line
 		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA); // no see thru
 		currently_active_screen.onDrawConstant();
@@ -274,6 +278,21 @@ public class MyGame extends MyGLRender
 			
 			Constants.text.drawText(R.string.mpos, x_pos, y_pos, EnumDrawFrom.top_right);
 			Constants.text.drawNumber((int) (Constants.music_player.getCurrentPosition() / 1000.0), x_pos, y_pos, EnumDrawFrom.top_left);
+			
+			y_pos = Constants.y_200;
+			
+			// more quad counting
+			oos_color = Color.RED;
+			if (Constants.quads_coord_map_check < 50)
+				oos_color = Color.YELLOW;
+			if (Constants.quads_coord_map_check < 35)
+				oos_color = Color.GREEN;
+			if (Constants.quads_coord_map_check < 20)
+				oos_color = Color.BLUE;
+			
+			Constants.text.drawText(R.string.branch, x_pos, y_pos, EnumDrawFrom.bottom_right);
+			Constants.text.drawNumber(Constants.quads_coord_map_check, x_pos, y_pos, EnumDrawFrom.bottom_left, oos_color);
+			Constants.quads_coord_map_check = 0;
 		}
 		
 	}

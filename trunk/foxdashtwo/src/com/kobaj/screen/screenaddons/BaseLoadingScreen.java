@@ -43,6 +43,8 @@ public class BaseLoadingScreen
 	
 	public void onDrawLoading(double delta)
 	{
+		Functions.setCamera(0, 0, Constants.arbitrary_z);
+		
 		total_delta += (Math.PI / shape_count) * delta / 250.0;
 		
 		if (total_delta >= Math.PI * 4.0)

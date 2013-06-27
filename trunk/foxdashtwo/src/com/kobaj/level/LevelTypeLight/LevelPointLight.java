@@ -42,6 +42,8 @@ public class LevelPointLight extends LevelBloomLight
 	@Override
 	public void onUpdate(double delta)
 	{
+		super.onUpdate(delta);
+		
 		if (light_effect == EnumLightEffect.none)
 			return;
 		else if (!com.kobaj.math.Functions.onShader(quad_light.best_fit_aabb))

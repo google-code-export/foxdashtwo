@@ -175,8 +175,6 @@ public class Functions
 	// shader coordinates
 	public static final boolean onShader(double x, double y)
 	{
-		updateShaderRectFView();
-		
 		if (x >= shader_rectf_view.left && x <= shader_rectf_view.right && y >= shader_rectf_view.bottom && y <= shader_rectf_view.top)
 			return true;
 		
@@ -184,10 +182,14 @@ public class Functions
 	}
 	
 	// shader coords
+	public static final boolean onShader(RectF object)
+	{
+		return equalIntersects(object, shader_rectf_view);
+	}
+	
+	// shader coords
 	public static final boolean onShader(RectFExtended objects)
 	{
-		updateShaderRectFView();
-		
 		return equalIntersects(objects.main_rect, shader_rectf_view);
 	}
 	
@@ -195,24 +197,19 @@ public class Functions
 	public static RectF shader_rectf_view = new RectF();
 	public static RectF shader_rectf_view_no_translation = new RectF();
 	
-	public static final void updateShaderRectFView()
+	protected static final void updateShaderRectFView()
 	{
-		if (camera_changed)
-		{
-			camera_changed = false;
-			
-			final double neg_zoom = Constants.ratio * Constants.z_shader_translation;
-			
-			shader_rectf_view_no_translation.left = (float) (-Constants.ratio - neg_zoom);
-			shader_rectf_view_no_translation.top = (float) (1 + Constants.z_shader_translation);
-			shader_rectf_view_no_translation.right = (float) (Constants.ratio + neg_zoom);
-			shader_rectf_view_no_translation.bottom = (float) (-1 - Constants.z_shader_translation);
-			
-			shader_rectf_view.left = (float) (shader_rectf_view_no_translation.left + Constants.x_shader_translation);
-			shader_rectf_view.top = (float) (shader_rectf_view_no_translation.top + Constants.y_shader_translation);
-			shader_rectf_view.right = (float) (shader_rectf_view_no_translation.right + Constants.x_shader_translation);
-			shader_rectf_view.bottom = (float) (shader_rectf_view_no_translation.bottom + Constants.y_shader_translation);
-		}
+		final double neg_zoom = Constants.ratio * Constants.z_shader_translation;
+		
+		shader_rectf_view_no_translation.left = (float) (-Constants.ratio - neg_zoom);
+		shader_rectf_view_no_translation.top = (float) (1 + Constants.z_shader_translation);
+		shader_rectf_view_no_translation.right = (float) (Constants.ratio + neg_zoom);
+		shader_rectf_view_no_translation.bottom = (float) (-1 - Constants.z_shader_translation);
+		
+		shader_rectf_view.left = (float) (shader_rectf_view_no_translation.left + Constants.x_shader_translation);
+		shader_rectf_view.top = (float) (shader_rectf_view_no_translation.top + Constants.y_shader_translation);
+		shader_rectf_view.right = (float) (shader_rectf_view_no_translation.right + Constants.x_shader_translation);
+		shader_rectf_view.bottom = (float) (shader_rectf_view_no_translation.bottom + Constants.y_shader_translation);
 	}
 	
 	// helpful method
@@ -312,8 +309,6 @@ public class Functions
 		return ++x;
 	}
 	
-	private static boolean camera_changed = true;
-	
 	public static final void setCamera(double x_camera, double y_camera, double z_camera)
 	{
 		double user_set_buffer = Functions.clamp(Constants.user_zoom_max, UserSettings.zoom_value, Constants.user_zoom_min);
@@ -328,17 +323,16 @@ public class Functions
 		
 		if (x_camera == Constants.x_shader_translation && y_camera == Constants.y_shader_translation && z_camera == Constants.z_shader_translation)
 		{
-			camera_changed = false;
 			return;
 		}
-		
-		camera_changed = true;
 		
 		setIdentityMatrix(Constants.my_view_matrix);
 		Matrix.translateM(Constants.my_view_matrix, 0, (float) -x_camera, (float) -y_camera, (float) -z_camera);
 		Constants.x_shader_translation = x_camera;
 		Constants.y_shader_translation = y_camera;
 		Constants.z_shader_translation = z_camera;
+		
+		updateShaderRectFView();
 	}
 	
 	// calculate speed from two velocities
@@ -675,7 +669,8 @@ public class Functions
 		Constants.max_speed = Functions.speed(Constants.max_x_velocity, Constants.max_y_velocity);
 		
 		Constants.player_downward_platform_acc = Functions.screenHeightToShaderHeight(Constants.player_downward_platform_acc_default);
-		Constants.player_movement_threshold = Functions.screenWidthToShaderWidth(Constants.player_movement_threshold_default);
+		Constants.player_movement_threshold_horizintal = Functions.screenWidthToShaderWidth(Constants.player_movement_threshold_horizontal_default);
+		Constants.player_movement_threshold_vertical = Functions.screenHeightToShaderHeight(Constants.player_movement_threshold_vertical_default);
 		
 		Constants.shadow_height_shader = Functions.screenHeightToShaderHeight(Constants.shadow_height);
 		
@@ -700,6 +695,7 @@ public class Functions
 		Constants.x_100 = Functions.screenXToShaderX(100);
 		Constants.y_50 = Functions.screenYToShaderY((int) Functions.fix_y(50));
 		Constants.y_125 = Functions.screenYToShaderY((int) Functions.fix_y(125));
+		Constants.y_200 = Functions.screenYToShaderY((int) Functions.fix_y(200));
 		Constants.sixteen = Functions.screenWidthToShaderWidth(16);
 	}
 }

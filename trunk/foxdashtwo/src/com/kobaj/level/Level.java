@@ -13,6 +13,7 @@ import android.graphics.Color;
 import android.util.Log;
 
 import com.kobaj.account_settings.SinglePlayerSave;
+import com.kobaj.audio.Sound;
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.level.LevelEventTypes.EnumLevelEvent;
 import com.kobaj.level.LevelTypeLight.LevelAmbientLight;
@@ -75,6 +76,8 @@ public class Level
 	
 	@Element
 	public EnumMusics music = EnumMusics.none;
+	private final int[] current_playing_sounds = new int[Sound.sound_count];
+	private int sound_placement = 0;
 	
 	public double left_shader_limit;
 	public double top_shader_limit;
@@ -178,8 +181,8 @@ public class Level
 				temp.id = original.id;
 				temp.x_pos = original.x_pos + original.width / 2.0;
 				temp.y_pos = original.y_pos - original.height / 2.0;
-				temp.shader_width = original.width;
-				temp.shader_height = original.height;
+				temp.quad_width = original.width;
+				temp.quad_height = original.height;
 				temp.z_plane = 5;
 				temp.layer = EnumLayerTypes.Interaction;
 				
@@ -228,7 +231,7 @@ public class Level
 						(float) Functions.screenYToShaderY(y_pos - original.height));//
 				NParticleEmitter test = NParticleManager.makeEmitter(EnumParticleType.snow, shader_limits_for_snow_test);
 				test.onInitialize();
-				test.preUpdate();
+				// test.preUpdate();
 				local_np_emitter.add(test);
 				
 				event_list.remove(i);
@@ -295,7 +298,9 @@ public class Level
 				NParticleEmitter my_particle_emitter = null;
 				
 				if (reference.this_object == EnumLevelObject.l2_ground_platform_floating_1)
+				{
 					my_particle_emitter = NParticleManager.makeEmitter(EnumParticleType.floating_dust, emitt_from);
+				}
 				else if (reference.this_object == EnumLevelObject.l2_ground_platform_floating_2 //
 						|| reference.this_object == EnumLevelObject.l4_ground_platform_floating)
 					my_particle_emitter = NParticleManager.makeEmitter(EnumParticleType.floating_dust_2, emitt_from);
@@ -406,6 +411,7 @@ public class Level
 	
 	public void onUpdate(double delta, boolean play)
 	{
+		
 		for (int i = light_list.size() - 1; i >= 0; i--)
 			light_list.get(i).onUpdate(delta);
 		
@@ -431,13 +437,18 @@ public class Level
 			QuadAnimated reference = QuadAnimated.class.cast(player.quad_object);
 			
 			double current_x_speed = Math.abs(reference.x_vel_shader);
+			double current_y_speed = Math.abs(reference.y_vel_shader);
 			
 			// currently playing animation
-			if (reference.y_vel_shader < 0)
+			if (reference.y_vel_shader < 0 //
+					&& current_y_speed > Constants.player_movement_threshold_vertical //
+					&& !player_on_ground)
 				reference.setAnimation(EnumGlobalAnimationList.falling, 0, true);
-			else if (reference.y_vel_shader > 0)
+			else if (reference.y_vel_shader > 0 //
+					&& current_y_speed > Constants.player_movement_threshold_vertical //
+					&& !player_on_ground)
 				reference.setAnimation(EnumGlobalAnimationList.jumping, 0, true);
-			else if (current_x_speed < Constants.player_movement_threshold)
+			else if (current_x_speed < Constants.player_movement_threshold_horizintal)
 				reference.setAnimation(EnumGlobalAnimationList.stop, 0, true);
 			else
 			{
@@ -457,16 +468,15 @@ public class Level
 		}
 		
 		// move the paralax backgrounds
-		double x_distance = -Constants.x_shader_translation + x_start;
-		// double y_distance = -Constants.y_shader_translation + y_start;
+		double x_distance = -Constants.x_shader_translation;
 		
 		if (this.background_parallax_ratio != 0)
 			for (int i = background_objects.size() - 1; i >= 0; i--)
 			{
 				LevelObject reference = background_objects.get(i);
-				double multiplier = this.background_parallax_ratio / 30.0;
+				double multiplier = this.background_parallax_ratio / Constants.enum_layer_background_para;
 				if (reference.layer == EnumLayerTypes.Background_Aux)
-					multiplier = this.background_parallax_ratio / 20.0;
+					multiplier = this.background_parallax_ratio / Constants.enum_layer_background_aux_para;
 				
 				reference.quad_object.setXYPos(reference.x_pos_shader - x_distance * multiplier, reference.y_pos_shader, EnumDrawFrom.center);
 			}
@@ -475,9 +485,9 @@ public class Level
 			for (int i = foreground_objects.size() - 1; i >= 0; i--)
 			{
 				LevelObject reference = foreground_objects.get(i);
-				double multiplier = this.background_parallax_ratio / 15.0;
-				if (reference.layer == EnumLayerTypes.Background_Aux)
-					multiplier = this.background_parallax_ratio / 10.0;
+				double multiplier = this.foreground_parallax_ratio / Constants.enum_layer_foreground_para;
+				if (reference.layer == EnumLayerTypes.Foreground_Aux)
+					multiplier = this.foreground_parallax_ratio / Constants.enum_layer_foreground_aux_para;
 				
 				reference.quad_object.setXYPos(reference.x_pos_shader + x_distance * multiplier, reference.y_pos_shader, EnumDrawFrom.center);
 			}
@@ -485,12 +495,51 @@ public class Level
 		// then do sounds
 		walking_timeout += delta;
 		double velocity = Math.abs(player.quad_object.x_vel_shader) * 10000;
-		if (this.player_on_ground && velocity > 2 && walking_timeout - velocity > walking_max)
+		if (this.player_on_ground && velocity > Constants.arbitrary_sound_velocity && walking_timeout > walking_max)
 		{
 			walking_timeout = 0;
 			if (play)
-				Constants.sound.play(R.raw.fox_trot_2, 0);
+			{
+				sound_placement += 1;
+				sound_placement = sound_placement % Sound.sound_count;
+				
+				int result = Constants.sound.play(R.raw.fox_trot_2, 0);
+				if (result != 0)
+				{
+					this.current_playing_sounds[sound_placement] = result;
+				}
+				
+			}
 		}
+		else if (!this.player_on_ground)
+		{
+			for (int i = 0; i < current_playing_sounds.length; i++)
+			{
+				Constants.sound.stop(current_playing_sounds[i]);
+				current_playing_sounds[i] = 0;
+			}
+		}
+		
+		// prepare for next loop
+		player_on_ground = false;
+	}
+	
+	public double compute_parallax_shift(EnumLayerTypes type)
+	{
+		// this is the exact same as above
+		
+		double x_distance = -Constants.x_shader_translation;
+		double multiplier = 0;
+		if (type == EnumLayerTypes.Background)
+			multiplier = this.background_parallax_ratio / Constants.enum_layer_background_para;
+		else if (type == EnumLayerTypes.Background_Aux)
+			multiplier = this.background_parallax_ratio / Constants.enum_layer_background_aux_para;
+		else if (type == EnumLayerTypes.Foreground)
+			multiplier = -this.foreground_parallax_ratio / Constants.enum_layer_foreground_para;
+		else if (type == EnumLayerTypes.Foreground_Aux)
+			multiplier = -this.foreground_parallax_ratio / Constants.enum_layer_foreground_aux_para;
+		
+		return x_distance * multiplier;
 	}
 	
 	@SuppressLint("WrongCall")
@@ -505,7 +554,7 @@ public class Level
 					my_backdrop.onDrawAmbient(Constants.my_ip_matrix, true);
 			
 			CoordMap temp_coord = object_hash.get(type);
-			temp_coord.updated_visible_objects();
+			temp_coord.updated_visible_objects(compute_parallax_shift(type));
 			List<LevelObject> objects = object_hash.get(type).visible_objects;
 			
 			// draw sorted objects
@@ -540,9 +589,7 @@ public class Level
 	}
 	
 	public void objectInteraction(final RectF collision, final LevelObject player, final LevelObject reference, double delta)
-	{
-		player_on_ground = false;
-		
+	{	
 		// up down collision
 		if (collision.width() == 0)
 		{
@@ -555,8 +602,8 @@ public class Level
 			{
 				if (player.quad_object.y_pos_shader > reference.quad_object.y_pos_shader) // remember this is the center of the object
 				{
-					player.quad_object.setXYPos(player.quad_object.x_pos_shader + reference.quad_object.x_vel_shader * delta, player.quad_object.y_pos_shader - Constants.collision_detection_height,
-							EnumDrawFrom.center);
+					player.quad_object.setXYPos(player.quad_object.x_pos_shader + reference.quad_object.x_vel_shader * delta, player.quad_object.y_pos_shader - 2.0
+							* Constants.collision_detection_height, EnumDrawFrom.center);
 					// it would be neat to have the players velocity affect this downward push. but since we zero out the velocity upon collision, at this point, it would do nothing.
 					reference.quad_object.y_acc_shader += Constants.player_downward_platform_acc;
 				}
@@ -613,8 +660,9 @@ public class Level
 			LevelObject checkpoint = physics_objects.get(i);
 			if (checkpoint.this_object == EnumLevelObject.lx_pickup_checkpoint)
 			{
-				checkpoint.my_checkpoint.reset();
-				
+				if (checkpoint.my_checkpoint != null)
+					checkpoint.my_checkpoint.reset();
+				checkpoint.collide_with_player = true;
 			}
 		}
 	}

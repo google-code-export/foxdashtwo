@@ -7,6 +7,7 @@ import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 import com.kobaj.math.RectFExtended;
+import com.kobaj.math.android.RectF;
 import com.kobaj.opengldrawable.EnumDrawFrom;
 import com.kobaj.opengldrawable.Quad.Quad;
 import com.kobaj.opengldrawable.Quad.QuadColorShape;
@@ -26,6 +27,7 @@ public class NParticleEmitter
 	
 	// this is in shader coordinates (0-1)
 	public RectFExtended emit_location;
+	public RectF visible_zone;
 	
 	// I have the best most readable variable names.
 	public boolean is_affected_by_gravity = false;
@@ -70,7 +72,7 @@ public class NParticleEmitter
 	// be sure to keep this as a reference.
 	public Quad associated_quad;
 	
-	private boolean force_update = false;
+	public boolean force_update = false;
 	
 	public NParticleEmitter(EnumParticleType type)
 	{
@@ -81,7 +83,9 @@ public class NParticleEmitter
 	{
 		force_update = true;
 		
-		for (int i = 0; i < 1000; i++)
+		visible_zone = new RectF(Float.MAX_VALUE, Float.MIN_VALUE, Float.MIN_VALUE, Float.MAX_VALUE);
+		
+		for (int i = 0; i < 200; i++)
 			this.onUpdate(32);
 		
 		force_update = false;
@@ -115,6 +119,8 @@ public class NParticleEmitter
 			temp.onInitialize();
 			unused_pool.push(temp);
 		}
+		
+		preUpdate();
 	}
 	
 	public void onUnInitialize()
@@ -128,46 +134,58 @@ public class NParticleEmitter
 	
 	public void onUpdate(double delta)
 	{
-		//why update if not on screen?
-		if(!force_update && !Functions.onShader(emit_location))
-			return;
-		
-		// first see if we need to spawn some particles
-		if (number_of_particles != 0)
+		// why update if not on screen?
+		if (force_update || Functions.onShader(emit_location) || (visible_zone != null && Functions.onShader(visible_zone)))
 		{
-			current_time += delta;
-			if (current_time > next_particle_spawn)
+			if(!force_update)
 			{
-				emittParticle();
-				current_time = 0;
+			if(visible_zone.left > emit_location.main_rect.left)
+				visible_zone.left = emit_location.main_rect.left;
+			if(visible_zone.top < emit_location.main_rect.top)
+				visible_zone.top = emit_location.main_rect.top;
+			if(visible_zone.right < emit_location.main_rect.right)
+				visible_zone.right = emit_location.main_rect.right;
+			if(visible_zone.bottom > emit_location.main_rect.bottom)
+				visible_zone.bottom = emit_location.main_rect.bottom;
 			}
-		}
-		
-		// and then update our currently visible particles
-		for (int i = used_pool.size() - 1; i >= 0; i--)
-		{
-			NParticle reference = used_pool.get(i);
 			
-			// let the particle update its properties except for position
-			reference.onUpdate(delta);
-			
-			// different affects on the particle
-			if (is_affected_by_gravity)
-				Constants.physics.addGravity(reference.quad_reference);
-			
-			// we update the particle's position
-			Constants.physics.integratePhysics(delta, reference.quad_reference);
-			
-			// if its snow check and see if it has traveled outside of the spawn area
-			if (particle_type == EnumParticleType.snow)
-				if (!Functions.inRectF(emit_location.main_rect, reference.quad_reference.x_pos_shader, reference.quad_reference.y_pos_shader))
-					reference.kill();
-			
-			if (reference.is_dead)
+			// first see if we need to spawn some particles
+			if (number_of_particles != 0)
 			{
-				used_pool.remove(i);
-				unused_pool.push(reference);
-				update_quads = true;
+				current_time += delta;
+				if (current_time > next_particle_spawn)
+				{
+					emittParticle();
+					current_time = 0;
+				}
+			}
+			
+			// and then update our currently visible particles
+			for (int i = used_pool.size() - 1; i >= 0; i--)
+			{
+				NParticle reference = used_pool.get(i);
+				
+				// let the particle update its properties except for position
+				reference.onUpdate(delta);
+				
+				// different affects on the particle
+				if (is_affected_by_gravity)
+					Constants.physics.addGravity(reference.quad_reference);
+				
+				// we update the particle's position
+				Constants.physics.integratePhysics(delta, reference.quad_reference);
+				
+				// if its snow check and see if it has traveled outside of the spawn area
+				if (particle_type == EnumParticleType.snow)
+					if (!Functions.inRectF(emit_location.main_rect, reference.quad_reference.x_pos_shader, reference.quad_reference.y_pos_shader))
+						reference.kill();
+				
+				if (reference.is_dead)
+				{
+					used_pool.remove(i);
+					unused_pool.push(reference);
+					update_quads = true;
+				}
 			}
 		}
 	}
@@ -227,9 +245,9 @@ public class NParticleEmitter
 		// INSTANCE THAT HECK YEAH
 		if (used_quads.size() > 0)
 		{
-			if(Functions.onShader(emit_location))
+			if (Functions.onShader(emit_location) || (visible_zone != null && Functions.onShader(this.visible_zone)))
 			{
-				if(used_quads.get(0) instanceof QuadCompressed)
+				if (used_quads.get(0) instanceof QuadCompressed)
 					QuadRenderShell.onDrawQuad(Constants.my_vp_matrix, true, Constants.compressed_light, used_quads);
 				else
 					QuadRenderShell.onDrawQuad(Constants.my_vp_matrix, true, Constants.ambient_light, used_quads);

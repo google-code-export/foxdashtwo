@@ -13,6 +13,7 @@
     <string name="qos">QOS:</string>
     <string name="volume">Volume:</string>
     <string name="mpos">MPos:</string>
+    <string name="branch">Branch:</string>
 
     <!-- input -->
     <string name="left">Left</string>
@@ -72,7 +73,7 @@
     <string name="halfhalf">HalfHalf</string>
     <string name="new_game">New Game</string>
     <string name="level_select_game">Level Select</string>
-    <string name="download_maps">Download Maps</string>
+    <string name="download_maps">Community Maps</string>
     <string name="login_button">Login</string>
     <string name="account_button">Account</string>
     <string name="yes_button">Yes</string>
@@ -117,6 +118,7 @@
         <item>qos</item>
         <item>volume</item>
         <item>mpos</item>
+        <item>branch</item>
         
         <item>left</item>
         <item>right</item>

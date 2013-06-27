@@ -16,11 +16,13 @@ public class Sound extends AudioBase
 	private SoundPool sound_pool;
 	private SparseIntArray sound_pool_map;
 	
+	public static final int sound_count = 4;
+	
 	public Sound()
 	{
 		super();
 		
-		sound_pool = new SoundPool(4, AudioManager.STREAM_MUSIC, 0);
+		sound_pool = new SoundPool(sound_count, AudioManager.STREAM_MUSIC, 0);
 		sound_pool_map = new SparseIntArray();
 	}
 	
@@ -41,8 +43,9 @@ public class Sound extends AudioBase
 			sound_pool_map.put(sound_id, sound_pool.load(com.kobaj.math.Constants.context, sound_id, 1));
 	}
 	
-	// for loop_count: it is zero index based ;). -1 for infinite loops
-	public boolean play(int sound_id, int loop_count)
+	// return the stream id. or 0 on failure.
+	// loop count of -1 means loop forever
+	public int play(int sound_id, int loop_count)
 	{
 		int sound_to_be_played = sound_pool_map.get(sound_id);
 		
@@ -51,15 +54,20 @@ public class Sound extends AudioBase
 		{
 			float correct_volume = (float) getCorrectedVolume(UserSettings.desired_sound_volume);
 			
-			sound_pool.play(sound_pool_map.get(sound_id), correct_volume, correct_volume, 1, loop_count, 1f);
-			return true;
+			return sound_pool.play(sound_pool_map.get(sound_id), correct_volume, correct_volume, 1, loop_count, 1f);
 		}
 		
-		return false;
+		return 0;
 	}
 	
-	public boolean play(int sound_id)
+	public int play(int sound_id)
 	{
 		return play(sound_id, 0);
+	}
+	
+	public void stop(int stream_id)
+	{
+		if(stream_id != -1 && stream_id != 0)
+			sound_pool.stop(stream_id);
 	}
 }

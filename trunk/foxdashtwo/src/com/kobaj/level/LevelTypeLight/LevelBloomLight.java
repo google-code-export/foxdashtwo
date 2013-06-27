@@ -2,6 +2,9 @@ package com.kobaj.level.LevelTypeLight;
 
 import org.simpleframework.xml.Element;
 
+import android.graphics.Color;
+
+import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.EnumDrawFrom;
 import com.kobaj.opengldrawable.Quad.Quad;
 
@@ -37,13 +40,21 @@ public abstract class LevelBloomLight extends LevelAmbientLight
 	@Override
 	public void onDrawLight()
 	{
-		if(active)
+		if(active || quad_light.color != Color.BLACK)
 			quad_light.onDrawAmbient();
 	}
 	
 	public void onDrawObject()
 	{
-		if(active && is_bloom)
+		if(is_bloom)
+		if(active || quad_light.color != Color.TRANSPARENT)
+		{
+			// blue, or green would also work
+			int red = Functions.red(quad_light.color);
+			
+			quad_bloom.color = Functions.linearInterpolateColor(0, 255, red, Color.TRANSPARENT, Color.WHITE);
+			
 			quad_bloom.onDrawAmbient();
+		}
 	}
 }
