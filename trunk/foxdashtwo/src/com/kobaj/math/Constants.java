@@ -37,16 +37,18 @@ public class Constants
 	public static int device_width; // relative to the device
 	public static int device_height;
 	public static double device_ratio;
-	public static double one_over_device_based_shader_height; // this is 1/vratio
+	public static double device_vratio;
 	public static boolean horizontal_ratio = false;
 	
 	public static double shader_width; // technically double the ratio
-	public static double shader_height; // double the vratio
+	public static final double shader_height = 2.0; // 
 	
 	// this is (width / height)
 	public static double ratio;
-	public static double vratio;
 	public static final double my_ratio = 1.777777777; // some things (infinite jig) require a set ratio
+	
+	public static double local_ratio;
+	public static double local_vratio;
 	
 	// this is where the camera is translated to
 	public static double x_shader_translation;
