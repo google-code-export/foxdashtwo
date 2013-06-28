@@ -114,7 +114,7 @@ public class Functions
 	
 	public static final double screenYToShaderY(double input_y)
 	{
-		return linearInterpolateUnclamped(0, Constants.height, input_y, -1, 1);
+		return linearInterpolateUnclamped(0, Constants.height, input_y, -Constants.vratio, Constants.vratio);
 	}
 	
 	// used to translate shader coordinates to screen coordinates
@@ -202,9 +202,9 @@ public class Functions
 		final double neg_zoom = Constants.ratio * Constants.z_shader_translation;
 		
 		shader_rectf_view_no_translation.left = (float) (-Constants.ratio - neg_zoom);
-		shader_rectf_view_no_translation.top = (float) (1 + Constants.z_shader_translation);
+		shader_rectf_view_no_translation.top = (float) (Constants.vratio + Constants.z_shader_translation);
 		shader_rectf_view_no_translation.right = (float) (Constants.ratio + neg_zoom);
-		shader_rectf_view_no_translation.bottom = (float) (-1 - Constants.z_shader_translation);
+		shader_rectf_view_no_translation.bottom = (float) (-Constants.vratio - Constants.z_shader_translation);
 		
 		shader_rectf_view.left = (float) (shader_rectf_view_no_translation.left + Constants.x_shader_translation);
 		shader_rectf_view.top = (float) (shader_rectf_view_no_translation.top + Constants.y_shader_translation);
@@ -384,6 +384,36 @@ public class Functions
 			return Color.WHITE;
 		
 		return (a << 24) | (r << 16) | (g << 8) | b;
+	}
+	
+	// convert from device coordinates to game coordinates
+	// this is in screen coordinates (0-800)
+	public static final float deviceXtoGameX(float x)
+	{
+		if(Constants.horizontal_ratio)
+		{
+			return (float) Functions.linearInterpolateUnclamped(0, Constants.device_width, x, 0, Constants.width);
+		}
+		else
+		{
+			double window_width = Constants.device_height * Constants.ratio;
+			double half_space = (Constants.device_width - window_width);
+			return (float) Functions.linearInterpolateUnclamped(0, Constants.device_width, x, -half_space, Constants.width + half_space);
+		}
+	}
+	
+	public static final float deviceYtoGameY(float y)
+	{
+		if(Constants.horizontal_ratio)
+		{
+			double window_height = Constants.device_height * Constants.one_over_device_based_shader_height;
+			double half_space = (Constants.device_height - window_height);
+			return (float) Functions.linearInterpolateUnclamped(0, Constants.device_height, y, -half_space, Constants.height + half_space);
+		}
+		else
+		{
+			return (float) Functions.linearInterpolateUnclamped(0, Constants.device_height, y, 0, Constants.height);
+		}
 	}
 	
 	// when needing to blur something
@@ -677,8 +707,8 @@ public class Functions
 		Constants.floating_lr_distance = Functions.screenWidthToShaderWidth(Constants.floating_lr_distance_default);
 		Constants.floating_move_lr_acc = Functions.screenWidthToShaderWidth(Constants.floating_move_lr_speed_default);
 		
-		Constants.mini_time_pos_x = Functions.screenXToShaderX(Constants.width - Constants.default_mini_time_pos_x);
-		Constants.mini_time_pos_y = Functions.screenYToShaderY(Constants.height - Constants.default_mini_time_pos_y);
+		Constants.mini_time_pos_x = Functions.screenXToShaderX(Constants.width - Constants.mini_time_pos_x_default);
+		Constants.mini_time_pos_y = Functions.screenYToShaderY(Constants.height - Constants.mini_time_pos_y_default);
 		
 		Constants.one_fourth_height = Functions.screenYToShaderY(Constants.height / 4.0);
 		Constants.two_fourth_height = Functions.screenYToShaderY(2.0 * Constants.height / 4.0);
@@ -686,9 +716,10 @@ public class Functions
 		
 		Constants.one_third_width = Functions.screenXToShaderX(Constants.width / 3.0);
 		Constants.two_third_width = Functions.screenXToShaderX(2.0 * Constants.width / 3.0);
+		Constants.three_fourth_width = Functions.screenXToShaderX(3.0 * Constants.width / 4.0);
 		
-		Constants.width_padding = Functions.screenWidthToShaderWidth(Constants.default_width_padding);
-		Constants.height_padding = Functions.screenHeightToShaderHeight(Constants.default_height_padding);
+		Constants.width_padding = Functions.screenWidthToShaderWidth(Constants.width_padding_default);
+		Constants.height_padding = Functions.screenHeightToShaderHeight(Constants.height_padding_default);
 		
 		Constants.spinning_jig_radius = Functions.screenWidthToShaderWidth(Constants.default_spinning_jig_radius);
 		

@@ -73,7 +73,7 @@ public class LevelObject extends LevelEntityActive
 	// helps with our "quadtree"
 	public int sort_index = -1;
 	
-	// moveing objects
+	// moveing objects only need to be activated once
 	private boolean kickstarted = false;
 	
 	public void onInitialize()

@@ -93,18 +93,38 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		// set our window
 		GLES20.glViewport(0, 0, width, height);
 		
-		Constants.width = width;
-		Constants.height = height;
+		Constants.width = 1280; //width;
+		Constants.height = 300; //height;
 		
-		float ratio = (float) (width) / (float) (height);
+		float ratio = (float) (Constants.width) / (float) (Constants.height);
 		Constants.ratio = ratio;
 		Constants.shader_width = ratio * 2.0;
 		
-		// this projection matrix is applied to object coodinates
-		// in the onDrawFrame() method
+		// and device sizes
+		Constants.device_width = width;
+		Constants.device_height = height;
+		
+		float local_ratio = (float) (width) / (float) (height);
+		Constants.device_ratio = local_ratio;
+		
+		float added_height = 0;
+		
+		// calculate how we want to zoom in on things
+		if(local_ratio <= ratio)
+		{
+			added_height = ratio-local_ratio;
+			local_ratio = ratio;
+			Constants.horizontal_ratio = true;
+		}
+		
+		Constants.vratio = 1f + added_height;
+		Constants.shader_height = Constants.vratio * 2.0;
+		Constants.one_over_device_based_shader_height = 1f / Constants.vratio;
 		
 		// we use a frustrum because the game utilizes 'zoom' effects via the camera
-		Matrix.frustumM(Constants.my_proj_matrix, 0, -ratio, ratio, -1f, 1f, .9999999999f, 2);
+		Matrix.frustumM(Constants.my_proj_matrix, 0, -local_ratio, local_ratio, // width (x)
+				(float)-Constants.vratio, (float)Constants.vratio, // height (y)
+				.9999999999f, 2); // zoom (z)
 		// Matrix.orthoM(Constants.my_proj_matrix, 0, -ratio, ratio, -1, 1, .99999999f, 2);
 		Matrix.setLookAtM(Constants.my_view_matrix, 0, // this is the identity...
 				0f, 0f, 0f, // eye position/look at

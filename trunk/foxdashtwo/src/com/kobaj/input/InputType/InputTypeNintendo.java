@@ -43,7 +43,7 @@ public class InputTypeNintendo extends InputTypeBase
 	
 	public boolean getTouchedJump()
 	{
-		for (int i = 0; i < Constants.input_manager.fingerCount; i++)
+		for (int i = 0; i < Constants.input_manager.finger_count; i++)
 			if (Constants.input_manager.getTouched(i))
 				if (Functions.inRectF(my_quad_jump.best_fit_aabb.main_rect, Functions.screenXToShaderX(Constants.input_manager.getX(i)),
 						Functions.screenYToShaderY(Functions.fix_y(Constants.input_manager.getY(i)))))
@@ -55,7 +55,7 @@ public class InputTypeNintendo extends InputTypeBase
 	@Override
 	public boolean getPressedJump()
 	{
-		for (int i = 0; i < Constants.input_manager.fingerCount; i++)
+		for (int i = 0; i < Constants.input_manager.finger_count; i++)
 			if (Constants.input_manager.getPressed(i))
 				if (Functions.inRectF(my_quad_jump.best_fit_aabb.main_rect, Functions.screenXToShaderX(Constants.input_manager.getX(i)),
 						Functions.screenYToShaderY(Functions.fix_y(Constants.input_manager.getY(i)))))
@@ -67,7 +67,7 @@ public class InputTypeNintendo extends InputTypeBase
 	@Override
 	public boolean getReleasedJump()
 	{
-		for (int i = 0; i < Constants.input_manager.fingerCount; i++)
+		for (int i = 0; i < Constants.input_manager.finger_count; i++)
 			if (Constants.input_manager.getReleased(i))
 				if (Functions.inRectF(my_quad_jump.best_fit_aabb.main_rect, Functions.screenXToShaderX(Constants.input_manager.getX(i)),
 						Functions.screenYToShaderY(Functions.fix_y(Constants.input_manager.getY(i)))))
@@ -79,7 +79,7 @@ public class InputTypeNintendo extends InputTypeBase
 	@Override
 	public boolean getTouchedLeft()
 	{
-		for (int i = 0; i < Constants.input_manager.fingerCount; i++)
+		for (int i = 0; i < Constants.input_manager.finger_count; i++)
 			if (Constants.input_manager.getTouched(i))
 				if (Functions.inRectF(my_quad_left.best_fit_aabb.main_rect, Functions.screenXToShaderX(Constants.input_manager.getX(i)),
 						Functions.screenYToShaderY(Functions.fix_y(Constants.input_manager.getY(i)))))
@@ -91,7 +91,7 @@ public class InputTypeNintendo extends InputTypeBase
 	@Override
 	public boolean getTouchedRight()
 	{
-		for (int i = 0; i < Constants.input_manager.fingerCount; i++)
+		for (int i = 0; i < Constants.input_manager.finger_count; i++)
 			if (Constants.input_manager.getTouched(i))
 				if (Functions.inRectF(my_quad_right.best_fit_aabb.main_rect, Functions.screenXToShaderX(Constants.input_manager.getX(i)),
 						Functions.screenYToShaderY(Functions.fix_y(Constants.input_manager.getY(i)))))

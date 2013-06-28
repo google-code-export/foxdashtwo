@@ -201,33 +201,30 @@ public class MyGame extends MyGLRender
 		// regular objects	
 		GLES20.glBlendFuncSeparate(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA, GLES20.GL_ONE, GLES20.GL_ONE);
 		
+		if (foregroup.beginRenderToTexture(true))
+			currently_active_screen.onDrawObject(foregroup_enums);
+		
 		if (scene.beginRenderToTexture(true))
 			currently_active_screen.onDrawObject(interaction_group_enums);
 		
 		if (backgroup.beginRenderToTexture(true))
 			currently_active_screen.onDrawObject(backgroup_enums);
 		
-		if (foregroup.beginRenderToTexture(true))
-			currently_active_screen.onDrawObject(foregroup_enums);
 		foregroup.endRenderToTexture(true);
 		
-		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA); // no see thru
-		
 		// draw everything
-		GLES20.glBlendFunc(GLES20.GL_ONE, GLES20.GL_ZERO);
 		shadow_generator.shadow_radius = (float) currently_active_screen.player_stats[2];
 		shadow_generator.shadow_x_pos = (float) currently_active_screen.player_stats[0];
 		shadow_generator.shadow_y_pos = (float) currently_active_screen.player_stats[1];
 		shadow_generator.onDrawAmbient(my_local_ip_matrix, true);
 		
 		// debugging
-		/*backgroup.onDrawAmbient(my_local_ip_matrix, true); 
-		scene.onDrawAmbient(my_local_ip_matrix, true);
-		foregroup.onDrawAmbient(my_local_ip_matrix, true);
-	*/
+		//GLES20.glBlendFuncSeparate(GLES20.GL_ONE, GLES20.GL_ONE_MINUS_SRC_ALPHA, GLES20.GL_ONE, GLES20.GL_ONE);
+		//backgroup.onDrawAmbient(my_local_ip_matrix, true); 
+		//scene.onDrawAmbient(my_local_ip_matrix, true);
+		//foregroup.onDrawAmbient(my_local_ip_matrix, true);
 		 
 		// text below this line
-		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA); // no see thru
 		currently_active_screen.onDrawConstant();
 	}
 	
