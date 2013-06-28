@@ -31,15 +31,22 @@ public class Constants
 	public static double dip_scale;
 	
 	// width n height
-	public static int width;
+	public static int width; // relative to the game
 	public static int height;
 	
+	public static int device_width; // relative to the device
+	public static int device_height;
+	public static double device_ratio;
+	public static double one_over_device_based_shader_height; // this is 1/vratio
+	public static boolean horizontal_ratio = false;
+	
 	public static double shader_width; // technically double the ratio
-	public static final double shader_height = 2.0; // always regardless of phone
+	public static double shader_height; // double the vratio
 	
 	// this is (width / height)
 	public static double ratio;
-	public static final double my_ratio = 1.777777777;
+	public static double vratio;
+	public static final double my_ratio = 1.777777777; // some things (infinite jig) require a set ratio
 	
 	// this is where the camera is translated to
 	public static double x_shader_translation;
@@ -52,30 +59,31 @@ public class Constants
 	public static final double min_zoom = -.35;
 	public static final double max_zoom = .35;
 	public static final double arbitrary_z = .180;
-	// level zoom settings
-	
-	// and for when a level loads
-	public static final double z_modifier = 0.0000001;
-	
-	// other pretty constants
+
+	// other pretty constants for the shadow under the fox
 	public static final double shadow_radius = 50.0;
 	public static final double shadow_height = 450;
 	public static double shadow_height_shader;
 	
 	// score position constants
-	public static final double default_mini_time_pos_x = 100;
-	public static final double default_mini_time_pos_y = 100;
-	public static final double default_width_padding = 75;
-	public static final double default_height_padding = 75;
+	public static final double mini_time_pos_x_default = 100;
+	public static final double mini_time_pos_y_default = 100;
+	public static final double width_padding_default = 75;
+	public static final double height_padding_default = 75;
+	
+	// shader coordinates
 	public static double mini_time_pos_x;
 	public static double mini_time_pos_y;
+	public static double width_padding;
+	public static double height_padding;
+	
+	// additional shader coordinates
 	public static double one_fourth_height;
 	public static double two_fourth_height;
 	public static double three_fourth_height;
 	public static double one_third_width;
 	public static double two_third_width;
-	public static double width_padding;
-	public static double height_padding;
+	public static double three_fourth_width;
 	
 	// physics constants
 	public static final double gravity_default = 0.00100;
@@ -90,6 +98,7 @@ public class Constants
 	public static final double player_movement_threshold_horizontal_default = .01;
 	public static final double player_movement_threshold_vertical_default = .01;
 	
+	// floating platform help
 	public static final double floating_move_lr_speed_default = .02;
 	public static final double floating_lr_distance_default = 2.0;
 	

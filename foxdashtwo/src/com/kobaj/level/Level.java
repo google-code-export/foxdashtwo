@@ -458,10 +458,10 @@ public class Level
 				reference.reverseLeftRight((player.quad_object.x_vel_shader > 0));
 			}
 			
-			if (reference.best_fit_aabb.main_rect.top + Constants.shader_height / 2.0 < this.bottom_shader_limit
-					|| //
-					reference.best_fit_aabb.main_rect.bottom - Constants.shader_height / 2.0 > this.top_shader_limit
-					|| reference.best_fit_aabb.main_rect.left - Constants.ratio > this.right_shader_limit || reference.best_fit_aabb.main_rect.right + Constants.ratio < this.left_shader_limit)
+			if (reference.best_fit_aabb.main_rect.top + Constants.shader_height / 2.0 < this.bottom_shader_limit //
+					|| reference.best_fit_aabb.main_rect.bottom - Constants.shader_height / 2.0 > this.top_shader_limit //
+					|| reference.best_fit_aabb.main_rect.left - Constants.ratio > this.right_shader_limit //
+					|| reference.best_fit_aabb.main_rect.right + Constants.ratio < this.left_shader_limit) //
 				kill = true;
 			
 			reference.onUpdate(delta);
@@ -589,7 +589,7 @@ public class Level
 	}
 	
 	public void objectInteraction(final RectF collision, final LevelObject player, final LevelObject reference, double delta)
-	{	
+	{
 		// up down collision
 		if (collision.width() == 0)
 		{

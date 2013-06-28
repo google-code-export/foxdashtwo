@@ -18,7 +18,10 @@ import com.kobaj.opengldrawable.Quad.Quad;
 public class BaseInteractionPhysics
 {
 	// camera zoom
-	private final AverageMaker my_camera_average = new AverageMaker(20);
+	private final int average_count = 20;
+	private final AverageMaker my_camera_average = new AverageMaker(average_count);
+	private final AverageMaker my_camera_shift = new AverageMaker(average_count);
+	
 	private final RectF collision = new RectF();
 	
 	public double player_shadow_scale;
@@ -197,6 +200,13 @@ public class BaseInteractionPhysics
 		double right_level_limit = test_level.right_shader_limit - x_buffer;
 		double top_level_limit = test_level.top_shader_limit - Constants.z_shader_translation;
 		double bottom_level_limit = test_level.bottom_shader_limit + Constants.z_shader_translation;
+		
+		//shifts so the user can see more
+		double x_camera_shift = Functions.linearInterpolate(0, Constants.max_x_velocity, Math.abs(test_level.player.quad_object.x_vel_shader), 0, Constants.three_fourth_width);
+		if(test_level.player.quad_object.x_vel_shader < 0)
+			x_camera_shift = -x_camera_shift;
+		
+		x_camera += my_camera_shift.calculateAverage(x_camera_shift);
 		
 		// DO NOT ALTER
 		if (x_camera < left_level_limit)

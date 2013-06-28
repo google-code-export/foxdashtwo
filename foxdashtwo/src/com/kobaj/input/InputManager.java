@@ -3,9 +3,11 @@ package com.kobaj.input;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 
+import com.kobaj.math.Functions;
+
 public class InputManager
 {
-	public final int fingerCount = 4;
+	public final int finger_count = 4;
 	
 	private float[] x;
 	private float[] y;
@@ -24,17 +26,17 @@ public class InputManager
 	
 	public InputManager()
 	{
-		x = new float[fingerCount];
-		y = new float[fingerCount];
+		x = new float[finger_count];
+		y = new float[finger_count];
 		
-		x_old = new float[fingerCount];
-		y_old = new float[fingerCount];
+		x_old = new float[finger_count];
+		y_old = new float[finger_count];
 		
-		x_delta = new float[fingerCount];
-		y_delta = new float[fingerCount];
+		x_delta = new float[finger_count];
+		y_delta = new float[finger_count];
 		
-		old_pressed = new boolean[fingerCount];
-		pressed = new boolean[fingerCount];
+		old_pressed = new boolean[finger_count];
+		pressed = new boolean[finger_count];
 		
 		// this needs some work
 		dpads = new boolean[EnumKeyCodes.values().length];
@@ -131,61 +133,56 @@ public class InputManager
 	
 	public void eventUpdate(MotionEvent event)
 	{
-		int action = event.getAction();
+		// rewritten to be more standard and efficient
+		int action = event.getActionMasked();
 		
-		int ptrId = event.getPointerId(0);
-		if (event.getPointerCount() > 1)
-			ptrId = (action & MotionEvent.ACTION_POINTER_INDEX_MASK) >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
-		
-		action = action & MotionEvent.ACTION_MASK;
-		if (action < 7 && action > 4)
-			action = action - 5;
-		
-		if (action == MotionEvent.ACTION_DOWN)
+		if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN //
+				|| action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_POINTER_UP //
+				|| action == MotionEvent.ACTION_CANCEL) //
 		{
-			for (int i = 0; i < event.getPointerCount(); i++)
-			{
-				int id = event.getPointerId(i);
-				
-				x[id] = event.getX(i);
-				y[id] = event.getY(i);
-			}
 			
-			old_pressed[ptrId] = false;
-			pressed[ptrId] = true;
-		}
-		if (action == MotionEvent.ACTION_MOVE)
-		{
-			for (int i = 0; i < event.getPointerCount(); i++)
+			int pointer_index = event.getActionIndex();
+			int id = event.getPointerId(pointer_index);
+			
+			if (id >= 0 && id < finger_count)
 			{
-				int id = event.getPointerId(i);
 				
-				x_old[id] = x[id];
-				y_old[id] = y[id];
+				x[id] = Functions.deviceXtoGameX(event.getX(pointer_index));
+				y[id] = Functions.deviceYtoGameY(event.getY(pointer_index));
 				
-				x[id] = event.getX(i);
-				y[id] = event.getY(i);
-				
-				x_delta[id] = x[id] - x_old[id];
-				y_delta[id] = y[id] - y_old[id];
+				if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN)
+				{
+					old_pressed[id] = false;
+					pressed[id] = true;
+				}
+				else
+				// action up
+				{
+					old_pressed[id] = true;
+					pressed[id] = false;
+				}
 			}
 		}
-		if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL)
+		
+		// only mildly redundant.
+		else if (action == MotionEvent.ACTION_MOVE)
 		{
-			old_pressed[ptrId] = true;
-			pressed[ptrId] = false;
-			
 			for (int i = 0; i < event.getPointerCount(); i++)
 			{
 				int id = event.getPointerId(i);
 				
-				x[id] = event.getX(i);
-				y[id] = event.getY(i);
+				if (id >= 0 && id < finger_count)
+				{
+					x_old[id] = x[id];
+					y_old[id] = y[id];
+					
+					x[id] = Functions.deviceXtoGameX(event.getX(i));
+					y[id] = Functions.deviceYtoGameY(event.getY(i));
+					
+					x_delta[id] = x[id] - x_old[id];
+					y_delta[id] = y[id] - y_old[id];
+				}
 			}
-			
-			if (event.getPointerCount() == 1)
-				for (int i = 0; i < fingerCount; i++)
-					pressed[i] = false;
 		}
 	}
 	

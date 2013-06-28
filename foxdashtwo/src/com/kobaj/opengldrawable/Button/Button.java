@@ -68,7 +68,7 @@ public abstract class Button
 		ny += invisible_outline.y_pos_shader;
 		
 		// check
-		for (int i = 0; i < Constants.input_manager.fingerCount; i++)
+		for (int i = 0; i < Constants.input_manager.finger_count; i++)
 			if (Constants.input_manager.getTouched(i))
 				if (Functions.inRectF(invisible_outline.unrotated_aabb.main_rect, nx, ny))
 					return true;
