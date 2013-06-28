@@ -114,7 +114,7 @@ public class Functions
 	
 	public static final double screenYToShaderY(double input_y)
 	{
-		return linearInterpolateUnclamped(0, Constants.height, input_y, -Constants.vratio, Constants.vratio);
+		return linearInterpolateUnclamped(0, Constants.height, input_y, -1, 1);
 	}
 	
 	// used to translate shader coordinates to screen coordinates
@@ -202,9 +202,9 @@ public class Functions
 		final double neg_zoom = Constants.ratio * Constants.z_shader_translation;
 		
 		shader_rectf_view_no_translation.left = (float) (-Constants.ratio - neg_zoom);
-		shader_rectf_view_no_translation.top = (float) (Constants.vratio + Constants.z_shader_translation);
+		shader_rectf_view_no_translation.top = (float) (1 + Constants.z_shader_translation);
 		shader_rectf_view_no_translation.right = (float) (Constants.ratio + neg_zoom);
-		shader_rectf_view_no_translation.bottom = (float) (-Constants.vratio - Constants.z_shader_translation);
+		shader_rectf_view_no_translation.bottom = (float) (-1 - Constants.z_shader_translation);
 		
 		shader_rectf_view.left = (float) (shader_rectf_view_no_translation.left + Constants.x_shader_translation);
 		shader_rectf_view.top = (float) (shader_rectf_view_no_translation.top + Constants.y_shader_translation);
@@ -388,33 +388,67 @@ public class Functions
 	
 	// convert from device coordinates to game coordinates
 	// this is in screen coordinates (0-800)
-	public static final float deviceXtoGameX(float x)
+	public static final double deviceXToScreenX(double x)
 	{
 		if(Constants.horizontal_ratio)
 		{
-			return (float) Functions.linearInterpolateUnclamped(0, Constants.device_width, x, 0, Constants.width);
+			return x;
 		}
 		else
 		{
 			double window_width = Constants.device_height * Constants.ratio;
-			double half_space = (Constants.device_width - window_width);
-			return (float) Functions.linearInterpolateUnclamped(0, Constants.device_width, x, -half_space, Constants.width + half_space);
+            double half_space = (Constants.device_width - window_width);
+            return Functions.linearInterpolateUnclamped(0, Constants.device_width, x, -half_space, Constants.width + half_space);
 		}
-	}
+	}	
 	
-	public static final float deviceYtoGameY(float y)
+	public static final double deviceYToScreenY(double y)
 	{
 		if(Constants.horizontal_ratio)
 		{
-			double window_height = Constants.device_height * Constants.one_over_device_based_shader_height;
-			double half_space = (Constants.device_height - window_height);
-			return (float) Functions.linearInterpolateUnclamped(0, Constants.device_height, y, -half_space, Constants.height + half_space);
+			double difference = (Constants.device_height - Constants.height) / 2.0;
+			return y - difference;
 		}
 		else
 		{
-			return (float) Functions.linearInterpolateUnclamped(0, Constants.device_height, y, 0, Constants.height);
+			return Functions.linearInterpolateUnclamped(0, Constants.device_height, y, 0, Constants.height);
 		}
 	}
+	
+	/*public static final double deviceXToScreenX(double x)
+	{
+		if(Constants.horizontal_ratio)
+		{
+			return Functions.linearInterpolateUnclamped(0, Constants.device_width, x, 0, Constants.width);
+		}
+		else
+		{
+			//this is exceedingly inefficient, but it works (theoretically)
+			
+			double shader_coords = Functions.linearInterpolate(0, Constants.device_width, x, -Constants.device_ratio, Constants.device_ratio);
+			return Functions.shaderXToScreenX(shader_coords);
+		}
+	}
+	
+	public static final double deviceYToScreenY(double y)
+	{
+		if(true)
+			return y;
+		
+		if(Constants.horizontal_ratio)
+		{
+			double window_height = Constants.device_height * (1.0 / Constants.device_vratio);
+            double half_space = (Constants.device_height - window_height);
+            double new_y = Functions.linearInterpolateUnclamped(0, Constants.device_height, y, -half_space, Constants.height + half_space);
+
+			double shader_coords = Functions.linearInterpolate(0, Constants.height, new_y, -Constants.device_vratio, Constants.device_vratio);
+			return Functions.shaderYToScreenY(shader_coords);
+		}
+		else
+		{
+			return Functions.linearInterpolateUnclamped(0, Constants.device_height, y, 0, Constants.height);
+		}
+	}*/
 	
 	// when needing to blur something
 	public static final Bitmap fastBlur(Bitmap sentBitmap, int radius)

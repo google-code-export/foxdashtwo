@@ -147,8 +147,8 @@ public class InputManager
 			if (id >= 0 && id < finger_count)
 			{
 				
-				x[id] = Functions.deviceXtoGameX(event.getX(pointer_index));
-				y[id] = Functions.deviceYtoGameY(event.getY(pointer_index));
+				x[id] = (float) Functions.deviceXToScreenX(event.getX(pointer_index));
+				y[id] = (float) Functions.deviceYToScreenY(event.getY(pointer_index));
 				
 				if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN)
 				{
@@ -176,8 +176,8 @@ public class InputManager
 					x_old[id] = x[id];
 					y_old[id] = y[id];
 					
-					x[id] = Functions.deviceXtoGameX(event.getX(i));
-					y[id] = Functions.deviceYtoGameY(event.getY(i));
+					x[id] = (float) Functions.deviceXToScreenX(event.getX(i));
+					y[id] = (float) Functions.deviceYToScreenY(event.getY(i));
 					
 					x_delta[id] = x[id] - x_old[id];
 					y_delta[id] = y[id] - y_old[id];
