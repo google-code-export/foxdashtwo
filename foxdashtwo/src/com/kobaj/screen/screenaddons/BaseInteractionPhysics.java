@@ -24,7 +24,6 @@ public class BaseInteractionPhysics
 	
 	private final RectF collision = new RectF();
 	
-	public double player_shadow_scale;
 	public double player_shadow_y;
 	public final RectF player_extended = new RectF();
 	
@@ -75,8 +74,6 @@ public class BaseInteractionPhysics
 			}
 		}
 		
-		player_shadow_scale = shadow_collision_y;
-		
 		return can_jump;
 	}
 	
@@ -123,15 +120,8 @@ public class BaseInteractionPhysics
 						if(collision.bottom == player_extended.top)
 							collision.bottom = second.top;
 						
-						// collision, find the shadow
-						double player_y = collision_y = collision.bottom;
-						double screen_y = Constants.y_shader_translation;
-						
-						double shift_y = Functions.shaderYToScreenY(player_y - screen_y);
-						this.player_shadow_y = shift_y;
-						
 						// new calculation
-						this.player_shadow_y = collision.bottom;
+						this.player_shadow_y = collision_y = collision.bottom;
 					}
 				}
 			}

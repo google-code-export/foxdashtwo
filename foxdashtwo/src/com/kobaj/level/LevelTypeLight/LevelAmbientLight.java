@@ -4,12 +4,14 @@ import org.simpleframework.xml.Element;
 
 import android.graphics.Color;
 
+import com.kobaj.foxdashtwo.R;
 import com.kobaj.level.LevelEntityActive;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.EnumDrawFrom;
 import com.kobaj.opengldrawable.Quad.Quad;
 import com.kobaj.opengldrawable.Quad.QuadColorShape;
+import com.kobaj.opengldrawable.Quad.QuadCompressed;
 
 public class LevelAmbientLight extends LevelEntityActive
 {
@@ -26,8 +28,9 @@ public class LevelAmbientLight extends LevelEntityActive
 	
 	public void onInitialize()
 	{
-		quad_light = new QuadColorShape(0, com.kobaj.math.Constants.height, com.kobaj.math.Constants.width, 0, color, 0);
+		quad_light = new QuadCompressed(R.raw.white, R.raw.white, Constants.width, Constants.height);
 		quad_light.setXYPos(0, 0, EnumDrawFrom.center);
+		quad_light.color = color;
 		
 		if (!active)
 			quad_light.color = Color.BLACK;
@@ -55,9 +58,9 @@ public class LevelAmbientLight extends LevelEntityActive
 	
 		if (active) // turn on
 		{
-			if (quad_light.color != Color.WHITE)
+			if (quad_light.color != color)
 			{
-				quad_light.color = Functions.linearInterpolateColor(0, Constants.light_active_fade, fade_delta, Color.WHITE, Color.BLACK);
+				quad_light.color = Functions.linearInterpolateColor(0, Constants.light_active_fade, fade_delta, color, Color.BLACK);
 			}
 		}
 		else
@@ -65,7 +68,7 @@ public class LevelAmbientLight extends LevelEntityActive
 		{
 			if (quad_light.color != Color.BLACK)
 			{
-				quad_light.color = Functions.linearInterpolateColor(0, Constants.light_active_fade, fade_delta, Color.BLACK, Color.WHITE);
+				quad_light.color = Functions.linearInterpolateColor(0, Constants.light_active_fade, fade_delta, Color.BLACK, color);
 			}
 			
 		}

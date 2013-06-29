@@ -11,7 +11,6 @@ import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.EnumDrawFrom;
 import com.kobaj.opengldrawable.Quad.QuadRenderTo;
-import com.kobaj.opengldrawable.Quad.QuadShadow;
 import com.kobaj.screen.BaseScreen;
 import com.kobaj.screen.BlankScreen;
 import com.kobaj.screen.EnumScreenState;
@@ -28,14 +27,13 @@ public class MyGame extends MyGLRender
 	private float[] my_local_projection = new float[16];
 	private float[] my_local_ip_matrix = new float[16];
 	
+	private float[] used_matrix;
+	
 	// dont touch the variables below this line
 	// final drawable.
 	private QuadRenderTo scene;
 	private QuadRenderTo lights;
 	private QuadRenderTo backgroup;
-	private QuadRenderTo foregroup;
-	
-	private QuadShadow shadow_generator;
 	
 	private final EnumLayerTypes[] backgroup_enums = { EnumLayerTypes.Background, EnumLayerTypes.Background_Aux, EnumLayerTypes.Post_interaction };
 	private final EnumLayerTypes[] interaction_group_enums = { EnumLayerTypes.Interaction };
@@ -96,20 +94,6 @@ public class MyGame extends MyGLRender
 		scene = QuadRendersHandler(scene);
 		lights = QuadRendersHandler(lights);
 		backgroup = QuadRendersHandler(backgroup);
-		foregroup = QuadRendersHandler(foregroup);
-		
-		if (shadow_generator != null)
-		{
-			shadow_generator.onUnInitialize();
-			shadow_generator = null;
-		}
-		
-		shadow_generator = new QuadShadow();
-		shadow_generator.onInitialize();
-		shadow_generator.my_texture_data_handle = scene.my_texture_data_handle;
-		shadow_generator.my_light_data_handle = lights.my_texture_data_handle;
-		shadow_generator.my_backgroup_data_handle = backgroup.my_texture_data_handle;
-		shadow_generator.my_foregroup_data_handle = foregroup.my_texture_data_handle;
 		
 		System.gc();
 	}
@@ -119,7 +103,6 @@ public class MyGame extends MyGLRender
 		scene.setFBODivider(UserSettings.fbo_divider);
 		lights.setFBODivider(UserSettings.fbo_divider);
 		backgroup.setFBODivider(UserSettings.fbo_divider);
-		foregroup.setFBODivider(UserSettings.fbo_divider);
 	}
 	
 	private QuadRenderTo QuadRendersHandler(QuadRenderTo scene)
@@ -221,29 +204,19 @@ public class MyGame extends MyGLRender
 		
 		// draw everything 
 		
-		/*
-		shadow_generator.shadow_radius = (float) currently_active_screen.player_stats[2];
-		shadow_generator.shadow_x_pos = (float) currently_active_screen.player_stats[0];
-		shadow_generator.shadow_y_pos = (float) currently_active_screen.player_stats[1];
 		if (Constants.horizontal_ratio)
-			shadow_generator.onDrawAmbient(my_local_ip_matrix, true);
+			used_matrix = my_local_ip_matrix;
 		else
-			shadow_generator.onDrawAmbient(Constants.my_ip_matrix, true);
-		*/
+			used_matrix = Constants.my_ip_matrix;
 		
-		if (Constants.horizontal_ratio)
-		{
-			backgroup.onDrawAmbient(my_local_ip_matrix, true);
-			scene.onDrawAmbient(my_local_ip_matrix, true);
-		}
-		else
-		{
-			backgroup.onDrawAmbient(Constants.my_ip_matrix, true);
-			scene.onDrawAmbient(Constants.my_ip_matrix, true);
-		}
+		backgroup.onDrawAmbient(used_matrix, true);
+		scene.onDrawAmbient(used_matrix, true);
 		
+		GLES20.glBlendFuncSeparate(GLES20.GL_DST_COLOR, GLES20.GL_ZERO, GLES20.GL_DST_ALPHA, GLES20.GL_ZERO);
+		lights.onDrawAmbient(used_matrix, true);
 		
 		// text below this line
+		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
 		currently_active_screen.onDrawConstant();
 	}
 	

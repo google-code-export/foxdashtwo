@@ -150,6 +150,7 @@ public class Level
 		{
 			// store bloom lights in another array for easy use later
 			light_list.get(i).onInitialize();
+			// TODO optimize this to only have one if
 			if (LevelPointLight.class.isAssignableFrom(light_list.get(i).getClass()))
 			{
 				LevelPointLight temp = LevelPointLight.class.cast(light_list.get(i));

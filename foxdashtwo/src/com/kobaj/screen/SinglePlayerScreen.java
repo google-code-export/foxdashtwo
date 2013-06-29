@@ -327,23 +327,9 @@ public class SinglePlayerScreen extends BaseScreen implements FinishedScoring
 	
 	private void getPlayerPosition()
 	{
-		// radius
-		double radius = Constants.ratio * Constants.shadow_radius;
-		radius = radius - Constants.z_shader_translation * 100.0;
-		this.player_stats[2] = radius;
-		
-		// first do x
-		double player_x = the_level.player.quad_object.x_pos_shader;
-		double screen_x = Constants.x_shader_translation;
-		double shift_x = Functions.shaderXToScreenX((player_x - screen_x)); // will be zero if in the middle of the screen.
-		
-		this.player_stats[0] = Functions.linearInterpolateUnclamped(0, Constants.width, shift_x, 0, Constants.device_width);
-		this.player_stats[1] = Functions.linearInterpolateUnclamped(0, Constants.height, interaction_addon.player_shadow_y, 0, Constants.device_height);
-		
 		// finally recalculate radius to account for distance between fox and ground
-		double distance = Functions.distanceSquared(0, interaction_addon.player_extended.top, 0, interaction_addon.player_shadow_scale);
+		double distance = Functions.distanceSquared(0, interaction_addon.player_extended.top, 0, interaction_addon.player_shadow_y);
 		double multiplier = Functions.linearInterpolate(0, Constants.shadow_height_shader, distance, 1, 0) + .01;
-		this.player_stats[2] *= multiplier;
 		
 		// new calculation using drawn shadow
 		the_level.player_shadow.setXYPos(the_level.player.quad_object.x_pos_shader, interaction_addon.player_shadow_y, EnumDrawFrom.center);

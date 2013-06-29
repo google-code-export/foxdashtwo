@@ -22,9 +22,6 @@ public abstract class BaseScreen implements Runnable
 	
 	private EnumScreenState previous_state = EnumScreenState.not_started;
 	
-	// if a screen has a player
-	public double[] player_stats = new double[3]; // x, y, radius;
-	
 	public final void onInitialize()
 	{
 		previous_state = current_state;
