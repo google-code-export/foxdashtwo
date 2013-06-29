@@ -71,7 +71,7 @@ public class BaseInteractionPhysics
 					the_level.objectInteraction(collision, the_level.player, reference, delta);
 				
 				// do the fox's shadow
-				shadow_collision_y = calc_foxes_shadow(reference, shadow_collision_y);
+				shadow_collision_y = calc_foxes_shadow(reference, shadow_collision_y, the_level.player.quad_object.y_pos_shader);
 			}
 		}
 		
@@ -80,7 +80,7 @@ public class BaseInteractionPhysics
 		return can_jump;
 	}
 	
-	private final double calc_foxes_shadow(LevelObject reference, double collision_y)
+	private final double calc_foxes_shadow(LevelObject reference, double collision_y, double maximum_height)
 	{
 		collision.left = 0;
 		collision.top = 0;
@@ -99,32 +99,41 @@ public class BaseInteractionPhysics
 		{
 			RectF second = reference.quad_object.phys_rect_list.get(e).main_rect;
 			
-			if (player_extended.left > second.right || player_extended.right < second.left || player_extended.top < second.bottom || player_extended.bottom > second.top)
+			if (player_extended.left > second.right || player_extended.right < second.left //
+					|| player_extended.top < second.bottom || player_extended.bottom > second.top) //
 			{
 				// no possible collision
 			}
 			else
 			{
+				// possible collision
 				Functions.setEqualIntersects(collision, player_extended, second);
 				
-				// force this to be an up-down collision
-				if (collision.height() != 0)
-				{
-					collision.left = (float) -Constants.shadow_height;
-					collision.right = (float) Constants.shadow_height;
-				}
-				
 				if (Physics.cleanCollision(collision))
-					if (collision.height() != 0)
-						if (collision.bottom > collision_y)
-						{
-							// collision, find the shadow
-							double player_y = collision_y = collision.bottom;
-							double screen_y = Constants.y_shader_translation;
-							
-							double shift_y = Functions.shaderYToScreenY(player_y - screen_y);
-							this.player_shadow_y = shift_y;
-						}
+				{
+					
+					// force this to be an up-down collision
+					if (collision.width() != 0 ||
+							second.top > maximum_height)
+					{
+						continue;
+					}
+					else if (collision.bottom > collision_y)
+					{
+						if(collision.bottom == player_extended.top)
+							collision.bottom = second.top;
+						
+						// collision, find the shadow
+						double player_y = collision_y = collision.bottom;
+						double screen_y = Constants.y_shader_translation;
+						
+						double shift_y = Functions.shaderYToScreenY(player_y - screen_y);
+						this.player_shadow_y = shift_y;
+						
+						// new calculation
+						this.player_shadow_y = collision.bottom;
+					}
+				}
 			}
 		}
 		
@@ -202,8 +211,10 @@ public class BaseInteractionPhysics
 		double bottom_level_limit = test_level.bottom_shader_limit + Constants.z_shader_translation;
 		
 		//shifts so the user can see more
-		double x_camera_shift = Functions.linearInterpolate(0, Constants.max_x_velocity, Math.abs(test_level.player.quad_object.x_vel_shader), 0, Constants.three_fourth_width);
-		if(test_level.player.quad_object.x_vel_shader < 0)
+		double x_camera_shift = Functions.linearInterpolate(0, Constants.max_x_velocity, Math.abs(test_level.player.quad_object.x_vel_shader), -Constants.backward_camera_shift_width,
+				Constants.forward_camera_shift_width);
+		x_camera_shift = Math.max(x_camera_shift, 0);
+		if (test_level.player.quad_object.x_vel_shader < 0)
 			x_camera_shift = -x_camera_shift;
 		
 		x_camera += my_camera_shift.calculateAverage(x_camera_shift);

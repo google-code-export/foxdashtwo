@@ -289,7 +289,7 @@ public class Quad
 		this.shader_height = Functions.screenHeightToShaderHeight(height);
 		
 		float pos_tr_x = (float) (this.shader_width / 2.0);
-		float pos_tr_y = (float) (this.shader_height / 2.0f);
+		float pos_tr_y = (float) (this.shader_height / 2.0);
 		
 		float neg_tr_x = -pos_tr_x;
 		float neg_tr_y = -pos_tr_y;

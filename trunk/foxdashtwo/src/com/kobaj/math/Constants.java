@@ -61,6 +61,7 @@ public class Constants
 	public static final double min_zoom = -.35; // running zoom amount
 	public static final double max_zoom = .35;
 	public static final double arbitrary_z = .180;
+	public static final double zoom_value = 0.5;
 
 	// other pretty constants for the shadow under the fox
 	public static final double shadow_radius = 50.0;
@@ -80,12 +81,17 @@ public class Constants
 	public static double height_padding;
 	
 	// additional shader coordinates
-	public static double one_fourth_height;
-	public static double two_fourth_height;
-	public static double three_fourth_height;
-	public static double one_third_width;
-	public static double two_third_width;
-	public static double three_fourth_width;
+	public static double one_fourth_height_pos;
+	public static double two_fourth_height_pos;
+	public static double three_fourth_height_pos;
+	public static double one_third_width_pos;
+	public static double two_third_width_pos;
+	
+	// has to do with moving the camera
+	public static final double forward_camera_shift_width_default = 540;
+	public static final double backward_camera_shift_width_default = 540;
+	public static double forward_camera_shift_width;
+	public static double backward_camera_shift_width;
 	
 	// physics constants
 	public static final double gravity_default = 0.00100;
@@ -200,7 +206,7 @@ public class Constants
 	public static double y_50;
 	public static double y_125;
 	public static double y_200;
-	public static double sixteen;
+	public static double sixteen_width;
 	
 	// errors
 	public static int exception_timeout = 300; // ms

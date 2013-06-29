@@ -103,6 +103,7 @@ public class Level
 	
 	@Element
 	public LevelObject player;
+	public QuadCompressed player_shadow;
 	
 	private boolean player_on_ground = false;
 	
@@ -249,6 +250,8 @@ public class Level
 		player.quad_object.setScale(.75);
 		player.ignore_coord_map = true;
 		object_list.add(player);
+		
+		player_shadow = new QuadCompressed(R.raw.shadow_square, R.raw.shadow_square_alpha, 179, 90);
 		
 		// sort the objects
 		Collections.sort(object_list, new ObjectDrawSort());
@@ -549,6 +552,12 @@ public class Level
 		// is ok, is array
 		for (EnumLayerTypes type : types)
 		{
+			if(type == EnumLayerTypes.Shadow)
+			{
+				player_shadow.onDrawAmbient();
+				continue;
+			}
+			
 			// backdrop (looped in with background)
 			if (type == EnumLayerTypes.Background)
 				if (my_backdrop != null)

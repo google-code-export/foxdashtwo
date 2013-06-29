@@ -10,4 +10,6 @@ public enum EnumLayerTypes
 	Post_interaction,
 	Background_Aux,  // parallax
 	Background, // parallax
+	
+	Shadow
 }
