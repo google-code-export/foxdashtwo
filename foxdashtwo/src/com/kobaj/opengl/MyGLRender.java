@@ -93,8 +93,24 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		// set our window
 		GLES20.glViewport(0, 0, width, height);
 		
-		Constants.width = 1500; // width;
-		Constants.height = 1500; // height;
+		// good
+		//Constants.width = 2000; // width;
+		//Constants.height = 2000; // height;
+		
+		// good
+		//Constants.width = 300; // width;
+		//Constants.height = 300; // height;
+			
+		// good
+		//Constants.width = 1000; // width;
+		//Constants.height = 500; // height;		
+		
+		// good
+		//Constants.width = 2560; // width;
+		//Constants.height = 1000; // height;
+		
+		Constants.width = 1280; // width;
+		Constants.height = 720; // height;		
 		
 		float ratio = (float) (Constants.width) / (float) (Constants.height);
 		Constants.ratio = ratio;
@@ -106,29 +122,9 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 	
 		Constants.device_ratio = (float) (width) / (float) (height);	
 		
-		/*
-		float local_ratio = (float) (width) / (float) (height);
-		
-		float added_height = 0;
-		
-		// calculate how we want to zoom in on things
-		if (local_ratio <= ratio)
-		{
-			added_height = ratio - local_ratio;
-			local_ratio = ratio;
-			Constants.horizontal_ratio = true;
-		}
-		
-		float local_vratio = 1f + added_height;
-		Constants.device_vratio = local_vratio;
-		
-		Constants.local_ratio = local_ratio;
-		Constants.local_vratio = local_vratio;
-		*/
-		
 		double one_over_ratio = 1.0 / ratio;
 		double zoom_z = .999999999999f;
-		if (Constants.device_ratio <= ratio)
+		if (Constants.device_ratio < ratio)
 		{
 			// 29.3333 degrees and 60.66666 degrees respectively
 			zoom_z = (one_over_ratio / Math.sin(0.511963247)) * Math.sin(1.05883308);	
@@ -139,18 +135,6 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		Matrix.frustumM(Constants.my_proj_matrix, 0, (float) - Constants.device_ratio, (float) Constants.device_ratio, // width (x)
 				-1f, 1f, // height (y)
 				(float)zoom_z, 2f); // zoom (z)
-		
-		//Matrix.frustumM(Constants.my_proj_matrix, 0, -local_ratio, local_ratio, // width (x)
-		//		-local_vratio, local_vratio, // height (y)
-		//		.9999999999f, 2); // zoom (z)
-		
-		
-		// Matrix.orthoM(Constants.my_proj_matrix, 0, -ratio, ratio, -1, 1, .99999999f, 2);
-		/*Matrix.setLookAtM(Constants.my_view_matrix, 0, // this is the identity...
-				0f, 0f, 0f, // eye position/look at
-				0f, 0f, -5.0f, // center/camera position
-				0f, 1.0f, 0.0f); // up vector
-		*/
 		
 		// multiply
 		Matrix.multiplyMM(Constants.my_ip_matrix, 0, Constants.my_proj_matrix, 0, Constants.identity_matrix, 0);

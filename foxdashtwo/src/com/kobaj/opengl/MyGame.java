@@ -25,15 +25,15 @@ public class MyGame extends MyGLRender
 	
 	private BaseScreen pre_next_screen;
 	
+	private float[] my_local_projection = new float[16];
+	private float[] my_local_ip_matrix = new float[16];
+	
 	// dont touch the variables below this line
 	// final drawable.
 	private QuadRenderTo scene;
 	private QuadRenderTo lights;
 	private QuadRenderTo backgroup;
 	private QuadRenderTo foregroup;
-	
-	private float[] my_local_projection = new float[16];
-	private float[] my_local_ip_matrix = new float[16];
 	
 	private QuadShadow shadow_generator;
 	
@@ -87,9 +87,9 @@ public class MyGame extends MyGLRender
 		currently_active_screen.onInitialize();
 		
 		// dont touch below this line.
-
-		// change the camera
-		Matrix.orthoM(my_local_projection, 0, (float) -Constants.ratio, (float) Constants.ratio, -1, 1, .9999999999f, 2);
+		
+		// change camera
+		Matrix.orthoM(my_local_projection, 0, (float) -Constants.device_ratio, (float) Constants.device_ratio, -1, 1, .9999999999f, 2);
 		Matrix.multiplyMM(my_local_ip_matrix, 0, my_local_projection, 0, Constants.identity_matrix, 0);
 		
 		scene = QuadRendersHandler(scene);
@@ -104,6 +104,7 @@ public class MyGame extends MyGLRender
 		}
 		
 		shadow_generator = new QuadShadow();
+		shadow_generator.onInitialize();
 		shadow_generator.my_texture_data_handle = scene.my_texture_data_handle;
 		shadow_generator.my_light_data_handle = lights.my_texture_data_handle;
 		shadow_generator.my_backgroup_data_handle = backgroup.my_texture_data_handle;
@@ -198,17 +199,17 @@ public class MyGame extends MyGLRender
 		if (lights.beginRenderToTexture(true))
 			currently_active_screen.onDrawLight();
 		
-		// regular objects	
+		// regular objects
 		GLES20.glBlendFuncSeparate(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA, GLES20.GL_ONE, GLES20.GL_ONE);
-	
+		
 		if (backgroup.beginRenderToTexture(true))
-		currently_active_screen.onDrawObject(backgroup_enums);
+			currently_active_screen.onDrawObject(backgroup_enums);
 		
 		if (scene.beginRenderToTexture(true))
 			currently_active_screen.onDrawObject(interaction_group_enums);
-	
+		
 		if (foregroup.beginRenderToTexture(true))
-			currently_active_screen.onDrawObject(foregroup_enums);		
+			currently_active_screen.onDrawObject(foregroup_enums);
 		
 		foregroup.endRenderToTexture(true);
 		
@@ -216,14 +217,17 @@ public class MyGame extends MyGLRender
 		shadow_generator.shadow_radius = (float) currently_active_screen.player_stats[2];
 		shadow_generator.shadow_x_pos = (float) currently_active_screen.player_stats[0];
 		shadow_generator.shadow_y_pos = (float) currently_active_screen.player_stats[1];
-		shadow_generator.onDrawAmbient(Constants.my_ip_matrix, true);
+		if(Constants.horizontal_ratio)
+			shadow_generator.onDrawAmbient(my_local_ip_matrix, true);
+		else
+			shadow_generator.onDrawAmbient(Constants.my_ip_matrix, true);
 		
 		// debugging
-		//GLES20.glBlendFuncSeparate(GLES20.GL_ONE, GLES20.GL_ONE_MINUS_SRC_ALPHA, GLES20.GL_ONE, GLES20.GL_ONE);
-		//backgroup.onDrawAmbient(Constants.my_ip_matrix, true); 
-		//scene.onDrawAmbient(Constants.my_ip_matrix, true);
-		//foregroup.onDrawAmbient(Constants.my_ip_matrix, true);
-		 
+		// GLES20.glBlendFuncSeparate(GLES20.GL_ONE, GLES20.GL_ONE_MINUS_SRC_ALPHA, GLES20.GL_ONE, GLES20.GL_ONE);
+		// backgroup.onDrawAmbient(Constants.my_ip_matrix, true);
+		// scene.onDrawAmbient(Constants.my_ip_matrix, true);
+		// foregroup.onDrawAmbient(Constants.my_ip_matrix, true);
+		
 		// text below this line
 		currently_active_screen.onDrawConstant();
 	}

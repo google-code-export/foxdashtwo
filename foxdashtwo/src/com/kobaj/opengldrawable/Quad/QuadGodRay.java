@@ -7,20 +7,46 @@ import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 
 public class QuadGodRay extends Quad
-{	
+{
+	protected int local_fbo_divider = 1;
+	
 	// screen coordinates
 	public QuadGodRay()
 	{
 		this.width = Constants.device_width;
 		this.height = Constants.device_height;
+
+		computeSquares();
+	}
+	
+	public void setFBODivider(int fbo_divider)
+	{
+		if (fbo_divider < 0)
+			fbo_divider = 1;
+		local_fbo_divider = Functions.nearestPowerOf2(fbo_divider);
 		
-		square_width = com.kobaj.math.Functions.nearestPowerOf2(this.width);
-		square_height = com.kobaj.math.Functions.nearestPowerOf2(this.height);
-		
-		onCreate(1, this.width, this.height);
-		
+		computeSquares();
+	}
+	
+	protected void calcCorrectedTexCoords()
+	{
+		// dividing this by scale_factor gets the same result...
 		complexUpdateTexCoords(0, (float) com.kobaj.math.Functions.linearInterpolateUnclamped(0, square_width, this.width, 0, 1),
 				1.0f - (float) com.kobaj.math.Functions.linearInterpolateUnclamped(0, square_height, this.height, 0, 1), 1);
+	}
+	
+	protected void computeSquares()
+	{
+		// must precompute the square (Even though its computed in the oncreate).
+		square_width = Functions.nearestPowerOf2(this.width) / local_fbo_divider;
+		square_height = Functions.nearestPowerOf2(this.height) / local_fbo_divider;
+	}
+	
+	public void onInitialize()
+	{
+		onCreate(1, this.width, this.height);
+		
+		calcCorrectedTexCoords();
 	}
 	
 	@Override
