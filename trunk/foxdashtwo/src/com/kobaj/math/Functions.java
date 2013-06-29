@@ -8,7 +8,6 @@ import android.util.Log;
 
 import com.kobaj.account_settings.UserSettings;
 import com.kobaj.math.android.RectF;
-import com.kobaj.screen.SinglePlayerScreen;
 
 public class Functions
 {
@@ -323,7 +322,7 @@ public class Functions
 			z_camera = max_z_value;
 		
 		// weird hack
-		if(Constants.ratio == 1.0 && z_camera > .49 && z_camera < .51)
+		if (Constants.ratio == 1.0 && z_camera > .49 && z_camera < .51)
 		{
 			z_camera = .515; // not sure why, but you have to do this.
 		}
@@ -397,21 +396,21 @@ public class Functions
 	// this is in screen coordinates (0-800)
 	public static final double deviceXToScreenX(double x)
 	{
-		if(Constants.horizontal_ratio)
+		if (Constants.horizontal_ratio)
 		{
-			return x;
+			return Functions.linearInterpolateUnclamped(0, Constants.device_width, x, 0, Constants.width);
 		}
 		else
 		{
 			double window_width = Constants.device_height * Constants.ratio;
-            double half_space = (Constants.device_width - window_width) * ((double)Constants.width / (double)Constants.device_width);
-            return Functions.linearInterpolate(0, Constants.device_width, x, -half_space, Constants.width + half_space) ;
+			double half_space = (Constants.device_width - window_width) * ((double) Constants.width / (double) Constants.device_width);
+			return Functions.linearInterpolate(0, Constants.device_width, x, -half_space, Constants.width + half_space);
 		}
-	}	
+	}
 	
 	public static final double deviceYToScreenY(double y)
 	{
-		if(Constants.horizontal_ratio)
+		if (Constants.horizontal_ratio)
 		{
 			double difference = (Constants.device_height - Constants.height) / 2.0;
 			return y - difference;
@@ -422,40 +421,20 @@ public class Functions
 		}
 	}
 	
-	/*public static final double deviceXToScreenX(double x)
-	{
-		if(Constants.horizontal_ratio)
-		{
-			return Functions.linearInterpolateUnclamped(0, Constants.device_width, x, 0, Constants.width);
-		}
-		else
-		{
-			//this is exceedingly inefficient, but it works (theoretically)
-			
-			double shader_coords = Functions.linearInterpolate(0, Constants.device_width, x, -Constants.device_ratio, Constants.device_ratio);
-			return Functions.shaderXToScreenX(shader_coords);
-		}
-	}
-	
-	public static final double deviceYToScreenY(double y)
-	{
-		if(true)
-			return y;
-		
-		if(Constants.horizontal_ratio)
-		{
-			double window_height = Constants.device_height * (1.0 / Constants.device_vratio);
-            double half_space = (Constants.device_height - window_height);
-            double new_y = Functions.linearInterpolateUnclamped(0, Constants.device_height, y, -half_space, Constants.height + half_space);
-
-			double shader_coords = Functions.linearInterpolate(0, Constants.height, new_y, -Constants.device_vratio, Constants.device_vratio);
-			return Functions.shaderYToScreenY(shader_coords);
-		}
-		else
-		{
-			return Functions.linearInterpolateUnclamped(0, Constants.device_height, y, 0, Constants.height);
-		}
-	}*/
+	/*
+	 * public static final double deviceXToScreenX(double x) { if(Constants.horizontal_ratio) { return Functions.linearInterpolateUnclamped(0, Constants.device_width, x, 0, Constants.width); } else {
+	 * //this is exceedingly inefficient, but it works (theoretically)
+	 * 
+	 * double shader_coords = Functions.linearInterpolate(0, Constants.device_width, x, -Constants.device_ratio, Constants.device_ratio); return Functions.shaderXToScreenX(shader_coords); } }
+	 * 
+	 * public static final double deviceYToScreenY(double y) { if(true) return y;
+	 * 
+	 * if(Constants.horizontal_ratio) { double window_height = Constants.device_height * (1.0 / Constants.device_vratio); double half_space = (Constants.device_height - window_height); double new_y =
+	 * Functions.linearInterpolateUnclamped(0, Constants.device_height, y, -half_space, Constants.height + half_space);
+	 * 
+	 * double shader_coords = Functions.linearInterpolate(0, Constants.height, new_y, -Constants.device_vratio, Constants.device_vratio); return Functions.shaderYToScreenY(shader_coords); } else {
+	 * return Functions.linearInterpolateUnclamped(0, Constants.device_height, y, 0, Constants.height); } }
+	 */
 	
 	// when needing to blur something
 	public static final Bitmap fastBlur(Bitmap sentBitmap, int radius)
