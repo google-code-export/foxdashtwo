@@ -93,8 +93,8 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		// set our window
 		GLES20.glViewport(0, 0, width, height);
 		
-		Constants.width = 1280; // width;
-		Constants.height = 1280; // height;
+		Constants.width = 1500; // width;
+		Constants.height = 1500; // height;
 		
 		float ratio = (float) (Constants.width) / (float) (Constants.height);
 		Constants.ratio = ratio;
@@ -138,7 +138,7 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		// we use a frustrum because the game utilizes 'zoom' effects via the camera
 		Matrix.frustumM(Constants.my_proj_matrix, 0, (float) - Constants.device_ratio, (float) Constants.device_ratio, // width (x)
 				-1f, 1f, // height (y)
-				(float)zoom_z, 2); // zoom (z)
+				(float)zoom_z, 2f); // zoom (z)
 		
 		//Matrix.frustumM(Constants.my_proj_matrix, 0, -local_ratio, local_ratio, // width (x)
 		//		-local_vratio, local_vratio, // height (y)
@@ -146,16 +146,18 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		
 		
 		// Matrix.orthoM(Constants.my_proj_matrix, 0, -ratio, ratio, -1, 1, .99999999f, 2);
-		Matrix.setLookAtM(Constants.my_view_matrix, 0, // this is the identity...
+		/*Matrix.setLookAtM(Constants.my_view_matrix, 0, // this is the identity...
 				0f, 0f, 0f, // eye position/look at
 				0f, 0f, -5.0f, // center/camera position
 				0f, 1.0f, 0.0f); // up vector
+		*/
 		
 		// multiply
 		Matrix.multiplyMM(Constants.my_ip_matrix, 0, Constants.my_proj_matrix, 0, Constants.identity_matrix, 0);
 		
 		Constants.x_shader_translation = 0;
 		Constants.y_shader_translation = 0;
+		Constants.z_shader_translation = 0;
 		
 		// finish setup
 		Constants.text = new Text();
@@ -249,6 +251,7 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 	
 	protected abstract void onDraw();
 	
+	// this activates the screen shots and slow motion. 
 	public static boolean slowmo = false;
 	
 	public int screenshot_number = 0;

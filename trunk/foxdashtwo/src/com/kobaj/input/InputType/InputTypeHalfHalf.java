@@ -56,10 +56,13 @@ public class InputTypeHalfHalf extends InputTypeBase
 	@Override
 	public boolean getTouchedLeft()
 	{
-		if (Constants.input_manager.getTouched(0) && Constants.input_manager.getX(0) < Constants.width / 2.0)
+		int primary_finger = Constants.input_manager.getGlobalIndex(0);
+		int secondary_finger = Constants.input_manager.getGlobalIndex(1);
+			
+		if (Constants.input_manager.getTouched(primary_finger) && Constants.input_manager.getX(primary_finger) < Constants.width / 2.0)
 			return true;
 		
-		if (Constants.input_manager.getTouched(1) && Constants.input_manager.getX(1) < Constants.width / 2.0)
+		if (Constants.input_manager.getTouched(secondary_finger) && Constants.input_manager.getX(secondary_finger) < Constants.width / 2.0)
 			if(!getTouchedRight())
 				return true;
 		
@@ -69,10 +72,13 @@ public class InputTypeHalfHalf extends InputTypeBase
 	@Override
 	public boolean getTouchedRight()
 	{
-		if (Constants.input_manager.getTouched(0) && Constants.input_manager.getX(0) > Constants.width / 2.0)
+		int primary_finger = Constants.input_manager.getGlobalIndex(0);
+		int secondary_finger = Constants.input_manager.getGlobalIndex(1);
+		
+		if (Constants.input_manager.getTouched(primary_finger) && Constants.input_manager.getX(primary_finger) > Constants.width / 2.0)
 			return true;
 	
-		if (Constants.input_manager.getTouched(1) && Constants.input_manager.getX(1) > Constants.width / 2.0)
+		if (Constants.input_manager.getTouched(secondary_finger) && Constants.input_manager.getX(secondary_finger) > Constants.width / 2.0)
 			if(!getTouchedLeft())
 				return true;
 		

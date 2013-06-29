@@ -87,7 +87,7 @@ public class MyGame extends MyGLRender
 		currently_active_screen.onInitialize();
 		
 		// dont touch below this line.
-		
+
 		// change the camera
 		Matrix.orthoM(my_local_projection, 0, (float) -Constants.ratio, (float) Constants.ratio, -1, 1, .9999999999f, 2);
 		Matrix.multiplyMM(my_local_ip_matrix, 0, my_local_projection, 0, Constants.identity_matrix, 0);
@@ -200,15 +200,15 @@ public class MyGame extends MyGLRender
 		
 		// regular objects	
 		GLES20.glBlendFuncSeparate(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA, GLES20.GL_ONE, GLES20.GL_ONE);
-		
-		if (foregroup.beginRenderToTexture(true))
-			currently_active_screen.onDrawObject(foregroup_enums);
+	
+		if (backgroup.beginRenderToTexture(true))
+		currently_active_screen.onDrawObject(backgroup_enums);
 		
 		if (scene.beginRenderToTexture(true))
 			currently_active_screen.onDrawObject(interaction_group_enums);
-		
-		if (backgroup.beginRenderToTexture(true))
-			currently_active_screen.onDrawObject(backgroup_enums);
+	
+		if (foregroup.beginRenderToTexture(true))
+			currently_active_screen.onDrawObject(foregroup_enums);		
 		
 		foregroup.endRenderToTexture(true);
 		
@@ -216,13 +216,13 @@ public class MyGame extends MyGLRender
 		shadow_generator.shadow_radius = (float) currently_active_screen.player_stats[2];
 		shadow_generator.shadow_x_pos = (float) currently_active_screen.player_stats[0];
 		shadow_generator.shadow_y_pos = (float) currently_active_screen.player_stats[1];
-		shadow_generator.onDrawAmbient(my_local_ip_matrix, true);
+		shadow_generator.onDrawAmbient(Constants.my_ip_matrix, true);
 		
 		// debugging
 		//GLES20.glBlendFuncSeparate(GLES20.GL_ONE, GLES20.GL_ONE_MINUS_SRC_ALPHA, GLES20.GL_ONE, GLES20.GL_ONE);
-		//backgroup.onDrawAmbient(my_local_ip_matrix, true); 
-		//scene.onDrawAmbient(my_local_ip_matrix, true);
-		//foregroup.onDrawAmbient(my_local_ip_matrix, true);
+		//backgroup.onDrawAmbient(Constants.my_ip_matrix, true); 
+		//scene.onDrawAmbient(Constants.my_ip_matrix, true);
+		//foregroup.onDrawAmbient(Constants.my_ip_matrix, true);
 		 
 		// text below this line
 		currently_active_screen.onDrawConstant();

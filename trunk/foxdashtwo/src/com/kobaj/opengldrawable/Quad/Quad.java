@@ -67,7 +67,7 @@ public class Quad
 	public int square_height;
 	
 	// data about the quad
-	private float[] my_position_matrix = new float[18];
+	protected float[] my_position_matrix = new float[18];
 	protected FloatBuffer my_position;
 	protected FloatBuffer my_tex_coord;
 	
@@ -449,7 +449,7 @@ public class Quad
 			phys_rect_list.get(i).setPositionWithOffset(x_pos, y_pos);
 	}
 	
-	private void update_position_matrix(boolean also_update_scale_or_rotation)
+	protected void update_position_matrix(boolean also_update_scale_or_rotation)
 	{
 		// set the quad up
 		if (also_update_scale_or_rotation)

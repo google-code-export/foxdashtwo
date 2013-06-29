@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.kobaj.account_settings.UserSettings;
 import com.kobaj.math.android.RectF;
+import com.kobaj.screen.SinglePlayerScreen;
 
 public class Functions
 {
@@ -321,6 +322,12 @@ public class Functions
 		if (z_camera > max_z_value)
 			z_camera = max_z_value;
 		
+		// weird hack
+		if(Constants.ratio == 1.0 && z_camera > .49 && z_camera < .51)
+		{
+			z_camera = .515; // not sure why, but you have to do this.
+		}
+		
 		if (x_camera == Constants.x_shader_translation && y_camera == Constants.y_shader_translation && z_camera == Constants.z_shader_translation)
 		{
 			return;
@@ -397,8 +404,8 @@ public class Functions
 		else
 		{
 			double window_width = Constants.device_height * Constants.ratio;
-            double half_space = (Constants.device_width - window_width);
-            return Functions.linearInterpolateUnclamped(0, Constants.device_width, x, -half_space, Constants.width + half_space);
+            double half_space = (Constants.device_width - window_width) * ((double)Constants.width / (double)Constants.device_width);
+            return Functions.linearInterpolate(0, Constants.device_width, x, -half_space, Constants.width + half_space) ;
 		}
 	}	
 	

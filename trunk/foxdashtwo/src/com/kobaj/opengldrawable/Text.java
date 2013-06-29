@@ -30,6 +30,11 @@ public class Text
 	
 	private int count = 0;
 	
+	// turn off to have numbers be dynamically shifted. 
+	// turn on to have all letters spaced evenly
+	private boolean fixed_width = true;
+	private double fixed_width_value = 0; // dont touch, auto calculated later
+	
 	public Text()
 	{	
 		double size = Constants.text_size;
@@ -73,6 +78,15 @@ public class Text
 			generateString(s, size, key);
 			
 			count++;
+		}
+		
+		//for fixed sizes calculate width
+		if(fixed_width)
+		{
+			for(int i = 0; i < 10; i++)
+			{
+				fixed_width_value = Math.max(fixed_width_value, bitmap_buffer.get(i).shader_width);
+			}
 		}
 		
 		// bump up the size
@@ -216,14 +230,27 @@ public class Text
 		int value = (int) number;
 		double decimal = number - value;
 		
-		int fixed_decimals = (int)(decimal * Math.pow(10, number_of_decimals));
-		
 		drawNumber(value, x, y, EnumDrawFrom.bottom_right, color);
 		if(value < Math.pow(10, number_of_predecimals))
 		{
 			Quad temp = bitmap_buffer.get(R.string.full_stop);
 			drawText(R.string.full_stop, x - temp.shader_width, y, EnumDrawFrom.bottom_right, color);
-			drawNumber(fixed_decimals, x - temp.shader_width, y, EnumDrawFrom.bottom_left, color);
+			
+			double moved_decimal = decimal;
+			double total_width = 0;
+			
+			// draw zeros and then draw final number
+			for (int i = 0; i < number_of_decimals; i++)
+			{
+				moved_decimal *= 10.0;
+				int decimal_digit = (int) (moved_decimal % 10.0);
+				drawNumber(decimal_digit, (x - temp.shader_width) + total_width, y, EnumDrawFrom.bottom_left, color);
+				
+				if(fixed_width)
+					total_width += fixed_width_value;
+				else
+					total_width += bitmap_buffer.get(decimal_digit).shader_width;
+			}
 		}
 	}
 	
@@ -263,7 +290,10 @@ public class Text
 				if(zero)
 					key = 0;
 				
-				total_width += bitmap_buffer.get(key).shader_width;
+				if(fixed_width)
+					total_width += fixed_width_value;
+				else
+					total_width += bitmap_buffer.get(key).shader_width;
 				
 				number = number / 10;
 			}
@@ -286,7 +316,11 @@ public class Text
 			Quad temp = bitmap_buffer.get(key);
 			
 			// translate
-			current_width += temp.shader_width;
+			if(fixed_width)
+				current_width += fixed_width_value;
+			else
+				current_width += temp.shader_width;
+			
 			temp.setXYPos(x - current_width, y, where);
 			
 			// draw

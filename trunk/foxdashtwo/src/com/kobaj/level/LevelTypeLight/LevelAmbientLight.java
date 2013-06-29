@@ -7,6 +7,7 @@ import android.graphics.Color;
 import com.kobaj.level.LevelEntityActive;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
+import com.kobaj.opengldrawable.EnumDrawFrom;
 import com.kobaj.opengldrawable.Quad.Quad;
 import com.kobaj.opengldrawable.Quad.QuadColorShape;
 
@@ -26,6 +27,7 @@ public class LevelAmbientLight extends LevelEntityActive
 	public void onInitialize()
 	{
 		quad_light = new QuadColorShape(0, com.kobaj.math.Constants.height, com.kobaj.math.Constants.width, 0, color, 0);
+		quad_light.setXYPos(0, 0, EnumDrawFrom.center);
 		
 		if (!active)
 			quad_light.color = Color.BLACK;
