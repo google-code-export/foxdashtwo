@@ -72,8 +72,8 @@ public class TextButton extends Button
 		if (draw_background)
 		{
 			middle_outline.setXYPos(x, y, draw_from);
-			left_outline.setXYPos(x - shader_half_width - Constants.sixteen, y, draw_from);
-			right_outline.setXYPos(x + shader_half_width + Constants.sixteen, y, draw_from);
+			left_outline.setXYPos(x - shader_half_width - Constants.sixteen_width, y, draw_from);
+			right_outline.setXYPos(x + shader_half_width + Constants.sixteen_width, y, draw_from);
 		}
 	}
 	

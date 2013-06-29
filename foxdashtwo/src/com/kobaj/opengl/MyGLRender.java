@@ -106,11 +106,11 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		//Constants.height = 500; // height;		
 		
 		// good
-		//Constants.width = 2560; // width;
-		//Constants.height = 1000; // height;
+		Constants.width = 2560; // width;
+		Constants.height = 1000; // height;
 		
-		Constants.width = 1280; // width;
-		Constants.height = 720; // height;		
+		//Constants.width = 1280; // width;
+		//Constants.height = 720; // height;		
 		
 		float ratio = (float) (Constants.width) / (float) (Constants.height);
 		Constants.ratio = ratio;

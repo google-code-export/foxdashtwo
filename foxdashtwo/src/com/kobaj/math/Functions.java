@@ -6,7 +6,6 @@ import android.opengl.GLES20;
 import android.opengl.Matrix;
 import android.util.Log;
 
-import com.kobaj.account_settings.UserSettings;
 import com.kobaj.math.android.RectF;
 
 public class Functions
@@ -311,7 +310,7 @@ public class Functions
 	
 	public static final void setCamera(double x_camera, double y_camera, double z_camera)
 	{
-		double user_set_buffer = Functions.clamp(Constants.user_zoom_max, UserSettings.zoom_value, Constants.user_zoom_min);
+		double user_set_buffer = Functions.clamp(Constants.user_zoom_max, Constants.zoom_value, Constants.user_zoom_min);
 		z_camera += user_set_buffer;
 		double min_z_value = 0 + user_set_buffer;
 		double max_z_value = Constants.arbitrary_z + user_set_buffer;
@@ -412,29 +411,15 @@ public class Functions
 	{
 		if (Constants.horizontal_ratio)
 		{
-			double difference = (Constants.device_height - Constants.height) / 2.0;
-			return y - difference;
+			double window_height = Constants.device_width * (1.0 / Constants.ratio);
+			double half_space = (Constants.device_height - window_height) * ((double) Constants.height / (double) Constants.device_height);
+			return Functions.linearInterpolate(0, Constants.device_height, y, -half_space, Constants.height + half_space);
 		}
 		else
 		{
 			return Functions.linearInterpolateUnclamped(0, Constants.device_height, y, 0, Constants.height);
 		}
 	}
-	
-	/*
-	 * public static final double deviceXToScreenX(double x) { if(Constants.horizontal_ratio) { return Functions.linearInterpolateUnclamped(0, Constants.device_width, x, 0, Constants.width); } else {
-	 * //this is exceedingly inefficient, but it works (theoretically)
-	 * 
-	 * double shader_coords = Functions.linearInterpolate(0, Constants.device_width, x, -Constants.device_ratio, Constants.device_ratio); return Functions.shaderXToScreenX(shader_coords); } }
-	 * 
-	 * public static final double deviceYToScreenY(double y) { if(true) return y;
-	 * 
-	 * if(Constants.horizontal_ratio) { double window_height = Constants.device_height * (1.0 / Constants.device_vratio); double half_space = (Constants.device_height - window_height); double new_y =
-	 * Functions.linearInterpolateUnclamped(0, Constants.device_height, y, -half_space, Constants.height + half_space);
-	 * 
-	 * double shader_coords = Functions.linearInterpolate(0, Constants.height, new_y, -Constants.device_vratio, Constants.device_vratio); return Functions.shaderYToScreenY(shader_coords); } else {
-	 * return Functions.linearInterpolateUnclamped(0, Constants.device_height, y, 0, Constants.height); } }
-	 */
 	
 	// when needing to blur something
 	public static final Bitmap fastBlur(Bitmap sentBitmap, int radius)
@@ -730,13 +715,12 @@ public class Functions
 		Constants.mini_time_pos_x = Functions.screenXToShaderX(Constants.width - Constants.mini_time_pos_x_default);
 		Constants.mini_time_pos_y = Functions.screenYToShaderY(Constants.height - Constants.mini_time_pos_y_default);
 		
-		Constants.one_fourth_height = Functions.screenYToShaderY(Constants.height / 4.0);
-		Constants.two_fourth_height = Functions.screenYToShaderY(2.0 * Constants.height / 4.0);
-		Constants.three_fourth_height = Functions.screenYToShaderY(3.0 * Constants.height / 4.0);
+		Constants.one_fourth_height_pos = Functions.screenYToShaderY(Constants.height / 4.0);
+		Constants.two_fourth_height_pos = Functions.screenYToShaderY(2.0 * Constants.height / 4.0);
+		Constants.three_fourth_height_pos = Functions.screenYToShaderY(3.0 * Constants.height / 4.0);
 		
-		Constants.one_third_width = Functions.screenXToShaderX(Constants.width / 3.0);
-		Constants.two_third_width = Functions.screenXToShaderX(2.0 * Constants.width / 3.0);
-		Constants.three_fourth_width = Functions.screenXToShaderX(3.0 * Constants.width / 4.0);
+		Constants.one_third_width_pos = Functions.screenXToShaderX(Constants.width / 3.0);
+		Constants.two_third_width_pos = Functions.screenXToShaderX(2.0 * Constants.width / 3.0);
 		
 		Constants.width_padding = Functions.screenWidthToShaderWidth(Constants.width_padding_default);
 		Constants.height_padding = Functions.screenHeightToShaderHeight(Constants.height_padding_default);
@@ -747,6 +731,10 @@ public class Functions
 		Constants.y_50 = Functions.screenYToShaderY((int) Functions.fix_y(50));
 		Constants.y_125 = Functions.screenYToShaderY((int) Functions.fix_y(125));
 		Constants.y_200 = Functions.screenYToShaderY((int) Functions.fix_y(200));
-		Constants.sixteen = Functions.screenWidthToShaderWidth(16);
+		
+		Constants.sixteen_width = Functions.screenWidthToShaderWidth(16);
+		Constants.forward_camera_shift_width = Functions.screenWidthToShaderWidth(Constants.forward_camera_shift_width_default);
+		Constants.backward_camera_shift_width = Functions.screenWidthToShaderWidth(Constants.backward_camera_shift_width_default);
+		
 	}
 }

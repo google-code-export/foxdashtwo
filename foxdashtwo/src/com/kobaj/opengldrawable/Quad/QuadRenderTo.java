@@ -110,4 +110,10 @@ public class QuadRenderTo extends QuadGodRay
 			GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 		}
 	}
+	
+	@Override
+	public void onDrawAmbient(float[] my_vp_matrix, boolean skip_draw_check)
+	{
+		QuadRenderShell.onDrawQuad(my_vp_matrix, skip_draw_check, Constants.ambient_light, this);
+	}
 }

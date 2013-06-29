@@ -67,7 +67,7 @@ public class QuadGodRay extends Quad
 		this.shader_height = Functions.linearInterpolateUnclamped(0, Constants.device_height, height, 0, Constants.shader_height);
 		
 		float pos_tr_x = (float) (this.shader_width / 2.0);
-		float pos_tr_y = (float) (this.shader_height / 2.0f);
+		float pos_tr_y = (float) (this.shader_height / 2.0);
 		
 		float neg_tr_x = -pos_tr_x;
 		float neg_tr_y = -pos_tr_y;

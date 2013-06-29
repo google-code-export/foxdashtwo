@@ -4,7 +4,6 @@ import org.simpleframework.xml.Element;
 
 import com.kobaj.foxdashtwo.GameActivity;
 import com.kobaj.input.InputType.EnumInputType;
-import com.kobaj.math.Constants;
 
 public class UserSettings
 {
@@ -22,8 +21,6 @@ public class UserSettings
 	
 	@Element
 	public static boolean auto_login = false;
-	
-	public static double zoom_value = 0.5;
 	
 	@Element
 	public static boolean send_statistics = true;
@@ -44,16 +41,6 @@ public class UserSettings
 	
 	@Element
 	public static boolean fbo_warned = false;
-	
-	public static void zoom(double value)
-	{
-		if (value > Constants.user_zoom_max)
-			value = Constants.user_zoom_max;
-		else if (value < Constants.user_zoom_min)
-			value = Constants.user_zoom_min;
-		
-		zoom_value = value;
-	}
 	
 	public static void fbo(int value)
 	{

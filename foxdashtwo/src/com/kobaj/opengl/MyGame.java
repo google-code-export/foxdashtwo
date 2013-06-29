@@ -40,6 +40,7 @@ public class MyGame extends MyGLRender
 	private final EnumLayerTypes[] backgroup_enums = { EnumLayerTypes.Background, EnumLayerTypes.Background_Aux, EnumLayerTypes.Post_interaction };
 	private final EnumLayerTypes[] interaction_group_enums = { EnumLayerTypes.Interaction };
 	private final EnumLayerTypes[] foregroup_enums = { EnumLayerTypes.Pre_interaction, EnumLayerTypes.Foreground_Aux, EnumLayerTypes.Foreground, EnumLayerTypes.Top };
+	private final EnumLayerTypes[] shadow_enums = { EnumLayerTypes.Shadow };
 	
 	private int left_corner_count = 0;
 	
@@ -206,27 +207,41 @@ public class MyGame extends MyGLRender
 			currently_active_screen.onDrawObject(backgroup_enums);
 		
 		if (scene.beginRenderToTexture(true))
+		{
 			currently_active_screen.onDrawObject(interaction_group_enums);
-		
-		if (foregroup.beginRenderToTexture(true))
+			
+			GLES20.glBlendFuncSeparate(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA, GLES20.GL_ZERO, GLES20.GL_ONE);
+			currently_active_screen.onDrawObject(shadow_enums);
+			
+			GLES20.glBlendFuncSeparate(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA, GLES20.GL_ONE, GLES20.GL_ONE);
 			currently_active_screen.onDrawObject(foregroup_enums);
+		}
 		
-		foregroup.endRenderToTexture(true);
+		scene.endRenderToTexture(true);
 		
-		// draw everything
+		// draw everything 
+		
+		/*
 		shadow_generator.shadow_radius = (float) currently_active_screen.player_stats[2];
 		shadow_generator.shadow_x_pos = (float) currently_active_screen.player_stats[0];
 		shadow_generator.shadow_y_pos = (float) currently_active_screen.player_stats[1];
-		if(Constants.horizontal_ratio)
+		if (Constants.horizontal_ratio)
 			shadow_generator.onDrawAmbient(my_local_ip_matrix, true);
 		else
 			shadow_generator.onDrawAmbient(Constants.my_ip_matrix, true);
+		*/
 		
-		// debugging
-		// GLES20.glBlendFuncSeparate(GLES20.GL_ONE, GLES20.GL_ONE_MINUS_SRC_ALPHA, GLES20.GL_ONE, GLES20.GL_ONE);
-		// backgroup.onDrawAmbient(Constants.my_ip_matrix, true);
-		// scene.onDrawAmbient(Constants.my_ip_matrix, true);
-		// foregroup.onDrawAmbient(Constants.my_ip_matrix, true);
+		if (Constants.horizontal_ratio)
+		{
+			backgroup.onDrawAmbient(my_local_ip_matrix, true);
+			scene.onDrawAmbient(my_local_ip_matrix, true);
+		}
+		else
+		{
+			backgroup.onDrawAmbient(Constants.my_ip_matrix, true);
+			scene.onDrawAmbient(Constants.my_ip_matrix, true);
+		}
+		
 		
 		// text below this line
 		currently_active_screen.onDrawConstant();

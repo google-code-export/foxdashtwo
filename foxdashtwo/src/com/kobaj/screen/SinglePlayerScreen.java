@@ -162,8 +162,8 @@ public class SinglePlayerScreen extends BaseScreen implements FinishedScoring
 		network_loader = new RotationLoadingJig();
 		network_loader.onInitialize();
 		network_loader.radius = Constants.spinning_jig_radius;
-		network_loader.x_pos = Constants.two_third_width - Constants.width_padding;
-		network_loader.y_pos = Constants.two_fourth_height - Constants.height_padding;
+		network_loader.x_pos = Constants.two_third_width_pos - Constants.width_padding;
+		network_loader.y_pos = Constants.two_fourth_height_pos - Constants.height_padding;
 		
 		// buttons
 		title_screen_button = new TextButton(R.string.title_screen, true);
@@ -171,7 +171,7 @@ public class SinglePlayerScreen extends BaseScreen implements FinishedScoring
 		
 		title_screen_button.onInitialize();
 		replay_button.onInitialize();
-		BaseFloatingFrame.alignButtonsAlongXAxis(Constants.one_fourth_height, title_screen_button, replay_button);
+		BaseFloatingFrame.alignButtonsAlongXAxis(Constants.one_fourth_height_pos, title_screen_button, replay_button);
 		
 		GLBitmapReader.isLoaded();
 		
@@ -337,13 +337,17 @@ public class SinglePlayerScreen extends BaseScreen implements FinishedScoring
 		double screen_x = Constants.x_shader_translation;
 		double shift_x = Functions.shaderXToScreenX((player_x - screen_x)); // will be zero if in the middle of the screen.
 		
-		this.player_stats[0] = shift_x;
-		this.player_stats[1] = interaction_addon.player_shadow_y;// +
+		this.player_stats[0] = Functions.linearInterpolateUnclamped(0, Constants.width, shift_x, 0, Constants.device_width);
+		this.player_stats[1] = Functions.linearInterpolateUnclamped(0, Constants.height, interaction_addon.player_shadow_y, 0, Constants.device_height);
 		
 		// finally recalculate radius to account for distance between fox and ground
 		double distance = Functions.distanceSquared(0, interaction_addon.player_extended.top, 0, interaction_addon.player_shadow_scale);
 		double multiplier = Functions.linearInterpolate(0, Constants.shadow_height_shader, distance, 1, 0) + .01;
 		this.player_stats[2] *= multiplier;
+		
+		// new calculation using drawn shadow
+		the_level.player_shadow.setXYPos(the_level.player.quad_object.x_pos_shader, interaction_addon.player_shadow_y, EnumDrawFrom.center);
+		the_level.player_shadow.setScale(multiplier);
 	}
 	
 	@Override
@@ -372,11 +376,12 @@ public class SinglePlayerScreen extends BaseScreen implements FinishedScoring
 			color_overlay.onDrawAmbient(Constants.my_ip_matrix, true);
 			
 			// draw the scores
-			Constants.text.drawText(R.string.time, 0, Constants.three_fourth_height, EnumDrawFrom.center);
+			Constants.text.drawText(R.string.time, 0, Constants.three_fourth_height_pos, EnumDrawFrom.center);
 			
-			Constants.text.drawText(R.string.your_time, Constants.one_third_width + Constants.width_padding, Constants.two_fourth_height + Constants.height_padding, EnumDrawFrom.bottom_right);
-			Constants.text.drawText(R.string.best_time, Constants.one_third_width + Constants.width_padding, Constants.two_fourth_height, EnumDrawFrom.bottom_right);
-			Constants.text.drawText(R.string.world_time, Constants.one_third_width + Constants.width_padding, Constants.two_fourth_height - Constants.height_padding, EnumDrawFrom.bottom_right);
+			Constants.text.drawText(R.string.your_time, Constants.one_third_width_pos + Constants.width_padding, Constants.two_fourth_height_pos + Constants.height_padding, EnumDrawFrom.bottom_right);
+			Constants.text.drawText(R.string.best_time, Constants.one_third_width_pos + Constants.width_padding, Constants.two_fourth_height_pos, EnumDrawFrom.bottom_right);
+			Constants.text
+					.drawText(R.string.world_time, Constants.one_third_width_pos + Constants.width_padding, Constants.two_fourth_height_pos - Constants.height_padding, EnumDrawFrom.bottom_right);
 			
 			// make it look nice
 			int game_color = Color.WHITE;
@@ -398,17 +403,18 @@ public class SinglePlayerScreen extends BaseScreen implements FinishedScoring
 			}
 			
 			// draw level score
-			Constants.text.drawDecimalNumber(this.game_time / 1000.0, 4, 3, Constants.two_third_width - Constants.width_padding, Constants.two_fourth_height + Constants.height_padding);
+			Constants.text.drawDecimalNumber(this.game_time / 1000.0, 4, 3, Constants.two_third_width_pos - Constants.width_padding, Constants.two_fourth_height_pos + Constants.height_padding);
 			
 			// draw our local score
-			Constants.text.drawDecimalNumber(this.prev_best, 4, 3, Constants.two_third_width - Constants.width_padding, Constants.two_fourth_height, game_color);
+			Constants.text.drawDecimalNumber(this.prev_best, 4, 3, Constants.two_third_width_pos - Constants.width_padding, Constants.two_fourth_height_pos, game_color);
 			
 			// draw our world score
 			if (Constants.network_activity > 0 || world_best < 0)
 				network_loader.onDrawLoading();
 			if (this.world_best > 0)
 			{
-				Constants.text.drawDecimalNumber(this.world_best, 4, 3, Constants.two_third_width - Constants.width_padding, Constants.two_fourth_height - Constants.height_padding, world_color);
+				Constants.text.drawDecimalNumber(this.world_best, 4, 3, Constants.two_third_width_pos - Constants.width_padding, Constants.two_fourth_height_pos - Constants.height_padding,
+						world_color);
 			}
 			
 			// draw our buttons

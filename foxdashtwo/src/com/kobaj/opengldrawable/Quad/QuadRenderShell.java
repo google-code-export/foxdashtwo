@@ -246,6 +246,7 @@ public final class QuadRenderShell
 		GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, my_position_matrix.length / 3); // 3 values per vertex
 	}
 	
+	// shadow interaction texture assignment
 	private static final void onSetupShadow(final float radius, final float x, final float y, final int my_light_data_handle, final ShadowLightShader shadow_light)
 	{
 		GLES20.glUniform1f(shadow_light.my_radius_handle, radius);
@@ -261,6 +262,7 @@ public final class QuadRenderShell
 		GLES20.glUniform1i(shadow_light.my_light_uniform_handle, 4);
 	}
 	
+	// shadow backgroup and forgroup texture assignment
 	private static final void onSetupShadowBF(final int my_backgroup_data_handle, final int my_foregroup_data_handle, final ShadowLightShader shadow_light)
 	{
 		if (old_backgroup_data_handle != my_backgroup_data_handle)
