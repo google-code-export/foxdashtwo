@@ -1,5 +1,7 @@
 package com.kobaj.input;
 
+import java.util.Arrays;
+
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 
@@ -9,20 +11,25 @@ public class InputManager
 {
 	public final int finger_count = 4;
 	
-	private float[] x;
-	private float[] y;
+	private final float[] x;
+	private final float[] y;
 	
-	private float[] x_old;
-	private float[] y_old;
+	private final float[] x_old;
+	private final float[] y_old;
 	
-	private float[] x_delta;
-	private float[] y_delta;
+	private final float[] x_delta;
+	private final float[] y_delta;
 	
-	private boolean[] old_pressed;
-	private boolean[] pressed;
+	private final boolean[] old_pressed;
+	private final boolean[] pressed;
 	
-	private boolean[] old_dpads;
-	private boolean[] dpads;
+	private final boolean[] old_dpads;
+	private final boolean[] dpads;
+	
+	private final long[] finger_age;
+	private final long[] finger_age_copy;
+	
+	public int current_finger_count = 0;
 	
 	public InputManager()
 	{
@@ -37,6 +44,9 @@ public class InputManager
 		
 		old_pressed = new boolean[finger_count];
 		pressed = new boolean[finger_count];
+		
+		finger_age = new long[finger_count];
+		finger_age_copy = new long[finger_count];
 		
 		// this needs some work
 		dpads = new boolean[EnumKeyCodes.values().length];
@@ -146,7 +156,6 @@ public class InputManager
 			
 			if (id >= 0 && id < finger_count)
 			{
-				
 				x[id] = (float) Functions.deviceXToScreenX(event.getX(pointer_index));
 				y[id] = (float) Functions.deviceYToScreenY(event.getY(pointer_index));
 				
@@ -154,12 +163,20 @@ public class InputManager
 				{
 					old_pressed[id] = false;
 					pressed[id] = true;
+					
+					this.finger_age[id] = System.currentTimeMillis();
+					
+					current_finger_count++;
 				}
 				else
 				// action up
 				{
 					old_pressed[id] = true;
 					pressed[id] = false;
+					
+					this.finger_age[id] = 0;
+					
+					current_finger_count--;
 				}
 			}
 		}
@@ -184,6 +201,43 @@ public class InputManager
 				}
 			}
 		}
+	}
+	
+	// this is a little interesting
+	// the way Android handles touch events can mean
+	// the "primary" (0) finger is not at index 0
+	// so to find which is the primary finger, you must
+	// look at the age of each finger, the oldest is the primary
+	// "secondary" (1), and other fingers, can be found as well.
+	public int getGlobalIndex(int local_index)
+	{
+		if (local_index >= 0 && local_index < finger_count)
+		{
+			for (int i = 0; i < finger_count; i++)
+				finger_age_copy[i] = finger_age[i];
+			
+			Arrays.sort(finger_age_copy);
+			
+			int local_count = 0;
+			
+			for (int i = 0; i < finger_count; i++)
+				if (finger_age_copy[i] > 0)
+				{
+					if (local_count == local_index)
+					{
+						for (int e = 0; e < finger_count; e++)
+							if (finger_age_copy[i] == finger_age[e])
+								return e;
+					}
+					else
+						local_count++;
+				}
+			
+			// failure!
+			return local_index;
+		}
+		else
+			return 0;
 	}
 	
 	public float getX(int index)

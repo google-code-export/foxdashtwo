@@ -38,6 +38,11 @@ public class BaseInputSettingsScreen extends BaseFloatingFrame
 		in_button.onInitialize();
 		out_button.onInitialize();
 		
+		if(UserSettings.active_input_type == EnumInputType.halfhalf)
+			switch_button.setLabelPointer(0);
+		else
+			switch_button.setLabelPointer(1);
+		
 		double shift_y = Functions.screenHeightToShaderHeight(32);
 		double move_y = Functions.screenHeightToShaderHeight(5); // same value is in baseplaytype
 		

@@ -58,7 +58,7 @@ public class Constants
 	// camera zoom settings
 	public static final double user_zoom_min = 0;
 	public static final double user_zoom_max = .5;
-	public static final double min_zoom = -.35;
+	public static final double min_zoom = -.35; // running zoom amount
 	public static final double max_zoom = .35;
 	public static final double arbitrary_z = .180;
 

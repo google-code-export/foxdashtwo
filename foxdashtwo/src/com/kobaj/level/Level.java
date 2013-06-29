@@ -127,6 +127,7 @@ public class Level
 		if (backdrop_color != Color.TRANSPARENT || backdrop_color != Color.BLACK)
 		{
 			my_backdrop = new QuadCompressed(R.raw.white, R.raw.white, Constants.width, Constants.height);
+			my_backdrop.setXYPos(0, 0, EnumDrawFrom.center);
 			my_backdrop.color = backdrop_color;
 		}
 		

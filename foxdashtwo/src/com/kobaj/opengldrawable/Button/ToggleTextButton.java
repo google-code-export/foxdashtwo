@@ -38,4 +38,13 @@ public class ToggleTextButton extends TextButton
 		
 		return pushed;
 	}
+
+	public void setLabelPointer(int i)
+	{
+		if(i >= 0 && i < labels.length)
+		{
+			label_pointer = i;
+			label = labels[label_pointer];
+		}
+	}
 }
