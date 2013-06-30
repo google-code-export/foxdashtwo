@@ -227,10 +227,19 @@ public class Text
 	
 	public void drawDecimalNumber(double number, int number_of_predecimals, int number_of_decimals, double x, double y, int color)
 	{
+		boolean negative = false;
+		if(number < 0)
+			negative = true;
+		
+		number = Math.abs(number);
 		int value = (int) number;
 		double decimal = number - value;
 		
-		drawNumber(value, x, y, EnumDrawFrom.bottom_right, color);
+		int pre_decimal = value;
+		if(negative)
+			pre_decimal = -value;
+		
+		drawIntNumber(pre_decimal, x, y, EnumDrawFrom.bottom_right, color);
 		if(value < Math.pow(10, number_of_predecimals))
 		{
 			Quad temp = bitmap_buffer.get(R.string.full_stop);
@@ -244,7 +253,7 @@ public class Text
 			{
 				moved_decimal *= 10.0;
 				int decimal_digit = (int) (moved_decimal % 10.0);
-				drawNumber(decimal_digit, (x - temp.shader_width) + total_width, y, EnumDrawFrom.bottom_left, color);
+				drawIntNumber(decimal_digit, (x - temp.shader_width) + total_width, y, EnumDrawFrom.bottom_left, color);
 				
 				if(fixed_width)
 					total_width += fixed_width_value;
@@ -255,18 +264,21 @@ public class Text
 	}
 	
 	// x and y are in shader coordinates 0 to 1
-	public void drawNumber(int this_number, double x, double y, EnumDrawFrom where)
+	public void drawIntNumber(int this_number, double x, double y, EnumDrawFrom where)
 	{
-		drawNumber(this_number, x, y, where, Color.WHITE);
+		drawIntNumber(this_number, x, y, where, Color.WHITE);
 	}
 	
 	// if you want to do the math to rotate an int, be my guest. I'll be over here...
 	
-	public void drawNumber(int this_number, double x, double y, EnumDrawFrom where, int color)
+	public void drawIntNumber(int this_number, double x, double y, EnumDrawFrom where, int color)
 	{
 		double total_width = 0;
 		
-		// for now we only do positives (sorry).
+		boolean negative = false;
+		if(this_number < 0)
+			negative = true;
+		
 		this_number = (int) Math.abs(this_number);
 		
 		boolean zero = false;
@@ -280,31 +292,39 @@ public class Text
 		
 		// prepare to draw by seeing where we draw it.
 		double current_width = 0;
-		if (where == EnumDrawFrom.top_left || where == EnumDrawFrom.bottom_left)
+		
+		int number = this_number;
+		while (number > 0)
 		{
-			int number = this_number;
-			while (number > 0)
-			{
-				int key = (number % 10);
-				
-				if(zero)
-					key = 0;
-				
-				if(fixed_width)
-					total_width += fixed_width_value;
-				else
-					total_width += bitmap_buffer.get(key).shader_width;
-				
-				number = number / 10;
-			}
+			int key = (number % 10);
 			
-			current_width = -total_width;
+			if(zero)
+				key = 0;
+			
+			if(fixed_width)
+				total_width += fixed_width_value;
+			else
+				total_width += bitmap_buffer.get(key).shader_width;
+			
+			number = number / 10;
 		}
+		
+		if(negative)
+		{
+			if(fixed_width)
+				total_width += fixed_width_value;
+			else
+				total_width += bitmap_buffer.get(R.string.negative).shader_width;
+			
+		}
+		
+		if (where == EnumDrawFrom.top_left || where == EnumDrawFrom.bottom_left)
+			current_width = -total_width;
 		else if (where == EnumDrawFrom.center)
 			current_width = (-total_width / 2.0);
 		
 		// begin drawing the number
-		int number = this_number;
+		number = this_number;
 		while (number > 0)
 		{
 			// get the number
@@ -329,6 +349,27 @@ public class Text
 			
 			// continue
 			number = number / 10;
+		}
+		
+		if(negative)
+		{
+			Quad temp = bitmap_buffer.get(R.string.negative);
+			
+			double y_pos = y;
+			if(where == EnumDrawFrom.bottom_left ||
+					where == EnumDrawFrom.bottom_right)
+				y_pos += (bitmap_buffer.get(0).shader_height / 2.0) - (temp.shader_height / 2.0);
+			else if(where == EnumDrawFrom.top_left ||
+					where == EnumDrawFrom.top_right)
+				y_pos -= (bitmap_buffer.get(0).shader_height / 2.0) + (temp.shader_height / 2.0);
+			
+			if(fixed_width)
+				current_width += fixed_width_value;
+			else
+				current_width += temp.shader_width;
+			
+			temp.setXYPos(x - current_width, y_pos, where);
+			temp.onDrawAmbient(Constants.my_ip_matrix, true);
 		}
 	}
 	

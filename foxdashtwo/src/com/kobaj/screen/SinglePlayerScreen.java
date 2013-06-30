@@ -425,7 +425,8 @@ public class SinglePlayerScreen extends BaseScreen implements FinishedScoring
 		{
 			my_modifier.onDraw();
 			
-			Constants.text.drawDecimalNumber(this.game_time / 1000.0, 2, 1, Constants.mini_time_pos_x, Constants.mini_time_pos_y);
+			Constants.text.drawText(R.string.small_time, Constants.mini_time_title_pos_x, Constants.mini_time_pos_y, EnumDrawFrom.bottom_right);
+			Constants.text.drawDecimalNumber(this.game_time / 1000.0, 3, 2, Constants.mini_time_pos_x, Constants.mini_time_pos_y);
 		}
 		
 	}

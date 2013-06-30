@@ -12,7 +12,6 @@ import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.EnumDrawFrom;
 import com.kobaj.opengldrawable.Button.Button;
 import com.kobaj.opengldrawable.Button.TextButton;
-import com.kobaj.opengldrawable.Quad.QuadCompressed;
 import com.kobaj.opengldrawable.Tween.EnumTweenEvent;
 import com.kobaj.opengldrawable.Tween.TweenEvent;
 import com.kobaj.opengldrawable.Tween.TweenManager;
@@ -55,14 +54,6 @@ public class TitleScreen extends BaseScreen
 	// wheather to fade and what to fade to.
 	public boolean fade_in = true;
 	public static boolean fade_play = false;
-	
-	public QuadCompressed beta_lines_v;
-	public QuadCompressed beta_lines_h;
-	double y_limit = 720;
-	double x_limit = 1280;
-	
-	public QuadCompressed x_line;
-	public QuadCompressed y_line;
 	
 	public TitleScreen()
 	{
@@ -138,16 +129,6 @@ public class TitleScreen extends BaseScreen
 		// login box
 		base_login = new BaseLoginInfo();
 		base_login.onInitialize();
-		
-		this.y_limit = Constants.height;
-		this.x_limit = Constants.width;
-		this.beta_lines_h = new QuadCompressed(R.raw.white, R.raw.white, 2, (int)y_limit);
-		this.beta_lines_v = new QuadCompressed(R.raw.white, R.raw.white, (int)x_limit, 2);
-		
-		this.x_line = new QuadCompressed(R.raw.white, R.raw.white, 2, (int) y_limit * 2);
-		this.x_line.color = Color.GREEN;
-		this.y_line = new QuadCompressed(R.raw.white, R.raw.white, (int) x_limit * 2, 2);
-		this.y_line.color = Color.RED;
 		
 		// if the last screen had a bug, alert the user on this screen
 		if (crashed)
@@ -301,26 +282,6 @@ public class TitleScreen extends BaseScreen
 		
 		if (fade_in || fade_play)
 			black_overlay_fade.onDrawAmbient(Constants.my_ip_matrix, true);
-		
-		// beta lines		
-		this.beta_lines_h.setXYPos(Functions.screenXToShaderX(x_limit - 2.0), Functions.screenYToShaderY(y_limit), EnumDrawFrom.top_left);
-		this.beta_lines_h.onDrawAmbient(Constants.my_ip_matrix, true);
-		this.beta_lines_h.setXYPos(Functions.screenXToShaderX(0), Functions.screenYToShaderY(y_limit), EnumDrawFrom.top_left);
-		this.beta_lines_h.onDrawAmbient(Constants.my_ip_matrix, true);
-		
-		this.beta_lines_v.setXYPos(Functions.screenXToShaderX(0), Functions.screenYToShaderY(2), EnumDrawFrom.top_left);
-		this.beta_lines_v.onDrawAmbient(Constants.my_ip_matrix, true);
-		this.beta_lines_v.setXYPos(Functions.screenXToShaderX(0), Functions.screenYToShaderY(y_limit), EnumDrawFrom.top_left);
-		this.beta_lines_v.onDrawAmbient(Constants.my_ip_matrix, true);
-	
-		for(int i = 0; i < Constants.input_manager.finger_count; i++)
-			if(Constants.input_manager.getTouched(i))
-			{
-				this.y_line.setXYPos(Functions.screenXToShaderX(Constants.input_manager.getX(i)), Functions.screenYToShaderY(Functions.fix_y(Constants.input_manager.getY(i))), EnumDrawFrom.center);
-				this.y_line.onDrawAmbient(Constants.my_ip_matrix, true);
-				this.x_line.setXYPos(Functions.screenXToShaderX(Constants.input_manager.getX(i)), Functions.screenYToShaderY(Functions.fix_y(Constants.input_manager.getY(i))), EnumDrawFrom.center);
-				this.x_line.onDrawAmbient(Constants.my_ip_matrix, true);
-			}
 	}
 	
 	@Override
