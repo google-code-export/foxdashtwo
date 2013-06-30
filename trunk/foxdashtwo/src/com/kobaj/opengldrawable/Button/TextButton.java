@@ -32,6 +32,8 @@ public class TextButton extends Button
 	
 	public void onInitialize()
 	{
+		super.onInitialize();
+		
 		// even if we dont draw this, we will need to instantiate it so we have something to check a bounding box with.
 		invisible_outline = new QuadEmpty(width, height);
 		

@@ -16,7 +16,7 @@ public class ShadowLightShader extends BaseLightShader
 	
 	public ShadowLightShader()
 	{
-		super(R.raw.ambient_vertex_shader, R.raw.shadow_fragment_shader);
+		super(R.raw.shader_vertex_ambient, R.raw.shadow_fragment_shader);
 		
 		my_radius_handle = GLES20.glGetUniformLocation(my_shader, "u_radius");
 		my_shadow_position_handle = GLES20.glGetUniformLocation(my_shader, "u_shadowPosition");

@@ -241,7 +241,7 @@ public class Level
 		}
 		
 		// setup player
-		QuadAnimated player_animation = new QuadAnimated(R.raw.fox2, R.raw.fox2_alpha, R.raw.fox_animation_list, 350, 180, 1024, 1024);
+		QuadAnimated player_animation = new QuadAnimated(R.raw.fox2, R.raw.fox2_alpha, R.raw.animation_list_fox, 350, 180, 1024, 1024);
 		player_animation.setAnimation(EnumGlobalAnimationList.stop, 0, -1);
 		player.quad_object = player_animation;
 		player.eid = Integer.MIN_VALUE;
@@ -362,7 +362,9 @@ public class Level
 		bottom_shader_limit = Functions.screenYToShaderY(bottom_limit) + Constants.shader_height / 2.0;
 		
 		// sounds
-		Constants.sound.addSound(R.raw.fox_trot_2);
+		Constants.sound.addSound(R.raw.sound_fox_trot_2);
+		Constants.sound.addSound(R.raw.sound_checkpoint);
+		Constants.sound.addSound(R.raw.sound_death);
 	}
 	
 	public void setPlayerPosition()
@@ -466,7 +468,7 @@ public class Level
 					|| reference.best_fit_aabb.main_rect.bottom - Constants.shader_height / 2.0 > this.top_shader_limit //
 					|| reference.best_fit_aabb.main_rect.left - Constants.ratio > this.right_shader_limit //
 					|| reference.best_fit_aabb.main_rect.right + Constants.ratio < this.left_shader_limit) //
-				kill = true;
+				kill();
 			
 			reference.onUpdate(delta);
 		}
@@ -507,7 +509,7 @@ public class Level
 				sound_placement += 1;
 				sound_placement = sound_placement % Sound.sound_count;
 				
-				int result = Constants.sound.play(R.raw.fox_trot_2, 0);
+				int result = Constants.sound.play(R.raw.sound_fox_trot_2, 0);
 				if (result != 0)
 				{
 					this.current_playing_sounds[sound_placement] = result;
@@ -622,6 +624,7 @@ public class Level
 		
 		if (reference.this_object == EnumLevelObject.lx_pickup_checkpoint)
 		{
+			Constants.sound.play(R.raw.sound_checkpoint);
 			reference.collide_with_player = false;
 			if (reference.my_checkpoint != null)
 				reference.my_checkpoint.explode();
@@ -636,6 +639,12 @@ public class Level
 		this.setPlayerPosition();
 	}
 	
+	public void kill()
+	{
+		kill = true;
+		Constants.sound.play(R.raw.sound_death);
+	}
+	
 	public void startMusic()
 	{
 		if (music == EnumMusics.none)
@@ -645,7 +654,7 @@ public class Level
 		}
 		
 		if (music == EnumMusics.tunnel)
-			Constants.music_player.start(R.raw.tunnel, Constants.music_fade_time, true);
+			Constants.music_player.start(R.raw.music_tunnel, Constants.music_fade_time, true);
 		else
 			return;
 		// rest of the music will go here eventually.

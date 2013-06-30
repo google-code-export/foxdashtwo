@@ -10,7 +10,7 @@ public class BlurLightShader extends BaseLightShader
 	
 	public BlurLightShader()
 	{
-		super(R.raw.ambient_vertex_shader, R.raw.compressed_fragment_shader);
+		super(R.raw.shader_vertex_ambient, R.raw.shader_fragment_compressed);
 		my_offset_handle = GLES20.glGetUniformLocation(my_shader, "Offset");
 	}
 }

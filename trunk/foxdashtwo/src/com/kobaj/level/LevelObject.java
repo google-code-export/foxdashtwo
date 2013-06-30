@@ -325,7 +325,7 @@ public class LevelObject extends LevelEntityActive
 			
 			quad_object.phys_rect_list.remove(0);
 			
-			Constants.sound.addSound(R.raw.single_water_drop);
+			Constants.sound.addSound(R.raw.sound_single_water_drop);
 			
 			this.ignore_coord_map = true;
 		}
@@ -495,7 +495,7 @@ public class LevelObject extends LevelEntityActive
 				if (quad_object.phys_rect_list.get(0).main_rect.bottom < this.y_water_drop_path.main_rect.bottom)
 				{
 					translate_object_to_original_position();
-					Constants.sound.play(R.raw.single_water_drop);
+					Constants.sound.play(R.raw.sound_single_water_drop);
 				}
 			}
 		}

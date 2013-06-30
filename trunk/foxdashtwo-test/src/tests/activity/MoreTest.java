@@ -24,7 +24,7 @@ import com.kobaj.opengldrawable.Quad.QuadEmpty;
 
 @RunWith(SampleTestRunner.class)
 public class MoreTest
-{	
+{
 	@Test
 	public void testCoordMap_InsertObj() throws Exception
 	{
@@ -69,12 +69,12 @@ public class MoreTest
 		Functions.setCamera(-1, -1, 0);
 		coord_temp.updated_visible_objects();
 		
-		assertThat(coord_temp.visible_objects.size(), equalTo(0));
+		assertThat(coord_temp.visible_object_count, equalTo(0));
 		
 		Functions.setCamera(18, 8, 0);
 		coord_temp.updated_visible_objects();
 		
-		assertThat(coord_temp.visible_objects.size(), equalTo(1));
+		assertThat(coord_temp.visible_object_count, equalTo(1));
 	}
 	
 	@Test
@@ -87,8 +87,8 @@ public class MoreTest
 		
 		int[] x_y = coord_temp.calculate_x_y(12000, 3400);
 		
-		assertThat(x_y[0], equalTo(30));
-		assertThat(x_y[1], equalTo(12));
+		assertThat(x_y[0], equalTo(15));
+		assertThat(x_y[1], equalTo(6));
 		
 		Constants.width = 851;
 		Constants.height = 361;
