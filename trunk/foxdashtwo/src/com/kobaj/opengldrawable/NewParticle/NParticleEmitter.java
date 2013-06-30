@@ -137,16 +137,16 @@ public class NParticleEmitter
 		// why update if not on screen?
 		if (force_update || Functions.onShader(emit_location) || (visible_zone != null && Functions.onShader(visible_zone)))
 		{
-			if(!force_update)
+			if (!force_update)
 			{
-			if(visible_zone.left > emit_location.main_rect.left)
-				visible_zone.left = emit_location.main_rect.left;
-			if(visible_zone.top < emit_location.main_rect.top)
-				visible_zone.top = emit_location.main_rect.top;
-			if(visible_zone.right < emit_location.main_rect.right)
-				visible_zone.right = emit_location.main_rect.right;
-			if(visible_zone.bottom > emit_location.main_rect.bottom)
-				visible_zone.bottom = emit_location.main_rect.bottom;
+				if (visible_zone.left > emit_location.main_rect.left)
+					visible_zone.left = emit_location.main_rect.left;
+				if (visible_zone.top < emit_location.main_rect.top)
+					visible_zone.top = emit_location.main_rect.top;
+				if (visible_zone.right < emit_location.main_rect.right)
+					visible_zone.right = emit_location.main_rect.right;
+				if (visible_zone.bottom > emit_location.main_rect.bottom)
+					visible_zone.bottom = emit_location.main_rect.bottom;
 			}
 			
 			// first see if we need to spawn some particles
@@ -199,6 +199,9 @@ public class NParticleEmitter
 			NParticle reference = unused_pool.pop();
 			reference.reset();
 			
+			if(force_update)
+				reference.preUpdate = true;
+			
 			// random position
 			double x_pos = Functions.randomDouble(emit_location.main_rect.left, emit_location.main_rect.right);
 			
@@ -237,7 +240,11 @@ public class NParticleEmitter
 		{
 			used_quads.clear();
 			for (int i = used_pool.size() - 1; i >= 0; i--)
-				used_quads.add(used_pool.get(i).quad_reference);
+			{
+				NParticle temp = used_pool.get(i);
+				if(!temp.preUpdate)
+					used_quads.add(temp.quad_reference);
+			}
 			
 			update_quads = false;
 		}

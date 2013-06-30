@@ -1,7 +1,5 @@
 package com.kobaj.screen.screenaddons;
 
-import java.util.List;
-
 import com.kobaj.input.GameInputModifier;
 import com.kobaj.level.EnumLayerTypes;
 import com.kobaj.level.EnumLevelObject;
@@ -43,10 +41,10 @@ public class BaseInteractionPhysics
 		Constants.physics.integratePhysics(delta, the_level.player.quad_object);
 		
 		// integrate all other objects
-		List<LevelObject> temp = the_level.object_hash.get(EnumLayerTypes.Interaction).visible_objects;
-		for (int i = temp.size() - 1; i >= 0; i--)
+		LevelObject[] temp = the_level.object_hash.get(EnumLayerTypes.Interaction).visible_objects;
+		for (int i = the_level.object_hash.get(EnumLayerTypes.Interaction).visible_object_count - 1; i >= 0; i--)
 		{
-			LevelObject reference = temp.get(i);
+			LevelObject reference = temp[i];
 			
 			if (!reference.collide_with_player)
 				continue;
@@ -110,14 +108,13 @@ public class BaseInteractionPhysics
 				{
 					
 					// force this to be an up-down collision
-					if (collision.width() != 0 ||
-							second.top > maximum_height)
+					if (collision.width() != 0 || second.top > maximum_height)
 					{
 						continue;
 					}
 					else if (collision.bottom > collision_y)
 					{
-						if(collision.bottom == player_extended.top)
+						if (collision.bottom == player_extended.top)
 							collision.bottom = second.top;
 						
 						// new calculation
@@ -200,9 +197,9 @@ public class BaseInteractionPhysics
 		double top_level_limit = test_level.top_shader_limit - Constants.z_shader_translation;
 		double bottom_level_limit = test_level.bottom_shader_limit + Constants.z_shader_translation;
 		
-		//shifts so the user can see more
-		double x_camera_shift = Functions.linearInterpolate(0, Constants.max_x_velocity, Math.abs(test_level.player.quad_object.x_vel_shader),
-				-Constants.backward_camera_shift_width, Constants.forward_camera_shift_width);
+		// shifts so the user can see more
+		double x_camera_shift = Functions.linearInterpolate(0, Constants.max_x_velocity, Math.abs(test_level.player.quad_object.x_vel_shader), -Constants.backward_camera_shift_width,
+				Constants.forward_camera_shift_width);
 		x_camera_shift = Math.max(x_camera_shift, 0);
 		if (test_level.player.quad_object.x_vel_shader < 0)
 			x_camera_shift = -x_camera_shift;

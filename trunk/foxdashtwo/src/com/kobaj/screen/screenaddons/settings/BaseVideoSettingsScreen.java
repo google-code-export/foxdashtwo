@@ -70,7 +70,7 @@ public class BaseVideoSettingsScreen extends BaseFloatingFrame
 		Constants.text.drawText(R.string.video, label_x, label_y, EnumDrawFrom.center);
 		
 		Constants.text.drawText(R.string.fbo_divider, music_label_x, music_label_y, EnumDrawFrom.bottom_right);
-		Constants.text.drawNumber(UserSettings.fbo_divider, music_label_x, music_label_y, EnumDrawFrom.bottom_left);
+		Constants.text.drawIntNumber(UserSettings.fbo_divider, music_label_x, music_label_y, EnumDrawFrom.bottom_left);
 		
 		fbo_down_button.onDrawConstant();
 		fbo_up_button.onDrawConstant();

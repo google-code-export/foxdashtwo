@@ -3,7 +3,6 @@ package com.kobaj.level;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
@@ -234,7 +233,7 @@ public class Level
 						(float) Functions.screenYToShaderY(y_pos - original.height));//
 				NParticleEmitter test = NParticleManager.makeEmitter(EnumParticleType.snow, shader_limits_for_snow_test);
 				test.onInitialize();
-				// test.preUpdate();
+
 				local_np_emitter.add(test);
 				
 				event_list.remove(i);
@@ -311,7 +310,7 @@ public class Level
 					my_particle_emitter = NParticleManager.makeEmitter(EnumParticleType.floating_dust_2, emitt_from);
 				
 				my_particle_emitter.onInitialize();
-				// test.preUpdate();
+
 				my_particle_emitter.associated_quad = reference.quad_object;
 				local_np_emitter.add(my_particle_emitter);
 				
@@ -553,7 +552,7 @@ public class Level
 		// is ok, is array
 		for (EnumLayerTypes type : types)
 		{
-			if(type == EnumLayerTypes.Shadow)
+			if (type == EnumLayerTypes.Shadow)
 			{
 				player_shadow.onDrawAmbient();
 				continue;
@@ -566,11 +565,11 @@ public class Level
 			
 			CoordMap temp_coord = object_hash.get(type);
 			temp_coord.updated_visible_objects(compute_parallax_shift(type));
-			List<LevelObject> objects = object_hash.get(type).visible_objects;
+			LevelObject[] objects = object_hash.get(type).visible_objects;
 			
 			// draw sorted objects
-			for (int i = objects.size() - 1; i >= 0; i--)
-				objects.get(i).onDrawObject();
+			for (int i = object_hash.get(type).visible_object_count - 1; i >= 0; i--)
+				objects[i].onDrawObject();
 			
 			// particles (looped in with top)
 			if (type == EnumLayerTypes.Top)

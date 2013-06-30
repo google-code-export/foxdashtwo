@@ -69,12 +69,14 @@ public class Constants
 	public static double shadow_height_shader;
 	
 	// score position constants
+	public static final double mini_time_title_pos_x_default = 200;
 	public static final double mini_time_pos_x_default = 100;
 	public static final double mini_time_pos_y_default = 100;
 	public static final double width_padding_default = 75;
 	public static final double height_padding_default = 75;
 	
 	// shader coordinates
+	public static double mini_time_title_pos_x;
 	public static double mini_time_pos_x;
 	public static double mini_time_pos_y;
 	public static double width_padding;

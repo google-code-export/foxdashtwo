@@ -1,7 +1,6 @@
 package com.kobaj.level;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import android.util.SparseArray;
 
@@ -18,7 +17,8 @@ public class CoordMap
 	
 	private ArrayList<LevelObject> ignored_objects;
 	
-	public List<LevelObject> visible_objects;
+	public LevelObject[] visible_objects;
+	public int visible_object_count = 0;
 	public boolean[] untrimmed_visible_objects;
 	
 	private double half_width;
@@ -33,7 +33,7 @@ public class CoordMap
 		
 		calculated_objects = new SparseArray<SparseArray<ArrayList<LevelObject>>>();
 		ignored_objects = new ArrayList<LevelObject>();
-		visible_objects = new ArrayList<LevelObject>();
+		visible_objects = new LevelObject[level_objects.size()];
 		
 		insert_objects(level_objects);
 		
@@ -88,7 +88,7 @@ public class CoordMap
 	
 	public void updated_visible_objects(double shift_x)
 	{
-		visible_objects.clear();
+		visible_object_count = 0;
 		
 		// add the ignored objects
 		for (int i = ignored_objects.size() - 1; i >= 0; i--)
@@ -132,12 +132,14 @@ public class CoordMap
 		{
 			if (untrimmed_visible_objects[i])
 			{
-				visible_objects.add(objects_copy.get(i));
+				visible_objects[visible_object_count] = objects_copy.get(i);
+				visible_object_count++;
+				
 				untrimmed_visible_objects[i] = false;
 			}
 		}
 		
-		Constants.quads_coord_map_check += visible_objects.size();
+		Constants.quads_coord_map_check += visible_object_count;
 		
 	}
 	

@@ -122,11 +122,10 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		
 		Constants.device_ratio = (float) (width) / (float) (height);
 		
-		double one_over_ratio = 1.0 / ratio;
-		double zoom_z = .999999999999f;
+		double zoom_z = .999999999999;
 		if (Constants.device_ratio < ratio)
 		{
-			zoom_z = Constants.device_ratio / ratio; 
+			zoom_z = Constants.device_ratio / ratio;
 			Constants.horizontal_ratio = true;
 		}
 		

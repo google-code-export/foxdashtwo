@@ -10,7 +10,6 @@ import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.EnumDrawFrom;
 import com.kobaj.opengldrawable.Quad.Quad;
-import com.kobaj.opengldrawable.Quad.QuadColorShape;
 import com.kobaj.opengldrawable.Quad.QuadCompressed;
 
 public class LevelAmbientLight extends LevelEntityActive
@@ -55,7 +54,7 @@ public class LevelAmbientLight extends LevelEntityActive
 			fade_delta = Constants.light_active_fade - fade_delta;
 			old_active = active;
 		}
-	
+		
 		if (active) // turn on
 		{
 			if (quad_light.color != color)

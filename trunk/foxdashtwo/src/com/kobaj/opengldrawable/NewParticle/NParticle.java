@@ -21,6 +21,8 @@ public class NParticle
 	public int green_reference = 255;
 	public int blue_reference = 255;
 	
+	public boolean preUpdate = true;
+	
 	public NParticle(boolean vary_scale, int fade_in_time, int fade_out_time, int life_time)
 	{
 		this.fade_in_time = fade_in_time;
@@ -42,6 +44,7 @@ public class NParticle
 		is_dead = false;
 		killed = false;
 		this.life_time = original_life_time;
+		preUpdate = false;
 	}
 	
 	public void onUpdate(double delta)

@@ -242,7 +242,7 @@ public class MyGame extends MyGLRender
 			y_pos = Constants.y_50;
 			
 			Constants.text.drawText(R.string.fps, x_pos, y_pos, EnumDrawFrom.bottom_right);
-			Constants.text.drawNumber(fps.fps, x_pos, y_pos, EnumDrawFrom.bottom_left, fps_color);
+			Constants.text.drawIntNumber(fps.fps, x_pos, y_pos, EnumDrawFrom.bottom_left, fps_color);
 		}
 		
 		if (UserSettings.my_debug_mode == UserSettings.DebugMode.detailed)
@@ -256,17 +256,17 @@ public class MyGame extends MyGLRender
 				oos_color = Color.BLUE;
 			
 			Constants.text.drawText(R.string.qos, x_pos, y_pos, EnumDrawFrom.top_right);
-			Constants.text.drawNumber(Constants.quads_drawn_screen, x_pos, y_pos, EnumDrawFrom.top_left, oos_color);
+			Constants.text.drawIntNumber(Constants.quads_drawn_screen, x_pos, y_pos, EnumDrawFrom.top_left, oos_color);
 			Constants.quads_drawn_screen = 0;
 			
 			// music metrics
 			y_pos = Constants.y_125;
 			
 			Constants.text.drawText(R.string.volume, x_pos, y_pos, EnumDrawFrom.bottom_right);
-			Constants.text.drawNumber((int) (Constants.music_player.actual_volume * 100.0), x_pos, y_pos, EnumDrawFrom.bottom_left);
+			Constants.text.drawIntNumber((int) (Constants.music_player.actual_volume * 100.0), x_pos, y_pos, EnumDrawFrom.bottom_left);
 			
 			Constants.text.drawText(R.string.mpos, x_pos, y_pos, EnumDrawFrom.top_right);
-			Constants.text.drawNumber((int) (Constants.music_player.getCurrentPosition() / 1000.0), x_pos, y_pos, EnumDrawFrom.top_left);
+			Constants.text.drawIntNumber((int) (Constants.music_player.getCurrentPosition() / 1000.0), x_pos, y_pos, EnumDrawFrom.top_left);
 			
 			y_pos = Constants.y_200;
 			
@@ -280,7 +280,7 @@ public class MyGame extends MyGLRender
 				oos_color = Color.BLUE;
 			
 			Constants.text.drawText(R.string.branch, x_pos, y_pos, EnumDrawFrom.bottom_right);
-			Constants.text.drawNumber(Constants.quads_coord_map_check, x_pos, y_pos, EnumDrawFrom.bottom_left, oos_color);
+			Constants.text.drawIntNumber(Constants.quads_coord_map_check, x_pos, y_pos, EnumDrawFrom.bottom_left, oos_color);
 			Constants.quads_coord_map_check = 0;
 		}
 		

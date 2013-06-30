@@ -89,9 +89,9 @@ public class BaseAudioSettingsScreen extends BaseFloatingFrame
 		Constants.text.drawText(R.string.audio, label_x, label_y, EnumDrawFrom.center);
 		
 		Constants.text.drawText(R.string.music, music_label_x, music_label_y, EnumDrawFrom.bottom_right);
-		Constants.text.drawNumber((int) (UserSettings.desired_music_volume * 100.0), music_label_x, music_label_y, EnumDrawFrom.bottom_left);
+		Constants.text.drawIntNumber((int) (UserSettings.desired_music_volume * 100.0), music_label_x, music_label_y, EnumDrawFrom.bottom_left);
 		Constants.text.drawText(R.string.sound, sound_label_x, sound_label_y, EnumDrawFrom.bottom_right);
-		Constants.text.drawNumber((int) (UserSettings.desired_sound_volume * 100.0), sound_label_x, sound_label_y, EnumDrawFrom.bottom_left);
+		Constants.text.drawIntNumber((int) (UserSettings.desired_sound_volume * 100.0), sound_label_x, sound_label_y, EnumDrawFrom.bottom_left);
 		
 		sound_volume_down_button.onDrawConstant();
 		sound_volume_up_button.onDrawConstant();
