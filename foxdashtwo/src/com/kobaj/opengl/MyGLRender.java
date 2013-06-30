@@ -94,23 +94,23 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		GLES20.glViewport(0, 0, width, height);
 		
 		// good
-		//Constants.width = 2000; // width;
-		//Constants.height = 2000; // height;
+		// Constants.width = 2000; // width;
+		// Constants.height = 2000; // height;
 		
 		// good
-		//Constants.width = 300; // width;
-		//Constants.height = 300; // height;
-			
-		// good
-		//Constants.width = 1000; // width;
-		//Constants.height = 500; // height;		
+		// Constants.width = 300; // width;
+		// Constants.height = 300; // height;
 		
 		// good
-		Constants.width = 2560; // width;
-		Constants.height = 1000; // height;
+		// Constants.width = 1000; // width;
+		// Constants.height = 500; // height;
 		
-		//Constants.width = 1280; // width;
-		//Constants.height = 720; // height;		
+		// good
+		// Constants.width = 2560; // width;
+		// Constants.height = 1000; // height;
+		
+		Constants.width = 1280; // width;
+		Constants.height = 720; // height;
 		
 		float ratio = (float) (Constants.width) / (float) (Constants.height);
 		Constants.ratio = ratio;
@@ -119,22 +119,21 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		// and device sizes
 		Constants.device_width = width;
 		Constants.device_height = height;
-	
-		Constants.device_ratio = (float) (width) / (float) (height);	
+		
+		Constants.device_ratio = (float) (width) / (float) (height);
 		
 		double one_over_ratio = 1.0 / ratio;
 		double zoom_z = .999999999999f;
 		if (Constants.device_ratio < ratio)
 		{
-			// 29.3333 degrees and 60.66666 degrees respectively
-			zoom_z = (one_over_ratio / Math.sin(0.511963247)) * Math.sin(1.05883308);	
+			zoom_z = Constants.device_ratio / ratio; 
 			Constants.horizontal_ratio = true;
 		}
 		
 		// we use a frustrum because the game utilizes 'zoom' effects via the camera
-		Matrix.frustumM(Constants.my_proj_matrix, 0, (float) - Constants.device_ratio, (float) Constants.device_ratio, // width (x)
+		Matrix.frustumM(Constants.my_proj_matrix, 0, (float) -Constants.device_ratio, (float) Constants.device_ratio, // width (x)
 				-1f, 1f, // height (y)
-				(float)zoom_z, 2f); // zoom (z)
+				(float) zoom_z, 2f); // zoom (z)
 		
 		// multiply
 		Matrix.multiplyMM(Constants.my_ip_matrix, 0, Constants.my_proj_matrix, 0, Constants.identity_matrix, 0);
@@ -235,7 +234,7 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 	
 	protected abstract void onDraw();
 	
-	// this activates the screen shots and slow motion. 
+	// this activates the screen shots and slow motion.
 	public static boolean slowmo = false;
 	
 	public int screenshot_number = 0;

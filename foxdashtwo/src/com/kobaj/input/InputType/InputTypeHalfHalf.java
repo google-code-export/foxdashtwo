@@ -12,16 +12,19 @@ public class InputTypeHalfHalf extends InputTypeBase
 	private Quad my_quad_left;
 	private Quad my_quad_right;
 	
+	private int pixel_shift = 5;
+	private int pixel_width = 3;
+	
 	@Override
 	public void onInitialize()
 	{
 		// make
-		my_quad_left = new QuadCompressed(R.raw.white, R.raw.white, 2, Constants.height);
-		my_quad_right = new QuadCompressed(R.raw.white, R.raw.white, 2, Constants.height);
+		my_quad_left = new QuadCompressed(R.raw.white, R.raw.white, pixel_width, Constants.height);
+		my_quad_right = new QuadCompressed(R.raw.white, R.raw.white, pixel_width, Constants.height);
 		
 		// move
-		my_quad_left.setXYPos(Functions.screenXToShaderX(2), Functions.screenYToShaderY(0), EnumDrawFrom.bottom_left);
-		my_quad_right.setXYPos(Functions.screenXToShaderX(Constants.width - 2), Functions.screenYToShaderY(0), EnumDrawFrom.bottom_right);
+		my_quad_left.setXYPos(Functions.screenXToShaderX(pixel_shift), Functions.screenYToShaderY(0), EnumDrawFrom.bottom_left);
+		my_quad_right.setXYPos(Functions.screenXToShaderX(Constants.width - pixel_shift), Functions.screenYToShaderY(0), EnumDrawFrom.bottom_right);
 	}
 	
 	@Override

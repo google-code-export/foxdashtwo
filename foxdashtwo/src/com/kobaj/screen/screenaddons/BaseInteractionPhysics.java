@@ -201,8 +201,8 @@ public class BaseInteractionPhysics
 		double bottom_level_limit = test_level.bottom_shader_limit + Constants.z_shader_translation;
 		
 		//shifts so the user can see more
-		double x_camera_shift = Functions.linearInterpolate(0, Constants.max_x_velocity, Math.abs(test_level.player.quad_object.x_vel_shader), -Constants.backward_camera_shift_width,
-				Constants.forward_camera_shift_width);
+		double x_camera_shift = Functions.linearInterpolate(0, Constants.max_x_velocity, Math.abs(test_level.player.quad_object.x_vel_shader),
+				-Constants.backward_camera_shift_width, Constants.forward_camera_shift_width);
 		x_camera_shift = Math.max(x_camera_shift, 0);
 		if (test_level.player.quad_object.x_vel_shader < 0)
 			x_camera_shift = -x_camera_shift;
