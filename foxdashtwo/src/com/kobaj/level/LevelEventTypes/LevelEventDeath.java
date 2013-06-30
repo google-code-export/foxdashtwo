@@ -22,6 +22,6 @@ public class LevelEventDeath extends LevelEventBase
 	public void onUpdate(double delta, boolean active)
 	{
 		if (active)
-			level_cache.kill = true;
+			level_cache.kill();
 	}
 }

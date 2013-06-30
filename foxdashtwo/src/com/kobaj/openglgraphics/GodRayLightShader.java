@@ -6,6 +6,6 @@ public class GodRayLightShader extends BaseLightShader
 {
 	public GodRayLightShader()
 	{
-		super(R.raw.ambient_vertex_shader, R.raw.god_ray_fragment_shader);
+		super(R.raw.shader_vertex_ambient, R.raw.shader_fragment_god_ray);
 	}
 }

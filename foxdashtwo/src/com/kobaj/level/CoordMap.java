@@ -28,18 +28,22 @@ public class CoordMap
 	
 	public CoordMap(int level_width, int level_height, ArrayList<LevelObject> level_objects)
 	{
+		int counted_objects = 0;
+		if(level_objects != null)
+			counted_objects = level_objects.size();
+		
 		// number of bins is x * y;
 		calculate_x_y(level_width, level_height);
 		
 		calculated_objects = new SparseArray<SparseArray<ArrayList<LevelObject>>>();
 		ignored_objects = new ArrayList<LevelObject>();
-		visible_objects = new LevelObject[level_objects.size()];
+		visible_objects = new LevelObject[counted_objects];
 		
 		insert_objects(level_objects);
 		
 		objects_copy = level_objects;
 		
-		untrimmed_visible_objects = new boolean[level_objects.size()];
+		untrimmed_visible_objects = new boolean[counted_objects];
 		for (int i = 0; i < untrimmed_visible_objects.length; i++)
 			untrimmed_visible_objects[i] = false;
 	}

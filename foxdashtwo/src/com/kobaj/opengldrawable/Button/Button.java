@@ -1,5 +1,6 @@
 package com.kobaj.opengldrawable.Button;
 
+import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.EnumDrawFrom;
@@ -17,7 +18,10 @@ public abstract class Button
 	
 	protected boolean draw_background = false;
 	
-	public abstract void onInitialize();
+	public void onInitialize()
+	{
+		Constants.sound.addSound(R.raw.sound_button_click_two);
+	}
 	
 	public void setXYPos(double x, double y, EnumDrawFrom draw_from)
 	{
@@ -40,7 +44,10 @@ public abstract class Button
 		current_touch = isTouched();
 		
 		if (!current_touch && old_touch)
+		{
+			Constants.sound.play(R.raw.sound_button_click_two);
 			returned_touch = true;
+		}
 		
 		old_touch = current_touch;
 		return returned_touch;

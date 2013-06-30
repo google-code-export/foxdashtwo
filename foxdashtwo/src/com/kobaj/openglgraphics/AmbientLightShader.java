@@ -8,6 +8,6 @@ public class AmbientLightShader extends BaseLightShader
 	//really just allowing us to instantiate a base light.
 	public AmbientLightShader()
 	{
-		super(R.raw.ambient_vertex_shader, R.raw.ambient_fragment_shader);
+		super(R.raw.shader_vertex_ambient, R.raw.shader_fragment_ambient);
 	}
 }
