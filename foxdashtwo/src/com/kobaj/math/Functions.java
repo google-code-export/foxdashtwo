@@ -401,9 +401,11 @@ public class Functions
 		}
 		else
 		{
-			double window_width = Constants.device_height * Constants.ratio;
-			double half_space = (Constants.device_width - window_width) * ((double) Constants.width / (double) Constants.device_width);
-			return Functions.linearInterpolate(0, Constants.device_width, x, -half_space, Constants.width + half_space);
+			double window_width = (double) Constants.device_height * Constants.ratio;
+			double window_space = ((double) Constants.device_width - window_width);
+			double window_half_space = window_space / 2.0;
+			
+			return Functions.linearInterpolateUnclamped(window_half_space, window_width + window_half_space, x, 0, Constants.width);
 		}
 	}
 	
@@ -411,9 +413,11 @@ public class Functions
 	{
 		if (Constants.horizontal_ratio)
 		{
-			double window_height = Constants.device_width * (1.0 / Constants.ratio);
-			double half_space = (Constants.device_height - window_height) * ((double) Constants.height / (double) Constants.device_height);
-			return Functions.linearInterpolate(0, Constants.device_height, y, -half_space, Constants.height + half_space);
+			double window_height = (double) Constants.device_width * (1.0 / Constants.ratio);
+			double window_space = ((double) Constants.device_height - window_height);
+			double window_half_space =  window_space / 2.0; 
+			
+			return Functions.linearInterpolateUnclamped(window_half_space, window_height + window_half_space, y, 0, Constants.height);
 		}
 		else
 		{

@@ -94,9 +94,13 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		GLES20.glViewport(0, 0, width, height);
 		
 		// good
-		// Constants.width = 2000; // width;
-		// Constants.height = 2000; // height;
+		 //Constants.width = 2000; // width;
+		 //Constants.height = 2000; // height;
 		
+		// good
+		// Constants.width = 1000; // width;
+		// Constants.height = 1000; // height;
+				
 		// good
 		// Constants.width = 300; // width;
 		// Constants.height = 300; // height;
@@ -109,8 +113,8 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		// Constants.width = 2560; // width;
 		// Constants.height = 1000; // height;
 		
-		Constants.width = 1280; // width;
-		Constants.height = 720; // height;
+		Constants.width = 1000; // 1280; // width;
+		Constants.height = 563; // 720; // height;
 		
 		float ratio = (float) (Constants.width) / (float) (Constants.height);
 		Constants.ratio = ratio;
