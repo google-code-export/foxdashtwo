@@ -216,7 +216,7 @@ public class MyGame extends MyGLRender
 		lights.onDrawAmbient(used_matrix, true);
 		
 		// text below this line
-		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
+		GLES20.glBlendFuncSeparate(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA, GLES20.GL_ONE, GLES20.GL_ONE);
 		currently_active_screen.onDrawConstant();
 	}
 	
