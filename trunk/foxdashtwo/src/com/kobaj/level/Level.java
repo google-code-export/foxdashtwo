@@ -9,7 +9,6 @@ import org.simpleframework.xml.ElementList;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
-import android.util.Log;
 
 import com.kobaj.account_settings.SinglePlayerSave;
 import com.kobaj.audio.Sound;
@@ -75,7 +74,7 @@ public class Level
 	
 	@Element
 	public EnumMusics music = EnumMusics.none;
-	private final int[] current_playing_sounds = new int[Sound.sound_count];
+	private final int[] current_playing_fox_paws = new int[Sound.sound_count];
 	private int sound_placement = 0;
 	
 	public double left_shader_limit;
@@ -233,7 +232,7 @@ public class Level
 						(float) Functions.screenYToShaderY(y_pos - original.height));//
 				NParticleEmitter test = NParticleManager.makeEmitter(EnumParticleType.snow, shader_limits_for_snow_test);
 				test.onInitialize();
-
+				
 				local_np_emitter.add(test);
 				
 				event_list.remove(i);
@@ -310,7 +309,7 @@ public class Level
 					my_particle_emitter = NParticleManager.makeEmitter(EnumParticleType.floating_dust_2, emitt_from);
 				
 				my_particle_emitter.onInitialize();
-
+				
 				my_particle_emitter.associated_quad = reference.quad_object;
 				local_np_emitter.add(my_particle_emitter);
 				
@@ -512,17 +511,17 @@ public class Level
 				int result = Constants.sound.play(R.raw.sound_fox_trot_2, 0);
 				if (result != 0)
 				{
-					this.current_playing_sounds[sound_placement] = result;
+					this.current_playing_fox_paws[sound_placement] = result;
 				}
 				
 			}
 		}
 		else if (!this.player_on_ground)
 		{
-			for (int i = 0; i < current_playing_sounds.length; i++)
+			for (int i = 0; i < current_playing_fox_paws.length; i++)
 			{
-				Constants.sound.stop(current_playing_sounds[i]);
-				current_playing_sounds[i] = 0;
+				Constants.sound.stop(current_playing_fox_paws[i]);
+				current_playing_fox_paws[i] = 0;
 			}
 		}
 		
@@ -659,17 +658,6 @@ public class Level
 			return;
 		// rest of the music will go here eventually.
 		
-		while (!Constants.music_player.isLoaded())
-		{
-			try
-			{
-				Thread.sleep(Constants.exception_timeout);
-			}
-			catch (InterruptedException e)
-			{
-				Log.e("Single Player Exception", e.toString());
-			}
-		}
 	}
 	
 	public void reset_checkpoints()

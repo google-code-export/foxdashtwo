@@ -1,6 +1,9 @@
 package com.kobaj.audio;
 
+import android.util.Log;
+
 import com.kobaj.account_settings.UserSettings;
+import com.kobaj.math.Constants;
 
 public class MusicPlayer
 {
@@ -123,6 +126,8 @@ public class MusicPlayer
 	}
 	
 	// fade_length is in milliseconds, 30000ms is 30 seconds
+	// note this method is blocking and thus should only be
+	// called in the load method ie, off the UI thread
 	public void start(int song, int fade_length, boolean loop)
 	{
 		if (fade_length < 0)
@@ -131,13 +136,44 @@ public class MusicPlayer
 		fade_start = 0;
 		fade_end = fade_start + fade_length;
 		checkFadeEnd();
-		current_state = EnumMusicStates.fade_in;
 		
-		music_player.play(song, 0.0);
+		if (fade_length != 0)
+		{
+			current_state = EnumMusicStates.fade_in;
+			music_player.play(song, 0.0);
+		}
+		else
+		{
+			current_state = EnumMusicStates.playing;
+			this.actual_volume = UserSettings.desired_music_volume;
+			music_player.play(song, actual_volume);
+		}
+		
 		music_player.media_player.setLooping(loop);
 		isLooping = loop;
 		
 		next_song = -1;
+		
+		while (!isLoaded())
+		{
+			try
+			{
+				Thread.sleep(Constants.exception_timeout);
+			}
+			catch (InterruptedException e)
+			{
+				Log.e("Single Player Exception", e.toString());
+			}
+		}
+	}
+	
+	public void setLooping(boolean loop)
+	{
+		if(isLooping != loop)
+		{
+			music_player.media_player.setLooping(loop);
+			this.isLooping = loop;
+		}
 	}
 	
 	// assume zero fade
@@ -160,12 +196,21 @@ public class MusicPlayer
 		fade_start = music_player.media_player.getCurrentPosition();
 		fade_end = fade_start + fade_length;
 		checkFadeEnd();
-		current_state = EnumMusicStates.fade_out;
+		
+		if(fade_length != 0)
+		{
+			current_state = EnumMusicStates.fade_out;
+			next_song = song;
+		}
+		else
+		{
+			current_state = EnumMusicStates.playing;
+			this.actual_volume = UserSettings.desired_music_volume;
+			music_player.play(song, actual_volume);
+		}
 		
 		music_player.media_player.setLooping(loop);
 		isLooping = loop;
-		
-		next_song = song;
 	}
 	
 	public void stop()
@@ -175,7 +220,7 @@ public class MusicPlayer
 	
 	public void stop(int fade_length)
 	{
-		if(fade_length < 0)
+		if (fade_length < 0)
 			fade_length = 0;
 		
 		fade_start = music_player.media_player.getCurrentPosition();
