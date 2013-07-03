@@ -11,10 +11,10 @@ public class UserSettings
 	public static EnumInputType active_input_type = EnumInputType.halfhalf;
 	
 	@Element
-	public static double desired_music_volume = 1.0;
+	public static double desired_music_volume = 0.9;
 	
 	@Element
-	public static double desired_sound_volume = 0.6;
+	public static double desired_sound_volume = 0.8;
 	
 	@Element
 	public static int selected_account_login = -1;

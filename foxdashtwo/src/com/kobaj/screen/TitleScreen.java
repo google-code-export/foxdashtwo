@@ -3,6 +3,7 @@ package com.kobaj.screen;
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 
+import com.kobaj.audio.MusicPlayList;
 import com.kobaj.foxdashtwo.GameActivity;
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.input.EnumKeyCodes;
@@ -64,6 +65,8 @@ public class TitleScreen extends BaseScreen
 	private QuadCompressed x_line;
 	private QuadCompressed y_line;
 	
+	private MusicPlayList play_list;
+	
 	public TitleScreen()
 	{
 		fade_play = false;
@@ -72,7 +75,8 @@ public class TitleScreen extends BaseScreen
 	@Override
 	public void onLoad()
 	{
-		Constants.music_player.stop(Constants.music_fade_time);
+		play_list = new MusicPlayList();
+		this.startMusic();
 		
 		Functions.setCamera(0, 0, Constants.arbitrary_z);
 		
@@ -183,7 +187,7 @@ public class TitleScreen extends BaseScreen
 	public void onUpdate(double delta)
 	{
 		// that music
-		Constants.music_player.onUpdate();
+		play_list.onUpdate();
 		
 		// these are all the different possible poups that can be visible
 		if (settings_visible)
@@ -349,5 +353,11 @@ public class TitleScreen extends BaseScreen
 	{
 		// TODO Auto-generated method stub
 		
+	}
+	
+	private void startMusic()
+	{
+		play_list.setPlayList(-1, R.raw.music_title_screen, R.raw.music_title_screen_loop_body);
+		play_list.startLoopLast(0, true);
 	}
 }
