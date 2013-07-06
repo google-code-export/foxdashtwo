@@ -157,6 +157,7 @@ public class Text
 			paint_temp.setStyle(Style.FILL);
 			paint_temp.setColor(Color.WHITE);
 			paint_temp.setTextSize((float) size);
+			paint_temp.setFilterBitmap(false);
 			
 			Paint paint_stroke = new Paint();
 			paint_stroke.setColor(Color.BLACK);
@@ -164,8 +165,9 @@ public class Text
 			paint_stroke.setTextSize((float) size);
 			paint_stroke.setTypeface(Typeface.DEFAULT_BOLD);
 			paint_stroke.setStyle(Paint.Style.STROKE);
-			paint_stroke.setStrokeWidth(2);
+			paint_stroke.setStrokeWidth(6);
 			paint_stroke.setAntiAlias(true);
+			paint_stroke.setFilterBitmap(false);
 			
 			// prep
 			ArrayList<Path> path_splits = new ArrayList<Path>();
