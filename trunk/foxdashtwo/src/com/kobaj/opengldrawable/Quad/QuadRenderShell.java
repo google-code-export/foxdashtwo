@@ -323,7 +323,7 @@ public final class QuadRenderShell
 			Quad uncompressed = clones_two.get(i);
 			boolean removed = false;
 			
-			if(uncompressed == null)
+			if(uncompressed == null || uncompressed.color == Color.TRANSPARENT)
 			{
 				clones_two.remove(i);
 				removed = true;

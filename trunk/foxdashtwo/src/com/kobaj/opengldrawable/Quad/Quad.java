@@ -257,7 +257,7 @@ public class Quad
 		}
 	}
 	
-	// this is a value between 1.0 and
+	// this is a value (ideally) between 1.0 and 0.0
 	public void setScale(double scale_value)
 	{
 		this.scale_value = scale_value;

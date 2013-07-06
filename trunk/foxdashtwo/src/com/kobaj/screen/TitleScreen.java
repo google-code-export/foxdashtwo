@@ -13,6 +13,7 @@ import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.EnumDrawFrom;
 import com.kobaj.opengldrawable.Button.Button;
 import com.kobaj.opengldrawable.Button.TextButton;
+import com.kobaj.opengldrawable.NewParticle.RingParticle;
 import com.kobaj.opengldrawable.Quad.QuadCompressed;
 import com.kobaj.opengldrawable.Tween.EnumTweenEvent;
 import com.kobaj.opengldrawable.Tween.TweenEvent;
@@ -66,6 +67,8 @@ public class TitleScreen extends BaseScreen
 	private QuadCompressed y_line;
 	
 	private MusicPlayList play_list;
+	
+	private RingParticle rings;
 	
 	public TitleScreen()
 	{
@@ -156,6 +159,10 @@ public class TitleScreen extends BaseScreen
 			this.y_line.color = Color.RED;
 		}
 		
+		// silly rings
+		rings = new RingParticle();
+		rings.onInitialize();
+		
 		// if the last screen had a bug, alert the user on this screen
 		if (crashed)
 		{
@@ -202,6 +209,9 @@ public class TitleScreen extends BaseScreen
 			login_visible = base_login.onUpdate(delta);
 		else
 		{
+			// silly rings
+			rings.onUpdate(delta);
+			
 			// and if nothing is visible, then just update like normal
 			if (Constants.input_manager.getKeyPressed(EnumKeyCodes.back))
 				ready_to_quit = true;
@@ -290,6 +300,8 @@ public class TitleScreen extends BaseScreen
 			base_login.onDraw();
 		else
 		{
+			rings.onDrawConstant();
+			
 			// TODO add the actual logo here and delete this.
 			double x_pos = Functions.screenXToShaderX(500);
 			double y_pos = Functions.screenYToShaderY((int) Functions.fix_y(100));
@@ -333,7 +345,6 @@ public class TitleScreen extends BaseScreen
 					this.x_line.onDrawAmbient(Constants.my_ip_matrix, true);
 				}
 		}
-		
 	}
 	
 	@Override

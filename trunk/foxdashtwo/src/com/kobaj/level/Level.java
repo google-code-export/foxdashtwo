@@ -115,6 +115,10 @@ public class Level
 	private final double walking_max = 600;
 	private double walking_timeout = 0;
 	
+	// other random sounds
+	private int random_sound_time = 0;
+	private int random_sound_key = 0;
+	
 	// no constructor
 	
 	public void onInitialize()
@@ -243,6 +247,7 @@ public class Level
 		QuadAnimated player_animation = new QuadAnimated(R.raw.fox2, R.raw.fox2_alpha, R.raw.animation_list_fox, 350, 180, 1024, 1024);
 		player_animation.setAnimation(EnumGlobalAnimationList.stop, 0, -1);
 		player.quad_object = player_animation;
+		player.this_object = EnumLevelObject.fox2;
 		player.eid = Integer.MIN_VALUE;
 		player.layer = EnumLayerTypes.Pre_interaction;
 		player.z_plane = Double.MIN_VALUE;
@@ -250,6 +255,35 @@ public class Level
 		player.ignore_coord_map = true;
 		object_list.add(player);
 		
+		// setup our two bounding fade edges
+		QuadCompressed left_edge = new QuadCompressed(R.raw.black, R.raw.lx_background_fade_1_alpha, this.right_limit - this.left_limit, 512);
+		left_edge.setRotationZ(-90);
+		left_edge.setXYPos(Functions.screenXToShaderX(left_limit + 255), Functions.screenYToShaderY(((double) top_limit + (double) bottom_limit) / 2.0), EnumDrawFrom.center);
+		LevelObject left_object = new LevelObject();
+		left_object.this_object = EnumLevelObject.lx_background_fade_1;
+		left_object.quad_object = left_edge;
+		left_object.eid = Integer.MAX_VALUE;
+		left_object.layer = EnumLayerTypes.Top;
+		left_object.z_plane = Double.MAX_VALUE;
+		left_object.active = true;
+		// note, you dont have to set x_pos or y_pos of the levelobject,
+		// because this object isnt one a moving layer, nor does it move itself.
+		object_list.add(left_object);
+		
+		QuadCompressed right_edge = new QuadCompressed(R.raw.black, R.raw.lx_background_fade_1_alpha, this.right_limit - this.left_limit, 512);
+		right_edge.setRotationZ(90);
+		right_edge.setXYPos(Functions.screenXToShaderX(right_limit - 255), Functions.screenYToShaderY(((double) top_limit + (double) bottom_limit) / 2.0), EnumDrawFrom.center);
+		LevelObject right_object = new LevelObject();
+		right_object.this_object = EnumLevelObject.lx_background_fade_1;
+		right_object.quad_object = right_edge;
+		right_object.eid = Integer.MAX_VALUE;
+		right_object.layer = EnumLayerTypes.Top;
+		right_object.z_plane = Double.MAX_VALUE;
+		right_object.active = true;
+		
+		object_list.add(right_object);		
+		
+		// player shadow
 		player_shadow = new QuadCompressed(R.raw.shadow_square, R.raw.shadow_square_alpha, 179, 90);
 		
 		// sort the objects
@@ -364,6 +398,9 @@ public class Level
 		Constants.sound.addSound(R.raw.sound_fox_trot_2);
 		Constants.sound.addSound(R.raw.sound_checkpoint);
 		Constants.sound.addSound(R.raw.sound_death);
+				
+		// last
+		this.reset_checkpoints();
 	}
 	
 	public void setPlayerPosition()
@@ -424,8 +461,9 @@ public class Level
 			event_list.get(i).onUpdate(delta);
 		
 		// whaaaaat
-		for (int i = physics_objects.size() - 1; i >= 0; i--)
-			physics_objects.get(i).onUpdate(delta);
+		if(play)
+			for (int i = physics_objects.size() - 1; i >= 0; i--)
+				physics_objects.get(i).onUpdate(delta);
 		
 		for (int i = local_np_emitter.size() - 1; i >= 0; i--)
 		{
@@ -523,6 +561,14 @@ public class Level
 				Constants.sound.stop(current_playing_fox_paws[i]);
 				current_playing_fox_paws[i] = 0;
 			}
+		}
+		
+		// random sounds
+		if(this.random_sound_time > 0)
+		{
+			this.random_sound_time -= (int) delta;
+			if(this.random_sound_time < 0)
+				Constants.sound.play(random_sound_key);
 		}
 		
 		// prepare for next loop
@@ -653,15 +699,44 @@ public class Level
 		}
 		
 		if (music == EnumMusics.tunnel)
+		{
 			Constants.music_player.start(R.raw.music_tunnel, Constants.music_fade_time, true);
-		else
-			return;
-		// rest of the music will go here eventually.
+			random_sound_key = R.raw.sound_hum;
+		}
+		else if (music == EnumMusics.field)
+		{
+			Constants.music_player.start(R.raw.music_field, Constants.music_fade_time, true);
+			random_sound_key = R.raw.sound_hum;
+		}
+		else if (music == EnumMusics.swamp)
+		{
+			Constants.music_player.start(R.raw.music_swamp, Constants.music_fade_time, true);
+			random_sound_key = R.raw.sound_swamp_bugs;
+		}
+		else if (music == EnumMusics.mountain)
+		{
+			Constants.music_player.start(R.raw.music_mountain, Constants.music_fade_time, true);
+			random_sound_key = R.raw.sound_mountain_wind;
+		}
+		else if (music == EnumMusics.river)
+		{
+			Constants.music_player.start(R.raw.music_river, Constants.music_fade_time, true);
+			random_sound_key = R.raw.sound_hum;
+		}
+		else if (music == EnumMusics.canyon)
+		{
+			// Constants.music_player.start(R.raw.music_canyon, Constants.music_fade_time, true);
+			random_sound_key = R.raw.sound_rock_rumbles;
+		}		
 		
+		Constants.sound.addSound(random_sound_key);
 	}
 	
+	// this is called when the player resets the level
 	public void reset_checkpoints()
 	{
+		this.random_sound_time = Functions.randomInt(Constants.min_random_wait_time, Constants.max_random_wait_time);
+		
 		for (int i = this.physics_objects.size() - 1; i >= 0; i--)
 		{
 			LevelObject checkpoint = physics_objects.get(i);

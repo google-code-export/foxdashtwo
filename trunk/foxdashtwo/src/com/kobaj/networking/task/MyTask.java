@@ -35,7 +35,7 @@ public abstract class MyTask extends AsyncTask<String, Void, String>
 		catch (JSONException e)
 		{
 			// do nothing
-			ToastManager.makeShortToast(R.string.error_message);
+			ToastManager.makeShortToast(R.string.error_network);
 		}
 		
 		Constants.logging_in = false;

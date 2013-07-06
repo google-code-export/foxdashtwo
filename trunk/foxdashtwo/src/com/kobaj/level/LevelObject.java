@@ -408,7 +408,7 @@ public class LevelObject extends LevelEntityActive
 			quad_object = new QuadCompressed(R.raw.white, R.raw.white, (int) quad_width, (int) quad_height);
 		else if (this_object == EnumLevelObject.test)
 			quad_object = new QuadColorShape(0, 200, 200, 0, Color.WHITE, 0);
-		else
+		else if (quad_object == null)
 			quad_object = new QuadColorShape(0, 200, 200, 0, Color.RED, 0);
 		
 		// set these before

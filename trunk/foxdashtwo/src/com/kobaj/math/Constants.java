@@ -166,6 +166,9 @@ public class Constants
 	public static MusicPlayer music_player;
 	public static Sound sound;
 	public static final int music_fade_time = 3000;
+	// level music
+	public static final int min_random_wait_time = 20000;
+	public static final int max_random_wait_time = 60000;
 	
 	public static InputManager input_manager;
 	// input constants
