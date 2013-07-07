@@ -76,10 +76,48 @@ public class Physics
 		the_quad.setXYPos(x_pos, y_pos, com.kobaj.opengldrawable.EnumDrawFrom.center);
 	}
 	
+	public int checkCollision(RectF collision, RectF main_rect, RectF second_rect, boolean clean_collision)
+	{
+		Functions.setEqualIntersects(collision, main_rect, second_rect);
+		if (collision.left != collision.right || collision.top != collision.bottom)
+		{
+			// we will generate normals
+			// and in addition modify the collision rectangle
+			// based on how the object should react (bounce, fly through, stick, etc
+			
+			// then decide normal
+			if (!cleanCollision(collision, clean_collision))
+				return -1; // no possible collision
+			
+			// double width = collision.width();
+			double height = collision.height();
+			
+			// we can still return false
+			if (height != 0)
+				return 1; // up down collision, can jump
+			else
+				return 0; // left right collision, cant jump
+		}
+		
+		return -1;
+	}
+	
+	public <T extends Quad> int checkCollision(RectF collision, RectF main_rect, T second_quad, boolean clean_collision)
+	{
+		for (int e = second_quad.phys_rect_list.size() - 1; e >= 0; e--)
+		{
+			int collision_value = checkCollision(collision, main_rect, second_quad.phys_rect_list.get(e).main_rect, clean_collision);
+			if(collision_value != -1)
+				return collision_value;
+		}
+		
+		return -1;
+	}
+	
 	// check for a collision and return true if the collision is up and down (the player can jump)
 	// otherwise return false
 	// zero based index. 0 = first quad, 1 = second_quad
-	public <T extends Quad> boolean checkCollision(RectF collision, T first_quad, T second_quad, int quad_to_move)
+	public <T extends Quad> int checkCollision(RectF collision, T first_quad, T second_quad, int quad_to_move)
 	{
 		// quick check to even see if its possible for two quads to touch
 		RectF player_extended = first_quad.best_fit_aabb.main_rect;
@@ -90,42 +128,26 @@ public class Physics
 				player_extended.left > main_rect.right || //
 				player_extended.top < main_rect.bottom || //
 				player_extended.bottom > main_rect.top) //
-			return false;
+			return -1;
 		
 		// if its possible, get a detailed picture of the collision
 		for (int i = first_quad.phys_rect_list.size() - 1; i >= 0; i--)
-			for (int e = second_quad.phys_rect_list.size() - 1; i >= 0; i--)
+		{
+			int collision_value = checkCollision(collision, first_quad.phys_rect_list.get(i).main_rect, second_quad, true);
+			if(collision_value != -1)
 			{
-				Functions.setEqualIntersects(collision, first_quad.phys_rect_list.get(i).main_rect, second_quad.phys_rect_list.get(e).main_rect);
-				if (collision.left != collision.right || collision.top != collision.bottom)
-				{
-					// we will generate normals
-					// and in addition modify the collision rectangle
-					// based on how the object should react (bounce, fly through, stick, etc
-					
-					// then decide normal
-					if (!cleanCollision(collision))
-						return false;
-					
-					// double width = collision.width();
-					double height = collision.height();
-					
-					// and move the user specified quad
-					if (quad_to_move == 0)
-						handleCollision(collision, first_quad);
-					else if (quad_to_move == 1)
-						handleCollision(collision, second_quad);
-					
-					// we can still return false
-					if (height != 0)
-						return true;
-					else
-						return false;
-				}
+				// and move the user specified quad
+				if (quad_to_move == 0)
+					handleCollision(collision, first_quad);
+				else if (quad_to_move == 1)
+					handleCollision(collision, second_quad);
+				
+				return collision_value;
 			}
+		}
 		
 		// if there is a collision, return a rectF, if no collision then null.
-		return false;
+		return -1;
 	}
 	
 	// this is a garbage filled terribly implemented static method that should only be used when you know what you're doing
@@ -157,7 +179,7 @@ public class Physics
 						collision.right = (float) Constants.shadow_height;
 					}
 					
-					if (Physics.cleanCollision(collision))
+					if (Physics.cleanCollision(collision, true))
 						if (collision.height() != 0)
 							if (collision.bottom > collision_y)
 								collision_y = collision.bottom;
@@ -195,7 +217,7 @@ public class Physics
 		}
 	}
 	
-	public static boolean cleanCollision(RectF collision)
+	public static boolean cleanCollision(RectF collision, boolean permanent)
 	{
 		if (collision.left > collision.right)
 		{
@@ -214,11 +236,11 @@ public class Physics
 		double width = collision.width();
 		double height = collision.height();
 		
-		if (width > height)
+		if (width > height && permanent)
 			collision.left = collision.right = 0;
-		else if (height > Constants.collision_detection_height)
+		else if (height > Constants.collision_detection_height && permanent)
 			collision.top = collision.bottom = 0;
-		else
+		else if (permanent)
 		{
 			collision.left = collision.right = collision.top = collision.bottom = 0;
 			return false;

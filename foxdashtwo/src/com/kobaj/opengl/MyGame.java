@@ -184,10 +184,7 @@ public class MyGame extends MyGLRender
 			currently_active_screen.onDrawLight();
 		
 		// regular objects
-		GLES20.glBlendFuncSeparate(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA, GLES20.GL_ONE, GLES20.GL_ONE);
-		
-		if (backgroup.beginRenderToTexture(true))
-			currently_active_screen.onDrawObject(backgroup_enums);
+		GLES20.glBlendFuncSeparate(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA, GLES20.GL_ONE, GLES20.GL_ONE);	
 		
 		if (scene.beginRenderToTexture(true))
 		{
@@ -209,7 +206,10 @@ public class MyGame extends MyGLRender
 		else
 			used_matrix = Constants.my_ip_matrix;
 		
-		backgroup.onDrawAmbient(used_matrix, true);
+		GLES20.glBlendFuncSeparate(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA, GLES20.GL_ONE, GLES20.GL_ONE);
+		currently_active_screen.onDrawObject(backgroup_enums);
+		
+		GLES20.glBlendFuncSeparate(GLES20.GL_ONE, GLES20.GL_ONE_MINUS_SRC_ALPHA, GLES20.GL_ONE, GLES20.GL_ONE);
 		scene.onDrawAmbient(used_matrix, true);
 		
 		GLES20.glBlendFuncSeparate(GLES20.GL_DST_COLOR, GLES20.GL_ZERO, GLES20.GL_DST_ALPHA, GLES20.GL_ZERO);

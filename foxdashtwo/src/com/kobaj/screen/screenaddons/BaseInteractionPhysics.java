@@ -8,10 +8,7 @@ import com.kobaj.level.LevelObject;
 import com.kobaj.math.AverageMaker;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
-import com.kobaj.math.Physics;
-import com.kobaj.math.RectFExtended;
 import com.kobaj.math.android.RectF;
-import com.kobaj.opengldrawable.Quad.Quad;
 
 public class BaseInteractionPhysics
 {
@@ -28,9 +25,9 @@ public class BaseInteractionPhysics
 	private final boolean integratePhysics(final double delta, final Level the_level)
 	{
 		// something to collide with the shadow
-		player_extended.left = (float) (the_level.player.quad_object.x_pos_shader - the_level.player.quad_object.shader_width / 2.0);
-		player_extended.right = (float) (player_extended.left + the_level.player.quad_object.shader_width);
-		player_extended.top = (float) (the_level.player.quad_object.y_pos_shader - the_level.player.quad_object.shader_height / 2.0);
+		player_extended.left = (float) (the_level.player.quad_object.x_pos_shader - the_level.player.quad_object.shader_width / 5.0);
+		player_extended.right = (float) (the_level.player.quad_object.x_pos_shader + the_level.player.quad_object.shader_width / 5.0);
+		player_extended.top = (float) (the_level.player.quad_object.y_pos_shader - the_level.player.quad_object.shader_height / 5.0);
 		player_extended.bottom = (float) (player_extended.top - Constants.shadow_height_shader);
 		
 		double shadow_collision_y = player_extended.bottom;
@@ -51,6 +48,21 @@ public class BaseInteractionPhysics
 			
 			if (reference.active)
 			{
+				// do it again for the shadow
+				collision.left = 0;
+				collision.top = 0;
+				collision.right = 0;
+				collision.bottom = 0;
+				
+				if (Constants.physics.checkCollision(collision, player_extended, reference.quad_object, false) == 1)
+				{
+					if (collision.bottom > shadow_collision_y)
+					{
+						// new calculation
+						this.player_shadow_y = shadow_collision_y = collision.bottom;
+					}
+				}
+				
 				// do the regular fox's collision
 				collision.left = 0;
 				collision.top = 0;
@@ -61,70 +73,18 @@ public class BaseInteractionPhysics
 				if (reference.this_object == EnumLevelObject.lx_pickup_checkpoint)
 					collision_agent = 3;
 				
-				if (Constants.physics.checkCollision(collision, the_level.player.quad_object, reference.quad_object, collision_agent))
+				if (Constants.physics.checkCollision(collision, the_level.player.quad_object, reference.quad_object, collision_agent) == 1)
 					can_jump = true;
 				
 				if (collision.width() != 0 || collision.height() != 0)
 					the_level.objectInteraction(collision, the_level.player, reference, delta);
 				
 				// do the fox's shadow
-				shadow_collision_y = calc_foxes_shadow(reference, shadow_collision_y, the_level.player.quad_object.y_pos_shader);
+				// shadow_collision_y = calc_foxes_shadow(reference, shadow_collision_y, the_level.player.quad_object.y_pos_shader);
 			}
 		}
 		
 		return can_jump;
-	}
-	
-	private final double calc_foxes_shadow(LevelObject reference, double collision_y, double maximum_height)
-	{
-		collision.left = 0;
-		collision.top = 0;
-		collision.right = 0;
-		collision.bottom = 0;
-		
-		Quad second_quad = reference.quad_object;
-		RectFExtended best_fit_aabb = second_quad.best_fit_aabb;
-		
-		// short circuit
-		if (player_extended.right < best_fit_aabb.main_rect.left || player_extended.left > best_fit_aabb.main_rect.right || player_extended.top < best_fit_aabb.main_rect.bottom
-				|| player_extended.bottom > best_fit_aabb.main_rect.top)
-			return collision_y;
-		
-		for (int e = reference.quad_object.phys_rect_list.size() - 1; e >= 0; e--)
-		{
-			RectF second = reference.quad_object.phys_rect_list.get(e).main_rect;
-			
-			if (player_extended.left > second.right || player_extended.right < second.left //
-					|| player_extended.top < second.bottom || player_extended.bottom > second.top) //
-			{
-				// no possible collision
-			}
-			else
-			{
-				// possible collision
-				Functions.setEqualIntersects(collision, player_extended, second);
-				
-				if (Physics.cleanCollision(collision))
-				{
-					
-					// force this to be an up-down collision
-					if (collision.width() != 0 || second.top > maximum_height)
-					{
-						continue;
-					}
-					else if (collision.bottom > collision_y)
-					{
-						if (collision.bottom == player_extended.top)
-							collision.bottom = second.top;
-						
-						// new calculation
-						this.player_shadow_y = collision_y = collision.bottom;
-					}
-				}
-			}
-		}
-		
-		return collision_y;
 	}
 	
 	private final boolean handleTouchInput(final boolean can_jump, final GameInputModifier my_modifier, final Level the_level)
