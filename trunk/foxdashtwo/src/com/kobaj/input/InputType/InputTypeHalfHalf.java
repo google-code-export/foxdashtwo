@@ -35,6 +35,12 @@ public class InputTypeHalfHalf extends InputTypeBase
 	}
 	
 	@Override
+	public boolean getTouchedJump()
+	{
+		return getTouchedLeft() && getTouchedRight();
+	}
+	
+	@Override
 	public boolean getPressedJump()
 	{
 		if ((Constants.input_manager.getTouched(1) && Constants.input_manager.getPressed(0)) || //

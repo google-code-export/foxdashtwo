@@ -2,6 +2,7 @@ package com.kobaj.screen.screenaddons.floatingframe;
 
 import android.annotation.SuppressLint;
 
+import com.kobaj.account_settings.SinglePlayerSave;
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
@@ -79,6 +80,7 @@ public class BasePlayType extends BaseFloatingFrame
 		else if (new_game_button.isReleased())
 		{
 			TitleScreen.fade_play = true;
+			SinglePlayerSave.last_level = Constants.empty;
 		}
 		else if (level_select_button.isReleased() && !Constants.demo_mode)
 		{

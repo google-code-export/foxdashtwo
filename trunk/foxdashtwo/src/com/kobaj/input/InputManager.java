@@ -281,7 +281,7 @@ public class InputManager
 		
 		if (dpads[index] && !old_dpads[index])
 		{
-			old_dpads[index] = true;
+			//old_dpads[index] = true;
 			return true;
 		}
 		
@@ -294,7 +294,7 @@ public class InputManager
 		
 		if (!dpads[index] && old_dpads[index])
 		{
-			old_dpads[index] = false;
+			//old_dpads[index] = false;
 			return true;
 		}
 		
@@ -305,7 +305,7 @@ public class InputManager
 	{
 		if (pressed[index] && !old_pressed[index])
 		{
-			old_pressed[index] = true;
+			//old_pressed[index] = true;
 			
 			return true;
 		}
@@ -317,10 +317,19 @@ public class InputManager
 	{
 		if (!pressed[index] && old_pressed[index])
 		{
-			old_pressed[index] = false;
+			//old_pressed[index] = false;
 			return true;
 		}
 		
 		return false;
+	}
+	
+	public void onUpdate(double delta)
+	{
+		for(int i = 0; i < finger_count; i++)
+		{
+			old_pressed[i] = pressed[i];
+			old_dpads[i] = dpads[i];
+		}
 	}
 }

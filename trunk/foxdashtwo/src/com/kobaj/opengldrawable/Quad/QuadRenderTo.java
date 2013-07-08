@@ -82,30 +82,11 @@ public class QuadRenderTo extends QuadGodRay
 		if (local_fbo_divider > 1)
 			GLES20.glViewport(0, 0, Constants.device_width / local_fbo_divider, Constants.device_height / local_fbo_divider);
 		
-		double scissor_width = Constants.device_width;
-		double scissor_height = Constants.device_height;
-		double start_x = 0;
-		double start_y = 0;
-		
-		if (Constants.horizontal_ratio)
-		{
-			scissor_height = Constants.device_width * (1.0 / Constants.ratio);
-			start_y = (Constants.device_height - scissor_height) / 2.0;
-		}
-		else
-		{
-			scissor_width = Constants.device_height * Constants.ratio;
-			start_x = (Constants.device_width - scissor_width) / 2.0;
-		}
-		
 		// clear
 		if (clear)
 		{
 			GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
 		}
-		
-		GLES20.glEnable(GLES20.GL_SCISSOR_TEST);
-		GLES20.glScissor((int) start_x, (int) start_y, (int) scissor_width, (int) scissor_height);
 		
 		// check status
 		int status = GLES20.glCheckFramebufferStatus(GLES20.GL_FRAMEBUFFER);
@@ -128,9 +109,6 @@ public class QuadRenderTo extends QuadGodRay
 		{
 			GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 		}
-		
-		GLES20.glScissor(0, 0, Constants.device_width, Constants.device_height);
-		GLES20.glDisable(GLES20.GL_SCISSOR_TEST);
 	}
 	
 	@Override

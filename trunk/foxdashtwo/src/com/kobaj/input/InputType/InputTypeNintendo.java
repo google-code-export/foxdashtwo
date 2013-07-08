@@ -2,6 +2,7 @@ package com.kobaj.input.InputType;
 
 import android.graphics.Color;
 
+import com.kobaj.account_settings.UserSettings;
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
@@ -17,20 +18,27 @@ public class InputTypeNintendo extends InputTypeBase
 	@Override
 	public void onInitialize()
 	{
-		// these will be replaced with images in the future.
-		double shader_circle_pos_y = Functions.screenYToShaderY(Constants.input_circle_width);
-		
 		// left
 		my_quad_left = new QuadColorShape(Constants.input_circle_width, Color.WHITE, 0);
-		my_quad_left.setXYPos(Functions.screenXToShaderX(Constants.input_circle_width), shader_circle_pos_y, EnumDrawFrom.bottom_left);
-		
+
 		// right
 		my_quad_right = new QuadColorShape(Constants.input_circle_width, Color.WHITE, 0);
-		my_quad_right.setXYPos(Functions.screenXToShaderX(Constants.input_circle_width * 3), shader_circle_pos_y, EnumDrawFrom.bottom_left);
-		
+
 		// jump
 		my_quad_jump = new QuadColorShape(Constants.input_circle_width, Color.WHITE, 0);
-		my_quad_jump.setXYPos(Functions.screenXToShaderX(Constants.width - Constants.input_circle_width), shader_circle_pos_y, EnumDrawFrom.bottom_right);
+
+		updateUserSetPositions();
+	}
+	
+	@Override
+	public void updateUserSetPositions()
+	{
+		my_quad_left.setXYPos(Functions.screenXToShaderX(UserSettings.left_button_position.x), 
+				Functions.screenYToShaderY(Functions.fix_y(UserSettings.left_button_position.y)), EnumDrawFrom.center);
+		my_quad_right.setXYPos(Functions.screenXToShaderX(UserSettings.right_button_position.x), 
+				Functions.screenYToShaderY(Functions.fix_y(UserSettings.right_button_position.y)), EnumDrawFrom.center);
+		my_quad_jump.setXYPos(Functions.screenXToShaderX(UserSettings.jump_button_position.x), 
+				Functions.screenYToShaderY(Functions.fix_y(UserSettings.jump_button_position.y)), EnumDrawFrom.center);
 	}
 	
 	@Override
@@ -41,6 +49,7 @@ public class InputTypeNintendo extends InputTypeBase
 		my_quad_jump.onUnInitialize();
 	}
 	
+	@Override
 	public boolean getTouchedJump()
 	{
 		for (int i = 0; i < Constants.input_manager.finger_count; i++)

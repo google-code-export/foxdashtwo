@@ -319,15 +319,17 @@ public class Level
 					|| reference.this_object == EnumLevelObject.l2_ground_platform_floating_2 //
 					|| reference.this_object == EnumLevelObject.l4_ground_platform_floating)
 			{
-				float half_width = (float) (reference.quad_object.best_fit_aabb.main_rect.width() - Functions.screenWidthToShaderWidth(25)) / 2.0f;// (float) Functions.screenWidthToShaderWidth(45);
-				float half_height_top = (float) Functions.screenHeightToShaderHeight(0);
-				float half_height_bottom = (float) Functions.screenHeightToShaderHeight(-50);
+				double scale_reference = reference.quad_object.scale_value;
+				
+				float half_width = (float) (reference.quad_object.best_fit_aabb.main_rect.width() - Functions.screenWidthToShaderWidth(25.0 * scale_reference)) / 2.0f;
+				float half_height_top = (float) Functions.screenHeightToShaderHeight(0.0 * scale_reference);
+				float half_height_bottom = (float) Functions.screenHeightToShaderHeight(-50.0  * scale_reference);
 				
 				// additional changes
 				if (reference.this_object == EnumLevelObject.l4_ground_platform_floating)
 				{
-					half_height_top = (float) Functions.screenHeightToShaderHeight(-60);
-					half_height_bottom = (float) Functions.screenHeightToShaderHeight(-110);
+					half_height_top = (float) Functions.screenHeightToShaderHeight(-60.0  * scale_reference);
+					half_height_bottom = (float) Functions.screenHeightToShaderHeight(-110.0  * scale_reference);
 				}
 				
 				RectFExtended emitt_from = new RectFExtended(-half_width, half_height_top, half_width, half_height_bottom);
@@ -400,7 +402,7 @@ public class Level
 		Constants.sound.addSound(R.raw.sound_death);
 				
 		// last
-		this.reset_checkpoints();
+		this.resetLevel();
 	}
 	
 	public void setPlayerPosition()
@@ -675,6 +677,7 @@ public class Level
 				reference.my_checkpoint.explode();
 			
 			SinglePlayerSave.last_checkpoint = reference.id;
+			this.resetCheckpoints(reference.id);
 		}
 	}
 	
@@ -732,15 +735,26 @@ public class Level
 		Constants.sound.addSound(random_sound_key);
 	}
 	
-	// this is called when the player resets the level
-	public void reset_checkpoints()
+	public void resetLevel()
 	{
 		this.random_sound_time = Functions.randomInt(Constants.min_random_wait_time, Constants.max_random_wait_time);
 		
+		resetCheckpoints();
+	}
+	
+	// this is called when the player resets the level
+	public void resetCheckpoints()
+	{
+		resetCheckpoints(Constants.empty);
+	}
+	
+	public void resetCheckpoints(String skip_id)
+	{
 		for (int i = this.physics_objects.size() - 1; i >= 0; i--)
 		{
 			LevelObject checkpoint = physics_objects.get(i);
-			if (checkpoint.this_object == EnumLevelObject.lx_pickup_checkpoint)
+			if (checkpoint.this_object == EnumLevelObject.lx_pickup_checkpoint &&
+					!checkpoint.id.equals(skip_id))
 			{
 				if (checkpoint.my_checkpoint != null)
 					checkpoint.my_checkpoint.reset();

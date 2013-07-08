@@ -19,7 +19,7 @@ public class BaseAudioSettingsScreen extends BaseFloatingFrame
 	
 	private double sound_label_x;
 	private double sound_label_y;
-	private double music_label_x;
+	private double music_label_x; // music is on top
 	private double music_label_y;
 	
 	@Override

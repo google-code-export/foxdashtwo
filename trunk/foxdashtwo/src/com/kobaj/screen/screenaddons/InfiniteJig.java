@@ -30,9 +30,19 @@ public class InfiniteJig extends RotationLoadingJig
 			
 			outer_rings[i] = new RotationLoadingJig();
 			outer_rings[i].shape_count = i_2;
-			outer_rings[i].radius = .1 * i_2;
 			outer_rings[i].speed = 10;
 			outer_rings[i].loading_delta_shift = Math.PI / ((double) i_2) * 2.0;
+		}
+		
+		setOuterRingRadius();
+	}
+	
+	public void setOuterRingRadius()
+	{
+		for(int i = 0; i < outer_rings.length; i++)
+		{
+			int i_2 = i + 2;
+			outer_rings[i].radius = .1 * (double) i_2;
 		}
 	}
 	
@@ -145,5 +155,8 @@ public class InfiniteJig extends RotationLoadingJig
 	{
 		explode = false;
 		saved_delta = 0;
+		
+		// set our outer rings radius back
+		setOuterRingRadius();
 	}
 }

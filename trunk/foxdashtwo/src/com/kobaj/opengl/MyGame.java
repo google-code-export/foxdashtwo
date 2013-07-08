@@ -33,7 +33,9 @@ public class MyGame extends MyGLRender
 	// final drawable.
 	private QuadRenderTo scene;
 	private QuadRenderTo lights;
-	private QuadRenderTo backgroup;
+	
+	private final int detection_x_default = 50;
+	private final int detection_y_default = 50;
 	
 	private final EnumLayerTypes[] backgroup_enums = { EnumLayerTypes.Background, EnumLayerTypes.Background_Aux, EnumLayerTypes.Post_interaction };
 	private final EnumLayerTypes[] interaction_group_enums = { EnumLayerTypes.Interaction };
@@ -93,7 +95,8 @@ public class MyGame extends MyGLRender
 		
 		scene = QuadRendersHandler(scene);
 		lights = QuadRendersHandler(lights);
-		backgroup = QuadRendersHandler(backgroup);
+		
+		reInitializeQuadRenders();
 		
 		System.gc();
 	}
@@ -102,7 +105,6 @@ public class MyGame extends MyGLRender
 	{
 		scene.setFBODivider(UserSettings.fbo_divider);
 		lights.setFBODivider(UserSettings.fbo_divider);
-		backgroup.setFBODivider(UserSettings.fbo_divider);
 	}
 	
 	private QuadRenderTo QuadRendersHandler(QuadRenderTo scene)
@@ -142,7 +144,8 @@ public class MyGame extends MyGLRender
 		
 		// super hacks to change settings
 		if (Constants.input_manager.getPressed(0))
-			if (Constants.input_manager.getX(0) < 100 * Constants.ratio && Constants.input_manager.getY(0) < 100 * Constants.ratio)
+		{
+			if (Constants.input_manager.getX(0) < detection_x_default && Constants.input_manager.getY(0) < detection_y_default)
 			{
 				left_corner_count++;
 				
@@ -159,6 +162,10 @@ public class MyGame extends MyGLRender
 						UserSettings.my_debug_mode = UserSettings.DebugMode.none;
 				}
 			}
+		}
+		
+		// input manager loop
+		Constants.input_manager.onUpdate(delta);
 	}
 	
 	@Override
@@ -282,6 +289,14 @@ public class MyGame extends MyGLRender
 			Constants.text.drawText(R.string.branch, x_pos, y_pos, EnumDrawFrom.bottom_right);
 			Constants.text.drawIntNumber(Constants.quads_coord_map_check, x_pos, y_pos, EnumDrawFrom.bottom_left, oos_color);
 			Constants.quads_coord_map_check = 0;
+			
+			y_pos = Constants.y_275;
+			
+			Constants.text.drawText(R.string.x, x_pos, y_pos, EnumDrawFrom.bottom_right);
+			Constants.text.drawIntNumber((int) Functions.shaderXToScreenX(Constants.x_shader_translation), x_pos, y_pos, EnumDrawFrom.bottom_left);
+			
+			Constants.text.drawText(R.string.y, x_pos, y_pos, EnumDrawFrom.top_right);
+			Constants.text.drawIntNumber((int) Functions.shaderXToScreenX(Constants.y_shader_translation), x_pos, y_pos, EnumDrawFrom.top_left);
 		}
 		
 	}

@@ -401,8 +401,8 @@ public class Quad
 	{
 		currently_drawn = where;
 		
-		double x_pos;
-		double y_pos;
+		double x_pos = 0;
+		double y_pos = 0;
 		
 		if (where == EnumDrawFrom.top_left)
 		{
@@ -422,15 +422,34 @@ public class Quad
 			y_pos = y + shader_height / 2.0;
 		}
 		else if (where == EnumDrawFrom.bottom_right)
-		{
-			
+		{	
 			x_pos = x - shader_width / 2.0;
 			y_pos = y + shader_height / 2.0;
 		}
-		else
+		else if (where == EnumDrawFrom.center)
 		{
 			x_pos = x;
 			y_pos = y;
+		}
+		else if (where == EnumDrawFrom.center_top)
+		{
+			x_pos = x;
+			y_pos = y - shader_height / 2.0;
+		}
+		else if (where == EnumDrawFrom.center_bottom)
+		{
+			x_pos = x;
+			y_pos = y + shader_height / 2.0;
+		}
+		else if (where == EnumDrawFrom.center_left)
+		{
+			y_pos = y;
+			x_pos = x + shader_width / 2.0;
+		}
+		else if (where == EnumDrawFrom.center_right)
+		{
+			y_pos = y;
+			x_pos = x - shader_width / 2.0;
 		}
 		
 		// nothing has changed
