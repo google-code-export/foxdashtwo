@@ -736,6 +736,7 @@ public class Functions
 		Constants.y_50 = Functions.screenYToShaderY((int) Functions.fix_y(50));
 		Constants.y_125 = Functions.screenYToShaderY((int) Functions.fix_y(125));
 		Constants.y_200 = Functions.screenYToShaderY((int) Functions.fix_y(200));
+		Constants.y_275 = Functions.screenYToShaderY((int) Functions.fix_y(275));
 		
 		Constants.sixteen_width = Functions.screenWidthToShaderWidth(16);
 		Constants.forward_camera_shift_width = Functions.screenWidthToShaderWidth(Constants.forward_camera_shift_width_default);

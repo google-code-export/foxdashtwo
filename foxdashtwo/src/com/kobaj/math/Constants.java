@@ -102,7 +102,7 @@ public class Constants
 	public static final double normal_acceleration_default = 0.00100;
 	public static final double normal_reverse_acceleration_default = 0.00750;
 	public static final double collision_detection_height_default = 1.0;
-	public static final double jump_velocity_default = 0.800;
+	public static final double jump_velocity_default = 0.850;
 	public static final double jump_limiter_default = 0.185;
 	public static final double player_downward_platform_acc_default = -.001;
 	public static final double player_movement_threshold_horizontal_default = .01;
@@ -172,7 +172,7 @@ public class Constants
 	
 	public static InputManager input_manager;
 	// input constants
-	public static final double input_circle_width = 50;
+	public static final double input_circle_width = 75;
 	public static final int input_unpress_color = 0xBBBBBBCC;
 	public static final int input_press_color = 0xBB888899;
 	
@@ -211,6 +211,7 @@ public class Constants
 	public static double y_50;
 	public static double y_125;
 	public static double y_200;
+	public static double y_275;
 	public static double sixteen_width;
 	
 	// errors

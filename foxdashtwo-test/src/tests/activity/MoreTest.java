@@ -109,7 +109,7 @@ public class MoreTest
 		rectangle.left = 5;
 		rectangle.right = -5;
 		
-		Physics.cleanCollision(rectangle);
+		Physics.cleanCollision(rectangle, true);
 		
 		// RectFs are UPSIDE DOWN
 		assertThat(rectangle.top, equalTo(-1f));
@@ -121,7 +121,7 @@ public class MoreTest
 		rectangle.left = 1;
 		rectangle.right = -1;
 		
-		Physics.cleanCollision(rectangle);
+		Physics.cleanCollision(rectangle, true);
 		assertThat(rectangle.left, equalTo(-1f));
 		assertThat(rectangle.right, equalTo(1f));
 		assertThat(rectangle.height(), equalTo(0f));

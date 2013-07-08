@@ -316,7 +316,7 @@ public class SinglePlayerScreen extends BaseScreen implements FinishedScoring
 				level_done = false;
 				SinglePlayerSave.last_checkpoint = Constants.empty;
 				game_time = 0;
-				this.the_level.reset_checkpoints();
+				this.the_level.resetLevel();
 				
 				// send to start.
 				this.current_death_stage = EnumDeathStages.kill;

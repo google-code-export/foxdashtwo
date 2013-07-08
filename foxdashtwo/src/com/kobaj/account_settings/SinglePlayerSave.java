@@ -9,15 +9,15 @@ import com.kobaj.math.Constants;
 
 public class SinglePlayerSave
 {
-	public static String last_level = "";
+	public static String last_level;
 	
-	public static String last_checkpoint = "";
+	public static String last_checkpoint;
 	
-	@Element
+	@Element // eggs
 	public static boolean are_you_still_there = true;
 	
 	@ElementMap
-	public static HashMap<String, Double> finished_levels_and_times = new HashMap<String, Double>();
+	public static HashMap<String, Double> finished_levels_and_times;
 	
 	public static double getPrevBest(String level_name)
 	{
@@ -36,5 +36,12 @@ public class SinglePlayerSave
 	{
 		if (!level_name.equals(Constants.empty))
 			finished_levels_and_times.put(level_name, new_best);
+	}
+	
+	public static void resetDefaults()
+	{
+		last_level = Constants.empty;
+		last_checkpoint = Constants.empty;
+		finished_levels_and_times = new HashMap<String, Double>();
 	}
 }

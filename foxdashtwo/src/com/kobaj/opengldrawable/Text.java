@@ -363,7 +363,7 @@ public class Text
 				y_pos += (bitmap_buffer.get(0).shader_height / 2.0) - (temp.shader_height / 2.0);
 			else if(where == EnumDrawFrom.top_left ||
 					where == EnumDrawFrom.top_right)
-				y_pos -= (bitmap_buffer.get(0).shader_height / 2.0) + (temp.shader_height / 2.0);
+				y_pos -= (bitmap_buffer.get(0).shader_height / 2.0) - (temp.shader_height / 2.0);
 			
 			if(fixed_width)
 				current_width += fixed_width_value;
