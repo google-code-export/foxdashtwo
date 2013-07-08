@@ -43,5 +43,5 @@ public enum EnumLevelObject
 	lx_background_fade_1, lx_decoration_spikes_1, lx_decoration_spikes_2, lx_decoration_spikes_3,
 	lx_decoration_spikes_4, lx_decoration_spikes_5, lx_decoration_spikes_6,
 	lx_pickup_checkpoint,
-	right_arrow, test_light
+	right_arrow, test_light,
 }

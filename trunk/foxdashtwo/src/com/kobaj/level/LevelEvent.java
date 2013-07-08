@@ -14,6 +14,7 @@ import com.kobaj.level.LevelEventTypes.LevelEventBase;
 import com.kobaj.level.LevelEventTypes.LevelEventCheckPoint;
 import com.kobaj.level.LevelEventTypes.LevelEventDeath;
 import com.kobaj.level.LevelEventTypes.LevelEventNextLevel;
+import com.kobaj.level.LevelEventTypes.LevelEventThoughtBubble;
 import com.kobaj.math.Functions;
 import com.kobaj.math.android.RectF;
 
@@ -68,6 +69,8 @@ public class LevelEvent
 			my_possible_event = new LevelEventCheckPoint(this_event);
 		else if (this_event == EnumLevelEvent.death)
 			my_possible_event = new LevelEventDeath(this_event);
+		else if (this_event == EnumLevelEvent.thought_bubble)
+			my_possible_event = new LevelEventThoughtBubble(this_event);
 		
 		if (my_possible_event != null)
 			my_possible_event.onInitialize(level, id_strings);

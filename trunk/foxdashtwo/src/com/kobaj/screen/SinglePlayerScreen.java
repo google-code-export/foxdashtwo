@@ -94,9 +94,9 @@ public class SinglePlayerScreen extends BaseScreen implements FinishedScoring
 		if (level_name == null || level_name.equals(Constants.empty))
 		{
 			// change the first level
-			the_level = FileHandler.readSerialResource(Constants.resources, R.raw.level_0, com.kobaj.level.Level.class);
+			the_level = FileHandler.readSerialResource(Constants.resources, R.raw.level_1, com.kobaj.level.Level.class);
 			{
-				level_name = "level_one";
+				level_name = "level_0";
 				return true;
 			}
 		}
@@ -156,6 +156,9 @@ public class SinglePlayerScreen extends BaseScreen implements FinishedScoring
 		
 		pause_addon = new BasePauseScreen();
 		pause_addon.onInitialize();
+		
+		pause_addon.base_settings.base_input.adjustment.my_modifier = null;
+		pause_addon.base_settings.base_input.adjustment.my_modifier = my_modifier;
 		
 		// debug_addon = new LevelDebugScreen(the_level, EnumDebugType.events);
 		

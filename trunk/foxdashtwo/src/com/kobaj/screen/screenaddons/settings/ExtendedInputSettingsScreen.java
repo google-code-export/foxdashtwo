@@ -16,7 +16,7 @@ public class ExtendedInputSettingsScreen extends BaseFloatingFrame
 	private TextButton cancel_button;
 	private TextButton reset_button;
 	
-	private GameInputModifier my_modifier;
+	public GameInputModifier my_modifier;
 	
 	private double input_label_y;
 	

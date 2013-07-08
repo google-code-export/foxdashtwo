@@ -13,6 +13,7 @@ public class LevelEventDeath extends LevelEventBase
 	
 	private Level level_cache;
 	
+	@Override
 	public void onInitialize(final Level level, final ArrayList<String> id_strings)
 	{
 		level_cache = level;

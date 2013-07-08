@@ -94,7 +94,7 @@
     
     <!-- long messages -->
     <string name="error_network">Error: check your network connection.</string>
-    <string name="error_message">There was an error somewhere. Sorry.</string>
+    <string name="error_message">There was an error somewhere. \nTry re-downloading the level.</string>
 	<string name="account_list">Which account would you like to login with?</string>
     
 	<!-- url success -->

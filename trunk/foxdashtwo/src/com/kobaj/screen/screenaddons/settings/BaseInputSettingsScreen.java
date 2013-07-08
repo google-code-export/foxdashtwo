@@ -19,7 +19,7 @@ public class BaseInputSettingsScreen extends BaseFloatingFrame
 	private TextButton adjustment_button;
 	private boolean adjustment_open = false;
 	
-	private ExtendedInputSettingsScreen adjustment;
+	public ExtendedInputSettingsScreen adjustment;
 	
 	private double input_label_x;
 	private double input_label_y;

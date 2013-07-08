@@ -19,6 +19,7 @@ public class LevelAmbientLight extends LevelEntityActive
 	
 	@Element
 	public int color;
+	public int secondary_color = Color.BLACK;
 	
 	public Quad quad_light;
 	
@@ -32,7 +33,7 @@ public class LevelAmbientLight extends LevelEntityActive
 		quad_light.color = color;
 		
 		if (!active)
-			quad_light.color = Color.BLACK;
+			quad_light.color = secondary_color;
 		
 		old_active = active;
 	}
@@ -59,15 +60,15 @@ public class LevelAmbientLight extends LevelEntityActive
 		{
 			if (quad_light.color != color)
 			{
-				quad_light.color = Functions.linearInterpolateColor(0, Constants.light_active_fade, fade_delta, color, Color.BLACK);
+				quad_light.color = Functions.linearInterpolateColor(0, Constants.light_active_fade, fade_delta, color, secondary_color);
 			}
 		}
 		else
 		// turn off
 		{
-			if (quad_light.color != Color.BLACK)
+			if (quad_light.color != secondary_color)
 			{
-				quad_light.color = Functions.linearInterpolateColor(0, Constants.light_active_fade, fade_delta, Color.BLACK, color);
+				quad_light.color = Functions.linearInterpolateColor(0, Constants.light_active_fade, fade_delta, secondary_color, color);
 			}
 			
 		}
@@ -75,7 +76,7 @@ public class LevelAmbientLight extends LevelEntityActive
 	
 	public void onDrawLight()
 	{
-		if (active || quad_light.color != Color.BLACK)
+		if (active || quad_light.color != Color.BLACK || quad_light.color != Color.TRANSPARENT)
 			quad_light.onDrawAmbient(Constants.my_ip_matrix, true);
 	}
 }
