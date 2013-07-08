@@ -117,6 +117,11 @@ public class Text
 		System.gc();
 	}
 	
+	public int generateString(String s)
+	{
+		return generateString(s, Constants.text_size);
+	}
+	
 	// generate a string and return a key that will get that string.
 	// note, you probably shouldn't call this except at loading time, 
 	// and never call this during game play

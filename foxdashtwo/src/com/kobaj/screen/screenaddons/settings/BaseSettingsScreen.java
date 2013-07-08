@@ -22,7 +22,7 @@ public class BaseSettingsScreen extends BaseFloatingFrame
 	
 	private BaseVideoSettingsScreen base_video = new BaseVideoSettingsScreen();
 	private BaseAudioSettingsScreen base_audio = new BaseAudioSettingsScreen();
-	private BaseInputSettingsScreen base_input = new BaseInputSettingsScreen();
+	public BaseInputSettingsScreen base_input = new BaseInputSettingsScreen();
 	private BaseAccountSettingsScreen base_account = new BaseAccountSettingsScreen();
 	
 	@Override

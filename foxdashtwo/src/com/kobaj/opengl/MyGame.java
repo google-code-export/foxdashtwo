@@ -46,7 +46,6 @@ public class MyGame extends MyGLRender
 	
 	public MyGame()
 	{
-		// single_player_screen = new SinglePlayerScreen();
 		currently_active_screen = new BlankScreen(); // single_player_screen;
 	}
 	

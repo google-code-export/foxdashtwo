@@ -19,7 +19,7 @@ public class BasePauseScreen extends BaseFloatingFrame
 	private TextButton settings_button;
 	
 	// let users edit settings right in game!
-	private BaseSettingsScreen base_settings = new BaseSettingsScreen();
+	public BaseSettingsScreen base_settings = new BaseSettingsScreen();
 	private BaseQuit base_quit = new BaseQuit();
 	
 	private boolean ready_to_quit = false;

@@ -26,35 +26,35 @@ public abstract class LevelBloomLight extends LevelAmbientLight
 	{
 		super.onUnInitialize();
 		
-		if(is_bloom)
+		if (is_bloom)
 			quad_bloom.onUnInitialize();
 	}
 	
 	protected void setupPositions()
 	{
 		quad_light.setXYPos(com.kobaj.math.Functions.screenXToShaderX(x_pos), com.kobaj.math.Functions.screenYToShaderY(y_pos), draw_from);
-		if(is_bloom)
-			quad_bloom.setXYPos(com.kobaj.math.Functions.screenXToShaderX(x_pos), com.kobaj.math.Functions.screenYToShaderY(y_pos), draw_from);	
+		if (is_bloom)
+			quad_bloom.setXYPos(com.kobaj.math.Functions.screenXToShaderX(x_pos), com.kobaj.math.Functions.screenYToShaderY(y_pos), draw_from);
 	}
 	
 	@Override
 	public void onDrawLight()
 	{
-		if(active || quad_light.color != Color.BLACK)
+		if (active || quad_light.color != Color.BLACK || quad_light.color != Color.TRANSPARENT)
 			quad_light.onDrawAmbient();
 	}
 	
 	public void onDrawObject()
 	{
-		if(is_bloom)
-		if(active || quad_light.color != Color.TRANSPARENT)
-		{
-			// blue, or green would also work
-			int red = Functions.red(quad_light.color);
-			
-			quad_bloom.color = Functions.linearInterpolateColor(0, 255, red, Color.TRANSPARENT, Color.WHITE);
-			
-			quad_bloom.onDrawAmbient();
-		}
+		if (is_bloom)
+			if (active || quad_light.color != Color.TRANSPARENT)
+			{
+				// blue, or green would also work
+				int red = Functions.red(quad_light.color);
+				
+				quad_bloom.color = Functions.linearInterpolateColor(0, 255, red, Color.TRANSPARENT, Color.WHITE);
+				
+				quad_bloom.onDrawAmbient();
+			}
 	}
 }

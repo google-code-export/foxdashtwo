@@ -6,5 +6,8 @@ public enum EnumLevelEvent
 	
 	toggle_active, off_active, on_active, touch_active, anti_touch_active,
 	
-	next_level, checkpoint, color, snow
+	next_level, checkpoint, color, snow,
+	
+	/* one last thing */
+	thought_bubble
 }
