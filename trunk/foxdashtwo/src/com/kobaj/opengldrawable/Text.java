@@ -13,6 +13,7 @@ import android.graphics.Typeface;
 import android.util.SparseArray;
 
 import com.kobaj.foxdashtwo.R;
+import com.kobaj.loader.GLBitmapReader;
 import com.kobaj.math.Constants;
 import com.kobaj.opengldrawable.Quad.Quad;
 
@@ -30,13 +31,13 @@ public class Text
 	
 	private int count = 0;
 	
-	// turn off to have numbers be dynamically shifted. 
+	// turn off to have numbers be dynamically shifted.
 	// turn on to have all letters spaced evenly
 	private boolean fixed_width = true;
 	private double fixed_width_value = 0; // dont touch, auto calculated later
 	
 	public Text()
-	{	
+	{
 		double size = Constants.text_size;
 		
 		// new bitmap_buffer!
@@ -61,7 +62,7 @@ public class Text
 		for (int i = 0; i < buffer_size; i++)
 		{
 			String s = my_string_array.get(i);
-		
+			
 			int key = count;
 			
 			// grab the id
@@ -80,10 +81,10 @@ public class Text
 			count++;
 		}
 		
-		//for fixed sizes calculate width
-		if(fixed_width)
+		// for fixed sizes calculate width
+		if (fixed_width)
 		{
-			for(int i = 0; i < 10; i++)
+			for (int i = 0; i < 10; i++)
 			{
 				fixed_width_value = Math.max(fixed_width_value, bitmap_buffer.get(i).shader_width);
 			}
@@ -123,13 +124,13 @@ public class Text
 	}
 	
 	// generate a string and return a key that will get that string.
-	// note, you probably shouldn't call this except at loading time, 
+	// note, you probably shouldn't call this except at loading time,
 	// and never call this during game play
 	public int generateString(String s, double size)
 	{
-		//see if already contained
+		// see if already contained
 		int checked_key = string_container.indexOfValue(s);
-		if(checked_key > 0)
+		if (checked_key > 0)
 			return checked_key;
 		
 		// find a key
@@ -137,16 +138,15 @@ public class Text
 		// but 'shouldnt' have collision problems.
 		int key = 0;
 		boolean key_found = false;
-		while(!key_found)
+		while (!key_found)
 		{
-			key = count;
-			count++;
+			key = GLBitmapReader.newResourceID();
 			
-			if(bitmap_buffer.get(key) == null)
-				key_found = true;		
+			if (bitmap_buffer.get(key) == null)
+				key_found = true;
 		}
 		
-		//generate
+		// generate
 		generateString(s, size, key);
 		
 		return key;
@@ -235,7 +235,7 @@ public class Text
 	public void drawDecimalNumber(double number, int number_of_predecimals, int number_of_decimals, double x, double y, int color)
 	{
 		boolean negative = false;
-		if(number < 0)
+		if (number < 0)
 			negative = true;
 		
 		number = Math.abs(number);
@@ -243,11 +243,11 @@ public class Text
 		double decimal = number - value;
 		
 		int pre_decimal = value;
-		if(negative)
+		if (negative)
 			pre_decimal = -value;
 		
 		drawIntNumber(pre_decimal, x, y, EnumDrawFrom.bottom_right, color);
-		if(value < Math.pow(10, number_of_predecimals))
+		if (value < Math.pow(10, number_of_predecimals))
 		{
 			Quad temp = bitmap_buffer.get(R.string.full_stop);
 			drawText(R.string.full_stop, x - temp.shader_width, y, EnumDrawFrom.bottom_right, color);
@@ -262,7 +262,7 @@ public class Text
 				int decimal_digit = (int) (moved_decimal % 10.0);
 				drawIntNumber(decimal_digit, (x - temp.shader_width) + total_width, y, EnumDrawFrom.bottom_left, color);
 				
-				if(fixed_width)
+				if (fixed_width)
 					total_width += fixed_width_value;
 				else
 					total_width += bitmap_buffer.get(decimal_digit).shader_width;
@@ -283,7 +283,7 @@ public class Text
 		double total_width = 0;
 		
 		boolean negative = false;
-		if(this_number < 0)
+		if (this_number < 0)
 			negative = true;
 		
 		this_number = (int) Math.abs(this_number);
@@ -305,10 +305,10 @@ public class Text
 		{
 			int key = (number % 10);
 			
-			if(zero)
+			if (zero)
 				key = 0;
 			
-			if(fixed_width)
+			if (fixed_width)
 				total_width += fixed_width_value;
 			else
 				total_width += bitmap_buffer.get(key).shader_width;
@@ -316,9 +316,9 @@ public class Text
 			number = number / 10;
 		}
 		
-		if(negative)
+		if (negative)
 		{
-			if(fixed_width)
+			if (fixed_width)
 				total_width += fixed_width_value;
 			else
 				total_width += bitmap_buffer.get(R.string.negative).shader_width;
@@ -327,7 +327,12 @@ public class Text
 		
 		if (where == EnumDrawFrom.top_left || where == EnumDrawFrom.bottom_left)
 			current_width = -total_width;
-		else if (where == EnumDrawFrom.center)
+		else if (where == EnumDrawFrom.top_right || where == EnumDrawFrom.bottom_right)
+		{
+			// do nothing
+		}
+		else
+			// center
 			current_width = (-total_width / 2.0);
 		
 		// begin drawing the number
@@ -343,7 +348,7 @@ public class Text
 			Quad temp = bitmap_buffer.get(key);
 			
 			// translate
-			if(fixed_width)
+			if (fixed_width)
 				current_width += fixed_width_value;
 			else
 				current_width += temp.shader_width;
@@ -358,19 +363,17 @@ public class Text
 			number = number / 10;
 		}
 		
-		if(negative)
+		if (negative)
 		{
 			Quad temp = bitmap_buffer.get(R.string.negative);
 			
 			double y_pos = y;
-			if(where == EnumDrawFrom.bottom_left ||
-					where == EnumDrawFrom.bottom_right)
+			if (where == EnumDrawFrom.bottom_left || where == EnumDrawFrom.bottom_right)
 				y_pos += (bitmap_buffer.get(0).shader_height / 2.0) - (temp.shader_height / 2.0);
-			else if(where == EnumDrawFrom.top_left ||
-					where == EnumDrawFrom.top_right)
+			else if (where == EnumDrawFrom.top_left || where == EnumDrawFrom.top_right)
 				y_pos -= (bitmap_buffer.get(0).shader_height / 2.0) - (temp.shader_height / 2.0);
 			
-			if(fixed_width)
+			if (fixed_width)
 				current_width += fixed_width_value;
 			else
 				current_width += temp.shader_width;
@@ -393,6 +396,9 @@ public class Text
 	
 	public void drawText(int resource_value, double x, double y, EnumDrawFrom where, int color, double degree)
 	{
+		if(color == Color.TRANSPARENT)
+			return;
+		
 		if (bitmap_buffer.indexOfKey(resource_value) >= 0)
 		{
 			// optimize the gets

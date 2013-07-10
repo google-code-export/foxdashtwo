@@ -1,44 +1,41 @@
 package com.kobaj.input.InputType;
 
-import android.graphics.Color;
-
 import com.kobaj.account_settings.UserSettings;
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 import com.kobaj.opengldrawable.EnumDrawFrom;
-import com.kobaj.opengldrawable.Quad.QuadColorShape;
+import com.kobaj.opengldrawable.Quad.Quad;
+import com.kobaj.opengldrawable.Quad.QuadCompressed;
 
 public class InputTypeNintendo extends InputTypeBase
 {
-	private QuadColorShape my_quad_left;
-	private QuadColorShape my_quad_right;
-	private QuadColorShape my_quad_jump;
+	private Quad my_quad_left;
+	private Quad my_quad_right;
+	private Quad my_quad_jump;
 	
 	@Override
 	public void onInitialize()
 	{
 		// left
-		my_quad_left = new QuadColorShape(Constants.input_circle_width, Color.WHITE, 0);
-
+		my_quad_left = new QuadCompressed(R.raw.thumb_button, R.raw.thumb_button_alpha, 128, 128);
+		
 		// right
-		my_quad_right = new QuadColorShape(Constants.input_circle_width, Color.WHITE, 0);
-
+		my_quad_right = new QuadCompressed(R.raw.thumb_button, R.raw.thumb_button_alpha, 128, 128);
+		
 		// jump
-		my_quad_jump = new QuadColorShape(Constants.input_circle_width, Color.WHITE, 0);
-
+		my_quad_jump = new QuadCompressed(R.raw.thumb_button, R.raw.thumb_button_alpha, 128, 128);
+		
 		updateUserSetPositions();
 	}
 	
 	@Override
 	public void updateUserSetPositions()
 	{
-		my_quad_left.setXYPos(Functions.screenXToShaderX(UserSettings.left_button_position.x), 
-				Functions.screenYToShaderY(Functions.fix_y(UserSettings.left_button_position.y)), EnumDrawFrom.center);
-		my_quad_right.setXYPos(Functions.screenXToShaderX(UserSettings.right_button_position.x), 
-				Functions.screenYToShaderY(Functions.fix_y(UserSettings.right_button_position.y)), EnumDrawFrom.center);
-		my_quad_jump.setXYPos(Functions.screenXToShaderX(UserSettings.jump_button_position.x), 
-				Functions.screenYToShaderY(Functions.fix_y(UserSettings.jump_button_position.y)), EnumDrawFrom.center);
+		my_quad_left.setXYPos(Functions.screenXToShaderX(UserSettings.left_button_position.x), Functions.screenYToShaderY(Functions.fix_y(UserSettings.left_button_position.y)), EnumDrawFrom.center);
+		my_quad_right
+				.setXYPos(Functions.screenXToShaderX(UserSettings.right_button_position.x), Functions.screenYToShaderY(Functions.fix_y(UserSettings.right_button_position.y)), EnumDrawFrom.center);
+		my_quad_jump.setXYPos(Functions.screenXToShaderX(UserSettings.jump_button_position.x), Functions.screenYToShaderY(Functions.fix_y(UserSettings.jump_button_position.y)), EnumDrawFrom.center);
 	}
 	
 	@Override
@@ -134,7 +131,7 @@ public class InputTypeNintendo extends InputTypeBase
 			my_quad_jump.color = Constants.input_press_color;
 		else
 			my_quad_jump.color = Constants.input_unpress_color;
-
+		
 		my_quad_jump.onDrawAmbient(Constants.my_ip_matrix, true);
 		
 		// text

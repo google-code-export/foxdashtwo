@@ -76,6 +76,11 @@ public class LevelEvent
 			my_possible_event.onInitialize(level, id_strings);
 	}
 	
+	public void onUnInitialize()
+	{
+		my_possible_event.onUnInitialize();
+	}
+	
 	public void onUpdate(double delta)
 	{
 		if (my_possible_event != null)

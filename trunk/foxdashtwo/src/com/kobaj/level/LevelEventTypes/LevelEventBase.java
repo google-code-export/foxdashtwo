@@ -28,6 +28,11 @@ public abstract class LevelEventBase
 		id_cache = affected_strings;
 	}
 	
+	public void onUnInitialize()
+	{
+
+	}
+	
 	public abstract void onUpdate(double delta, boolean active);
 	
 	public void onDraw()

@@ -14,6 +14,8 @@ import com.kobaj.account_settings.SinglePlayerSave;
 import com.kobaj.audio.Sound;
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.level.LevelEventTypes.EnumLevelEvent;
+import com.kobaj.level.LevelEventTypes.LevelEventBase;
+import com.kobaj.level.LevelEventTypes.LevelEventThoughtBubble;
 import com.kobaj.level.LevelTypeLight.LevelAmbientLight;
 import com.kobaj.level.LevelTypeLight.LevelBloomLight;
 import com.kobaj.level.LevelTypeLight.LevelCustomLight;
@@ -108,6 +110,8 @@ public class Level
 	@ElementList
 	public ArrayList<LevelEvent> event_list;
 	
+	public ArrayList<LevelEventThoughtBubble> thought_bubble_cache;
+	
 	// and our local particles
 	private ArrayList<NParticleEmitter> local_np_emitter = new ArrayList<NParticleEmitter>();
 	
@@ -168,6 +172,7 @@ public class Level
 		}
 		
 		// setup events
+		thought_bubble_cache = new ArrayList<LevelEventThoughtBubble>();
 		for (int i = event_list.size() - 1; i >= 0; i--)
 		{
 			LevelEvent current_event = event_list.get(i);
@@ -241,6 +246,12 @@ public class Level
 				
 				event_list.remove(i);
 			}
+			else if (current_event.this_event == EnumLevelEvent.thought_bubble)
+			{
+				LevelEventBase base = current_event.my_possible_event;
+				if (base instanceof LevelEventThoughtBubble)
+					thought_bubble_cache.add((LevelEventThoughtBubble) base);
+			}
 		}
 		
 		// setup player
@@ -281,7 +292,7 @@ public class Level
 		right_object.z_plane = Double.MAX_VALUE;
 		right_object.active = true;
 		
-		object_list.add(right_object);		
+		object_list.add(right_object);
 		
 		// player shadow
 		player_shadow = new QuadCompressed(R.raw.shadow_square, R.raw.shadow_square_alpha, 179, 90);
@@ -323,13 +334,13 @@ public class Level
 				
 				float half_width = (float) (reference.quad_object.best_fit_aabb.main_rect.width() - Functions.screenWidthToShaderWidth(25.0 * scale_reference)) / 2.0f;
 				float half_height_top = (float) Functions.screenHeightToShaderHeight(0.0 * scale_reference);
-				float half_height_bottom = (float) Functions.screenHeightToShaderHeight(-50.0  * scale_reference);
+				float half_height_bottom = (float) Functions.screenHeightToShaderHeight(-50.0 * scale_reference);
 				
 				// additional changes
 				if (reference.this_object == EnumLevelObject.l4_ground_platform_floating)
 				{
-					half_height_top = (float) Functions.screenHeightToShaderHeight(-60.0  * scale_reference);
-					half_height_bottom = (float) Functions.screenHeightToShaderHeight(-110.0  * scale_reference);
+					half_height_top = (float) Functions.screenHeightToShaderHeight(-60.0 * scale_reference);
+					half_height_bottom = (float) Functions.screenHeightToShaderHeight(-110.0 * scale_reference);
 				}
 				
 				RectFExtended emitt_from = new RectFExtended(-half_width, half_height_top, half_width, half_height_bottom);
@@ -400,7 +411,7 @@ public class Level
 		Constants.sound.addSound(R.raw.sound_fox_trot_2);
 		Constants.sound.addSound(R.raw.sound_checkpoint);
 		Constants.sound.addSound(R.raw.sound_death);
-				
+		
 		// last
 		this.resetLevel();
 	}
@@ -440,7 +451,7 @@ public class Level
 		if (my_backdrop != null)
 			my_backdrop.onUnInitialize();
 		
-		// draw sorted objects
+		// objects
 		for (int i = object_list.size() - 1; i >= 0; i--)
 			object_list.get(i).onUnInitialize();
 		
@@ -451,19 +462,40 @@ public class Level
 		// bloom lights
 		for (int i = bloom_light_list.size() - 1; i >= 0; i--)
 			bloom_light_list.get(i).onUnInitialize();
+		
+		// events
+		for (int i = this.event_list.size() - 1; i >= 0; i--)
+			event_list.get(i).onUnInitialize();
 	}
 	
 	public void onUpdate(double delta, boolean play)
 	{
+		// compute the players position relative on screen
+		// this is in shader coordinates
+		// first do x
+		double player_x = player.quad_object.x_pos_shader;
+		double screen_x = Constants.x_shader_translation;
+		double shift_x = (player_x - screen_x); // will be zero if in the middle of the screen.
+		double player_shader_shifted_x = shift_x;
+		
+		// then y
+		double player_y = player.quad_object.y_pos_shader;
+		double screen_y = Constants.y_shader_translation;
+		double shift_y = (player_y - screen_y);
+		double player_shader_shifted_y = shift_y;
 		
 		for (int i = light_list.size() - 1; i >= 0; i--)
 			light_list.get(i).onUpdate(delta);
+		
+		// do our thought bubble changes
+		for (int i = thought_bubble_cache.size() - 1; i >= 0; i--)
+			thought_bubble_cache.get(i).setPlayerPosRelative(player_shader_shifted_x, player_shader_shifted_y);
 		
 		for (int i = event_list.size() - 1; i >= 0; i--)
 			event_list.get(i).onUpdate(delta);
 		
 		// whaaaaat
-		if(play)
+		if (play)
 			for (int i = physics_objects.size() - 1; i >= 0; i--)
 				physics_objects.get(i).onUpdate(delta);
 		
@@ -566,10 +598,10 @@ public class Level
 		}
 		
 		// random sounds
-		if(this.random_sound_time > 0)
+		if (this.random_sound_time > 0)
 		{
 			this.random_sound_time -= (int) delta;
-			if(this.random_sound_time < 0)
+			if (this.random_sound_time < 0)
 				Constants.sound.play(random_sound_key);
 		}
 		
@@ -730,7 +762,7 @@ public class Level
 		{
 			// Constants.music_player.start(R.raw.music_canyon, Constants.music_fade_time, true);
 			random_sound_key = R.raw.sound_rock_rumbles;
-		}		
+		}
 		
 		Constants.sound.addSound(random_sound_key);
 	}
@@ -753,8 +785,7 @@ public class Level
 		for (int i = this.physics_objects.size() - 1; i >= 0; i--)
 		{
 			LevelObject checkpoint = physics_objects.get(i);
-			if (checkpoint.this_object == EnumLevelObject.lx_pickup_checkpoint &&
-					!checkpoint.id.equals(skip_id))
+			if (checkpoint.this_object == EnumLevelObject.lx_pickup_checkpoint && !checkpoint.id.equals(skip_id))
 			{
 				if (checkpoint.my_checkpoint != null)
 					checkpoint.my_checkpoint.reset();

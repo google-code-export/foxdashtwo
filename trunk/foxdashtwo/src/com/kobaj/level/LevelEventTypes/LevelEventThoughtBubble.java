@@ -2,33 +2,36 @@ package com.kobaj.level.LevelEventTypes;
 
 import java.util.ArrayList;
 
-import android.graphics.Color;
+import android.annotation.SuppressLint;
 
-import com.kobaj.foxdashtwo.R;
 import com.kobaj.level.Level;
-import com.kobaj.level.LevelTypeLight.LevelAmbientLight;
 import com.kobaj.math.Constants;
-import com.kobaj.math.Functions;
-import com.kobaj.opengldrawable.EnumDrawFrom;
-import com.kobaj.opengldrawable.Quad.QuadCompressed;
 
 public class LevelEventThoughtBubble extends LevelEventBase
 {
-	private LevelAmbientLight bubble;
-	private int text_id;
-	private int padding = 20;
+	private int x_pos = 0; // screen coordinates
+	private int y_pos = 0;
 	
-	private double pos_x = 0;
-	private double pos_y_default = 50;
-	private double pos_y;
+	private double player_x; // shader coordinates
+	private double player_y;
+	
+	private boolean activated = false;
+	private boolean finished = false;
+	
+	private int string_count;
+	
+	private int timer = 0;
+	private int timer_limit = 5000; // 5 seconds
+	private int current_index = 0;
+	
+	private ThoughtBubbleHelper[] thought_bubbles;
 	
 	public LevelEventThoughtBubble(EnumLevelEvent type)
 	{
 		super(type);
-		bubble = new LevelAmbientLight();
-		bubble.active = false;
-		bubble.secondary_color = Color.TRANSPARENT;
-		bubble.color = Color.BLUE;
+		
+		x_pos = (int) (Constants.width / 2.0);
+		y_pos = 75;
 	}
 	
 	@Override
@@ -36,37 +39,83 @@ public class LevelEventThoughtBubble extends LevelEventBase
 	{
 		super.onInitialize(level, affected_strings);
 		
-		String value = Constants.empty;
-		
-		if(affected_strings.size() > 0)
+		string_count = affected_strings.size();
+		if (string_count > 0)
 		{
-			value = affected_strings.get(0);
+			thought_bubbles = new ThoughtBubbleHelper[string_count];
+			
+			for (int i = 0; i < string_count; i++)
+			{
+				thought_bubbles[i] = new ThoughtBubbleHelper(x_pos, y_pos, affected_strings.get(i));
+				thought_bubbles[i].onInitialize();
+			}
 		}
+	}
+	
+	@Override
+	public void onUnInitialize()
+	{
+		super.onUnInitialize();
 		
-		// and setup our string
-		text_id = Constants.text.generateString(value);
-		int width = Constants.text.measureTextWidth(text_id);
-		int height = Constants.text.measureTextHeight(text_id);
-		
-		bubble.onInitialize();
-		bubble.quad_light = new QuadCompressed(R.raw.white, R.raw.white, width + padding, height + padding);
-		bubble.quad_light.color = Color.TRANSPARENT;
-		bubble.quad_light.setXYPos(pos_x, Functions.screenYToShaderY(Functions.fix_y(pos_y_default)), EnumDrawFrom.center_top);
-		
-		pos_y = Functions.screenYToShaderY(Functions.fix_y(pos_y_default + padding / 2.0));
+		for (int i = 0; i < string_count; i++)
+			thought_bubbles[i].onUnInitalize();
+	}
+	
+	// shader coords
+	public void setPlayerPosRelative(double player_screen_x, double player_screen_y)
+	{
+		player_x = player_screen_x;
+		player_y = player_screen_y;
 	}
 	
 	@Override
 	public void onUpdate(double delta, boolean active)
 	{
-		bubble.onUpdate(delta);
-		bubble.active = active;
+		if (string_count <= 0 || finished)
+			return;
+		
+		if (!activated)
+		{
+			if (active)
+				activated = true;
+		}
+		
+		if (activated && current_index < string_count)
+		{
+			timer += delta;
+			if (timer > timer_limit)
+			{
+				current_index++;
+				timer = 0;
+			}
+		}
+		
+		if (activated)
+		{
+			for (int i = 0; i < string_count; i++)
+			{
+				boolean child_active = false;
+				if (i == current_index)
+					child_active = true;
+				
+				thought_bubbles[i].onUpdate(delta, child_active, player_x, player_y);
+			}
+		
+		if (current_index == string_count)
+			if (thought_bubbles[string_count - 1].finished())
+				finished = true;
+		}
 	}
 	
+	@SuppressLint("WrongCall")
 	@Override
 	public void onDraw()
 	{
-		bubble.onDrawLight();
-		Constants.text.drawText(text_id, pos_x, pos_y, EnumDrawFrom.center_top, bubble.quad_light.color);
+		if (string_count <= 0 || finished)
+			return;
+		
+		if (activated)
+			for (int i = 0; i < string_count; i++)
+				thought_bubbles[i].onDraw();
 	}
 }
