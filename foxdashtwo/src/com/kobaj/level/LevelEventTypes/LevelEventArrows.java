@@ -81,6 +81,13 @@ public class LevelEventArrows extends LevelEventBase
 	}
 	
 	@Override
+	public void onUnInitialize()
+	{
+		this.my_draw.onUnInitialize();
+		this.secondary_draw.onUnInitialize();
+	}
+	
+	@Override
 	public void onUpdate(double delta, boolean active)
 	{
 		if (active || brightness != 0)
