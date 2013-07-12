@@ -702,6 +702,7 @@ public class Functions
 		Constants.normal_acceleration = Functions.screenWidthToShaderWidth(Constants.normal_acceleration_default);
 		Constants.normal_reverse_acceleration = Functions.screenWidthToShaderWidth(Constants.normal_reverse_acceleration_default);
 		Constants.collision_detection_height = Functions.screenHeightToShaderHeight(Constants.collision_detection_height_default);
+		Constants.collision_detection_width = Functions.screenWidthToShaderWidth(Constants.collision_detection_width_default);
 		Constants.jump_velocity = Functions.screenHeightToShaderHeight(Constants.jump_velocity_default);
 		Constants.jump_limiter = Functions.screenHeightToShaderHeight(Constants.jump_limiter_default);
 		
@@ -711,7 +712,7 @@ public class Functions
 		Constants.player_movement_threshold_horizintal = Functions.screenWidthToShaderWidth(Constants.player_movement_threshold_horizontal_default);
 		Constants.player_movement_threshold_vertical = Functions.screenHeightToShaderHeight(Constants.player_movement_threshold_vertical_default);
 		
-		Constants.shadow_height_shader = Functions.screenHeightToShaderHeight(Constants.shadow_height);
+		Constants.shadow_height_shader = Functions.screenHeightToShaderHeight(Constants.shadow_height_default);
 		
 		Constants.floating_lr_distance = Functions.screenWidthToShaderWidth(Constants.floating_lr_distance_default);
 		Constants.floating_move_lr_acc = Functions.screenWidthToShaderWidth(Constants.floating_move_lr_speed_default);
@@ -737,6 +738,7 @@ public class Functions
 		Constants.y_125 = Functions.screenYToShaderY((int) Functions.fix_y(125));
 		Constants.y_200 = Functions.screenYToShaderY((int) Functions.fix_y(200));
 		Constants.y_275 = Functions.screenYToShaderY((int) Functions.fix_y(275));
+		Constants.y_350 = Functions.screenYToShaderY((int) Functions.fix_y(350));
 		
 		Constants.sixteen_width = Functions.screenWidthToShaderWidth(16);
 		Constants.forward_camera_shift_width = Functions.screenWidthToShaderWidth(Constants.forward_camera_shift_width_default);

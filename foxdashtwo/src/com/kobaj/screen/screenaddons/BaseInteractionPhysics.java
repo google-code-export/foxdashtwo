@@ -25,10 +25,12 @@ public class BaseInteractionPhysics
 	private final boolean integratePhysics(final double delta, final Level the_level)
 	{
 		// something to collide with the shadow
-		player_extended.left = (float) (the_level.player.quad_object.x_pos_shader - the_level.player.quad_object.shader_width / 5.0);
-		player_extended.right = (float) (the_level.player.quad_object.x_pos_shader + the_level.player.quad_object.shader_width / 5.0);
-		player_extended.top = (float) (the_level.player.quad_object.y_pos_shader - the_level.player.quad_object.shader_height / 5.0);
-		player_extended.bottom = (float) (player_extended.top - Constants.shadow_height_shader);
+		player_extended.left = (float) (the_level.player.quad_object.x_pos_shader - the_level.player.quad_object.shader_width / 2.0);
+		player_extended.right = (float) (the_level.player.quad_object.x_pos_shader + the_level.player.quad_object.shader_width / 2.0);
+		
+		double bottom_of_player = the_level.player.quad_object.y_pos_shader - the_level.player.quad_object.shader_height / 5.0;
+		player_extended.top = (float) (the_level.player.quad_object.y_pos_shader + the_level.player.quad_object.shader_height / 2.0);
+		player_extended.bottom = (float) (bottom_of_player - Constants.shadow_height_shader);
 		
 		double shadow_collision_y = player_extended.bottom;
 		player_shadow_y = -200;
@@ -54,14 +56,25 @@ public class BaseInteractionPhysics
 				collision.right = 0;
 				collision.bottom = 0;
 				
-				if (Constants.physics.checkCollision(collision, player_extended, reference.quad_object, false) == 1)
+				int initial_shadow_collision = Constants.physics.checkCollision(collision, player_extended, reference.quad_object, false);
+				
+				if (initial_shadow_collision == 1)
 				{
-					if (collision.bottom > shadow_collision_y)
+					// if its horizontally in the correct spot
+					if (collision.width() > Constants.collision_detection_width)
 					{
-						// new calculation
-						this.player_shadow_y = shadow_collision_y = collision.bottom;
+						// if its vertically in the correct spot
+						if (collision.bottom > shadow_collision_y && collision.bottom < bottom_of_player)
+						{
+							// new calculation
+							this.player_shadow_y = shadow_collision_y = collision.bottom;
+						}
 					}
 				}
+				
+				// if its -1 there is no way the fox will collide with anything anyway.
+				if (initial_shadow_collision == -1)
+					continue;
 				
 				// do the regular fox's collision
 				collision.left = 0;

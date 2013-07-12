@@ -74,6 +74,10 @@ public class NParticleEmitter
 	
 	public boolean force_update = false;
 	
+	private int count_off = 0;
+	private int batch_divider = 10;
+	private int batch_count = 0;
+	
 	public NParticleEmitter(EnumParticleType type)
 	{
 		this.particle_type = type;
@@ -91,10 +95,18 @@ public class NParticleEmitter
 		force_update = false;
 	}
 	
+	private void updateCountOff()
+	{
+		count_off = (count_off + 1) % batch_count;
+	}
+	
 	public void onInitialize()
 	{
 		unused_pool.clear();
 		used_pool.clear();
+		
+		Constants.particles_total += number_of_particles_shown;
+		batch_count = number_of_particles_shown / batch_divider;
 		
 		// time till next particle = number_of_particles_shown / start_lifetime;
 		if (custom_spawn_time == -1)
@@ -107,6 +119,9 @@ public class NParticleEmitter
 		for (int i = number_of_particles_shown + 1; i >= 0; i--)
 		{
 			NParticle temp = new NParticle(vary_scale, fade_in, fade_out, start_lifetime);
+			
+			updateCountOff();
+			temp.count_off = count_off;
 			
 			// define the quad reference for each particle
 			if (particle_type == EnumParticleType.floating_dust)
@@ -160,10 +175,19 @@ public class NParticleEmitter
 				}
 			}
 			
+			int pool_size = used_pool.size();
+			
 			// and then update our currently visible particles
-			for (int i = used_pool.size() - 1; i >= 0; i--)
+			for (int i = pool_size - 1; i >= 0; i--)
 			{
+				updateCountOff();
+				
 				NParticle reference = used_pool.get(i);
+				
+				if(reference.count_off != count_off)
+					continue;
+
+				Constants.particles_updating++;
 				
 				// let the particle update its properties except for position
 				reference.onUpdate(delta);
@@ -199,7 +223,7 @@ public class NParticleEmitter
 			NParticle reference = unused_pool.pop();
 			reference.reset();
 			
-			if(force_update)
+			if (force_update)
 				reference.preUpdate = true;
 			
 			// random position
@@ -242,7 +266,7 @@ public class NParticleEmitter
 			for (int i = used_pool.size() - 1; i >= 0; i--)
 			{
 				NParticle temp = used_pool.get(i);
-				if(!temp.preUpdate)
+				if (!temp.preUpdate)
 					used_quads.add(temp.quad_reference);
 			}
 			

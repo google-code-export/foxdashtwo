@@ -23,6 +23,8 @@ public class NParticle
 	
 	public boolean preUpdate = true;
 	
+	public int count_off = 0;
+	
 	public NParticle(boolean vary_scale, int fade_in_time, int fade_out_time, int life_time)
 	{
 		this.fade_in_time = fade_in_time;

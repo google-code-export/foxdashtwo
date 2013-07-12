@@ -34,8 +34,8 @@ public class MyGame extends MyGLRender
 	private QuadRenderTo scene;
 	private QuadRenderTo lights;
 	
-	private final int detection_x_default = 50;
-	private final int detection_y_default = 50;
+	private final int detection_x_default = 75;
+	private final int detection_y_default = 75;
 	
 	private final EnumLayerTypes[] backgroup_enums = { EnumLayerTypes.Background, EnumLayerTypes.Background_Aux, EnumLayerTypes.Post_interaction };
 	private final EnumLayerTypes[] interaction_group_enums = { EnumLayerTypes.Interaction };
@@ -263,7 +263,6 @@ public class MyGame extends MyGLRender
 			
 			Constants.text.drawText(R.string.qos, x_pos, y_pos, EnumDrawFrom.top_right);
 			Constants.text.drawIntNumber(Constants.quads_drawn_screen, x_pos, y_pos, EnumDrawFrom.top_left, oos_color);
-			Constants.quads_drawn_screen = 0;
 			
 			// music metrics
 			y_pos = Constants.y_125;
@@ -287,16 +286,28 @@ public class MyGame extends MyGLRender
 			
 			Constants.text.drawText(R.string.branch, x_pos, y_pos, EnumDrawFrom.bottom_right);
 			Constants.text.drawIntNumber(Constants.quads_coord_map_check, x_pos, y_pos, EnumDrawFrom.bottom_left, oos_color);
-			Constants.quads_coord_map_check = 0;
 			
+			// position of player in the map
 			y_pos = Constants.y_275;
-			
 			Constants.text.drawText(R.string.x, x_pos, y_pos, EnumDrawFrom.bottom_right);
 			Constants.text.drawIntNumber((int) Functions.shaderXToScreenX(Constants.x_shader_translation), x_pos, y_pos, EnumDrawFrom.bottom_left);
 			
 			Constants.text.drawText(R.string.y, x_pos, y_pos, EnumDrawFrom.top_right);
 			Constants.text.drawIntNumber((int) Functions.shaderXToScreenX(Constants.y_shader_translation), x_pos, y_pos, EnumDrawFrom.top_left);
+			
+			// particle info
+			y_pos = Constants.y_350;
+			Constants.text.drawText(R.string.p_total, x_pos, y_pos, EnumDrawFrom.bottom_right);
+			Constants.text.drawIntNumber(Constants.particles_total, x_pos, y_pos, EnumDrawFrom.bottom_left);
+			
+			Constants.text.drawText(R.string.p_update, x_pos, y_pos, EnumDrawFrom.top_right);
+			Constants.text.drawIntNumber(Constants.particles_updating, x_pos, y_pos, EnumDrawFrom.top_left);
 		}
+		
+		// dont forget to clear our statistics
+		Constants.quads_drawn_screen = 0;
+		Constants.quads_coord_map_check = 0;
+		Constants.particles_updating = 0;
 		
 	}
 	
@@ -304,5 +315,11 @@ public class MyGame extends MyGLRender
 	protected void onPause()
 	{
 		currently_active_screen.onPause();
+	}
+
+	@Override
+	protected void on100msUpdate()
+	{
+		currently_active_screen.on100msUpdate();
 	}
 }
