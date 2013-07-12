@@ -174,6 +174,10 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 			{
 				// do nothing.
 			}
+			
+			// let the screen we are on have a pulse of life
+			this.on100msUpdate();
+			
 			return;
 		}
 		
@@ -298,6 +302,8 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 		}
 		onUpdate(delta);
 	}
+	
+	protected abstract void on100msUpdate();
 	
 	protected abstract void onUpdate(double delta);
 	

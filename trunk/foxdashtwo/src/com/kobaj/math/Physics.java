@@ -175,8 +175,8 @@ public class Physics
 					// force up down
 					if (collision.height() != 0)
 					{
-						collision.left = (float) -Constants.shadow_height;
-						collision.right = (float) Constants.shadow_height;
+						collision.left = (float) -Constants.shadow_height_default;
+						collision.right = (float) Constants.shadow_height_default;
 					}
 					
 					if (Physics.cleanCollision(collision, true))

@@ -191,6 +191,12 @@ public class TitleScreen extends BaseScreen
 	}
 	
 	@Override
+	public void on100msUpdate()
+	{
+		play_list.onUpdate();
+	}
+	
+	@Override
 	public void onUpdate(double delta)
 	{
 		// that music

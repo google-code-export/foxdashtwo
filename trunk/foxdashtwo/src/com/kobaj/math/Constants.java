@@ -65,7 +65,7 @@ public class Constants
 
 	// other pretty constants for the shadow under the fox
 	public static final double shadow_radius = 50.0;
-	public static final double shadow_height = 450;
+	public static final double shadow_height_default = 550;
 	public static double shadow_height_shader;
 	
 	// score position constants
@@ -101,7 +101,8 @@ public class Constants
 	public static final double max_x_velocity_default = .9;
 	public static final double normal_acceleration_default = 0.00100;
 	public static final double normal_reverse_acceleration_default = 0.00750;
-	public static final double collision_detection_height_default = 1.0;
+	public static final double collision_detection_height_default = 1.0; // pixels
+	public static final double collision_detection_width_default = 10.0; // pixels
 	public static final double jump_velocity_default = 0.850;
 	public static final double jump_limiter_default = 0.185;
 	public static final double player_downward_platform_acc_default = -.001;
@@ -121,6 +122,7 @@ public class Constants
 	public static double normal_acceleration;
 	public static double normal_reverse_acceleration;
 	public static double collision_detection_height;
+	public static double collision_detection_width;
 	public static double jump_velocity;
 	public static double jump_limiter;
 	public static double max_speed; // this is of all objects
@@ -207,11 +209,16 @@ public class Constants
 	// metrics
 	public static int quads_drawn_screen = 0;
 	public static int quads_coord_map_check = 0;
+	public static int particles_total = 0;
+	public static int particles_updating = 0; 
+	
+	// metric positions
 	public static double x_100;
 	public static double y_50;
 	public static double y_125;
 	public static double y_200;
 	public static double y_275;
+	public static double y_350;
 	public static double sixteen_width;
 	
 	// errors

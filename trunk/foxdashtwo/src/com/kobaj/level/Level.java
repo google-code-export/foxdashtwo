@@ -721,8 +721,11 @@ public class Level
 	
 	public void kill()
 	{
-		kill = true;
-		Constants.sound.play(R.raw.sound_death);
+		if(kill != true)
+		{
+			kill = true;
+			Constants.sound.play(R.raw.sound_death);
+		}
 	}
 	
 	public void startMusic()
@@ -760,7 +763,7 @@ public class Level
 		}
 		else if (music == EnumMusics.canyon)
 		{
-			// Constants.music_player.start(R.raw.music_canyon, Constants.music_fade_time, true);
+			Constants.music_player.start(R.raw.music_canyon, Constants.music_fade_time, true);
 			random_sound_key = R.raw.sound_rock_rumbles;
 		}
 		

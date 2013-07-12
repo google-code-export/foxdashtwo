@@ -64,10 +64,12 @@ public class LevelEventArrows extends LevelEventBase
 		{
 			double y_pos = 0;
 			
+			// left side of the screen
 			double x_pos_1 = Functions.screenXToShaderX(100);
 			my_draw.setRotationZ(90);
 			my_draw.setXYPos(x_pos_1, y_pos, EnumDrawFrom.center);
 			
+			// right side of the screen
 			double x_pos_2 = Functions.screenXToShaderX(Constants.width - 100);
 			secondary_draw.setRotationZ(90);
 			secondary_draw.setXYPos(x_pos_2, y_pos, EnumDrawFrom.center);
@@ -128,12 +130,16 @@ public class LevelEventArrows extends LevelEventBase
 			}
 		}
 		else if (brightness < 0 && UserSettings.active_input_type == EnumInputType.halfhalf)
-			for (int i = x_poss.size() - 1; i >= 0; i--)
+		{
+			if(this_event == EnumLevelEvent.up_arrows)
 			{
-				double x_pos = x_poss.get(i);
-				double y_pos = y_poss.get(i);
-				
-				Constants.text.drawText(R.string.touch_here, x_pos, y_pos, EnumDrawFrom.center, secon_color);
+				Constants.text.drawText(R.string.press_here, x_poss.get(0), y_poss.get(0), EnumDrawFrom.center, secon_color); // left
+				Constants.text.drawText(R.string.tap_here, x_poss.get(1), y_poss.get(1), EnumDrawFrom.center, secon_color); // right
 			}
+			else
+			{
+				Constants.text.drawText(R.string.touch_here, x_poss.get(0), y_poss.get(0), EnumDrawFrom.center, secon_color);
+			}
+		}
 	}
 }
