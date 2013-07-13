@@ -133,8 +133,8 @@ public class LevelEventArrows extends LevelEventBase
 		{
 			if(this_event == EnumLevelEvent.up_arrows)
 			{
-				Constants.text.drawText(R.string.press_here, x_poss.get(0), y_poss.get(0), EnumDrawFrom.center, secon_color); // left
-				Constants.text.drawText(R.string.tap_here, x_poss.get(1), y_poss.get(1), EnumDrawFrom.center, secon_color); // right
+				Constants.text.drawText(R.string.tap_here, x_poss.get(0), y_poss.get(0), EnumDrawFrom.center, secon_color); // left
+				Constants.text.drawText(R.string.press_here, x_poss.get(1), y_poss.get(1), EnumDrawFrom.center, secon_color); // right
 			}
 			else
 			{

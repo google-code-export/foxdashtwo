@@ -26,7 +26,7 @@ public class BaseLevelSelect extends BaseFloatingFrame
 		
 		// see which levels can be clicked
 		accessable_levels[0] = true; // level 1
-		accessable_levels[6] = true; // credits
+		accessable_levels[accessable_levels.length - 1] = true; // credits
 		
 		for(int i = 0; i < 5; i++)
 			if(SinglePlayerSave.getPrevBest(level_prefix + String.valueOf(i)) != Double.MAX_VALUE)
@@ -95,7 +95,7 @@ public class BaseLevelSelect extends BaseFloatingFrame
 		if (back_button.isReleased())
 			return false;
 		
-		for(int i = 0; i < 7; i++)
+		for(int i = 0; i < accessable_levels.length; i++)
 		{
 			if(accessable_levels[i])
 			{
@@ -116,7 +116,7 @@ public class BaseLevelSelect extends BaseFloatingFrame
 		main_popup.onDrawAmbient(Constants.my_ip_matrix, true);
 		Constants.text.drawText(R.string.level_select, label_x, label_y, EnumDrawFrom.center);
 		
-		for(int i = 0; i < 7; i++)
+		for(int i = 0; i < my_levels.length; i++)
 		{
 			my_levels[i].onDrawConstant();
 		}
