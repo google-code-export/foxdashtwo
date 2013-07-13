@@ -86,44 +86,47 @@ public class SinglePlayerScreen extends BaseScreen implements FinishedScoring
 	}
 	
 	// loads the next level and returns true if successful.
-	private boolean setNextLevel(String level_name)
+	private boolean setNextLevel(String local_level_name)
 	{
 		// erase the last checkpoint since we are 'starting new';
 		SinglePlayerSave.last_checkpoint = null;
 		
-		if (level_name != null)
-			level_name = level_name.trim();
+		if (local_level_name != null)
+			local_level_name = local_level_name.trim();
 		
-		if (level_name == null || level_name.equals(Constants.empty))
+		if (local_level_name == null || local_level_name.equals(Constants.empty))
 		{
 			// change the first level
 			the_level = FileHandler.readSerialResource(Constants.resources, R.raw.level_0, com.kobaj.level.Level.class);
 			{
-				level_name = "level_0";
+				this.level_name = local_level_name = "level_0";
 				return true;
 			}
 		}
 		
 		// if not then try to load from R
-		int level_R = Constants.resources.getIdentifier(level_name, "raw", "com.kobaj.foxdashtwo");
+		int level_R = Constants.resources.getIdentifier(local_level_name, "raw", "com.kobaj.foxdashtwo");
 		if (level_R != 0)
 		{
 			the_level = FileHandler.readSerialResource(Constants.resources, level_R, com.kobaj.level.Level.class);
 			if (the_level != null)
 			{
-				this.level_name = level_name;
+				if(local_level_name == "level_5")
+					the_level.credits_level = true;
+				
+				this.level_name = local_level_name;
 				return true;
 			}
 		}
 		
 		// first see if it is a physical level on disk
-		if (FileHandler.fileExists(level_name))
+		if (FileHandler.fileExists(local_level_name))
 		{
-			the_level = FileHandler.readSerialFile(level_name, com.kobaj.level.Level.class);
+			the_level = FileHandler.readSerialFile(local_level_name, com.kobaj.level.Level.class);
 			if (the_level != null)
 			{
 				// split the path
-				String[] paths = level_name.split("/");
+				String[] paths = local_level_name.split("/");
 				this.level_name = paths[paths.length - 1]; // last path is file name
 				return true;
 			}

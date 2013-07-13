@@ -14,7 +14,7 @@ public class LevelEventArrowsDelay extends LevelEventArrows
 	{
 		if(max_delay > 0)
 		{
-			max_delay += delta;
+			max_delay -= delta;
 			return;
 		}
 		

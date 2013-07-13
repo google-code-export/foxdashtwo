@@ -16,7 +16,6 @@ public class LevelEventNextLevel extends LevelEventBase
 	@Override
 	public void onUpdate(double delta, boolean active)
 	{
-		
 		if (active)
 		{	
 			SinglePlayerSave.last_level = null;
@@ -29,11 +28,12 @@ public class LevelEventNextLevel extends LevelEventBase
 			// set the next level
 			if (!this.id_cache.isEmpty())
 			{
+				next_level = true;
+				
 				SinglePlayerSave.last_level = id_cache.get(0);
 				
 				// load the next level
 				next = (new SinglePlayerScreen());
-				next_level = true;
 			}
 			else
 				next = (new TitleScreen());

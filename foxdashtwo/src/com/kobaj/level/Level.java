@@ -71,7 +71,7 @@ public class Level
 	
 	public static enum EnumMusics
 	{
-		none, tunnel, field, swamp, mountain, canyon, river
+		none, tunnel, field, swamp, mountain, river, canyon
 	};
 	
 	@Element
@@ -130,6 +130,7 @@ public class Level
 	public boolean force_right = false;
 	
 	// no constructor
+	public boolean credits_level = false;
 	
 	public void onInitialize()
 	{
@@ -415,7 +416,16 @@ public class Level
 	
 	public void setupPlayer()
 	{
-		QuadAnimated player_animation = new QuadAnimated(R.raw.fox, R.raw.fox_alpha, R.raw.animation_list_fox, 400, 215, 2048, 1024);
+		int fox = R.raw.fox;
+		int fox_alpha = R.raw.fox_alpha;
+		
+		if(credits_level)
+		{
+		//	fox = R.raw.fox_smile;
+		//	fox_alpha = R.raw.fox_smile_slpha;
+		}
+			
+		QuadAnimated player_animation = new QuadAnimated(fox, fox_alpha, R.raw.animation_list_fox, 400, 215, 2048, 1024);
 		player_animation.setAnimation(EnumGlobalAnimationList.stop, 0, true);
 		
 		RectF previous = player_animation.phys_rect_list.get(0).main_rect;
@@ -518,12 +528,7 @@ public class Level
 		// do our thought bubble changes
 		for (int i = thought_bubble_cache.size() - 1; i >= 0; i--)
 		{
-			double bubble_shift_x = player.quad_object.shader_width / 2.0;
-			
-			if(!player.quad_object.reverse_left_right)
-				bubble_shift_x = -bubble_shift_x;
-			
-			thought_bubble_cache.get(i).setPlayerPosRelative(player_shader_shifted_x + bubble_shift_x, player_shader_shifted_y);
+			thought_bubble_cache.get(i).setPlayerPosRelative(player_shader_shifted_x, player_shader_shifted_y);
 		}
 		
 		for (int i = event_list.size() - 1; i >= 0; i--)
@@ -590,7 +595,7 @@ public class Level
 				{
 					reference.setAnimation(EnumGlobalAnimationList.landing, 0, true, false);
 				}
-				else if(reference.currently_playing == EnumGlobalAnimationList.stop || //
+				else if((reference.currently_playing != EnumGlobalAnimationList.running && reference.currently_playing != EnumGlobalAnimationList.landing) || //
 						(reference.currently_playing == EnumGlobalAnimationList.landing && reference.currently_playing_frameset_reference.animation_complete))
 				{
 					reference.setAnimation(EnumGlobalAnimationList.running, 0, true);

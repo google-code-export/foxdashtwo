@@ -31,7 +31,7 @@ public class LevelEventThoughtBubble extends LevelEventBase
 		super(type);
 		
 		x_pos = (int) (Constants.width / 2.0);
-		y_pos = 75;
+		y_pos = 175;
 	}
 	
 	@Override

@@ -29,7 +29,7 @@
 
     <!-- level event arrows -->
     <string name="touch_here">Touch Here</string>
-    <string name="press_here">Press and /nHold Here</string>
+    <string name="press_here">Press Here</string>
     <string name="tap_here">Tap Here</string>
 
     <!-- popup labels -->

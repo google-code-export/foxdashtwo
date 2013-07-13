@@ -3,6 +3,7 @@ package com.kobaj.screen;
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 
+import com.kobaj.account_settings.SinglePlayerSave;
 import com.kobaj.audio.MusicPlayList;
 import com.kobaj.foxdashtwo.GameActivity;
 import com.kobaj.foxdashtwo.R;
@@ -75,7 +76,6 @@ public class TitleScreen extends BaseScreen
 	private SinglePlayerScreen backdrop_screen;
 	
 	private boolean title_screen_ready = false;
-	private boolean fader_ready = false;
 	
 	private TriggerFade my_trigger_fader;
 	private int last_loading = 0;
@@ -90,8 +90,6 @@ public class TitleScreen extends BaseScreen
 	{
 		my_trigger_fader = new TriggerFade();
 		my_trigger_fader.onInitialize(1000, 563, R.raw.blur_title_50, R.raw.blur_title_25, R.raw.blur_title_15, R.raw.blur_title_10);
-		
-		fader_ready = true;
 		
 		play_list = new MusicPlayList();
 		this.startMusic();
@@ -185,9 +183,10 @@ public class TitleScreen extends BaseScreen
 			base_error.onInitialize();
 			crash_visible = true;
 		}
-	
+		
 		title_screen_ready = true;
 		
+		SinglePlayerSave.last_level = "level_title";
 		backdrop_screen = new SinglePlayerScreen();
 		backdrop_screen.fade_in = false;
 		backdrop_screen.run();
@@ -224,14 +223,14 @@ public class TitleScreen extends BaseScreen
 	{
 		my_trigger_fader.onUpdate(delta);
 		
-		if(last_loading != this.backdrop_screen.loading_amount)
+		if (last_loading != this.backdrop_screen.loading_amount)
 		{
 			int current_load = backdrop_screen.loading_amount;
 			
-			if(current_load == 60 || //  
-					current_load == 100 )
+			if (current_load == 60 || //
+					current_load == 80)
 				my_trigger_fader.trigger();
-					
+			
 			last_loading = backdrop_screen.loading_amount;
 		}
 		
@@ -335,7 +334,7 @@ public class TitleScreen extends BaseScreen
 	{
 		my_trigger_fader.onDraw();
 		
-		if(this.backdrop_screen.current_state != EnumScreenState.running)
+		if (this.backdrop_screen.current_state != EnumScreenState.running)
 		{
 			Constants.text.drawText(R.string.loading_level_data, Functions.screenXToShaderX(150), Functions.screenYToShaderY(25), EnumDrawFrom.center);
 		}
@@ -403,12 +402,6 @@ public class TitleScreen extends BaseScreen
 	@Override
 	public void onDrawLoading(double delta)
 	{
-		// just a test for now
-		if(this.fader_ready)
-		{
-			my_trigger_fader.onDraw();
-		}
-		
 		if (!this.title_screen_ready)
 			Constants.text.drawText(R.string.loading, 0, 0, EnumDrawFrom.center);
 		else
