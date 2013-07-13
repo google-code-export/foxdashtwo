@@ -72,7 +72,7 @@ public class Quad
 	protected FloatBuffer my_tex_coord;
 	
 	protected boolean reverse_texture_y = true;
-	protected boolean reverse_left_right = false;
+	public boolean reverse_left_right = false; // READ ONLY
 	protected boolean reverse_up_down = false;
 	private final float[] unfiltered_texture_data = new float[4]; // indicies are each corner for complexupdatetexcoordinate
 	

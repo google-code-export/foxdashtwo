@@ -10,7 +10,7 @@ public class QuadAnimated extends QuadCompressed
 	private FrameAnimation frame_animation = new FrameAnimation();
 	
 	// whats currently playing
-	private FrameSet currently_playing_frameset_reference; // long names are cool.
+	public FrameSet currently_playing_frameset_reference; // long names are cool.
 	public EnumGlobalAnimationList currently_playing;
 	
 	// is playing?
@@ -30,7 +30,7 @@ public class QuadAnimated extends QuadCompressed
 		frame_animation = com.kobaj.loader.FileHandler.readSerialResource(com.kobaj.math.Constants.resources, animation_resource, frame_animation.getClass());
 		
 		// every animation must have stop
-		this.setAnimation(EnumGlobalAnimationList.stop, 0, -1);
+		this.setAnimation(EnumGlobalAnimationList.stop, 0, true);
 		
 		// texture data
 		square_width = com.kobaj.math.Functions.nearestPowerOf2(texture_width);
@@ -64,20 +64,17 @@ public class QuadAnimated extends QuadCompressed
 	// returns true if animation can be played
 	public boolean setAnimation(EnumGlobalAnimationList id)
 	{
-		currently_playing = id;
-		
-		if (frame_animation.animation_set.containsKey(id))
-		{
-			currently_playing_frameset_reference = frame_animation.animation_set.get(id);
-			return true;
-		}
-		
-		return false;
+		return setAnimation(id, -1, false, false);
+	}
+	
+	public boolean setAnimation(EnumGlobalAnimationList id, int frame, boolean instant_update)
+	{
+		return setAnimation(id, frame, instant_update, true);
 	}
 	
 	// if animation is already set, then continue
 	// otherwise force an instant update to the frame number
-	public boolean setAnimation(EnumGlobalAnimationList id, int frame, boolean instant_update)
+	public boolean setAnimation(EnumGlobalAnimationList id, int frame, boolean instant_update, boolean repeat)
 	{
 		if(frame_animation.animation_set.containsKey(id))
 		{
@@ -89,35 +86,22 @@ public class QuadAnimated extends QuadCompressed
 				if (frame >= 0)
 					currently_playing_frameset_reference.setCurrentFrame(frame);
 				
-				updateTexCoords();
+				if(instant_update)
+					updateTexCoords();
+				
+				if(!repeat)
+				{
+					// reset the frameset
+					currently_playing_frameset_reference.animation_complete = false;
+					currently_playing_frameset_reference.animation_started = false;
+				}
+				
+				currently_playing_frameset_reference.repeat = repeat;
 				
 				return true;
 			}
 		}
 		
 		return false;
-	}
-	
-	// see above, but this allows you to specify what frame to start from
-	// other wise it will start from the last frame it was on
-	public boolean setAnimation(EnumGlobalAnimationList id, int frame, double fps)
-	{
-		boolean success = false;
-		
-		if (setAnimation(id))
-		{
-			if (frame >= 0)
-			{
-				if (currently_playing_frameset_reference.setCurrentFrame(frame))
-					success = true;
-				
-				updateTexCoords();
-			}
-			
-			if (fps >= 0)
-				currently_playing_frameset_reference.rec_fps = fps;
-		}
-		
-		return success;
 	}
 }

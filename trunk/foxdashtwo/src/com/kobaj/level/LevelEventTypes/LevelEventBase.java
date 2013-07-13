@@ -39,4 +39,9 @@ public abstract class LevelEventBase
 	{
 		// do nothing
 	}
+	
+	public void onKillReset()
+	{
+		// do nothing
+	}
 }

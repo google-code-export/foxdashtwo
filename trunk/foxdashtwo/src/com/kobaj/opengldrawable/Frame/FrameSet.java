@@ -15,8 +15,6 @@ public class FrameSet
 	@Element
 	public double rec_fps; //allow .5fps
 	private double frame_timer = 0.0;
-	private boolean first_run = false;
-	
 	//current frame information
 	private int current_frame;
 	public Sprite current_frame_reference;
@@ -24,15 +22,18 @@ public class FrameSet
 	//assume loop animation forever
 	public boolean repeat = true;
 	
+	public boolean animation_started = false;
+	public boolean animation_complete = false;
+	
 	//no constructor
 	
 	//just cause we are awesome, this will return true if 
 	//the tex-coordinates need changing
 	public boolean onUpdate(double delta)
 	{
-		if(!first_run && !repeat)
+		if(!animation_started && !repeat)
 		{
-			first_run = true;
+			animation_started = true;
 			onAnimationStart(); //very first frame
 		}
 		
@@ -53,7 +54,11 @@ public class FrameSet
 			if(!repeat)
 			{
 				if(current_frame == frame_list.size()) //last frame
+				{
 					onAnimationEnd();
+					animation_complete = true;
+				}
+				
 			}
 			else if(current_frame == frame_list.size())
 				current_frame = 0;

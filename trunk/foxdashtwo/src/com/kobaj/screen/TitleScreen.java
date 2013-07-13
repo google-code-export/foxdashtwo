@@ -16,6 +16,7 @@ import com.kobaj.opengldrawable.Button.TextButton;
 import com.kobaj.opengldrawable.NewParticle.RingParticle;
 import com.kobaj.opengldrawable.Quad.QuadCompressed;
 import com.kobaj.opengldrawable.Tween.EnumTweenEvent;
+import com.kobaj.opengldrawable.Tween.TriggerFade;
 import com.kobaj.opengldrawable.Tween.TweenEvent;
 import com.kobaj.opengldrawable.Tween.TweenManager;
 import com.kobaj.screen.screenaddons.RotationLoadingJig;
@@ -70,6 +71,15 @@ public class TitleScreen extends BaseScreen
 	
 	private RingParticle rings;
 	
+	// thats right, I'm crazy!
+	private SinglePlayerScreen backdrop_screen;
+	
+	private boolean title_screen_ready = false;
+	private boolean fader_ready = false;
+	
+	private TriggerFade my_trigger_fader;
+	private int last_loading = 0;
+	
 	public TitleScreen()
 	{
 		fade_play = false;
@@ -78,6 +88,11 @@ public class TitleScreen extends BaseScreen
 	@Override
 	public void onLoad()
 	{
+		my_trigger_fader = new TriggerFade();
+		my_trigger_fader.onInitialize(1000, 563, R.raw.blur_title_50, R.raw.blur_title_25, R.raw.blur_title_15, R.raw.blur_title_10);
+		
+		fader_ready = true;
+		
 		play_list = new MusicPlayList();
 		this.startMusic();
 		
@@ -170,11 +185,19 @@ public class TitleScreen extends BaseScreen
 			base_error.onInitialize();
 			crash_visible = true;
 		}
+	
+		title_screen_ready = true;
+		
+		backdrop_screen = new SinglePlayerScreen();
+		backdrop_screen.fade_in = false;
+		backdrop_screen.run();
 	}
 	
 	@Override
 	public void onUnload()
 	{
+		backdrop_screen.onUnInitialize();
+		
 		if (crashed)
 			base_error.onUnInitialize();
 		
@@ -199,6 +222,19 @@ public class TitleScreen extends BaseScreen
 	@Override
 	public void onUpdate(double delta)
 	{
+		my_trigger_fader.onUpdate(delta);
+		
+		if(last_loading != this.backdrop_screen.loading_amount)
+		{
+			int current_load = backdrop_screen.loading_amount;
+			
+			if(current_load == 60 || //  
+					current_load == 100 )
+				my_trigger_fader.trigger();
+					
+			last_loading = backdrop_screen.loading_amount;
+		}
+		
 		// that music
 		play_list.onUpdate();
 		
@@ -275,25 +311,35 @@ public class TitleScreen extends BaseScreen
 		if (fade_play)
 			if (!tween_fade_out.onUpdate(delta))
 				GameActivity.mGLView.my_game.onChangeScreen(new SinglePlayerScreen());
+		
+		if (this.backdrop_screen.current_state == EnumScreenState.running)
+			this.backdrop_screen.onUpdate(delta / 1.5);
 	}
 	
 	@Override
 	public void onDrawObject(EnumLayerTypes... types)
 	{
-		// TODO Auto-generated method stub
+		my_trigger_fader.trigger();
+		this.backdrop_screen.onDrawObject(types);
 	}
 	
 	@Override
 	public void onDrawLight()
 	{
-		// TODO Auto-generated method stub
-		
+		this.backdrop_screen.onDrawLight();
 	}
 	
 	@SuppressLint("WrongCall")
 	@Override
 	public void onDrawConstant()
 	{
+		my_trigger_fader.onDraw();
+		
+		if(this.backdrop_screen.current_state != EnumScreenState.running)
+		{
+			Constants.text.drawText(R.string.loading_level_data, Functions.screenXToShaderX(150), Functions.screenYToShaderY(25), EnumDrawFrom.center);
+		}
+		
 		if (settings_visible)
 			base_settings.onDraw();
 		else if (ready_to_quit)
@@ -353,10 +399,23 @@ public class TitleScreen extends BaseScreen
 		}
 	}
 	
+	@SuppressLint("WrongCall")
 	@Override
 	public void onDrawLoading(double delta)
 	{
-		// draw nothing
+		// just a test for now
+		if(this.fader_ready)
+		{
+			my_trigger_fader.onDraw();
+		}
+		
+		if (!this.title_screen_ready)
+			Constants.text.drawText(R.string.loading, 0, 0, EnumDrawFrom.center);
+		else
+		{
+			onUpdate(delta);
+			onDrawConstant();
+		}
 	}
 	
 	@Override
