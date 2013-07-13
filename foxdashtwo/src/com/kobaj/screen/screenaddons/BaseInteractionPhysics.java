@@ -8,6 +8,7 @@ import com.kobaj.level.LevelObject;
 import com.kobaj.math.AverageMaker;
 import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
+import com.kobaj.math.RectFExtended;
 import com.kobaj.math.android.RectF;
 
 public class BaseInteractionPhysics
@@ -25,11 +26,19 @@ public class BaseInteractionPhysics
 	private final boolean integratePhysics(final double delta, final Level the_level)
 	{
 		// something to collide with the shadow
-		player_extended.left = (float) (the_level.player.quad_object.x_pos_shader - the_level.player.quad_object.shader_width / 2.0);
+		/*player_extended.left = (float) (the_level.player.quad_object.x_pos_shader - the_level.player.quad_object.shader_width / 2.0);
 		player_extended.right = (float) (the_level.player.quad_object.x_pos_shader + the_level.player.quad_object.shader_width / 2.0);
 		
 		double bottom_of_player = the_level.player.quad_object.y_pos_shader - the_level.player.quad_object.shader_height / 5.0;
 		player_extended.top = (float) (the_level.player.quad_object.y_pos_shader + the_level.player.quad_object.shader_height / 2.0);
+		player_extended.bottom = (float) (bottom_of_player - Constants.shadow_height_shader);
+		*/
+		
+		RectFExtended main_phys = the_level.player.quad_object.phys_rect_list.get(0);
+		player_extended.left = main_phys.main_rect.left;
+		player_extended.top = main_phys.main_rect.top;
+		player_extended.right = main_phys.main_rect.right;
+		double bottom_of_player = main_phys.main_rect.bottom + 5.0 * Constants.collision_detection_height;
 		player_extended.bottom = (float) (bottom_of_player - Constants.shadow_height_shader);
 		
 		double shadow_collision_y = player_extended.bottom;
@@ -100,15 +109,16 @@ public class BaseInteractionPhysics
 		return can_jump;
 	}
 	
+	// left right movement
 	private final boolean handleTouchInput(final boolean can_jump, final GameInputModifier my_modifier, final Level the_level)
 	{
 		// initial touch
-		if (my_modifier.getInputType().getLeftXorRight())
+		if (the_level.force_left != the_level.force_right || my_modifier.getInputType().getLeftXorRight())
 		{
 			double move_amount = 0;
 			
 			// if touch right
-			if (my_modifier.getInputType().getTouchedRight())
+			if (the_level.force_right || my_modifier.getInputType().getTouchedRight())
 			{
 				// if we are on the ground
 				if (can_jump && the_level.player.quad_object.x_vel_shader < 0)
@@ -118,7 +128,7 @@ public class BaseInteractionPhysics
 			}
 			
 			// if touch left
-			else if (my_modifier.getInputType().getTouchedLeft())
+			else if (the_level.force_left || my_modifier.getInputType().getTouchedLeft())
 			{
 				if (can_jump && the_level.player.quad_object.x_vel_shader > 0)
 					move_amount += -Constants.normal_reverse_acceleration;
@@ -139,6 +149,7 @@ public class BaseInteractionPhysics
 		return false;
 	}
 	
+	// jumping
 	private void addForce(final boolean is_touched, final boolean can_jump, final GameInputModifier my_modifier, final Level the_level)
 	{
 		// add gravity
@@ -149,9 +160,9 @@ public class BaseInteractionPhysics
 			the_level.player.quad_object.x_acc_shader -= Constants.normal_friction * the_level.player.quad_object.x_vel_shader;
 		
 		// add jump
-		if (my_modifier.getInputType().getPressedJump() && can_jump)
+		if ((the_level.force_jump_start || my_modifier.getInputType().getPressedJump()) && can_jump)
 			the_level.player.quad_object.y_vel_shader = Constants.jump_velocity;
-		else if (my_modifier.getInputType().getReleasedJump())
+		else if (the_level.force_jump_end || my_modifier.getInputType().getReleasedJump())
 			if (the_level.player.quad_object.y_vel_shader > Constants.jump_limiter)
 				the_level.player.quad_object.y_vel_shader = Constants.jump_limiter;
 	}

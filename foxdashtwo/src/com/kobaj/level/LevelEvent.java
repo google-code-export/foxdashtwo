@@ -13,6 +13,8 @@ import com.kobaj.level.LevelEventTypes.LevelEventArrows;
 import com.kobaj.level.LevelEventTypes.LevelEventBase;
 import com.kobaj.level.LevelEventTypes.LevelEventCheckPoint;
 import com.kobaj.level.LevelEventTypes.LevelEventDeath;
+import com.kobaj.level.LevelEventTypes.LevelEventEraseCheckpoints;
+import com.kobaj.level.LevelEventTypes.LevelEventMovement;
 import com.kobaj.level.LevelEventTypes.LevelEventNextLevel;
 import com.kobaj.level.LevelEventTypes.LevelEventThoughtBubble;
 import com.kobaj.math.Functions;
@@ -71,7 +73,12 @@ public class LevelEvent
 			my_possible_event = new LevelEventDeath(this_event);
 		else if (this_event == EnumLevelEvent.thought_bubble)
 			my_possible_event = new LevelEventThoughtBubble(this_event);
+		else if (this_event == EnumLevelEvent.movement)
+			my_possible_event = new LevelEventMovement(this_event);
+		else if (this_event == EnumLevelEvent.erase_checkpoint)
+			my_possible_event = new LevelEventEraseCheckpoints(this_event);
 		
+		// finally
 		if (my_possible_event != null)
 			my_possible_event.onInitialize(level, id_strings);
 	}
@@ -102,5 +109,11 @@ public class LevelEvent
 	{
 		if (my_possible_event != null)
 			my_possible_event.onDraw();
+	}
+	
+	public void onKillReset()
+	{
+		if (my_possible_event != null)
+			my_possible_event.onKillReset();
 	}
 }

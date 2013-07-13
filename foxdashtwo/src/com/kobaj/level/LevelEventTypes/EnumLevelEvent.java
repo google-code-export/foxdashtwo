@@ -9,5 +9,5 @@ public enum EnumLevelEvent
 	next_level, checkpoint, color, snow,
 	
 	/* one last thing */
-	thought_bubble
+	thought_bubble, movement, erase_checkpoint
 }

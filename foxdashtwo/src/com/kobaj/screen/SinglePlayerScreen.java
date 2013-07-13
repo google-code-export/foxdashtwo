@@ -74,6 +74,10 @@ public class SinglePlayerScreen extends BaseScreen implements FinishedScoring
 	
 	private RotationLoadingJig network_loader;
 	
+	public boolean self_playing = false;
+	
+	public int loading_amount = 0;
+	
 	public SinglePlayerScreen()
 	{
 		// initialize everything
@@ -94,7 +98,7 @@ public class SinglePlayerScreen extends BaseScreen implements FinishedScoring
 		if (level_name == null || level_name.equals(Constants.empty))
 		{
 			// change the first level
-			the_level = FileHandler.readSerialResource(Constants.resources, R.raw.level_0, com.kobaj.level.Level.class);
+			the_level = FileHandler.readSerialResource(Constants.resources, R.raw.level_title, com.kobaj.level.Level.class);
 			{
 				level_name = "level_0";
 				return true;
@@ -132,17 +136,24 @@ public class SinglePlayerScreen extends BaseScreen implements FinishedScoring
 	@Override
 	public void onLoad()
 	{
+		this.loading_amount = 0;
+		
 		// load our addons. Do the loader first
 		loading_addon.onInitialize();
 		
+		loading_amount = 10;
+		
 		this.setNextLevel(SinglePlayerSave.last_level);
+		
+		loading_amount = 60;
 		
 		if (the_level != null)
 		{
 			the_level.onInitialize();
 			
 			// testing sounds
-			the_level.startMusic();
+			if (!self_playing)
+				the_level.startMusic();
 		}
 		else
 		{
@@ -154,6 +165,8 @@ public class SinglePlayerScreen extends BaseScreen implements FinishedScoring
 		// control input and other addons
 		my_modifier.onInitialize();
 		
+		loading_amount = 70;
+		
 		pause_addon = new BasePauseScreen();
 		pause_addon.onInitialize();
 		
@@ -162,11 +175,15 @@ public class SinglePlayerScreen extends BaseScreen implements FinishedScoring
 		
 		// debug_addon = new LevelDebugScreen(the_level, EnumDebugType.events);
 		
+		loading_amount = 80;
+		
 		network_loader = new RotationLoadingJig();
 		network_loader.onInitialize();
 		network_loader.radius = Constants.spinning_jig_radius;
 		network_loader.x_pos = Constants.two_third_width_pos - Constants.width_padding;
 		network_loader.y_pos = Constants.two_fourth_height_pos - Constants.height_padding;
+		
+		loading_amount = 90;
 		
 		// buttons
 		title_screen_button = new TextButton(R.string.title_screen, true);
@@ -175,6 +192,8 @@ public class SinglePlayerScreen extends BaseScreen implements FinishedScoring
 		title_screen_button.onInitialize();
 		replay_button.onInitialize();
 		BaseFloatingFrame.alignButtonsAlongXAxis(Constants.one_fourth_height_pos, title_screen_button, replay_button);
+		
+		loading_amount = 100;
 		
 		GLBitmapReader.isLoaded();
 		
@@ -201,12 +220,16 @@ public class SinglePlayerScreen extends BaseScreen implements FinishedScoring
 	public void onUpdate(double delta)
 	{
 		// that music
-		Constants.music_player.onUpdate();
+		if (!self_playing)
+			Constants.music_player.onUpdate();
 		
 		if (current_state != EnumScreenState.paused)
 			onRunningUpdate(delta);
 		else if (!pause_addon.onUpdate(delta))
 			current_state = EnumScreenState.running;
+		
+		if (self_playing)
+			return;
 		
 		// go into pause mode by hitting menu, search, back...
 		if (Constants.input_manager.getKeyPressed(EnumKeyCodes.back) || //

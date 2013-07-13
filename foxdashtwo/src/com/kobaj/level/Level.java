@@ -123,6 +123,12 @@ public class Level
 	private int random_sound_time = 0;
 	private int random_sound_key = 0;
 	
+	// forcing player movement
+	public boolean force_left = false;
+	public boolean force_jump_start = false;
+	public boolean force_jump_end = false;
+	public boolean force_right = false;
+	
 	// no constructor
 	
 	public void onInitialize()
@@ -255,16 +261,7 @@ public class Level
 		}
 		
 		// setup player
-		QuadAnimated player_animation = new QuadAnimated(R.raw.fox2, R.raw.fox2_alpha, R.raw.animation_list_fox, 350, 180, 1024, 1024);
-		player_animation.setAnimation(EnumGlobalAnimationList.stop, 0, -1);
-		player.quad_object = player_animation;
-		player.this_object = EnumLevelObject.fox2;
-		player.eid = Integer.MIN_VALUE;
-		player.layer = EnumLayerTypes.Pre_interaction;
-		player.z_plane = Double.MIN_VALUE;
-		player.quad_object.setScale(.75);
-		player.ignore_coord_map = true;
-		object_list.add(player);
+		setupPlayer();
 		
 		// setup our two bounding fade edges
 		QuadCompressed left_edge = new QuadCompressed(R.raw.black, R.raw.lx_background_fade_1_alpha, this.right_limit - this.left_limit, 512);
@@ -416,6 +413,31 @@ public class Level
 		this.resetLevel();
 	}
 	
+	public void setupPlayer()
+	{
+		QuadAnimated player_animation = new QuadAnimated(R.raw.fox, R.raw.fox_alpha, R.raw.animation_list_fox, 400, 215, 2048, 1024);
+		player_animation.setAnimation(EnumGlobalAnimationList.stop, 0, true);
+		
+		RectF previous = player_animation.phys_rect_list.get(0).main_rect;
+		player_animation.phys_rect_list.add(new RectFExtended(previous.left + Functions.screenWidthToShaderWidth(58), //
+				previous.top - Functions.screenHeightToShaderHeight(55), //
+				previous.right - Functions.screenWidthToShaderWidth(58), //
+				previous.bottom + Functions.screenHeightToShaderHeight(15)));
+		player_animation.phys_rect_list.remove(0);
+		
+		player.quad_object = player_animation;
+		player.this_object = EnumLevelObject.fox2;
+		player.eid = Integer.MIN_VALUE;
+		player.layer = EnumLayerTypes.Pre_interaction;
+		player.z_plane = Double.MIN_VALUE;
+		player.quad_object.setScale(.75);
+		player.ignore_coord_map = true;
+		
+		player_animation.reverseLeftRight(true);
+		
+		object_list.add(player);
+	}
+	
 	public void setPlayerPosition()
 	{
 		// pre-player
@@ -470,6 +492,12 @@ public class Level
 	
 	public void onUpdate(double delta, boolean play)
 	{
+		// reset our forces
+		force_left = false;
+		force_jump_start = false;
+		force_jump_end = false;
+		force_right = false;
+		
 		// compute the players position relative on screen
 		// this is in shader coordinates
 		// first do x
@@ -489,7 +517,14 @@ public class Level
 		
 		// do our thought bubble changes
 		for (int i = thought_bubble_cache.size() - 1; i >= 0; i--)
-			thought_bubble_cache.get(i).setPlayerPosRelative(player_shader_shifted_x, player_shader_shifted_y);
+		{
+			double bubble_shift_x = player.quad_object.shader_width / 2.0;
+			
+			if(!player.quad_object.reverse_left_right)
+				bubble_shift_x = -bubble_shift_x;
+			
+			thought_bubble_cache.get(i).setPlayerPosRelative(player_shader_shifted_x + bubble_shift_x, player_shader_shifted_y);
+		}
 		
 		for (int i = event_list.size() - 1; i >= 0; i--)
 			event_list.get(i).onUpdate(delta);
@@ -520,19 +555,52 @@ public class Level
 			if (reference.y_vel_shader < 0 //
 					&& current_y_speed > Constants.player_movement_threshold_vertical //
 					&& !player_on_ground)
-				reference.setAnimation(EnumGlobalAnimationList.falling, 0, true);
-			else if (reference.y_vel_shader > 0 //
-					&& current_y_speed > Constants.player_movement_threshold_vertical //
-					&& !player_on_ground)
-				reference.setAnimation(EnumGlobalAnimationList.jumping, 0, true);
-			else if (current_x_speed < Constants.player_movement_threshold_horizintal)
-				reference.setAnimation(EnumGlobalAnimationList.stop, 0, true);
-			else
 			{
-				reference.setAnimation(EnumGlobalAnimationList.running, 0, true);
-				
+					reference.setAnimation(EnumGlobalAnimationList.falling, 0, true);
+			}
+			else if (reference.y_vel_shader > 0 //
+					&& current_y_speed > Constants.player_movement_threshold_vertical)
+			{
+				if(player_on_ground)
+				{
+					reference.setAnimation(EnumGlobalAnimationList.jump, 0, true, false);
+				}
+				else
+				{
+					if(reference.currently_playing == EnumGlobalAnimationList.jump)
+					{
+						if(reference.currently_playing_frameset_reference.animation_complete)
+						{
+							reference.setAnimation(EnumGlobalAnimationList.jumping, 0, true);
+						}
+					}
+					else
+					{
+						reference.setAnimation(EnumGlobalAnimationList.jumping, 0, true);
+					}
+				}
+			}
+			else if (current_x_speed < Constants.player_movement_threshold_horizontal)
+			{
+				reference.setAnimation(EnumGlobalAnimationList.stop, 0, true);
+			}
+			else
+			{	
+				if(reference.currently_playing == EnumGlobalAnimationList.falling)
+				{
+					reference.setAnimation(EnumGlobalAnimationList.landing, 0, true, false);
+				}
+				else if(reference.currently_playing == EnumGlobalAnimationList.stop || //
+						(reference.currently_playing == EnumGlobalAnimationList.landing && reference.currently_playing_frameset_reference.animation_complete))
+				{
+					reference.setAnimation(EnumGlobalAnimationList.running, 0, true);
+				}
+			}
+			
+			if(current_x_speed > Constants.player_movement_threshold_horizontal)
+			{
 				// current direction
-				reference.reverseLeftRight((player.quad_object.x_vel_shader > 0));
+				reference.reverseLeftRight((player.quad_object.x_vel_shader >= 0));	
 			}
 			
 			if (reference.best_fit_aabb.main_rect.top + Constants.shader_height / 2.0 < this.bottom_shader_limit //
@@ -717,11 +785,14 @@ public class Level
 	{
 		kill = false;
 		this.setPlayerPosition();
+		
+		for (int i = event_list.size() - 1; i >= 0; i--)
+			event_list.get(i).onKillReset();
 	}
 	
 	public void kill()
 	{
-		if(kill != true)
+		if (kill != true)
 		{
 			kill = true;
 			Constants.sound.play(R.raw.sound_death);

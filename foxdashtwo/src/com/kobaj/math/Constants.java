@@ -127,7 +127,7 @@ public class Constants
 	public static double jump_limiter;
 	public static double max_speed; // this is of all objects
 	public static double player_downward_platform_acc; // player specific
-	public static double player_movement_threshold_horizintal;
+	public static double player_movement_threshold_horizontal;
 	public static double player_movement_threshold_vertical;
 	public static double floating_move_lr_acc;
 	public static double floating_lr_distance;

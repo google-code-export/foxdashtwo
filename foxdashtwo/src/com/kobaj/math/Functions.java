@@ -709,7 +709,7 @@ public class Functions
 		Constants.max_speed = Functions.speed(Constants.max_x_velocity, Constants.max_y_velocity);
 		
 		Constants.player_downward_platform_acc = Functions.screenHeightToShaderHeight(Constants.player_downward_platform_acc_default);
-		Constants.player_movement_threshold_horizintal = Functions.screenWidthToShaderWidth(Constants.player_movement_threshold_horizontal_default);
+		Constants.player_movement_threshold_horizontal = Functions.screenWidthToShaderWidth(Constants.player_movement_threshold_horizontal_default);
 		Constants.player_movement_threshold_vertical = Functions.screenHeightToShaderHeight(Constants.player_movement_threshold_vertical_default);
 		
 		Constants.shadow_height_shader = Functions.screenHeightToShaderHeight(Constants.shadow_height_default);
