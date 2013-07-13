@@ -14,8 +14,8 @@ public class BaseLevelSelect extends BaseFloatingFrame
 	
 	private TextButton back_button;
 	
-	private ImageButton[] my_levels = new ImageButton[7];
-	private boolean[] accessable_levels = new boolean[7]; 
+	private ImageButton[] my_levels = new ImageButton[6];
+	private boolean[] accessable_levels = new boolean[6]; 
 	
 	private final String level_prefix = "level_";
 	
@@ -60,12 +60,7 @@ public class BaseLevelSelect extends BaseFloatingFrame
 		else
 			my_levels[4] = new ImageButton(R.raw.level_button_5_bw, R.raw.level_button_5_bw_alpha, 64,64);
 		
-		if(accessable_levels[5])
-			my_levels[5] = new ImageButton(R.raw.level_button_6, R.raw.level_button_6_alpha, 64, 64);
-		else
-			my_levels[5] = new ImageButton(R.raw.level_button_6_bw, R.raw.level_button_6_bw_alpha, 64,64);
-		
-		my_levels[6] = new ImageButton(R.raw.level_button_c, R.raw.level_button_c_alpha, 64, 64);
+		my_levels[5] = new ImageButton(R.raw.level_button_c, R.raw.level_button_c_alpha, 64, 64);
 		
 		// initialize everything
 		back_button.onInitialize();
@@ -79,9 +74,7 @@ public class BaseLevelSelect extends BaseFloatingFrame
 		double shift_y = Functions.screenHeightToShaderHeight(32);
 		double move_y = Functions.screenHeightToShaderHeight(5); // same value is in base audio settings
 		
-		//my_levels[0].setXYPos(0, 0, EnumDrawFrom.center);
-		
-		BaseFloatingFrame.alignButtonsAlongXAxis(center_y + shift_y + move_y, my_levels[0], my_levels[2], my_levels[4], my_levels[6]);
+		BaseFloatingFrame.alignButtonsAlongXAxis(center_y + shift_y + move_y, my_levels[0], my_levels[2], my_levels[4]);
 		BaseFloatingFrame.alignButtonsAlongXAxis(center_y - 1.9 * shift_y + move_y, my_levels[1], my_levels[3], my_levels[5]);
 	}
 	

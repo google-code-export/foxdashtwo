@@ -799,8 +799,13 @@ public class Level
 		}
 	}
 	
-	public void startMusic()
+	public void startMusic(boolean play_sounds)
 	{
+		Constants.sound.play_sound = play_sounds;
+		
+		if(!play_sounds)
+			return;
+		
 		if (music == EnumMusics.none)
 		{
 			Constants.music_player.stop(Constants.music_fade_time);

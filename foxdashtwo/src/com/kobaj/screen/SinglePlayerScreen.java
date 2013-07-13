@@ -21,7 +21,6 @@ import com.kobaj.opengldrawable.EnumDrawFrom;
 import com.kobaj.opengldrawable.Button.TextButton;
 import com.kobaj.screen.screenaddons.BaseInteractionPhysics;
 import com.kobaj.screen.screenaddons.BaseLoadingScreen;
-import com.kobaj.screen.screenaddons.LevelDebugScreen;
 import com.kobaj.screen.screenaddons.RotationLoadingJig;
 import com.kobaj.screen.screenaddons.floatingframe.BaseFloatingFrame;
 import com.kobaj.screen.screenaddons.floatingframe.BasePauseScreen;
@@ -43,7 +42,7 @@ public class SinglePlayerScreen extends BaseScreen implements FinishedScoring
 	private com.kobaj.level.Level the_level;
 	
 	// addons
-	private LevelDebugScreen debug_addon;
+	// private LevelDebugScreen debug_addon;
 	private BaseLoadingScreen loading_addon;
 	private BaseInteractionPhysics interaction_addon;
 	private BasePauseScreen pause_addon;
@@ -98,7 +97,7 @@ public class SinglePlayerScreen extends BaseScreen implements FinishedScoring
 		if (level_name == null || level_name.equals(Constants.empty))
 		{
 			// change the first level
-			the_level = FileHandler.readSerialResource(Constants.resources, R.raw.level_title, com.kobaj.level.Level.class);
+			the_level = FileHandler.readSerialResource(Constants.resources, R.raw.level_0, com.kobaj.level.Level.class);
 			{
 				level_name = "level_0";
 				return true;
@@ -152,8 +151,7 @@ public class SinglePlayerScreen extends BaseScreen implements FinishedScoring
 			the_level.onInitialize();
 			
 			// testing sounds
-			if (!self_playing)
-				the_level.startMusic();
+			the_level.startMusic(self_playing);
 		}
 		else
 		{
