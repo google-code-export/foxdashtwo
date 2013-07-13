@@ -18,6 +18,8 @@ public class Sound extends AudioBase
 	
 	public static final int sound_count = 4;
 	
+	public boolean play_sound = true;
+	
 	public Sound()
 	{
 		super();
@@ -47,6 +49,9 @@ public class Sound extends AudioBase
 	// loop count of -1 means loop forever
 	public int play(int sound_id, int loop_count)
 	{
+		if(!play_sound)
+			return 0; 
+		
 		int sound_to_be_played = sound_pool_map.get(sound_id);
 		
 		// see if it is contained in map

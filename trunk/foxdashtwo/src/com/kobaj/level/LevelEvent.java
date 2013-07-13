@@ -10,6 +10,7 @@ import android.annotation.SuppressLint;
 import com.kobaj.level.LevelEventTypes.EnumLevelEvent;
 import com.kobaj.level.LevelEventTypes.LevelEventActive;
 import com.kobaj.level.LevelEventTypes.LevelEventArrows;
+import com.kobaj.level.LevelEventTypes.LevelEventArrowsDelay;
 import com.kobaj.level.LevelEventTypes.LevelEventBase;
 import com.kobaj.level.LevelEventTypes.LevelEventCheckPoint;
 import com.kobaj.level.LevelEventTypes.LevelEventDeath;
@@ -77,6 +78,8 @@ public class LevelEvent
 			my_possible_event = new LevelEventMovement(this_event);
 		else if (this_event == EnumLevelEvent.erase_checkpoint)
 			my_possible_event = new LevelEventEraseCheckpoints(this_event);
+		else if (this_event == EnumLevelEvent.right_arrow_delay)
+			my_possible_event = new LevelEventArrowsDelay(this_event);
 		
 		// finally
 		if (my_possible_event != null)
