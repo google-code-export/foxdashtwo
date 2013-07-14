@@ -40,7 +40,7 @@ public class LevelEventArrows extends LevelEventBase
 		
 		// drawable
 		// all the different types of level events
-		if (this_event == EnumLevelEvent.left_arrow || this_event == EnumLevelEvent.right_arrow)
+		if (this_event == EnumLevelEvent.left_arrow || this_event == EnumLevelEvent.right_arrow || this_event == EnumLevelEvent.right_arrow_delay)
 		{
 			secondary_draw = null;
 			
@@ -52,7 +52,7 @@ public class LevelEventArrows extends LevelEventBase
 				x_pos = Functions.screenXToShaderX(100);
 				my_draw.setRotationZ(180);
 			}
-			else if (this_event == EnumLevelEvent.right_arrow)
+			else if (this_event == EnumLevelEvent.right_arrow || this_event == EnumLevelEvent.right_arrow_delay)
 				x_pos = Functions.screenXToShaderX(Constants.width - 100);
 			
 			my_draw.setXYPos(x_pos, y_pos, EnumDrawFrom.center);

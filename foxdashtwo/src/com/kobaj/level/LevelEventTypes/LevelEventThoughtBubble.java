@@ -26,6 +26,8 @@ public class LevelEventThoughtBubble extends LevelEventBase
 	
 	private ThoughtBubbleHelper[] thought_bubbles;
 	
+	public boolean delay = false;
+	
 	public LevelEventThoughtBubble(EnumLevelEvent type)
 	{
 		super(type);
@@ -74,7 +76,7 @@ public class LevelEventThoughtBubble extends LevelEventBase
 		if (string_count <= 0 || finished)
 			return;
 		
-		if (!activated)
+		if (!activated && !delay)
 		{
 			if (active)
 				activated = true;

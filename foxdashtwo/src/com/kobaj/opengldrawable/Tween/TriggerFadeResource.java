@@ -14,13 +14,15 @@ public class TriggerFadeResource
 	public double current_fade_times;
 	public int color = Color.WHITE;
 	
+	public double max_fade = 1000;
+	
 	public TriggerFadeResource(int width, int height, int resource_id, int index)
 	{
 		this.index = index;
 		resources = new QuadCompressed(resource_id, R.raw.white, width, height);
 	}
 	
-	public void onUpdate(double delta, double max_fade, int global_index)
+	public void onUpdate(double delta, int global_index)
 	{
 		if(global_index <= index)
 			return;

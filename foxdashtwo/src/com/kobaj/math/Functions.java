@@ -722,7 +722,7 @@ public class Functions
 		Constants.mini_time_pos_y = Functions.screenYToShaderY(Constants.height - Constants.mini_time_pos_y_default);
 		
 		Constants.one_fourth_height_pos = Functions.screenYToShaderY(Constants.height / 4.0);
-		Constants.two_fourth_height_pos = Functions.screenYToShaderY(2.0 * Constants.height / 4.0);
+		Constants.two_fourth_height_pos = Functions.screenYToShaderY(2.0 * Constants.height / 4.0); // haha
 		Constants.three_fourth_height_pos = Functions.screenYToShaderY(3.0 * Constants.height / 4.0);
 		
 		Constants.one_third_width_pos = Functions.screenXToShaderX(Constants.width / 3.0);

@@ -73,7 +73,7 @@ public class SinglePlayerScreen extends BaseScreen implements FinishedScoring
 	
 	private RotationLoadingJig network_loader;
 	
-	public boolean self_playing = false;
+	private boolean self_playing = false;
 	
 	public int loading_amount = 0;
 	
@@ -111,8 +111,11 @@ public class SinglePlayerScreen extends BaseScreen implements FinishedScoring
 			the_level = FileHandler.readSerialResource(Constants.resources, level_R, com.kobaj.level.Level.class);
 			if (the_level != null)
 			{
-				if(local_level_name == "level_5")
+				if (local_level_name.equals("level_5"))
 					the_level.credits_level = true;
+				
+				if(local_level_name.equals("level_title"))
+					self_playing = true;
 				
 				this.level_name = local_level_name;
 				return true;
@@ -145,7 +148,13 @@ public class SinglePlayerScreen extends BaseScreen implements FinishedScoring
 		
 		loading_amount = 10;
 		
+		if (kill_early)
+			return;
+		
 		this.setNextLevel(SinglePlayerSave.last_level);
+		
+		if(kill_early)
+			return;
 		
 		loading_amount = 60;
 		
@@ -154,7 +163,7 @@ public class SinglePlayerScreen extends BaseScreen implements FinishedScoring
 			the_level.onInitialize();
 			
 			// testing sounds
-			the_level.startMusic(self_playing);
+			the_level.startMusic(!self_playing);
 		}
 		else
 		{
@@ -163,10 +172,16 @@ public class SinglePlayerScreen extends BaseScreen implements FinishedScoring
 			GameActivity.mGLView.my_game.onChangeScreen(crash);
 		}
 		
+		if(kill_early)
+			return;
+		
 		// control input and other addons
 		my_modifier.onInitialize();
 		
 		loading_amount = 70;
+		
+		if(kill_early)
+			return;
 		
 		pause_addon = new BasePauseScreen();
 		pause_addon.onInitialize();
@@ -178,6 +193,9 @@ public class SinglePlayerScreen extends BaseScreen implements FinishedScoring
 		
 		loading_amount = 80;
 		
+		if(kill_early)
+			return;
+		
 		network_loader = new RotationLoadingJig();
 		network_loader.onInitialize();
 		network_loader.radius = Constants.spinning_jig_radius;
@@ -185,6 +203,9 @@ public class SinglePlayerScreen extends BaseScreen implements FinishedScoring
 		network_loader.y_pos = Constants.two_fourth_height_pos - Constants.height_padding;
 		
 		loading_amount = 90;
+		
+		if(kill_early)
+			return;
 		
 		// buttons
 		title_screen_button = new TextButton(R.string.title_screen, true);
@@ -195,6 +216,9 @@ public class SinglePlayerScreen extends BaseScreen implements FinishedScoring
 		BaseFloatingFrame.alignButtonsAlongXAxis(Constants.one_fourth_height_pos, title_screen_button, replay_button);
 		
 		loading_amount = 100;
+		
+		if(kill_early)
+			return;
 		
 		GLBitmapReader.isLoaded();
 		
@@ -359,8 +383,8 @@ public class SinglePlayerScreen extends BaseScreen implements FinishedScoring
 		double multiplier = Functions.linearInterpolate(0, Constants.shadow_height_shader, distance, 1, 0) + .01;
 		
 		// new calculation using drawn shadow
-		the_level.player_shadow.setXYPos(the_level.player.quad_object.x_pos_shader, interaction_addon.player_shadow_y, EnumDrawFrom.center);
-		the_level.player_shadow.setScale(multiplier);
+		the_level.player_fox.player_shadow.setXYPos(the_level.player.quad_object.x_pos_shader, interaction_addon.player_shadow_y, EnumDrawFrom.center);
+		the_level.player_fox.player_shadow.setScale(multiplier);
 	}
 	
 	@Override
@@ -452,8 +476,12 @@ public class SinglePlayerScreen extends BaseScreen implements FinishedScoring
 		{
 			my_modifier.onDraw();
 			
-			Constants.text.drawText(R.string.small_time, Constants.mini_time_title_pos_x, Constants.mini_time_pos_y, EnumDrawFrom.bottom_right);
-			Constants.text.drawDecimalNumber(this.game_time / 1000.0, 3, 2, Constants.mini_time_pos_x, Constants.mini_time_pos_y);
+			// draw our score
+			if(!the_level.credits_level)
+			{
+				Constants.text.drawText(R.string.small_time, Constants.mini_time_title_pos_x, Constants.mini_time_pos_y, EnumDrawFrom.bottom_right);
+				Constants.text.drawDecimalNumber(this.game_time / 1000.0, 3, 2, Constants.mini_time_pos_x, Constants.mini_time_pos_y);
+			}
 		}
 		
 	}

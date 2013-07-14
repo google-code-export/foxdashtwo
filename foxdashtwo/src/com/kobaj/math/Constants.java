@@ -222,7 +222,7 @@ public class Constants
 	public static double sixteen_width;
 	
 	// errors
-	public static int exception_timeout = 300; // ms
+	public static int exception_timeout = 100; // ms
 	
 	// accounts
 	public static Accounts accounts;
