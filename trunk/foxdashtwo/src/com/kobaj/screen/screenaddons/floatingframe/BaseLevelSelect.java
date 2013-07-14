@@ -28,7 +28,7 @@ public class BaseLevelSelect extends BaseFloatingFrame
 		accessable_levels[0] = true; // level 1
 		accessable_levels[accessable_levels.length - 1] = true; // credits
 		
-		for(int i = 0; i < 5; i++)
+		for(int i = 0; i < accessable_levels.length - 2; i++)
 			if(SinglePlayerSave.getPrevBest(level_prefix + String.valueOf(i)) != Double.MAX_VALUE)
 				accessable_levels[i + 1] = true;
 			else

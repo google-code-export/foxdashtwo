@@ -20,19 +20,10 @@ import com.kobaj.math.Functions;
 import com.kobaj.math.RectFExtended;
 import com.kobaj.opengldrawable.EnumDrawFrom;
 
-public class Quad
+public class Quad extends QuadSimplePhysics
 {
 	// and placed in the exact center of the quad
 	public EnumDrawFrom currently_drawn = EnumDrawFrom.center;
-	
-	// these are in shader coordinates 0 to 1
-	// anyway, dont be fooled, these are public to READ but not public to SET
-	public double x_pos_shader = 0.0;
-	public double y_pos_shader = 0.0;
-	public double x_acc_shader = 0.0;
-	public double y_acc_shader = 0.0;
-	public double x_vel_shader = 0.0;
-	public double y_vel_shader = 0.0;
 	
 	// this is new
 	public int color = Color.WHITE;
@@ -422,7 +413,7 @@ public class Quad
 			y_pos = y + shader_height / 2.0;
 		}
 		else if (where == EnumDrawFrom.bottom_right)
-		{	
+		{
 			x_pos = x - shader_width / 2.0;
 			y_pos = y + shader_height / 2.0;
 		}

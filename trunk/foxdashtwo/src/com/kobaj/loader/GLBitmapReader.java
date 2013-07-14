@@ -32,12 +32,13 @@ public class GLBitmapReader
 	
 	// way of seeing when we're done loading
 	private static ArrayList<Boolean> loading_list = new ArrayList<Boolean>();
+	public static boolean pause_loading;
 	
 	// this method blocks the thread, dont put it on the UI
 	public static boolean isLoaded()
 	{
 		int current_size = loading_list.size();
-		while (true)
+		while (true && !pause_loading)
 		{
 			boolean good = true;
 			for (int i = loading_list.size() - 1; i >= 0; i--)
@@ -50,7 +51,7 @@ public class GLBitmapReader
 			if (good)
 			{
 				if (current_size == loading_list.size())
-					return false;
+					return true;
 			}
 			
 			try
@@ -62,6 +63,8 @@ public class GLBitmapReader
 				Log.e("Loading Exception", e.toString());
 			}
 		}
+		
+		return false;
 	}
 	
 	// in case context is lost

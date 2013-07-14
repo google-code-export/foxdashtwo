@@ -122,6 +122,17 @@
 	<string name="low_fps_blurb">Low FPS detected, would you like your \nsettings to automatically be adjusted \nto help raise your FPS? \n(These settings can be changed back.)</string>
 	<string name="adjustment_blurb">Press and drag the controller \nbuttons around to your desired \nlocation and click ok to save.</string>
 	
+	<string name="credits_1">Programming, Design, and Coordinator: Jakob Griffith</string>
+	<string name="credits_1_1">To my lost fox: Andrew</string>
+	
+	<string name="credits_2">Javascript: \nBackground Art: \nStory: \nMusic: \nSound: \nLevel Draft: \nChar. Art:</string>
+	<string name="credits_2_1">Daniel Imhoff \nPatryk "Imrooniel" Kowalik \nKevin Poisson \nFredrik Miller \nLonzo Rust \nBrady Jackson \nRaymond Griffith</string>
+	
+	<string name="credits_3">Special Thanks:</string>
+	<string name="credits_3_1">Ryan Knight \nVelociawesome</string>
+	<string name="credits_3_2">Beta Testers:</string>
+	<string name="credits_3_3">\nAjaat14 \nLoki_the_sergal \nNarkiel \nPsidra \nReivanElph \nSirblastalot \nSpartaninspace</string>
+	
     <!-- annoying, but you have to put your string name here too if you want to draw it in game -->
     <string-array name="my_sa">
         <item>hello</item>
@@ -167,7 +178,6 @@
         <item>fbo_down</item>
         <item>zoom_in</item>
         <item>zoom_out</item>
-        <item>play</item>
         <item>reset</item>
         
         <item>settings_button</item>
@@ -203,9 +213,20 @@
         <item>login_blurb</item>
         <item>low_fps_blurb</item>
         <item>adjustment_blurb</item>
+        
+        <item>credits_1</item>
+        <item>credits_1_1</item>
+        <item>credits_2</item>
+        <item>credits_2_1</item>
+        <item>credits_3</item>
+        <item>credits_3_1</item>
+        <item>credits_3_2</item>
+        <item>credits_3_3</item>
     </string-array>
     
     <string-array name="my_sa2">
+        <item>play</item>
+        
       	<item>error</item>
       	<item>warning</item>
         <item>play_header</item>

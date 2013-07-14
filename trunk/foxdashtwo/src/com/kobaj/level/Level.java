@@ -11,7 +11,6 @@ import android.annotation.SuppressLint;
 import android.graphics.Color;
 
 import com.kobaj.account_settings.SinglePlayerSave;
-import com.kobaj.audio.Sound;
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.level.LevelEventTypes.EnumLevelEvent;
 import com.kobaj.level.LevelEventTypes.LevelEventBase;
@@ -24,15 +23,15 @@ import com.kobaj.math.Constants;
 import com.kobaj.math.Functions;
 import com.kobaj.math.Physics;
 import com.kobaj.math.RectFExtended;
+import com.kobaj.math.Timer;
 import com.kobaj.math.android.RectF;
 import com.kobaj.opengldrawable.EnumDrawFrom;
-import com.kobaj.opengldrawable.EnumGlobalAnimationList;
 import com.kobaj.opengldrawable.NewParticle.EnumParticleType;
 import com.kobaj.opengldrawable.NewParticle.NParticleEmitter;
 import com.kobaj.opengldrawable.NewParticle.NParticleManager;
 import com.kobaj.opengldrawable.Quad.Quad;
-import com.kobaj.opengldrawable.Quad.QuadAnimated;
 import com.kobaj.opengldrawable.Quad.QuadCompressed;
+import com.kobaj.opengldrawable.Tween.TriggerFade;
 
 public class Level
 {
@@ -76,8 +75,6 @@ public class Level
 	
 	@Element
 	public EnumMusics music = EnumMusics.none;
-	private final int[] current_playing_fox_paws = new int[Sound.sound_count];
-	private int sound_placement = 0;
 	
 	public double left_shader_limit;
 	public double top_shader_limit;
@@ -101,10 +98,6 @@ public class Level
 	
 	private ArrayList<LevelBloomLight> bloom_light_list = new ArrayList<LevelBloomLight>(); // references for only blooms
 	
-	@Element
-	public LevelObject player;
-	public QuadCompressed player_shadow;
-	
 	private boolean player_on_ground = false;
 	
 	@ElementList
@@ -112,12 +105,19 @@ public class Level
 	
 	public ArrayList<LevelEventThoughtBubble> thought_bubble_cache;
 	
+	public PlayerFox player_fox;
+	@Element
+	public LevelObject player;
+	
+	private PlayerFox player_fox_red;
+	private LevelObject player_red;
+	
+	private TriggerFade my_credits_fade;
+	private Timer my_credits_timer;
+	private LevelEventThoughtBubble my_credits_bubble;
+	
 	// and our local particles
 	private ArrayList<NParticleEmitter> local_np_emitter = new ArrayList<NParticleEmitter>();
-	
-	// walking sounds
-	private final double walking_max = 600;
-	private double walking_timeout = 0;
 	
 	// other random sounds
 	private int random_sound_time = 0;
@@ -129,8 +129,14 @@ public class Level
 	public boolean force_jump_end = false;
 	public boolean force_right = false;
 	
-	// no constructor
 	public boolean credits_level = false;
+	
+	public Level()
+	{
+		player_red = new LevelObject();
+		player_red.active = true;
+		player_red.id = "follow_me";
+	}
 	
 	public void onInitialize()
 	{
@@ -262,7 +268,35 @@ public class Level
 		}
 		
 		// setup player
-		setupPlayer();
+		player_fox = new PlayerFox(false, credits_level);
+		player = player_fox.setupPlayer(player);
+		object_list.add(player);
+		
+		if (credits_level)
+		{
+			player_fox_red = new PlayerFox(true, credits_level);
+			player_red = player_fox_red.setupPlayer(player_red);
+			object_list.add(player_red);
+		}
+		else
+			player_red = null;
+		
+		if (credits_level)
+		{
+			// regular fade
+			this.my_credits_fade = new TriggerFade();
+			my_credits_fade.onInitialize(1000, 563, true, R.raw.credits_1, R.raw.credits_2, R.raw.credits_3);
+			my_credits_timer = new Timer(5000);
+			
+			// thought bubble
+			this.my_credits_bubble = new LevelEventThoughtBubble(EnumLevelEvent.thought_bubble);
+			ArrayList<String> affected_strings = new ArrayList<String>();
+			affected_strings.add("Thank You");
+			my_credits_bubble.onInitialize(this, affected_strings);
+			my_credits_bubble.delay = true;
+			
+			this.thought_bubble_cache.add(my_credits_bubble);
+		}
 		
 		// setup our two bounding fade edges
 		QuadCompressed left_edge = new QuadCompressed(R.raw.black, R.raw.lx_background_fade_1_alpha, this.right_limit - this.left_limit, 512);
@@ -291,9 +325,6 @@ public class Level
 		right_object.active = true;
 		
 		object_list.add(right_object);
-		
-		// player shadow
-		player_shadow = new QuadCompressed(R.raw.shadow_square, R.raw.shadow_square_alpha, 179, 90);
 		
 		// sort the objects
 		Collections.sort(object_list, new ObjectDrawSort());
@@ -414,40 +445,6 @@ public class Level
 		this.resetLevel();
 	}
 	
-	public void setupPlayer()
-	{
-		int fox = R.raw.fox;
-		int fox_alpha = R.raw.fox_alpha;
-		
-		if(credits_level)
-		{
-		//	fox = R.raw.fox_smile;
-		//	fox_alpha = R.raw.fox_smile_slpha;
-		}
-			
-		QuadAnimated player_animation = new QuadAnimated(fox, fox_alpha, R.raw.animation_list_fox, 400, 215, 2048, 1024);
-		player_animation.setAnimation(EnumGlobalAnimationList.stop, 0, true);
-		
-		RectF previous = player_animation.phys_rect_list.get(0).main_rect;
-		player_animation.phys_rect_list.add(new RectFExtended(previous.left + Functions.screenWidthToShaderWidth(58), //
-				previous.top - Functions.screenHeightToShaderHeight(55), //
-				previous.right - Functions.screenWidthToShaderWidth(58), //
-				previous.bottom + Functions.screenHeightToShaderHeight(15)));
-		player_animation.phys_rect_list.remove(0);
-		
-		player.quad_object = player_animation;
-		player.this_object = EnumLevelObject.fox2;
-		player.eid = Integer.MIN_VALUE;
-		player.layer = EnumLayerTypes.Pre_interaction;
-		player.z_plane = Double.MIN_VALUE;
-		player.quad_object.setScale(.75);
-		player.ignore_coord_map = true;
-		
-		player_animation.reverseLeftRight(true);
-		
-		object_list.add(player);
-	}
-	
 	public void setPlayerPosition()
 	{
 		// pre-player
@@ -502,6 +499,26 @@ public class Level
 	
 	public void onUpdate(double delta, boolean play)
 	{
+		if (credits_level)
+		{
+			if (my_credits_timer.trigger_count < 3)
+				Constants.sound.play_sound = false;
+			else
+			{
+				// thought bubble
+				this.my_credits_bubble.delay = false;
+				this.my_credits_bubble.onUpdate(delta, true);
+				
+				// sound
+				Constants.sound.play_sound = true;
+			}
+			
+			boolean trigger = my_credits_timer.onUpdate(delta);
+			my_credits_fade.onUpdate(delta);
+			if (trigger)
+				this.my_credits_fade.trigger();
+		}
+		
 		// reset our forces
 		force_left = false;
 		force_jump_start = false;
@@ -549,73 +566,23 @@ public class Level
 			reference.onUpdate(delta);
 		}
 		
-		if (play && player.quad_object instanceof QuadAnimated)
+		// update animations
+		player_fox.onUpdate(delta, play, player_on_ground);
+		
+		// copy foxy
+		if (credits_level)
 		{
-			QuadAnimated reference = QuadAnimated.class.cast(player.quad_object);
-			
-			double current_x_speed = Math.abs(reference.x_vel_shader);
-			double current_y_speed = Math.abs(reference.y_vel_shader);
-			
-			// currently playing animation
-			if (reference.y_vel_shader < 0 //
-					&& current_y_speed > Constants.player_movement_threshold_vertical //
-					&& !player_on_ground)
-			{
-					reference.setAnimation(EnumGlobalAnimationList.falling, 0, true);
-			}
-			else if (reference.y_vel_shader > 0 //
-					&& current_y_speed > Constants.player_movement_threshold_vertical)
-			{
-				if(player_on_ground)
-				{
-					reference.setAnimation(EnumGlobalAnimationList.jump, 0, true, false);
-				}
-				else
-				{
-					if(reference.currently_playing == EnumGlobalAnimationList.jump)
-					{
-						if(reference.currently_playing_frameset_reference.animation_complete)
-						{
-							reference.setAnimation(EnumGlobalAnimationList.jumping, 0, true);
-						}
-					}
-					else
-					{
-						reference.setAnimation(EnumGlobalAnimationList.jumping, 0, true);
-					}
-				}
-			}
-			else if (current_x_speed < Constants.player_movement_threshold_horizontal)
-			{
-				reference.setAnimation(EnumGlobalAnimationList.stop, 0, true);
-			}
-			else
-			{	
-				if(reference.currently_playing == EnumGlobalAnimationList.falling)
-				{
-					reference.setAnimation(EnumGlobalAnimationList.landing, 0, true, false);
-				}
-				else if((reference.currently_playing != EnumGlobalAnimationList.running && reference.currently_playing != EnumGlobalAnimationList.landing) || //
-						(reference.currently_playing == EnumGlobalAnimationList.landing && reference.currently_playing_frameset_reference.animation_complete))
-				{
-					reference.setAnimation(EnumGlobalAnimationList.running, 0, true);
-				}
-			}
-			
-			if(current_x_speed > Constants.player_movement_threshold_horizontal)
-			{
-				// current direction
-				reference.reverseLeftRight((player.quad_object.x_vel_shader >= 0));	
-			}
-			
-			if (reference.best_fit_aabb.main_rect.top + Constants.shader_height / 2.0 < this.bottom_shader_limit //
-					|| reference.best_fit_aabb.main_rect.bottom - Constants.shader_height / 2.0 > this.top_shader_limit //
-					|| reference.best_fit_aabb.main_rect.left - Constants.ratio > this.right_shader_limit //
-					|| reference.best_fit_aabb.main_rect.right + Constants.ratio < this.left_shader_limit) //
-				kill();
-			
-			reference.onUpdate(delta);
+			player_fox_red.copyFox(player.quad_object, player_fox.player_shadow);
+			player_fox_red.onUpdate(delta, play, player_on_ground);
 		}
+		
+		// kill our foxy :(
+		Quad fox_reference = player.quad_object;
+		if (fox_reference.best_fit_aabb.main_rect.top + Constants.shader_height / 2.0 < this.bottom_shader_limit //
+				|| fox_reference.best_fit_aabb.main_rect.bottom - Constants.shader_height / 2.0 > this.top_shader_limit //
+				|| fox_reference.best_fit_aabb.main_rect.left - Constants.ratio > this.right_shader_limit //
+				|| fox_reference.best_fit_aabb.main_rect.right + Constants.ratio < this.left_shader_limit) //
+			kill();
 		
 		// move the paralax backgrounds
 		double x_distance = -Constants.x_shader_translation;
@@ -641,34 +608,6 @@ public class Level
 				
 				reference.quad_object.setXYPos(reference.x_pos_shader + x_distance * multiplier, reference.y_pos_shader, EnumDrawFrom.center);
 			}
-		
-		// then do sounds
-		walking_timeout += delta;
-		double velocity = Math.abs(player.quad_object.x_vel_shader) * 10000;
-		if (this.player_on_ground && velocity > Constants.arbitrary_sound_velocity && walking_timeout > walking_max)
-		{
-			walking_timeout = 0;
-			if (play)
-			{
-				sound_placement += 1;
-				sound_placement = sound_placement % Sound.sound_count;
-				
-				int result = Constants.sound.play(R.raw.sound_fox_trot_2, 0);
-				if (result != 0)
-				{
-					this.current_playing_fox_paws[sound_placement] = result;
-				}
-				
-			}
-		}
-		else if (!this.player_on_ground)
-		{
-			for (int i = 0; i < current_playing_fox_paws.length; i++)
-			{
-				Constants.sound.stop(current_playing_fox_paws[i]);
-				current_playing_fox_paws[i] = 0;
-			}
-		}
 		
 		// random sounds
 		if (this.random_sound_time > 0)
@@ -708,7 +647,11 @@ public class Level
 		{
 			if (type == EnumLayerTypes.Shadow)
 			{
-				player_shadow.onDrawAmbient();
+				player_fox.player_shadow.onDrawAmbient();
+				
+				if (credits_level)
+					player_fox_red.player_shadow.onDrawAmbient();
+				
 				continue;
 			}
 			
@@ -727,8 +670,16 @@ public class Level
 			
 			// particles (looped in with top)
 			if (type == EnumLayerTypes.Top)
+			{
 				for (int i = local_np_emitter.size() - 1; i >= 0; i--)
 					local_np_emitter.get(i).onDraw();
+				
+				if (credits_level)
+				{
+					this.my_credits_fade.onDraw();
+					this.my_credits_bubble.onDraw();
+				}
+			}
 			
 			// bloom lights
 			if (type == EnumLayerTypes.Top)
@@ -808,7 +759,7 @@ public class Level
 	{
 		Constants.sound.play_sound = play_sounds;
 		
-		if(!play_sounds)
+		if (!play_sounds)
 			return;
 		
 		if (music == EnumMusics.none)

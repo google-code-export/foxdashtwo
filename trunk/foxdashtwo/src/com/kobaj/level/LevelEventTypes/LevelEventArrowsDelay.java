@@ -2,7 +2,7 @@ package com.kobaj.level.LevelEventTypes;
 
 public class LevelEventArrowsDelay extends LevelEventArrows
 {
-	public double max_delay = 5000; // 5 seconds
+	public double max_delay = 7000; // 5 seconds
 
 	public LevelEventArrowsDelay(EnumLevelEvent type)
 	{

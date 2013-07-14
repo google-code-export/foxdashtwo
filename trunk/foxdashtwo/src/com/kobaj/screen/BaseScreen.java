@@ -4,6 +4,7 @@ import android.graphics.Color;
 
 import com.kobaj.foxdashtwo.R;
 import com.kobaj.level.EnumLayerTypes;
+import com.kobaj.loader.GLBitmapReader;
 import com.kobaj.math.Constants;
 import com.kobaj.opengldrawable.EnumDrawFrom;
 import com.kobaj.opengldrawable.Quad.QuadCompressed;
@@ -22,11 +23,15 @@ public abstract class BaseScreen implements Runnable
 	
 	private EnumScreenState previous_state = EnumScreenState.not_started;
 	
+	private Thread thread_cache;
+	protected boolean kill_early = false;
+	
 	public final void onInitialize()
 	{
 		previous_state = current_state;
 		current_state = EnumScreenState.loading;
-		new Thread(this).start();
+		thread_cache = new Thread(this);
+		thread_cache.start();
 	}
 	
 	public final void onUnInitialize()
@@ -34,6 +39,19 @@ public abstract class BaseScreen implements Runnable
 		try
 		{
 			current_state = EnumScreenState.unload;
+			
+			GLBitmapReader.pause_loading = true;
+			kill_early = true;
+
+				try
+				{
+					while(thread_cache.isAlive())
+						Thread.sleep(Constants.exception_timeout); // sadly this is blocking
+				}
+				catch (InterruptedException e)
+				{
+					// do nothing
+				}
 			
 			// unload everything
 			black_overlay_fade.onUnInitialize();
@@ -50,6 +68,8 @@ public abstract class BaseScreen implements Runnable
 	
 	public void run()
 	{
+		GLBitmapReader.pause_loading = false;
+		
 		// nice overlay for fade in and out
 		black_overlay_fade = new QuadCompressed(R.raw.white, R.raw.white, Constants.width, Constants.height);
 		black_overlay_fade.setXYPos(0, 0, EnumDrawFrom.center);

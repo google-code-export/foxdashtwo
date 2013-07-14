@@ -164,6 +164,8 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 	{
 		long start_time = System.currentTimeMillis();
 		
+		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
+		
 		if (!Constants.global_draw)
 		{
 			try
@@ -193,7 +195,6 @@ public abstract class MyGLRender implements GLSurfaceView.Renderer
 			onUpdateFrame();
 			
 			// Redraw background color
-			GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
 			
 			// calculate vp matrix
 			Matrix.multiplyMM(Constants.my_vp_matrix, 0, Constants.my_proj_matrix, 0, Constants.my_view_matrix, 0);
